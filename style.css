@@ -1,0 +1,348 @@
+body {
+	background-image: url('img/background.jpg');
+	background-color: #000000;
+	background-size: cover;
+	background-repeat:no-repeat;
+	overflow: hidden;
+	font: 1.5em Gerorgia, arial, verdana, sans-serif;
+}
+hr {
+    border: 0;
+    height: 1px;
+	-webkit-margin-before: 2px;
+	-webkit-margin-after: 2px;
+	margin-left: 10px;
+	margin-right: 10px;
+    background-image: -webkit-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
+    background-image:    -moz-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
+    background-image:     -ms-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
+    background-image:      -o-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
+}
+h1{
+	margin: 0;
+	font: Georgia;
+	color: #FFFFFF;
+
+}
+h2, h3, p {
+	margin: 0;
+	font: Georgia;
+	color: #A0A0A0;
+
+}
+img {
+	margin-left: auto;
+	margin-right: auto;
+
+}
+	/* Uncomment to Debug div Nesting
+div {
+	border-left: 1px white dashed;
+	border-right: 1px white dashed;
+	border-top: 1px white dashed;
+	border-bottom: 1px white dashed;
+	border-color: yellow
+}
+	End of Debug */
+.header {
+	width: 1062px;
+	height: 100px;
+	-webkit-margin-after: -15px;
+	display:table;
+}
+.HeaderLeft {
+	width: 310px;
+	float: left;
+	font: .85em Georgia;
+	color: white;
+	font-weight: bold;
+	text-align: left;
+}
+.HeaderCenter {
+	width:436px;
+	text-align:center;
+	float: left;
+	font-size: 1em;
+	-webkit-margin-before: 20px;
+	font: 1em Georgia;
+	color: white;
+}
+.HeaderRight {
+	width: 310px;
+	float: right;
+	font: .85em Georgia;
+	color: white;
+	font-weight: bold;
+	text-align: right;
+}
+.TitleBarBack {
+	width: 1062px;
+	height: 46px;
+	position: relative;
+	z-index: 1;
+	opacity: .4;
+	background: grey;
+	-webkit-margin-before: -10px;
+}
+.TitleBarSRM {
+	height: 46px;
+	width: 110px;
+	padding-top: 2px;
+	position: relative;
+	z-index: 2;
+	top: -46px;
+	float: left;
+	font: .65em arial, verdana, sans-serif;
+	color: white;
+	text-align: center;
+	font-weight: bold;
+	font-style:italic;
+}
+.TitleBarIBU {
+	height: 46px;
+	width: 140px;
+	padding-top: 2px;
+	border-left: 1px white dashed;
+	border-right: 1px white dashed;
+	position: relative;
+	z-index: 2;
+	top: -46px;
+	float: left;
+	font: .65em arial, verdana, sans-serif;
+	color: white;
+	text-align: center;
+	font-weight: bold;
+	font-style:italic;
+}
+.TitleBarBeerName {
+	height: 46px;
+	width: 530px;
+	padding-top: 2px;
+	position: relative;
+	z-index: 2;
+	top: -46px;
+	float: left;
+	font: .65em arial, verdana, sans-serif;
+	color: white;
+	text-align: center;
+	font-weight: bold;
+	font-style:italic;
+}
+.TitleBarABV {
+	height: 46px;
+	width: 140px;
+	padding-top: 2px;
+	border-left: 1px white dashed;
+	border-right: 1px white dashed;
+	position: relative;
+	z-index: 2;
+	top: -46px;
+	float: left;
+	font: .65em arial, verdana, sans-serif;
+	color: white;
+	text-align: center;
+	font-weight: bold;
+	font-style:italic;
+}
+.TitleBarKeg {
+	height: 46px;
+	width: 125px;
+	padding-top: 2px;
+	position: relative;
+	z-index: 2;
+	top: -46px;
+	float: left;
+	font: .65em arial, verdana, sans-serif;
+	color: white;
+	text-align: center;
+	font-weight: bold;
+	font-style:italic;
+}
+.SRMcolumn {
+	width: 110px;
+	float: left;
+	display:inline-block;
+	font: 1.8em Georgia;
+	text-align: center;
+}
+.OGnumber h3 {
+	font: .4em Georgia;
+ 	-webkit-margin-before: 5px;
+	-webkit-margin-after: 5px;
+}
+.SRMimage img {
+	-webkit-margin-before: 0px;
+	-webkit-margin-after: 0px;
+}
+.SRMnumber h2 {
+	font: .5em Georgia;
+	-webkit-margin-before: 0px;
+	-webkit-margin-after: 0px;
+}
+.IBUcolumn {
+	width: 140px;
+	float: left;
+	display:inline-block;
+	font: 1.8em Georgia;
+	text-align: center;
+	border-left: 1px white dashed;
+	border-right: 1px white dashed;
+}
+.BUGUnumber h3 {
+	font: .4em Georgia;
+	-webkit-margin-before: 5px;
+	-webkit-margin-after: 5px;
+}
+.IBUimage img {
+	-webkit-margin-before: 0px;
+	-webkit-margin-after: 0px;
+}
+.IBUnumber h2 {
+	font: .5em Georgia;
+	-webkit-margin-before: 0px;
+	-webkit-margin-after: 0px;
+}
+.BeerNameColumn {
+	width: 510px;
+	padding-left: 10px;
+    padding-right: 10px;
+	float:left;
+}
+.BeerName {
+	display:block;
+	height: 40px;
+	width: 100%;
+	color: white;
+	font: .7em Georgia;
+	font-weight: bold;
+	word-wrap: break-word;
+	text-align: left;
+}
+.BeerStyle {
+	font: .6em Georgia;
+	color: #A0A0A0;
+	display:block;
+	height: 27px;
+	text-align: left;
+}
+.TastingNotes {
+	display:table;
+	height: 95px;
+	font: .8em Georgia;
+	color: #A0A0A0;
+    -webkit-margin-before: 5px;
+    -webkit-margin-after: 0px;
+}
+.TastingNotes div {
+	display: table-cell;
+	vertical-align: middle;
+	padding-bottom: 10px;
+}
+.ABVcolumn {
+	width: 140px;
+	float:left;
+	border-left: 1px white dashed;
+	border-right: 1px white dashed;
+	text-align: center;
+	font: 1.8em Georgia;
+}
+.KCALnumber h3 {
+	font: .4em Georgia;
+	-webkit-margin-before: 5px;
+	-webkit-margin-after: 5px;
+}
+.ABVimage img {
+	-webkit-margin-before: 0px;
+	-webkit-margin-after: 0px;
+}
+.ABVnumber h2 {
+	font: .5em Georgia;
+	-webkit-margin-before: 0px;
+	-webkit-margin-after: 0px;
+}
+.KegColumn {
+	width: 125px;
+	float:left;
+	text-align: center;
+	font: 1.8em Georgia;
+	color: #A0A0A0;
+}
+.PouredNumber h3 {
+	font: .4em Georgia;
+	-webkit-margin-before: 5px;
+	-webkit-margin-after: 5px;
+}
+.KegImage img {
+	-webkit-margin-before: 0px;
+	-webkit-margin-after: 0px;
+}
+.LeftNumber h2 {
+	font: .5em Georgia;
+	-webkit-margin-before: 0px;
+	-webkit-margin-after: 0px;
+}
+.row-1st {
+	width: 1062px;
+	height: 175px;
+	position: relative;
+	top: -50px;
+}
+.row-odd {
+	width: 1062px;
+	height: 175px;
+}
+.row-even {
+	position: relative;
+	width: 1062px;
+	height: 175px;
+}
+.row-even-a {
+	position: absolute;
+	width: 1062px;
+	height: 175px;
+	z-index: 2;
+}
+.Shading {
+	position: absolute;
+	width: 1062px;
+	height: 175px;
+	background: gray;
+	opacity:0.4;
+	z-index: 1;
+}
+.clear {
+	clear: both;
+}
+
+
+
+/* EVERYTHING BELOW THIS LINE IS FOR DESIGN AND DEBUG PURPOSES ONLY */
+/* THESE ENTRIES WILL BE REMOVED IN THE PRODUCTION VERSION */
+
+
+
+.SRMimage {
+	border-top: 1px white dashed;
+	border-bottom: 1px white dashed;
+	border-color: red
+}
+.IBUimage {
+	border-top: 1px white dashed;
+	border-bottom: 1px white dashed;
+	border-color: red
+}
+.BeerStyle {
+	border-top: 1px white dashed;
+	border-bottom: 1px white dashed;
+	border-color: red
+}
+.ABVimage {
+	border-top: 1px white dashed;
+	border-bottom: 1px white dashed;
+	border-color: red
+	}
+.KegImage {
+	border-top: 1px white dashed;
+	border-bottom: 1px white dashed;
+	border-color: red
+	}
