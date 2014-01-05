@@ -1,13 +1,10 @@
-kegerface
-=========
+Digital Taplist
+===============
 
 A Kegerator Interface!
-This is a work in progress. Be gentle.
 
+Questions? Comments? Want to Contribute?
+http://www.homebrewtalk.com/f51/feeler-any-interest-digital-tap-lists-450400/
 
-Questions? Comments? Want to Contribute? email us - kegerface@gmail.com
-
-
-Note for beers.csv
-------------------------
-If you have a long beer name, change the final value from "BeerName" to "BeerNameL" and it will format correctly for 2 lines.
+Based on the master fork of Kegerface:
+http://github.com/kegerface/kegerface
