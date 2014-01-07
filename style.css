@@ -99,15 +99,15 @@ img {
 	
 }
 
-.TitleBarSRM, .SRMcolumn{
+.TitleBarSRM, .SRMcolumn, .TAPcolumn, .TitleBarTAP {
 	min-height:100%;
 	height:auto !important;
 	height:100%;
-	width: 15%;
+	width: 8%;
 	text-align:center;
 }
 
-.TitleBarIBU, .IBUcolumn{
+.TitleBarIBU, .IBUcolumn {
 	min-height:46px;
 	height:auto !important;
 	height:46px;
@@ -138,6 +138,17 @@ img {
 .TitleBarIBU, .IBUcolumn, .TitleBarABV, .ABVcolumn{
 	border-left: 1px white dashed;
 	border-right: 1px white dashed;
+}
+
+.TitleBarSRM, .SRMcolumn {
+	border-left: 1px white dashed;
+}
+
+.TapNum {
+color:white;
+padding: 11px;
+text-align: left;
+float: left;
 }
 
 /* Indivual Row Styles for Beers */
