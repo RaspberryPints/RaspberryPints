@@ -58,10 +58,9 @@
                     <h1 id="HeaderTitle">BEERS ON TAP</h1>
                 </div>
                 <div class="HeaderRight">
-                    <br>
-                    <?php echo date('l'); ?>
-                    <br>
-                    <?php echo date('F jS, Y'); ?>
+                    <?php echo date('F jS Y'); ?><br />
+					<?php echo date("g:i a"); ?>
+					
                     <!--
                     <?php
                         $date=getdate(date("U"));
@@ -74,7 +73,7 @@
             <!-- Begin Title Bar -->	
             <div class="TitleBarWrapper clearfix">
 			<div class="TitleBarTap LeadEdge">
-		         Tap &nbsp; <hr># &nbsp;
+		         Tap # &nbsp;
 		        </div>
                 <div class="TitleBarSRM">
                 	GRAVITY<hr>COLOR
@@ -100,11 +99,11 @@
 			?>
 
 			<div class="BeerWrapper clearfix <?php if($i%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beers[$i]['id']; ?>">
-						<div class="TapColumn clearfix">
-                <div class="TapNum">
-                     <?php echo $beers[$i]['tapnumber']; ?>
-			    </div>
-			</div>
+						<div class="TapColumn clearfix">	
+                            <div class="TapNum">
+                                  <?php echo $beers[$i]['tapnumber']; ?>
+				            </div>
+			            </div>
 				<div class="SRMcolumn  clearfix">
                     <h3><?php echo $beers[$i]['gravity']; ?> OG</h3>
                         <?php
