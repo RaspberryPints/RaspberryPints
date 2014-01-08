@@ -3,7 +3,7 @@ body {
 	background-color: #000000;
 	background-size: cover;
 	background-repeat:no-repeat;
-	overflow: hidden;
+	/*overflow: hidden;*/
 	font: 1.5em Gerorgia, arial, verdana, sans-serif;
 }
 hr {
@@ -75,13 +75,12 @@ div {
 	font-weight: bold;
 	text-align: right;
 }
-.TitleBarBack {
+.TitleBarRow {
 	width: 1062px;
 	height: 46px;
 	position: relative;
 	z-index: 1;
-	opacity: .4;
-	background: grey;
+	background: url(/img/row-shading.png);
 	-webkit-margin-before: -10px;
 }
 .TitleBarSRM {
@@ -90,7 +89,6 @@ div {
 	padding-top: 2px;
 	position: relative;
 	z-index: 2;
-	top: -46px;
 	float: left;
 	font: .65em arial, verdana, sans-serif;
 	color: white;
@@ -106,7 +104,6 @@ div {
 	border-right: 1px white dashed;
 	position: relative;
 	z-index: 2;
-	top: -46px;
 	float: left;
 	font: .65em arial, verdana, sans-serif;
 	color: white;
@@ -120,7 +117,6 @@ div {
 	padding-top: 2px;
 	position: relative;
 	z-index: 2;
-	top: -46px;
 	float: left;
 	font: .65em arial, verdana, sans-serif;
 	color: white;
@@ -136,7 +132,6 @@ div {
 	border-right: 1px white dashed;
 	position: relative;
 	z-index: 2;
-	top: -46px;
 	float: left;
 	font: .65em arial, verdana, sans-serif;
 	color: white;
@@ -150,7 +145,6 @@ div {
 	padding-top: 2px;
 	position: relative;
 	z-index: 2;
-	top: -46px;
 	float: left;
 	font: .65em arial, verdana, sans-serif;
 	color: white;
@@ -285,8 +279,20 @@ div {
 	width: 1062px;
 	height: 175px;
 	position: relative;
-	top: -50px;
 }
+
+.row-odd ,
+.row-even {
+	width: 1062px;
+	height: 175px;
+	clear: both;
+}
+
+.row-even{
+	background: url(/img/row-shading.png);
+}
+
+/*
 .row-odd {
 	width: 1062px;
 	height: 175px;
@@ -310,6 +316,7 @@ div {
 	opacity:0.4;
 	z-index: 1;
 }
+*/
 .clear {
 	clear: both;
 }
@@ -340,9 +347,160 @@ div {
 	border-top: 1px white dashed;
 	border-bottom: 1px white dashed;
 	border-color: red
-	}
+}
 .KegImage {
 	border-top: 1px white dashed;
 	border-bottom: 1px white dashed;
 	border-color: red
-	}
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+.IBUimage{
+	
+}
+
+.ibu-container{
+	position: relative;
+	height: 100px;
+	margin:8px 0 0 8px;
+}
+
+.ibu-indicator{
+	position: relative;
+	height:29px;
+	width:23px;
+	background: url(/img/ibu-new/empty.png) no-repeat bottom left;
+}
+.ibu-indicator .ibu-full{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background: url(/img/ibu-new/full.png) no-repeat bottom left;
+}
+
+.ibu-indicator.ibu-element{
+	position: absolute;
+}
+.ibu-indicator.ibu-element-0{
+	top: 5px;
+	left: 35px;
+}
+.ibu-indicator.ibu-element-1{
+	top: 5px;
+	left: 55px;
+}
+.ibu-indicator.ibu-element-2{
+	top: 5px;
+	left: 75px;
+}	
+.ibu-indicator.ibu-element-3{	
+	top: 32px;
+	left: 25px;
+}
+.ibu-indicator.ibu-element-4{	
+	top: 32px;
+	left: 45px;
+}
+.ibu-indicator.ibu-element-5{	
+	top: 32px;
+	left: 65px;
+}
+.ibu-indicator.ibu-element-6{	
+	top: 32px;
+	left: 85px;
+}
+.ibu-indicator.ibu-element-7{
+	top: 59px;
+	left: 35px;
+}
+.ibu-indicator.ibu-element-8{
+	top: 59px;
+	left: 55px;
+}
+.ibu-indicator.ibu-element-9{
+	top: 59px;
+	left: 75px;
+}	
+
+.ibu-max{
+	position: absolute;
+	top: -5px;
+	left: 35px;
+}
+	
+.ABVimage{
+	position: relative;
+	height: 100px;
+	padding: 5px 0 10px;
+}	
+	
+.abv-indicator{
+	display: inline-block;
+
+	position: relative;
+	height:100px;
+	width:55px;
+	background: url(/img/abv-new/empty.png) no-repeat bottom left;
+	margin: 2px;
+}
+
+.abv-indicator .abv-full{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background: url(/img/abv-new/full.png) no-repeat bottom left;
+}
+
+.abv-max{
+	position: absolute;
+	bottom: 8px;
+	left: 15px;
+}
+	
+.KegImage{
+	height: 100px;
+	padding: 5px 0 10px;
+}	
+	
+.keg-indicator{
+	display: inline-block;
+
+	position: relative;
+	height:100px;
+	width:67px;
+	background: url(/img/keg-new/empty.png) no-repeat bottom left;	
+}
+
+.keg-indicator .keg-full{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background: url(/img/keg-new/full-green.png) no-repeat bottom left;
+}
+
+.keg-indicator .keg-red{
+	background-image: url(/img/keg-new/full-red.png);
+}
+
+.keg-indicator .keg-orange{
+	background-image: url(/img/keg-new/full-orange.png);
+}
+
+.keg-indicator .keg-yellow{
+	background-image: url(/img/keg-new/full-yellow.png);
+}
+
+.keg-indicator .keg-green{
+	background-image: url(/img/keg-new/full-green.png);
+}
+	
