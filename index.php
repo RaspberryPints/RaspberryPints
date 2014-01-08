@@ -52,16 +52,19 @@
         	<!-- Heade Bar with Logo and Date -->
             <div class="header clearfix">
                 <div class="HeaderLeft">
-                    <img src="img/cryptid.png" height="100" alt="">
+                    <img src="img/bannerlogo.png" height="100" alt="">
                 </div>
                 <div class="HeaderCenter">
                     <h1 id="HeaderTitle">BEERS ON TAP</h1>
                 </div>
                 <div class="HeaderRight">
                     <br>
+					
                     <?php echo date('l'); ?>
-                    <br>
-                    <?php echo date('F jS, Y'); ?>
+                    
+                    <?php echo date('F jS Y'); ?><br />
+					<?php echo date("g:i a"); ?>
+					
                     <!--
                     <?php
                         $date=getdate(date("U"));
@@ -71,10 +74,10 @@
                 </div>
             </div>
             <!-- End Header Bar -->
-             <!-- Begin Title Bar -->	
+            <!-- Begin Title Bar -->	
             <div class="TitleBarWrapper clearfix">
 			<div class="TitleBarTap LeadEdge">
-		         Tap &nbsp; <hr># &nbsp;
+		         Tap # &nbsp;
 		        </div>
                 <div class="TitleBarSRM">
                 	GRAVITY<hr>COLOR
@@ -98,11 +101,13 @@
 				for($i = 0; $i < count($beers); $i++)
 				{
 			?>
+
 			<div class="BeerWrapper clearfix <?php if($i%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beers[$i]['id']; ?>">
-			<div class="TapColumn clearfix">
+						<div class="TapColumn clearfix">
+						
                 <div class="TapNum">
                      <?php echo $beers[$i]['tapnumber']; ?>
-			    </div>
+				</div>
 			</div>
 				<div class="SRMcolumn  clearfix">
                     <h3><?php echo $beers[$i]['gravity']; ?> OG</h3>
