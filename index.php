@@ -71,9 +71,12 @@
                 </div>
             </div>
             <!-- End Header Bar -->
-            <!-- Begin Title Bar -->	
+             <!-- Begin Title Bar -->	
             <div class="TitleBarWrapper clearfix">
-                <div class="TitleBarSRM LeadEdge">
+			<div class="TitleBarTap LeadEdge">
+		         Tap &nbsp; <hr># &nbsp;
+		        </div>
+                <div class="TitleBarSRM">
                 	GRAVITY<hr>COLOR
                 </div>
                 <div class="TitleBarIBU">
@@ -96,6 +99,11 @@
 				{
 			?>
 			<div class="BeerWrapper clearfix <?php if($i%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beers[$i]['id']; ?>">
+			<div class="TapColumn clearfix">
+                <div class="TapNum">
+                     <?php echo $beers[$i]['tapnumber']; ?>
+			    </div>
+			</div>
 				<div class="SRMcolumn  clearfix">
                     <h3><?php echo $beers[$i]['gravity']; ?> OG</h3>
                         <?php
