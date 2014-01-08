@@ -76,33 +76,33 @@
 		<div class="TitleBarRow">
 			
 			<div class="TitleBarSRM">
-			GRAVITY
-			<hr>
-			COLOR
+				GRAVITY
+				<hr>
+				COLOR
 			</div>
 
 			<div class="TitleBarIBU">
-			BALANCE
-			<hr>
-			BITTERNESS
+				BALANCE
+				<hr>
+				BITTERNESS
 			</div>
 			
 			<div class="TitleBarBeerName">
-			BEER NAME &nbsp; / &nbsp; STYLE
-			<hr>
-			TASTING NOTES
+				BEER NAME &nbsp; / &nbsp; STYLE
+				<hr>
+				TASTING NOTES
 			</div>
 			
 			<div class="TitleBarABV">
-			CALORIES
-			<hr>
-			ALCOHOL
+				CALORIES
+				<hr>
+				ALCOHOL
 			</div>
 
 			<div class="TitleBarKeg">
-			POURED
-			<hr>
-			REMAINING
+				POURED
+				<hr>
+				REMAINING
 			</div>
 		</div>
 		
