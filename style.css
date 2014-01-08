@@ -84,7 +84,6 @@ img {
 	width:98%;
 	height:60px;
 	background-color: rgba(153,153,153,.3);
-	padding:1%;
 	margin-bottom:10px;
 }
 
@@ -145,21 +144,19 @@ img {
 }
 
 .TapNum {
-color:white;
-padding: 11px;
-text-align: left;
+text-align: center;
 float: left;
+height: 50px; 
+width:50px;
 }
 
 /* Indivual Row Styles for Beers */
 .BeerWrapper{
 	width:98%;
-	min-height:100px;
+	min-height:95px;
 	height:auto !important;
-	height:100px;
+	height:95px;
 	background-color: rgba(153,153,153,.3);
-	padding:5px 1% 5px 1%;
-	margin-bottom:5px;
 }
 
 .BeerWrapper div{
