@@ -52,16 +52,12 @@
         	<!-- Heade Bar with Logo and Date -->
             <div class="header clearfix">
                 <div class="HeaderLeft">
-                    <img src="img/bannerlogo.png" height="100" alt="">
+                    <img src="img/cryptid.png" height="100" alt="">
                 </div>
                 <div class="HeaderCenter">
                     <h1 id="HeaderTitle">BEERS ON TAP</h1>
                 </div>
                 <div class="HeaderRight">
-                    <br>
-					
-                    <?php echo date('l'); ?>
-                    
                     <?php echo date('F jS Y'); ?><br />
 					<?php echo date("g:i a"); ?>
 					
@@ -103,12 +99,11 @@
 			?>
 
 			<div class="BeerWrapper clearfix <?php if($i%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beers[$i]['id']; ?>">
-						<div class="TapColumn clearfix">
-						
-                <div class="TapNum">
-                     <?php echo $beers[$i]['tapnumber']; ?>
-				</div>
-			</div>
+						<div class="TapColumn clearfix">	
+                            <div class="TapNum">
+                                  <?php echo $beers[$i]['tapnumber']; ?>
+				            </div>
+			            </div>
 				<div class="SRMcolumn  clearfix">
                     <h3><?php echo $beers[$i]['gravity']; ?> OG</h3>
                         <?php
