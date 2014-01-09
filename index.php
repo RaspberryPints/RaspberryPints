@@ -52,7 +52,7 @@
         	<!-- Heade Bar with Logo and Date -->
             <div class="header clearfix">
                 <div class="HeaderLeft">
-                    <img src="img/cryptid.png" height="100" alt="">
+                   <a href="admin"><img src="img/cryptid.png" height="100" alt=""></a>
                 </div>
                 <div class="HeaderCenter">
                     <h1 id="HeaderTitle">BEERS ON TAP</h1>
@@ -143,7 +143,7 @@
                         if ($beers[$i]['abv'] > 10)
                             echo '<img src="img/abv/offthechart.png" height="100" alt=""><br>';
                         else
-                            echo '<img src="img/abv/'.(round(($beers[$i]['abv']), -1, PHP_ROUND_HALF_UP)/2).'.png" height="100" alt=""><br>';
+                            echo '<img src="img/abv/'.(round(($beers[$i]['abv']*20*2), -1, PHP_ROUND_HALF_UP)/2).'.png"  height="100" alt=""><br>';
                         ?>
                         <h2><?php echo $beers[$i]['abv']."%"; ?> ABV</h2>
                 </div>
