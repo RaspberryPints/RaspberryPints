@@ -45,7 +45,7 @@
 
 		<!-- Set location of Cascading Style Sheet -->
 		<link rel="stylesheet" type="text/css" href="style.css">
-	</head>
+	</head> 
 
 	<body>
     	<div class="bodywrapper">
@@ -101,7 +101,7 @@
 			<div class="BeerWrapper clearfix <?php if($i%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beers[$i]['id']; ?>">
 						<div class="TapColumn clearfix">	
                             <div class="TapNum">
-                                  <?php echo $beers[$i]['tapnumber']; ?>
+                                <br /> <br /><span class="tapcircle"><?php echo $beers[$i]['tapnumber']; ?></span>
 				            </div>
 			            </div>
 				<div class="SRMcolumn  clearfix">
