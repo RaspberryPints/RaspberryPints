@@ -85,6 +85,7 @@ img {
 	height:60px;
 	background-color: rgba(153,153,153,.3);
 	margin-bottom:10px;
+	padding-top: 3px;
 }
 
 .TitleBarWrapper div{
@@ -104,6 +105,7 @@ img {
 	height:100%;
 	width: 8%;
 	text-align:center;
+
 }
 
 .TitleBarIBU, .IBUcolumn{
@@ -148,6 +150,20 @@ text-align: center;
 float: left;
 height: 50px; 
 width:50px;
+}
+
+span.tapcircle {
+  background: #cccccc;
+  border-radius: 0.8em;
+  -moz-border-radius: 0.8em;
+  -webkit-border-radius: 0.8em;
+  color: #ffffff;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1.6em;
+  margin-right: 5px;
+  text-align: center;
+  width: 1.6em; 
 }
 
 /* Indivual Row Styles for Beers */
