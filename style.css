@@ -5,7 +5,9 @@ body {
 	background-repeat:no-repeat;
 	/*overflow: hidden;*/
 	font: 1.5em Gerorgia, arial, verdana, sans-serif;
+	margin:5px;
 }
+
 hr {
     border: 0;
     height: 1px;
@@ -18,6 +20,7 @@ hr {
     background-image:     -ms-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
     background-image:      -o-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
 }
+
 h1{
 	margin: 0;
 	font: Georgia;
@@ -35,23 +38,22 @@ img {
 	margin-right: auto;
 
 }
-	/* Uncomment to Debug div Nesting
-div {
-	border-left: 1px white dashed;
-	border-right: 1px white dashed;
-	border-top: 1px white dashed;
-	border-bottom: 1px white dashed;
-	border-color: yellow
+
+.bodywrapper
+{
+	width:100%;
+	height:100%;
 }
-	End of Debug */
+
+/* Header Styles */
 .header {
-	width: 1062px;
-	height: 100px;
-	-webkit-margin-after: -15px;
-	display:table;
+	width: 100%;
+	height:100px;
+	margin-bottom:10px;
 }
 .HeaderLeft {
-	width: 310px;
+	width: 25%;
+	height:100px;
 	float: left;
 	font: .85em Georgia;
 	color: white;
@@ -59,22 +61,24 @@ div {
 	text-align: left;
 }
 .HeaderCenter {
-	width:436px;
+	width:50%;
+	height:100px;
 	text-align:center;
 	float: left;
 	font-size: 1em;
-	-webkit-margin-before: 20px;
 	font: 1em Georgia;
 	color: white;
 }
+
 .HeaderRight {
-	width: 310px;
+	width:25%;
 	float: right;
 	font: .85em Georgia;
 	color: white;
 	font-weight: bold;
 	text-align: right;
 }
+<<<<<<< HEAD
 .TitleBarRow {
 	width: 1062px;
 	height: 46px;
@@ -105,11 +109,26 @@ div {
 	position: relative;
 	z-index: 2;
 	float: left;
+=======
+
+/* Title Bar and Beer Bar Styles */
+.TitleBarWrapper{
+	width:98%;
+	height:60px;
+	background-color: rgba(153,153,153,.3);
+	padding:1%;
+	margin-bottom:10px;
+}
+
+.TitleBarWrapper div{
+	height:55px;
+>>>>>>> CSS, SQL Change
 	font: .65em arial, verdana, sans-serif;
 	color: white;
 	text-align: center;
 	font-weight: bold;
 	font-style:italic;
+<<<<<<< HEAD
 }
 .TitleBarBeerName {
 	height: 46px;
@@ -117,13 +136,12 @@ div {
 	padding-top: 2px;
 	position: relative;
 	z-index: 2;
+=======
+>>>>>>> CSS, SQL Change
 	float: left;
-	font: .65em arial, verdana, sans-serif;
-	color: white;
-	text-align: center;
-	font-weight: bold;
-	font-style:italic;
+	
 }
+<<<<<<< HEAD
 .TitleBarABV {
 	height: 46px;
 	width: 140px;
@@ -151,130 +169,115 @@ div {
 	text-align: center;
 	font-weight: bold;
 	font-style:italic;
+=======
+
+.TitleBarSRM, .SRMcolumn{
+	min-height:100%;
+	height:auto !important;
+	height:100%;
+	width: 15%;
+	text-align:center;
 }
-.SRMcolumn {
-	width: 110px;
-	float: left;
-	display:inline-block;
-	font: 1.8em Georgia;
-	text-align: center;
+
+.TitleBarIBU, .IBUcolumn{
+	min-height:46px;
+	height:auto !important;
+	height:46px;
+	width: 14%;
+	text-align:center;
+>>>>>>> CSS, SQL Change
 }
-.OGnumber h3 {
-	font: .4em Georgia;
- 	-webkit-margin-before: 5px;
-	-webkit-margin-after: 5px;
+.TitleBarBeerName, .BeerNameColumn{
+	min-height:46px;
+	height:auto !important;
+	height:46px;
+	width: 40%;
 }
-.SRMimage img {
-	-webkit-margin-before: 0px;
-	-webkit-margin-after: 0px;
+.TitleBarABV, .ABVcolumn, .KCALnumber{
+	min-height:46px;
+	height:auto !important;
+	height:46px;
+	width: 14%;
+	text-align:center;
 }
-.SRMnumber h2 {
-	font: .5em Georgia;
-	-webkit-margin-before: 0px;
-	-webkit-margin-after: 0px;
+.TitleBarKeg, .KegColumn{
+	min-height:46px;
+	height:auto !important;
+	height:46px;
+	width: 15%;
+	text-align:center;
 }
-.IBUcolumn {
-	width: 140px;
-	float: left;
-	display:inline-block;
-	font: 1.8em Georgia;
-	text-align: center;
+
+.TitleBarIBU, .IBUcolumn, .TitleBarABV, .ABVcolumn{
 	border-left: 1px white dashed;
 	border-right: 1px white dashed;
 }
-.BUGUnumber h3 {
-	font: .4em Georgia;
+
+/* Indivual Row Styles for Beers */
+.BeerWrapper{
+	width:98%;
+	min-height:100px;
+	height:auto !important;
+	height:100px;
+	background-color: rgba(153,153,153,.3);
+	padding:5px 1% 5px 1%;
+	margin-bottom:5px;
+}
+
+.BeerWrapper div{
+	min-height:50px;
+	height:auto !important;
+	height:50px;
+	color: white;
+	float: left;
+}
+
+.BeerWrapper div h3{
+	font: .8em Georgia;
 	-webkit-margin-before: 5px;
 	-webkit-margin-after: 5px;
+	text-align:center;
 }
-.IBUimage img {
+
+.BeerWrapper div h2{
+	font: 1em Georgia;
 	-webkit-margin-before: 0px;
 	-webkit-margin-after: 0px;
+	text-align:center;
 }
-.IBUnumber h2 {
-	font: .5em Georgia;
-	-webkit-margin-before: 0px;
-	-webkit-margin-after: 0px;
+
+.BeerWrapper div img
+{
+	margin: 10px 0 10px 0;
 }
-.BeerNameColumn {
-	width: 510px;
-	padding-left: 10px;
-    padding-right: 10px;
-	float:left;
+
+.Details
+{
+	width:96%;
+	height:96%;
+	margin:2%;
+	text-align: left;
 }
-.BeerName {
-	display:block;
-	height: 40px;
-	width: 100%;
+
+
+.Details h1{
 	color: white;
-	font: .7em Georgia;
-	font-weight: bold;
-	word-wrap: break-word;
-	text-align: left;
-}
-.BeerStyle {
-	font: .6em Georgia;
-	color: #A0A0A0;
+	opacity:1;
 	display:block;
-	height: 27px;
-	text-align: left;
+	font: 1.5em Georgia;
+	font-weight: bold;
 }
-.TastingNotes {
-	display:table;
-	height: 95px;
+.Details .subhead{
+	width:100%;
+	font: .9em Georgia;
+	text-align:left;
+}
+.Details p{
 	font: .8em Georgia;
 	color: #A0A0A0;
-    -webkit-margin-before: 5px;
-    -webkit-margin-after: 0px;
+	margin-top:20px;
 }
-.TastingNotes div {
-	display: table-cell;
-	vertical-align: middle;
-	padding-bottom: 10px;
-}
-.ABVcolumn {
-	width: 140px;
-	float:left;
-	border-left: 1px white dashed;
-	border-right: 1px white dashed;
-	text-align: center;
-	font: 1.8em Georgia;
-}
-.KCALnumber h3 {
-	font: .4em Georgia;
-	-webkit-margin-before: 5px;
-	-webkit-margin-after: 5px;
-}
-.ABVimage img {
-	-webkit-margin-before: 0px;
-	-webkit-margin-after: 0px;
-}
-.ABVnumber h2 {
-	font: .5em Georgia;
-	-webkit-margin-before: 0px;
-	-webkit-margin-after: 0px;
-}
-.KegColumn {
-	width: 125px;
-	float:left;
-	text-align: center;
-	font: 1.8em Georgia;
-	color: #A0A0A0;
-}
-.PouredNumber h3 {
-	font: .4em Georgia;
-	-webkit-margin-before: 5px;
-	-webkit-margin-after: 5px;
-}
-.KegImage img {
-	-webkit-margin-before: 0px;
-	-webkit-margin-after: 0px;
-}
-.LeftNumber h2 {
-	font: .5em Georgia;
-	-webkit-margin-before: 0px;
-	-webkit-margin-after: 0px;
-}
+
 .row-1st {
 	width: 1062px;
 	height: 175px;
@@ -321,12 +324,22 @@ div {
 	clear: both;
 }
 
+.altrow{
+	background:none;
+}
 
+.clearfix:after {
+   content: " "; /* Older browser do not support empty content */
+   visibility: hidden;
+   display: block;
+   height: 0;
+   clear: both;
+}
 
-/* EVERYTHING BELOW THIS LINE IS FOR DESIGN AND DEBUG PURPOSES ONLY */
+/*EVERYTHING BELOW THIS LINE IS FOR DESIGN AND DEBUG PURPOSES ONLY */
 /* THESE ENTRIES WILL BE REMOVED IN THE PRODUCTION VERSION */
 
-
+/*
 
 .SRMimage {
 	border-top: 1px white dashed;
@@ -352,6 +365,7 @@ div {
 	border-top: 1px white dashed;
 	border-bottom: 1px white dashed;
 	border-color: red
+<<<<<<< HEAD
 }
 	
 	
@@ -504,3 +518,8 @@ div {
 	background-image: url(/img/keg-new/full-green.png);
 }
 	
+=======
+	}
+	*/
+	
+>>>>>>> CSS, SQL Change
