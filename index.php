@@ -116,13 +116,31 @@
                 </div>
                 <div class="IBUcolumn  clearfix">
                     <h3><?php echo $beers[$i]['balance']; ?> BU:GU</h3>
-                        <?php
-                        if ($beers[$i]['ibu'] > 100)
-                            echo "<img src=\"img/ibu/", "offthechart", ".png\" height=\"100\" alt=\"\"><br>";
-                        else
-                            echo "<img src=\"img/ibu/", $beers[$i]['ibu'], ".png\" height=\"100\" alt=\"\"><br>";
-                        ?>
-                        <h2><?php echo $beers[$i]['ibu']; ?> IBU</h2>
+					
+					<div class="ibu-container">
+						<?php
+							$numHops = 0;
+							$remaining = $beers[$i]['ibu'];
+							for( $h = 0; $h < 10; $h++){                                                
+								if( $remaining < 10 ){
+									$level = $remaining;
+								}else{
+									$level = 10;
+								}
+								?><div class="ibu-indicator ibu-element ibu-element-<?php echo $h ?>"><div class="ibu-full" style="height:<?php echo $level * 10; ?>%"></div></div><?php
+								
+								$remaining = $remaining - $level;
+								$numHops++;
+							}
+							
+							if( $remaining > 0 ){
+								?><img class="ibu-max" src="/img/ibu-new/offthechart.png" /><?php
+							}
+						?>
+					</div>
+					
+					
+                    <h2><?php echo $beers[$i]['ibu']; ?> IBU</h2>
                 </div>
                 <div class="BeerNameColumn clearfix">
                 	<div class="Details">
@@ -140,25 +158,48 @@
                 <div class="ABVcolumn">
                     <h3><?php echo $beers[$i]['calories']; ?> kCal</h3>
                         <?php
-                        if ($beers[$i]['abv'] > 10)
-                            echo '<img src="img/abv/offthechart.png" height="100" alt=""><br>';
-                        else
-                            echo '<img src="img/abv/'.(round(($beers[$i]['abv']*20*2), -1, PHP_ROUND_HALF_UP)/2).'.png"  height="100" alt=""><br>';
-                        ?>
+							$numCups = 0;
+							$remaining = round(($beers[$i]['abv']*20*2), -1, PHP_ROUND_HALF_UP)/2;
+							do{                                                                
+									if( $remaining < 100 ){
+											$level = $remaining;
+									}else{
+											$level = 100;
+									}
+									?><div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div><?php                                                                
+									
+									$remaining = $remaining - $level;
+									$numCups++;
+							}while($remaining > 0 && $numCups < 2);
+							
+							if( $remaining > 0 ){
+									?><img class="abv-max" src="/img/abv-new/offthechart.png" /><?php
+							}
+						?>
                         <h2><?php echo $beers[$i]['abv']."%"; ?> ABV</h2>
                 </div>
                 <div class="KegColumn">
                     <h3>
 						<?php echo $beers[$i]['poured']; ?> poured
                     </h3>
-                        <?php
-                        if ($beers[$i]['poured'] < 0)
-                            echo "<img src=\"img/keg/0.png\" height=\"100\" alt=\"\"><br>";
-                        elseif ($beers[$i]['poured'] > 100)
-                            echo "<img src=\"img/keg/100.png\" height=\"100\" alt=\"\"><br>";
-                        else
-                            echo "<img src=\"img/keg/", (round(($beers[$i]['poured']), -1, PHP_ROUND_HALF_UP)), ".png\" height=\"100\" alt=\"\"><br>";
-                        ?>
+                        <?php 
+							$total = $beers[$i]['poured'] + $beers[$i]['remaining'];
+							$percentRemaining = $beers[$i]['remaining'] / $total * 100;
+							$kegImgClass = "";
+							if( $percentRemaining < 15 )
+								$kegImgClass = "keg-red";
+							else if( $percentRemaining < 25 )
+								$kegImgClass = "keg-orange";
+							else if( $percentRemaining < 45 )
+								$kegImgClass = "keg-yellow";
+							else
+								$kegImgClass = "keg-green"
+						?>
+						<div class="keg-indicator"><div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%"></div></div>
+				
+						
+						
+						
                         <h2><?php echo $beers[$i]['remaining']; ?> left</h2>
                 </div>
           	</div>
