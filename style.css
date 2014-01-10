@@ -84,7 +84,6 @@ img {
 	width:98%;
 	height:60px;
 	background-color: rgba(153,153,153,.3);
-	margin-bottom:10px;
 	padding-top: 3px;
 }
 
@@ -314,7 +313,9 @@ span.tapcircle {
 .ibu-container{
 	position: relative;
 	height: 100px;
-	margin:8px 0 0 30px;
+	width: 125px;
+	margin:8px 0 8px 50%;
+	left: -65px
 }
 
 .ibu-indicator{
@@ -384,7 +385,9 @@ span.tapcircle {
 .ABVimage{
 	position: relative;
 	height: 100px;
-	padding: 5px 0 10px;
+	width: 125px;
+	margin: 8px 0 8px 50%;
+	left: -65px;
 }	
 	
 .abv-indicator{
@@ -407,8 +410,8 @@ span.tapcircle {
 
 .abv-max{
 	position: absolute;
-	bottom: 8px;
-	left: 15px;
+	bottom: -12px;
+	left: 8px;
 }
 	
 .KegImage{

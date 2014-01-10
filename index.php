@@ -98,7 +98,7 @@
 				{
 			?>
 
-			<div class="BeerWrapper clearfix <?php if($i%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beers[$i]['id']; ?>">
+			<div class="BeerWrapper clearfix <?php if($i%2 == 0){ echo 'altrow'; }?>" id="<?php echo $beers[$i]['id']; ?>">
 						<div class="TapColumn clearfix">	
                             <div class="TapNum">
                                 <br /> <br /><span class="tapcircle"><?php echo $beers[$i]['tapnumber']; ?></span>
@@ -157,6 +157,7 @@
                 </div>
                 <div class="ABVcolumn">
                     <h3><?php echo $beers[$i]['calories']; ?> kCal</h3>
+					<div class="ABVimage">
                         <?php
 							$numCups = 0;
 							$remaining = round(($beers[$i]['abv']*20*2), -1, PHP_ROUND_HALF_UP)/2;
@@ -176,7 +177,8 @@
 									?><img class="abv-max" src="/img/abv-new/offthechart.png" /><?php
 							}
 						?>
-                        <h2><?php echo $beers[$i]['abv']."%"; ?> ABV</h2>
+					</div>
+                    <h2><?php echo $beers[$i]['abv']."%"; ?> ABV</h2>
                 </div>
                 <div class="KegColumn">
                     <h3>
@@ -184,7 +186,11 @@
                     </h3>
                         <?php 
 							$total = $beers[$i]['poured'] + $beers[$i]['remaining'];
-							$percentRemaining = $beers[$i]['remaining'] / $total * 100;
+							if( $total > 0 ){
+								$percentRemaining = $beers[$i]['remaining'] / $total * 100;
+							}else{
+								$percentRemaining = 0;
+							}
 							$kegImgClass = "";
 							if( $percentRemaining < 15 )
 								$kegImgClass = "keg-red";
