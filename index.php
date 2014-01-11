@@ -129,7 +129,7 @@
 										}
 										
 										if( $remaining > 0 ){
-											?><img class="ibu-max" src="/img/ibu-new/offthechart.png" /><?php
+											?><img class="ibu-max" src="img/ibu-new/offthechart.png" /><?php
 										}
 									?>
 								</div>								
@@ -159,7 +159,7 @@
 										}while($remaining > 0 && $numCups < 2);
 										
 										if( $remaining > 0 ){
-												?><img class="abv-max" src="/img/abv-new/offthechart.png" /><?php
+												?><img class="abv-max" src="img/abv-new/offthechart.png" /><?php
 										}
 									?>
 								</div>
