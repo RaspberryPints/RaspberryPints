@@ -79,80 +79,60 @@ img {
 	text-align: right;
 }
 
-/* Title Bar and Beer Bar Styles */
-.TitleBarWrapper{
-	width:98%;
+table{
+	border-collapse:collapse;
+}
+
+table th,
+table td{
+	border-left: 1px white dashed;
+	padding:5px 10px;
+	text-align: center;
+	color: white;
+}
+
+table th:first-child,
+table td:first-child{
+	border-left: none;
+}
+
+table thead{
 	height:60px;
 	background-color: rgba(153,153,153,.3);
 	padding-top: 3px;
 }
 
-.TitleBarWrapper div{
+table thead th{
 	height:55px;
 	font: .65em arial, verdana, sans-serif;
 	color: white;
-	text-align: center;
 	font-weight: bold;
 	font-style:italic;
-	float: left;
-	
+	vertical-align: top;
 }
 
-.TitleBarSRM, .SRMcolumn, .TAPcolumn, .TitleBarTAP{
-	min-height:100%;
-	height:auto !important;
-	height:100%;
+table .srm,
+table .tap-num{
 	width: 8%;
-	text-align:center;
-
 }
 
-.TitleBarIBU, .IBUcolumn{
-	min-height:46px;
-	height:auto !important;
-	height:46px;
+table .ibu{
 	width: 14%;
-	text-align:center;
 }
-.TitleBarBeerName, .BeerNameColumn{
-	min-height:46px;
-	height:auto !important;
-	height:46px;
+
+table .name{
 	width: 44%;
+	text-align: left;
 }
-.TitleBarABV, .ABVcolumn, .KCALnumber{
-	min-height:46px;
-	height:auto !important;
-	height:46px;
+table .abv{
 	width: 14%;
-	text-align:center;
 }
-.TitleBarKeg, .KegColumn{
-	min-height:46px;
-	height:auto !important;
-	height:46px;
+table .keg{
 	width: 15%;
-	text-align:center;
-}
-
-.TitleBarIBU, .IBUcolumn, .TitleBarABV, .ABVcolumn{
-	border-left: 1px white dashed;
-	border-right: 1px white dashed;
-}
-
-.TitleBarSRM, .SRMcolumn {
-	border-left: 1px white dashed;
-}
-
-.TapNum {
-text-align: center;
-float: left;
-height: 50px; 
-width:50px;
 }
 
 span.tapcircle {
-  background: #888888;
+  background: #cccccc;
   border-radius: 0.8em;
   -moz-border-radius: 0.8em;
   -webkit-border-radius: 0.8em;
@@ -165,149 +145,43 @@ span.tapcircle {
   width: 1.6em; 
 }
 
-/* Indivual Row Styles for Beers */
-.BeerWrapper{
-	width:98%;
-	min-height:95px;
-	height:auto !important;
-	height:95px;
-	background-color: rgba(153,153,153,.3);
-}
 
-.BeerWrapper > div{
-	min-height:50px;
-	height:auto !important;
-	height:50px;
-	color: white;
-	float: left;
-}
-
-.BeerWrapper div h3{
+table h3{
 	font: .8em Georgia;
 	-webkit-margin-before: 5px;
 	-webkit-margin-after: 5px;
 	text-align:center;
 }
 
-.BeerWrapper div h2{
+table h2{
 	font: 1em Georgia;
 	-webkit-margin-before: 0px;
 	-webkit-margin-after: 0px;
 	text-align:center;
 }
 
-.BeerWrapper div img
-{
-	margin: 10px 0 10px 0;
-}
-
-.Details
-{
-	width:96%;
-	height:96%;
-	margin:2%;
-	text-align: left;
-}
-
-
-.Details h1{
+table h1{
 	color: white;
 	opacity:1;
 	display:block;
 	font: 1.5em Georgia;
 	font-weight: bold;
 }
-.Details .subhead{
+table .subhead{
 	width:100%;
 	font: .9em Georgia;
 	text-align:left;
 }
-.Details p{
+table p{
 	font: .8em Georgia;
 	color: #A0A0A0;
 	margin-top:20px;
 }
 
-.row-1st {
-	width: 1062px;
-	height: 175px;
-	position: relative;
-	top: -50px;
-}
-.row-odd {
-	width: 1062px;
-	height: 175px;
-}
-.row-even {
-	position: relative;
-	width: 1062px;
-	height: 175px;
-}
-.row-even-a {
-	position: absolute;
-	width: 1062px;
-	height: 175px;
-	z-index: 2;
-}
-.Shading {
-	position: absolute;
-	width: 1062px;
-	height: 175px;
-	background: gray;
-	opacity:0.4;
-	z-index: 1;
-}
-.clear {
-	clear: both;
-}
+
 
 .altrow{
-	background:none;
-}
-
-.clearfix:after {
-   content: " "; /* Older browser do not support empty content */
-   visibility: hidden;
-   display: block;
-   height: 0;
-   clear: both;
-}
-
-/*EVERYTHING BELOW THIS LINE IS FOR DESIGN AND DEBUG PURPOSES ONLY */
-/* THESE ENTRIES WILL BE REMOVED IN THE PRODUCTION VERSION */
-
-/*
-
-.SRMimage {
-	border-top: 1px white dashed;
-	border-bottom: 1px white dashed;
-	border-color: red
-}
-.IBUimage {
-	border-top: 1px white dashed;
-	border-bottom: 1px white dashed;
-	border-color: red
-}
-.BeerStyle {
-	border-top: 1px white dashed;
-	border-bottom: 1px white dashed;
-	border-color: red
-}
-.ABVimage {
-	border-top: 1px white dashed;
-	border-bottom: 1px white dashed;
-	border-color: red
-	}
-.KegImage {
-	border-top: 1px white dashed;
-	border-bottom: 1px white dashed;
-	border-color: red
-	}
-	*/
-	
-
-.IBUimage{
-	
+	background-color: rgba(153,153,153,.3);
 }
 
 .ibu-container{
@@ -382,7 +256,7 @@ span.tapcircle {
 	left: 35px;
 }
 	
-.ABVimage{
+.abv-container{
 	position: relative;
 	height: 100px;
 	width: 125px;
@@ -392,7 +266,6 @@ span.tapcircle {
 	
 .abv-indicator{
 	display: inline-block;
-
 	position: relative;
 	height:100px;
 	width:55px;
@@ -410,7 +283,7 @@ span.tapcircle {
 
 .abv-max{
 	position: absolute;
-	bottom: -12px;
+	bottom: -2px;
 	left: 8px;
 }
 	
