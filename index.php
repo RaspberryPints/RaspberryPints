@@ -1,5 +1,5 @@
 <?php
-	require("includes/php/config.php");
+	require("includes/config.php");
 	
 	//This can be used to choose between CSV or MYSQL DB
 	$db = true;
