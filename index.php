@@ -74,22 +74,22 @@
 			<table>
 				<thead>
 					<tr>
-						<th>
+						<th class="tap-num">
 							Tap #
 						</th>
-						<th>
+						<th class="srm">
 							GRAVITY<hr>COLOR
 						</th>
-						<th>
+						<th class="ibu">
 							BALANCE<hr>BITTERNESS
 						</th>
-						<th>
+						<th class="name">
 							BEER NAME &nbsp; / &nbsp; STYLE<hr>TASTING NOTES
 						</th>
-						<th>				
+						<th class="abv">				
 							CALORIES<hr>ALCOHOL
 						</th>
-						<th>
+						<th class="keg">
 							POURED<hr>REMAINING
 						</th>
 					</tr>
