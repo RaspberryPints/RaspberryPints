@@ -13,8 +13,6 @@ hr {
     height: 1px;
 	-webkit-margin-before: 2px;
 	-webkit-margin-after: 2px;
-	margin-left: 10px;
-	margin-right: 10px;
     background-image: -webkit-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
     background-image:    -moz-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
     background-image:     -ms-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
@@ -41,19 +39,19 @@ img {
 
 .bodywrapper
 {
-	width:100%;
-	height:100%;
+	width: 100%;
+	height: 100%;
 }
 
 /* Header Styles */
 .header {
 	width: 100%;
-	height:100px;
-	margin-bottom:10px;
+	height: 100px;
+	margin-bottom: 10px;
 }
 .HeaderLeft {
 	width: 25%;
-	height:100px;
+	height: 100px;
 	float: left;
 	font: .85em Georgia;
 	color: white;
@@ -61,17 +59,18 @@ img {
 	text-align: left;
 }
 .HeaderCenter {
-	width:50%;
-	height:100px;
-	text-align:center;
+	width: 50%;
+	height: 100px;
+	text-align: center;
 	float: left;
 	font-size: 1em;
 	font: 1em Georgia;
 	color: white;
+	vertical-align: middle;
 }
 
 .HeaderRight {
-	width:25%;
+	width: 25%;
 	float: right;
 	font: .85em Georgia;
 	color: white;
@@ -81,13 +80,13 @@ img {
 
 table{
 	width: 100%;
-	border-collapse:collapse;
+	border-collapse: collapse;
 }
 
 table th,
 table td{
 	border-left: 1px white dashed;
-	padding:5px 10px;
+	padding: 1px 10px;
 	text-align: center;
 	color: white;
 }
@@ -98,57 +97,52 @@ table td:first-child{
 }
 
 table thead{
-	height:60px;
 	background-color: rgba(153,153,153,.3);
-	padding-top: 3px;
+	padding: 0px;
+	margin: auto;
 }
-
 table thead th{
-	height:55px;
+	min-height:35px;
 	font: .65em arial, verdana, sans-serif;
 	color: white;
 	font-weight: bold;
-	font-style:italic;
+	font-style: italic;
 	vertical-align: top;
 }
-
-
-
-
 table .tap-num{
-	width: 75px;
+	width: 50px;
 }
 
 table .srm{
-	width: 150px;
+	width: 125px;
 }
 
 table .ibu{
-	width: 150px;
+	width: 125px;
 }
 
 table .name{
 	text-align: left;
 }
 table .abv{
-	width: 150px;
+	width: 125px;
 }
 table .keg{
 	width: 150px;
 }
 
 span.tapcircle {
-  background: #cccccc;
-  border-radius: 0.8em;
-  -moz-border-radius: 0.8em;
-  -webkit-border-radius: 0.8em;
+  background-color: rgba(153,153,153,.3);
+  border-radius: 1em;
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
   color: #ffffff;
   display: inline-block;
   font-weight: bold;
-  line-height: 1.6em;
+  line-height: 2em;
   margin-right: 5px;
   text-align: center;
-  width: 1.6em; 
+  width: 2em; 
 }
 
 
@@ -183,13 +177,9 @@ table p{
 	color: #A0A0A0;
 	margin-top:20px;
 }
-
-
-
 .altrow{
 	background-color: rgba(153,153,153,.3);
 }
-
 .ibu-container{
 	position: relative;
 	height: 100px;
@@ -197,21 +187,19 @@ table p{
 	margin:8px 0 8px 50%;
 	left: -65px
 }
-
 .ibu-indicator{
 	position: relative;
 	height:29px;
 	width:23px;
-	background: url(img/ibu-new/empty.png) no-repeat bottom left;
+	background: url(img/ibu/empty.png) no-repeat bottom left;
 }
 .ibu-indicator .ibu-full{
 	position: absolute;
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background: url(img/ibu-new/full.png) no-repeat bottom left;
+	background: url(img/ibu/full.png) no-repeat bottom left;
 }
-
 .ibu-indicator.ibu-element{
 	position: absolute;
 }
@@ -255,13 +243,11 @@ table p{
 	top: 59px;
 	left: 75px;
 }	
-
 .ibu-max{
 	position: absolute;
 	top: -5px;
 	left: 35px;
 }
-	
 .abv-container{
 	position: relative;
 	height: 100px;
@@ -269,65 +255,54 @@ table p{
 	margin: 8px 0 8px 50%;
 	left: -65px;
 }	
-	
 .abv-indicator{
 	display: inline-block;
 	position: relative;
 	height:100px;
 	width:55px;
-	background: url(img/abv-new/empty.png) no-repeat bottom left;
+	background: url(img/abv/empty.png) no-repeat bottom left;
 	margin: 2px;
 }
-
 .abv-indicator .abv-full{
 	position: absolute;
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background: url(img/abv-new/full.png) no-repeat bottom left;
+	background: url(img/abv/full.png) no-repeat bottom left;
 }
-
 .abv-max{
 	position: absolute;
 	bottom: -2px;
 	left: 8px;
 }
-	
 .KegImage{
 	height: 100px;
 	padding: 5px 0 10px;
 }	
-	
 .keg-indicator{
 	display: inline-block;
 
 	position: relative;
 	height:100px;
 	width:67px;
-	background: url(img/keg-new/empty.png) no-repeat bottom left;	
+	background: url(img/keg/empty.png) no-repeat bottom left;	
 }
-
 .keg-indicator .keg-full{
 	position: absolute;
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background: url(img/keg-new/full-green.png) no-repeat bottom left;
+	background: url(img/keg/full-green.png) no-repeat bottom left;
 }
-
 .keg-indicator .keg-red{
-	background-image: url(img/keg-new/full-red.png);
+	background-image: url(img/keg/full-red.png);
 }
-
 .keg-indicator .keg-orange{
-	background-image: url(img/keg-new/full-orange.png);
+	background-image: url(img/keg/full-orange.png);
 }
-
 .keg-indicator .keg-yellow{
-	background-image: url(img/keg-new/full-yellow.png);
+	background-image: url(img/keg/full-yellow.png);
 }
-
 .keg-indicator .keg-green{
-	background-image: url(img/keg-new/full-green.png);
+	background-image: url(img/keg/full-green.png);
 }
-	

@@ -2,7 +2,7 @@
 
 function db(){
 	$link = mysql_connect("localhost", "beer", "beer");
-	mysql_select_db("kegerface");
+	mysql_select_db("raspberrypints");
 }
 
 
