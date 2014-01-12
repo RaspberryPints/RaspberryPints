@@ -7,7 +7,6 @@ body {
 	font: 1.5em Gerorgia, arial, verdana, sans-serif;
 	margin:5px;
 }
-
 hr {
     border: 0;
     height: 1px;
@@ -18,31 +17,25 @@ hr {
     background-image:     -ms-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
     background-image:      -o-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
 }
-
 h1{
 	margin: 0;
 	font: Georgia;
 	color: #FFFFFF;
-
 }
 h2, h3, p {
 	margin: 0;
 	font: Georgia;
 	color: #A0A0A0;
-
 }
 img {
 	margin-left: auto;
 	margin-right: auto;
-
 }
-
 .bodywrapper
 {
 	width: 100%;
 	height: 100%;
 }
-
 /* Header Styles */
 .header {
 	width: 100%;
@@ -69,7 +62,6 @@ img {
 	vertical-align: middle;
 	padding-top:50px;
 }
-
 .HeaderRight {
 	width: 25%;
 	float: right;
@@ -78,25 +70,21 @@ img {
 	font-weight: bold;
 	text-align: right;
 }
-
 table{
 	width: 100%;
 	border-collapse: collapse;
 }
-
 table th,
 table td{
 	border-left: 1px white dashed;
-	padding: 1px 10px;
+	padding: 1px 5px;
 	text-align: center;
 	color: white;
 }
-
 table th:first-child,
 table td:first-child{
 	border-left: none;
 }
-
 table thead{
 	background-color: rgba(153,153,153,.3);
 	padding: 0px;
@@ -113,15 +101,12 @@ table thead th{
 table .tap-num{
 	width: 50px;
 }
-
 table .srm{
 	width: 125px;
 }
-
 table .ibu{
 	width: 125px;
 }
-
 table td.name{
 	text-align: left;
 }
@@ -131,7 +116,6 @@ table .abv{
 table .keg{
 	width: 150px;
 }
-
 span.tapcircle {
   background-color: rgba(153,153,153,.3);
   border-radius: 1em;
@@ -145,22 +129,18 @@ span.tapcircle {
   text-align: center;
   width: 2em; 
 }
-
-
 table h3{
 	font: .8em Georgia;
 	-webkit-margin-before: 5px;
 	-webkit-margin-after: 5px;
 	text-align:center;
 }
-
 table h2{
 	font: 1em Georgia;
 	-webkit-margin-before: 0px;
 	-webkit-margin-after: 0px;
 	text-align:center;
 }
-
 table h1{
 	color: white;
 	opacity:1;
