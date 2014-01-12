@@ -60,13 +60,14 @@ img {
 }
 .HeaderCenter {
 	width: 50%;
-	height: 100px;
+	height: 50px;
 	text-align: center;
 	float: left;
 	font-size: 1em;
 	font: 1em Georgia;
 	color: white;
 	vertical-align: middle;
+	padding-top:50px;
 }
 
 .HeaderRight {
