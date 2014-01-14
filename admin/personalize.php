@@ -94,6 +94,16 @@ $rows=mysql_fetch_array($result);?>
 			<input name="id" type="hidden" id="id" value="13">
 			<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
+			<?php
+			$sql="SELECT * FROM profile";
+$result=mysql_query($sql);
+
+$rows=mysql_fetch_array($result);?>
+			<form method="post" action="update_header_text.php">
+             <b>Header text</b><br />
+			<input type="text" value="<? echo $rows['header_text']; ?>" name="header_text"> &nbsp<br />
+			<input type="submit" class="btn" name="Submit" value="Submit">
+			</form>
 			
 Change Brewery logo, which also changes admin panel logo<br />
 Change tap circle color scheme <br />
