@@ -94,13 +94,14 @@ $rows=mysql_fetch_array($result);?>
 			Off:<input type="radio" value="0" name="config_value"><br />
 			<input name="id" type="hidden" id="id" value="13">
 			<input type="submit" class="btn" name="Submit" value="Submit">
-			</form>
+			</form><br />
 			<?php
 			$sql="SELECT * FROM profile";
 $result=mysql_query($sql);
 
 $rows=mysql_fetch_array($result);?>
-			<br /><form method="post" action="upload_logo.php"><br />
+<h2>Change Header Text</h2>
+			<form method="post" action="upload_logo.php"><br />
              <b>Header text</b><br />
 			<input type="text" value="<? echo $rows['header_text']; ?>" name="header_text"> &nbsp <br />
 			<input type="submit" class="btn" name="Submit" value="Submit">
@@ -108,14 +109,18 @@ $rows=mysql_fetch_array($result);?>
 			
 		<form enctype="multipart/form-data" action="update_logo.php" method="POST">
 		<br />
-		<b>Change Logo:</b> <br /><input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/><br />
+		<h2>Change Site And Admin Logo</h2><br /><input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/><br />
 		<input type="submit" class="btn" value="Upload" />
 		</form> 
 		
 		<form enctype="multipart/form-data" action="update_background.php" method="POST">
 		<br />
-		<b>Change Background:</b> <br /><input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/><br />
-		<input type="submit" class="btn" value="Upload" />
+		<h2>Change Background Image</h2><br /><input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/><br />
+		<input type="submit" class="btn" value="Upload" /><br /><br />
+		</form> 
+		<form action="restore_background.php" method="POST">
+
+		<input type="submit" class="btn" value="Restore Default Background" />
 		</form> 
             </div>
         </div>
