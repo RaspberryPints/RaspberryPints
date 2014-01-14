@@ -69,6 +69,27 @@ INSERT INTO `config` (config_name, config_value) VALUES ('showAbvCol', 1);
 INSERT INTO `config` (config_name, config_value) VALUES ('showKegCol', 1);
 
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Users`
+--
+
+CREATE TABLE `Users` (
+  `username` varchar(65) CHARACTER SET utf8 NOT NULL,
+  `password` varchar(65) CHARACTER SET utf8 NOT NULL,
+  `name` varchar(65) CHARACTER SET utf8 NOT NULL,
+  `email` varchar(65) CHARACTER SET utf8 NOT NULL,
+  KEY `UserName` (`username`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Users`
+--
+
+INSERT INTO `Users` VALUES('admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin', 'support@raspberrypints.com');
+
+
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
