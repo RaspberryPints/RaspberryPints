@@ -111,6 +111,12 @@ $rows=mysql_fetch_array($result);?>
 		<b>Change Logo:</b> <br /><input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/><br />
 		<input type="submit" class="btn" value="Upload" />
 		</form> 
+		
+		<form enctype="multipart/form-data" action="update_background.php" method="POST">
+		<br />
+		<b>Change Background:</b> <br /><input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/><br />
+		<input type="submit" class="btn" value="Upload" />
+		</form> 
             </div>
         </div>
         <div id="footer">
