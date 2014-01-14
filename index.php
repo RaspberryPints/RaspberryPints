@@ -43,7 +43,6 @@
 	} else {
 	}
 	
-		
 	$sql="SELECT * FROM profile";
 $result=mysql_query($sql);
 
@@ -67,7 +66,7 @@ $rows=mysql_fetch_array($result);
         	<!-- Header with Brewery Logo and Project Name -->
             <div class="header clearfix">
                 <div class="HeaderLeft">
-                   <a href="admin"><img src="img/brewery.png" height="100" alt=""></a>
+                   <a href="admin/admin.php"><img src="<? echo $rows['logo_url']; ?>" height="100" alt=""></a>
                 </div>
                 <div class="HeaderCenter">
                     <h1 id="HeaderTitle"><? echo $rows['header_text']; ?></h1>
