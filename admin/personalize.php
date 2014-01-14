@@ -99,11 +99,16 @@ $rows=mysql_fetch_array($result);?>
 $result=mysql_query($sql);
 
 $rows=mysql_fetch_array($result);?>
-			<form method="post" action="update_header_text.php">
+			<form method="post" action="upload_logo.php"><br />
              <b>Header text</b><br />
-			<input type="text" value="<? echo $rows['header_text']; ?>" name="header_text"> &nbsp<br />
+			<input type="text" value="<? echo $rows['header_text']; ?>" name="header_text"> &nbsp <br />
 			<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
+			
+		<form enctype="multipart/form-data" action="update_logo.php" method="POST">
+		<b>Please choose a file:</b> <br /><input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/><br />
+		<input type="submit" class="btn" value="Upload" />
+		</form> 
 			
 Change Brewery logo, which also changes admin panel logo<br />
 Change tap circle color scheme <br />
@@ -129,7 +134,7 @@ Change Background<br />
 echo mysql_result($result, 0, 'name');
 ?></div>
     	<div class="user">
-         	<a href="../"><img src="img/avatar.png" width="120" height="120" class="hoverimg" alt="Avatar" /></a>
+         	<a href="../"><img src="img/logo.png" width="120" height="120" class="hoverimg" alt="Avatar" /></a>
         </div>
 
         
@@ -151,12 +156,12 @@ echo mysql_result($result, 0, 'name');
 					<li><a href="personalize.php" title="personalize">Personalize</a></li>
                 </ul>
             </li>
-			            <li>
+			  <li>
                 <a class="expanded heading">Analytics</a>
                  <ul class="navigation">
-                    <li><a href="#" target="" title="temperature">Temperature Monitoring</a></li>
-                    <li><a href="#" title="GPT">Gallons Per Tap</a></li>
-                    <li><a href="#" title="rank">Beer Rank</a></li>
+                    <li><a href="#" target="" title="temperature">Temperature Monitoring</a>Comming soon</li>
+                    <li><a href="#" title="GPT">Gallons Per Tap</a>Comming soon</li>
+                    <li><a href="#" title="rank">Beer Rank</a>Comming soon</li>
                 </ul>
             </li>
 			            <li>
