@@ -89,7 +89,22 @@ CREATE TABLE `Users` (
 
 INSERT INTO `Users` VALUES('admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin', 'support@raspberrypints.com');
 
+-- --------------------------------------------------------
 
+--
+-- Table structure for table `profile`
+--
+
+CREATE TABLE `profile` (
+  `logo_url` varchar(255) NOT NULL,
+  `header_text` varchar(255) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `profile`
+--
+
+INSERT INTO `profile` VALUES('', 'Beers On Tap');
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
