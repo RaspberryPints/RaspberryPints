@@ -5,6 +5,7 @@ header("location:index.php");
 }
 
 require 'includes/conn.php';
+require '../includes/config_names.php';
 ?> 
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -53,6 +54,47 @@ require 'includes/conn.php';
                 <h2>Configure Your Tap List Display Settings</h2>
             </div>
             <div class="contentbox">
+			<h2>Disable Sections</h2><br /> 
+			<?php
+			$sql="SELECT * FROM config";
+$result=mysql_query($sql);
+
+$rows=mysql_fetch_array($result);?>
+<form method="post" action="update_personalize.php">
+             <b>Tap Column</b><br />
+			On:<input type="radio" value="1" name="config_value"> &nbsp
+			Off:<input type="radio" value="0" name="config_value"><br />
+			<input name="id" type="hidden" id="id" value="9">
+			<input type="submit" class="btn" name="Submit" value="Submit">
+			</form>
+			<form method="post" action="update_personalize.php">
+             <b>SRM Column</b><br />
+			On:<input type="radio" value="1" name="config_value"> &nbsp
+			Off:<input type="radio" value="0" name="config_value"><br />
+			<input name="id" type="hidden" id="id" value="10">
+			<input type="submit" class="btn" name="Submit" value="Submit">
+			</form>
+			<form method="post" action="update_personalize.php">
+             <b>IBU Column</b><br />
+			On:<input type="radio" value="1" name="config_value"> &nbsp
+			Off:<input type="radio" value="0" name="config_value"><br />
+			<input name="id" type="hidden" id="id" value="11">
+			<input type="submit" class="btn" name="Submit" value="Submit">
+			</form><form method="post" action="update_personalize.php">
+             <b>ABV Column</b><br />
+			On:<input type="radio" value="1" name="config_value"> &nbsp
+			Off:<input type="radio" value="0" name="config_value"><br />
+			<input name="id" type="hidden" id="id" value="12">
+			<input type="submit" class="btn" name="Submit" value="Submit">
+			</form>
+			<form method="post" action="update_personalize.php">
+             <b>Keg Column</b><br />
+			On:<input type="radio" value="1" name="config_value"> &nbsp
+			Off:<input type="radio" value="0" name="config_value"><br />
+			<input name="id" type="hidden" id="id" value="13">
+			<input type="submit" class="btn" name="Submit" value="Submit">
+			</form>
+			
 Change Brewery logo, which also changes admin panel logo<br />
 Change tap circle color scheme <br />
 Change Beers on Tap text<br />
