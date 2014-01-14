@@ -1,0 +1,54 @@
+/* Blue Theme Stylesheet */
+
+	.contentcontainer .altheading {background: #00789F url(img/bg_heading_alt.png); border: 1px solid #00789F; color: #fff; text-shadow: 1px 1px 1px #2D738A;}
+
+	/* Navigation Styling */
+			
+	ul#nav li a.heading, a.collapsed, a.expanded, ul.navigation li.selected{border-bottom: 1px solid #006F93; border-top: 1px solid #2DABD5; text-shadow: 1px 1px 1px #0D2C35; background: url(img/bg_navigation.png) no-repeat top;}
+	
+	ul#nav li a.expanded {background: url(img/bg_navigation.png) 0 -76px;}
+	
+	ul#nav li a.collapsed:hover {background: url(img/bg_navigation.png) no-repeat 0 -38px; width: 205px;}
+	ul#nav li a.expanded:hover {background: url(img/bg_navigation.png) no-repeat 0 -114px; width: 205px;}
+
+	ul.navigation li.selected {background: url(img/bg_navigation_selected.png) no-repeat -1px 0; border: none;}
+	
+	/* Side Notifications */
+	
+	.notifycount {background: url(img/bg_notify_count.png) no-repeat top;}
+	
+	/* Pagination */
+	
+	ul.pagination li.page a {background: #00789F url(img/bg_buttons.png) repeat-x top; border: 1px solid #0D87AE;}
+		ul.pagination li.page a:hover {background: #00789F url(img/bg_buttons.png) 0 -50px; border: 1px solid #005977;}
+	
+	/* Button Styling */
+	
+	.btn, .btnalt {background: url(img/bg_buttons.png) repeat-x top; border: 1px solid #0D87AE!important; color: #fff; font-size: 11px; padding: 7px 10px; boirder-radius: 7px; -moz-border-radius: 7px; font-weight: 700; border: none;}
+		.btn:hover {background: url(img/bg_buttons.png) 0 -50px; border: 1px solid #005977; cursor: pointer;}
+		
+	.btnalt {background: url(img/bg_buttons_alternative.png) repeat-x top !important; border: 1px solid #333 !important; color: #fff; padding: 7px 10px; border: none;}
+		.btnalt:hover {background: url(img/bg_buttons_alternative.png) 0 -50px !important; border: 1px solid #111 !important; cursor: pointer;}		
+	
+	/* Login Page */
+	
+	.logininput {background: #00CCFF}
+	.logininput:focus {border: 1px solid #000000; color: #000000;}
+				
+		#logincontainer .loginbtn {background: #3197CA url(img/bg_login_btn.png) repeat-x top; border-radius: 8px; -moz-border-radius: 8px; border: none; font-size: 25px; font-weight: 700; text-shadow: 1px 1px 1px #9cced6; color: #1C5571; width: 260px; padding: 11px 0; margin: 5px 0 0 0; display: block; cursor: pointer; border-top: 1px solid #000000; letter-spacing: -1px;}
+		
+		#logincontainer .loginbtn:hover {background: #3197CA url(img/bg_login_btn.png) -0 -60px; cursor: pointer; color: #103141;}
+		
+		
+		
+	.inputbox {border: 1px solid #999; padding: 10px; width: 300px; -moz-border-radius: 3px; border-radius: 3px; margin-bottom: 5px; color: #666; background: url(img/bg_fade_sml.png) repeat-x top;}
+	.inputbox:focus {border: 1px solid #666;}
+	.errorbox {border: 1px solid #CC0000; background: #FCF0EF url(img/bg_fade_red_sml.png) repeat-x top; color: #CC0000; margin-right: 5px;}
+	.errorbox:focus {border: 1px solid #8A0000;}
+	.correctbox {border: 1px solid #9DB832; background: #F3F8E0 url(img/bg_fade_green_sml.png) repeat-x top;; color: #9DB832; margin-right: 5px;}
+	.correctbox:focus {border: 1px solid #7C9227;}
+	.smallbox {border: 1px solid #999; padding: 10px; width: 60px; -moz-border-radius: 3px; border-radius: 3px; margin-bottom: 5px; color: #666; background: url(img/bg_fade_sml.png) repeat-x top;}
+	.mediumbox {border: 1px solid #999; padding: 10px; width: 150px; -moz-border-radius: 3px; border-radius: 3px; margin-bottom: 5px; color: #666; background: url(img/bg_fade_sml.png) repeat-x top;}
+		
+			
+	

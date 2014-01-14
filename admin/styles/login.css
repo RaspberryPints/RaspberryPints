@@ -1,0 +1,13 @@
+body {background: #000000}
+
+	#logincontainer {width: 385px;  margin: 0 auto; margin-top: 90px;}
+		
+		#loginbox {border-radius: 20px; -moz-border-radius: 20px; background: #000 url(../img/bg_login_box.png) repeat-x top; border-bottom: 1px solid #000000;}
+			#loginheader {text-align: center; padding: 15px 0; background: url(../img/bg_login_header.png) repeat-x bottom; border-bottom: 1px solid #424242; border-top-left-radius: 20px; border-top-right-radius: 20px; -moz-border-radius-topright: 20px; -moz-border-radius-topleft: 20px;}
+		
+		#innerlogin {width: 260px; margin: 0 auto; text-align: center; padding: 15px 20px 30px 20px;}
+			.logininput {width: 240px; padding: 17px 10px; border: 1px solid #fff; border-radius: 8px; -moz-border-radius: 8px; font-size: 15px; margin: 10px 0;}
+			#innerlogin p {color: #ddd; font-weight: 700; text-shadow: 1px 1px 1px #222;}
+				
+				#innerlogin p a {background: #ccc url(../img/bg_forgotten_password.png) repeat-x top; text-shadow: 1px 1px 1px #fff; color: #666; font-size: 11px; padding: 4px 10px; border-radius: 5px; -moz-border-radius: 5px; text-decoration: none;}
+					#innerlogin p a:hover {background: #ccc url(../img/bg_forgotten_password.png) 0 -25px; color: #333;}
