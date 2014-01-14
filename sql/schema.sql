@@ -104,7 +104,7 @@ CREATE TABLE `profile` (
 -- Dumping data for table `profile`
 --
 
-INSERT INTO `profile` VALUES('', 'Beers On Tap');
+INSERT INTO `profile` VALUES('admin/img/logo.png', 'Beers On Tap');
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
