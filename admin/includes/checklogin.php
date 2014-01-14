@@ -4,15 +4,7 @@ $session=session_id();
 $time=time();
 $time_check=$time-1800; //SET TIME 10 Minute
 
-$host="localhost";
-$username="TapList45"; 
-$password=""; 
-$db_name="TapList45"; 
-$tbl_name="Users"; 
-
-// Connect to server and select databse.
-mysql_connect("$host", "$username", "$password")or die("cannot connect");
-mysql_select_db("$db_name")or die("cannot select DB");
+require 'conn.php';
 
 // username and password sent from form
 $myusername=$_POST['myusername'];
@@ -39,10 +31,10 @@ $_SESSION['mypassword'] =$mypassword;
 //session_register("myusername");
 //session_register("mypassword");
 
-header("location:../admin.php");
+echo "<script>location.href='../admin.php';</script>";
 }
 else {
 
-header("Location: ../index2.php"); 
+echo "<script>location.href='../index2.php';</script>";
 }
 ?>
