@@ -4,9 +4,9 @@ $session=session_id();
 $time=time();
 $time_check=$time-1800; //SET TIME 10 Minute
 
-$host="TapList45.db.10666578.hostedresource.com";
+$host="localhost";
 $username="TapList45"; 
-$password="Deer!boy45"; 
+$password=""; 
 $db_name="TapList45"; 
 $tbl_name="Users"; 
 
