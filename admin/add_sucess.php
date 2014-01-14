@@ -75,7 +75,7 @@ You have successfully added a beer YAY! Now lets add more <a href="beer_main.php
 echo mysql_result($result, 0, 'name');
 ?></div>
     	<div class="user">
-        	<a href="../"><img src="img/avatar.png" width="120" height="120" class="hoverimg" alt="Avatar" /></a>
+        	<a href="../"><img src="img/logo.png" width="120" height="120" class="hoverimg" alt="Avatar" /></a>
         </div>
 
         
@@ -97,12 +97,12 @@ echo mysql_result($result, 0, 'name');
 					<li><a href="personalize.php" title="personalize">Personalize</a></li>
                 </ul>
             </li>
-			            <li>
+			 <li>
                 <a class="expanded heading">Analytics</a>
                  <ul class="navigation">
-                    <li><a href="#" target="" title="temperature">Temperature Monitoring</a></li>
-                    <li><a href="#" title="GPT">Gallons Per Tap</a></li>
-                    <li><a href="#" title="rank">Beer Rank</a></li>
+                    <li><a href="#" target="" title="temperature">Temperature Monitoring</a>Comming soon</li>
+                    <li><a href="#" title="GPT">Gallons Per Tap</a>Comming soon</li>
+                    <li><a href="#" title="rank">Beer Rank</a>Comming soon</li>
                 </ul>
             </li>
 			            <li>
