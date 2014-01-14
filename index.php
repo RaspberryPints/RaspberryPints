@@ -42,6 +42,12 @@
 		}
 	} else {
 	}
+	
+		
+	$sql="SELECT * FROM profile";
+$result=mysql_query($sql);
+
+$rows=mysql_fetch_array($result);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
@@ -64,7 +70,7 @@
                    <a href="admin"><img src="img/brewery.png" height="100" alt=""></a>
                 </div>
                 <div class="HeaderCenter">
-                    <h1 id="HeaderTitle">BEERS ON TAP</h1>
+                    <h1 id="HeaderTitle"><? echo $rows['header_text']; ?></h1>
                 </div>
                 <div class="HeaderRight">
                    <a href="https://github.com/raspberrypints/raspberrypints"><img src="img/RaspberryPints.png" height="100" alt=""></a>
