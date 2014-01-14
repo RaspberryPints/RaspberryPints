@@ -74,7 +74,7 @@ require 'includes/conn.php';
 echo mysql_result($result, 0, 'name');
 ?></font></div>
     	<div class="user">
-        	<a href="../"><img src="img/avatar.png" width="120" height="120" class="hoverimg" alt="Avatar" /></a>
+        	<a href="../"><img src="img/logo.png" width="120" height="120" class="hoverimg" alt="Avatar" /></a>
 
         </div>
 
