@@ -67,27 +67,28 @@ $rows=mysql_fetch_array($result);?>
 			<input name="id" type="hidden" id="id" value="9">
 			<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
-			<form method="post" action="update_personalize.php">
+			<br /><form method="post" action="update_personalize.php">
              <b>SRM Column</b><br />
 			On:<input type="radio" value="1" name="config_value"> &nbsp
 			Off:<input type="radio" value="0" name="config_value"><br />
 			<input name="id" type="hidden" id="id" value="10">
 			<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
-			<form method="post" action="update_personalize.php">
+			<br /><form method="post" action="update_personalize.php">
              <b>IBU Column</b><br />
 			On:<input type="radio" value="1" name="config_value"> &nbsp
 			Off:<input type="radio" value="0" name="config_value"><br />
 			<input name="id" type="hidden" id="id" value="11">
 			<input type="submit" class="btn" name="Submit" value="Submit">
-			</form><form method="post" action="update_personalize.php">
+			</form>
+			<br /><form method="post" action="update_personalize.php">
              <b>ABV Column</b><br />
 			On:<input type="radio" value="1" name="config_value"> &nbsp
 			Off:<input type="radio" value="0" name="config_value"><br />
 			<input name="id" type="hidden" id="id" value="12">
 			<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
-			<form method="post" action="update_personalize.php">
+			<br /><form method="post" action="update_personalize.php">
              <b>Keg Column</b><br />
 			On:<input type="radio" value="1" name="config_value"> &nbsp
 			Off:<input type="radio" value="0" name="config_value"><br />
@@ -99,21 +100,17 @@ $rows=mysql_fetch_array($result);?>
 $result=mysql_query($sql);
 
 $rows=mysql_fetch_array($result);?>
-			<form method="post" action="upload_logo.php"><br />
+			<br /><form method="post" action="upload_logo.php"><br />
              <b>Header text</b><br />
 			<input type="text" value="<? echo $rows['header_text']; ?>" name="header_text"> &nbsp <br />
 			<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
 			
 		<form enctype="multipart/form-data" action="update_logo.php" method="POST">
-		<b>Please choose a file:</b> <br /><input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/><br />
+		<br />
+		<b>Change Logo:</b> <br /><input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/><br />
 		<input type="submit" class="btn" value="Upload" />
 		</form> 
-			
-Change Brewery logo, which also changes admin panel logo<br />
-Change tap circle color scheme <br />
-Change Beers on Tap text<br />
-Change Background<br />
             </div>
         </div>
         <div id="footer">
