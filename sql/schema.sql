@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `beers` (
   `notes` text NOT NULL,
   `og` decimal(4,3) NOT NULL,
   `fg` decimal(4,3) NOT NULL,
-  `srm` int(3) NOT NULL,
+  `srm` decimal(3,1) NOT NULL,
   `ibu` int(4) NOT NULL,
   `kegstart` decimal(6,1) NOT NULL,
   `kegremain` decimal(6,1) NOT NULL,
