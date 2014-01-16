@@ -21,7 +21,15 @@
 			$config[$b['config_name']] = $b['config_value'];
 		}
 		
-		$sql = "SELECT * FROM beers WHERE active = true ORDER BY tapnumber";
+		$srmRgb = array();
+		$sql = "SELECT * FROM srmRgb";
+		$qry = mysql_query($sql);
+		while($b = mysql_fetch_array($qry))
+		{
+			$srmRgb[$b['srm']] = $b['rgb'];
+		}
+		
+		$sql = "SELECT b.*, s.rgb as srmRgb FROM beers b LEFT JOIN srmRgb s ON s.srm = b.srm WHERE active = true ORDER BY tapnumber";
 		$qry = mysql_query($sql);
 		while($b = mysql_fetch_array($qry))
 		{
@@ -37,6 +45,7 @@
 				"kegstart" => $b['kegstart'],
 				"kegremain" => $b['kegremain'],
 				"tapnumber" => $b['tapnumber'],
+				"srmRgb" => $b['srmRgb']
 			);
 			array_push($beers, $beeritem);
 		}
@@ -46,6 +55,8 @@
 	$sql="SELECT * FROM profile";
 	$result=mysql_query($sql);
 	$rows=mysql_fetch_array($result);
+	
+	
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
@@ -65,12 +76,12 @@
 		<link rel="shortcut icon" href="img/pint.ico">
 	</head> 
 
-	<body>	
+	<body>
     	<div class="bodywrapper">
         	<!-- Header with Brewery Logo and Project Name -->
             <div class="header clearfix">
                 <div class="HeaderLeft">
-                   <a href="admin/admin.php"><img src="<? echo $rows['logo_url']; ?>" height="100" alt=""></a>
+                   <a href="admin/admin.php"><img src="<?php echo $rows['logo_url']; ?>" height="100" alt=""></a>
                 </div>
                 <div class="HeaderCenter">
                     <h1 id="HeaderTitle"><? echo $rows['header_text']; ?></h1>
@@ -131,12 +142,11 @@
 							<?php if($config[ConfigNames::ShowSrmCol]){ ?>
 								<td class="srm">
 									<h3><?php echo $beers[$i]['og']; ?> OG</h3>
-									<?php
-									if ($beers[$i]['srm'] > 30)
-										echo "<img src=\"img/srm/", "offthechart", ".png\" height=\"100\"  alt=\"\">";
-									else
-										echo "<img src=\"img/srm/", $beers[$i]['srm'], ".png\" height=\"100\"  alt=\"\">";
-									?>
+									
+									<div class="srm-container" style="background-color: rgb(<?php echo $beers[$i]['srmRgb'] ?>)">
+										<img class="srm-stroke" src="img/srm/pint-stroke.png"/>
+									</div>
+									
 									<h2><?php echo $beers[$i]['srm']; ?> SRM</h2>
 								</td>
 							<?php } ?>

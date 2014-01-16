@@ -3,7 +3,7 @@ body {
 	background-color: #000000;
 	background-size: cover;
 	background-repeat:no-repeat;
-	overflow: hidden;
+	/*overflow: hidden;*/
 	font: 1.5em Gerorgia, arial, verdana, sans-serif;
 	margin:5px;
 }
@@ -161,6 +161,20 @@ table p{
 .altrow{
 	background-color: rgba(153,153,153,.3);
 }
+
+.srm .srm-container{
+	position: relative;
+	height: 100px;
+	width: 56px;
+	margin: 0 auto;
+	
+	-webkit-mask-image: url(img/srm/pint-mask.png);
+	-o-mask-image: url(img/srm/pint-mask.png);
+	-moz-mask-image: url(img/srm/pint-mask.png);
+	mask-image: url(img/srm/pint-mask.png);
+}
+
+
 .ibu-container{
 	position: relative;
 	height: 100px;
