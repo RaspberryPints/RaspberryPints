@@ -44,9 +44,8 @@
 	}
 	
 	$sql="SELECT * FROM profile";
-$result=mysql_query($sql);
-
-$rows=mysql_fetch_array($result);
+	$result=mysql_query($sql);
+	$rows=mysql_fetch_array($result);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
