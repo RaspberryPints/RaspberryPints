@@ -58,6 +58,11 @@ $rows=mysql_fetch_array($result);
 
 		<!-- Set location of Cascading Style Sheet -->
 		<link rel="stylesheet" type="text/css" href="style.css">
+		
+		<?php if($config[ConfigNames::UseHighResolution]) { ?>
+			<link rel="stylesheet" type="text/css" href="high-res.css">
+		<?php } ?>
+		
 		<link rel="shortcut icon" href="img/pint.ico">
 	</head> 
 

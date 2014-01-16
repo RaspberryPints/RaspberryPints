@@ -7,5 +7,5 @@ abstract class ConfigNames
 	const ShowCalCol = 'showCalCol';
     const ShowAbvCol = 'showAbvCol';
 	const ShowKegCol = 'showKegCol';	
-	const HighResolution = 'highResolution';
+	const UseHighResolution = 'useHighResolution';
 }

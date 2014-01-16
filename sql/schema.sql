@@ -67,7 +67,7 @@ INSERT INTO `config` (config_name, config_value) VALUES ('showSrmCol', 1);
 INSERT INTO `config` (config_name, config_value) VALUES ('showIbuCol', 1);
 INSERT INTO `config` (config_name, config_value) VALUES ('showAbvCol', 1);
 INSERT INTO `config` (config_name, config_value) VALUES ('showKegCol', 1);
-INSERT INTO `config` (config_name, config_value) VALUES ('highResolution', 0);
+INSERT INTO `config` (config_name, config_value) VALUES ('useHighResolution', 0);
 
 
 -- --------------------------------------------------------
