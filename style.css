@@ -276,28 +276,30 @@ table p{
 }	
 .keg-indicator{
 	display: inline-block;
-
 	position: relative;
 	height:100px;
 	width:67px;
-	background: url(img/keg/empty.png) no-repeat bottom left;	
+	background: url(img/keg/stroke.png) no-repeat bottom left;	
 }
 .keg-indicator .keg-full{
 	position: absolute;
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background: url(img/keg/full-green.png) no-repeat bottom left;
+	background: url(img/keg/full.png) no-repeat bottom left;
+}
+.keg-indicator .keg-empty{
+	background-image: url(img/keg/empty.png);
 }
 .keg-indicator .keg-red{
-	background-image: url(img/keg/full-red.png);
+	background-image: url(img/keg/red.png);
 }
 .keg-indicator .keg-orange{
-	background-image: url(img/keg/full-orange.png);
+	background-image: url(img/keg/orange.png);
 }
 .keg-indicator .keg-yellow{
-	background-image: url(img/keg/full-yellow.png);
+	background-image: url(img/keg/yellow.png);
 }
 .keg-indicator .keg-green{
-	background-image: url(img/keg/full-green.png);
+	background-image: url(img/keg/green.png);
 }

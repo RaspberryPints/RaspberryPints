@@ -222,24 +222,23 @@
 								<td class="keg">
 									<h3><?php echo number_format((($beers[$i]['kegstart'] - $beers[$i]['kegremain']) * 128)); ?> fl oz poured</h3>
 									<?php 
-										$keglvl = $beers[$i]['kegstart'] + $beers[$i]['kegremain'];
-										if( $keglvl > 0 ){
-											$percentRemaining = $beers[$i]['kegremain'] / $beers[$i]['kegstart'] * 100;
-										}else{
-											$percentRemaining = 0;
-										}
 										$kegImgClass = "";
-										if( $percentRemaining < 15 )
+										$percentRemaining = $beers[$i]['kegremain'] / $beers[$i]['kegstart'] * 100;
+										if( $beers[$i]['kegremain'] <= 0 ) {
+											$kegImgClass = "keg-empty";
+											$percentRemaining = 100; }
+										else if( $percentRemaining < 15 )
 											$kegImgClass = "keg-red";
 										else if( $percentRemaining < 25 )
 											$kegImgClass = "keg-orange";
 										else if( $percentRemaining < 45 )
 											$kegImgClass = "keg-yellow";
-										else
-											$kegImgClass = "keg-green"
+										else if ( $percentRemaining < 100 )
+											$kegImgClass = "keg-green";
+										else if( $percentRemaining >= 100 )
+											$kegImgClass = "keg-full";
 									?>
 									<div class="keg-indicator"><div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%"></div></div>
-									
 									<h2><?php echo number_format(($beers[$i]['kegremain'] * 128)); ?> fl oz left</h2>
 								</td>
 							<?php } ?>
