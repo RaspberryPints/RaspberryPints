@@ -7,10 +7,10 @@
 .ibu-indicator{
 	height:29px;
 	width:23px;
-	background-image: url(img/ibu/empty.png);
+	background-image: url(img/ibu/empty-4k.png);
 }
 .ibu-indicator .ibu-full{
-	background-image: url(img/ibu/full.png);
+	background-image: url(img/ibu/full-4k.png);
 }
 
 .ibu-indicator.ibu-element-0{
@@ -66,11 +66,11 @@
 .abv-indicator{
 	height:100px;
 	width:55px;
-	background-image: url(img/abv/empty.png);
+	background-image: url(img/abv/empty-4k.png);
 	margin: 2px;
 }
 .abv-indicator .abv-full{
-	background-image: url(img/abv/full.png);
+	background-image: url(img/abv/full-4k.png);
 }
 .abv-max{
 	bottom: -2px;
@@ -83,20 +83,20 @@
 .keg-indicator{
 	height:100px;
 	width:67px;
-	background-image: url(img/keg/empty.png);	
+	background-image: url(img/keg/empty-4k.png);	
 }
 .keg-indicator .keg-full{
-	background-iamge: url(img/keg/full-green.png);
+	background-iamge: url(img/keg/full-green-4k.png);
 }
 .keg-indicator .keg-red{
-	background-image: url(img/keg/full-red.png);
+	background-image: url(img/keg/full-red-4k.png);
 }
 .keg-indicator .keg-orange{
-	background-image: url(img/keg/full-orange.png);
+	background-image: url(img/keg/full-orange-4k.png);
 }
 .keg-indicator .keg-yellow{
-	background-image: url(img/keg/full-yellow.png);
+	background-image: url(img/keg/full-yellow-4k.png);
 }
 .keg-indicator .keg-green{
-	background-image: url(img/keg/full-green.png);
+	background-image: url(img/keg/full-green-4k.png);
 }
