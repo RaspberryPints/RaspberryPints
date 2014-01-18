@@ -1,8 +1,8 @@
  <?php
  $host="localhost"; // Host name
-$username="TapList45"; // Mysql username
-$password=""; // Mysql password
-$db_name="TapList45"; // Database name
+$username="root"; // Mysql username
+$password="ljsgecko856"; // Mysql password
+$db_name="raspberrypints"; // Database name
 $tbl_name="beers";
 
 

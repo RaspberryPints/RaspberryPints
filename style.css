@@ -60,7 +60,7 @@ img {
 	font: 1em Georgia;
 	color: white;
 	vertical-align: middle;
-	padding-top:50px;
+	padding-top:25px;
 }
 .HeaderRight {
 	width: 25%;
@@ -159,7 +159,7 @@ table p{
 	margin-top:20px;
 }
 .altrow{
-	background-color: rgba(153,153,153,.3);
+	background-color: rgba(153,153,153,.23);
 }
 
 .srm .srm-container{
