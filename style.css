@@ -162,11 +162,20 @@ table p{
 	background-color: rgba(153,153,153,.23);
 }
 
-.srm .srm-container{
+.srm-container{
 	position: relative;
 	height: 100px;
-	width: 56px;
+	width: 55px;
 	margin: 0 auto;
+}
+
+.srm-indicator{
+	position: absolute; 
+	height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	z-index: 1;
 	
 	-webkit-mask-image: url(img/srm/pint-mask.png);
 	-o-mask-image: url(img/srm/pint-mask.png);
@@ -174,19 +183,31 @@ table p{
 	mask-image: url(img/srm/pint-mask.png);
 }
 
+.srm-stroke{
+	position: absolute; 
+	height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	z-index: 2;
+	
+	background: url(img/srm/pint-stroke.png)
+}
+
 
 .ibu-container{
 	position: relative;
-	height: 100px;
-	width: 125px;
-	margin:8px 0 8px 50%;
-	left: -65px
+	height:100px;
+	width:53px;
+	margin: 0 auto;
 }
 .ibu-indicator{
-	position: relative;
-	height:29px;
-	width:23px;
-	background: url(img/ibu/empty.png) no-repeat bottom left;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: url(img/ibu/stroke.png) no-repeat bottom left;
 }
 .ibu-indicator .ibu-full{
 	position: absolute;
@@ -195,49 +216,7 @@ table p{
 	width: 100%;
 	background: url(img/ibu/full.png) no-repeat bottom left;
 }
-.ibu-indicator.ibu-element{
-	position: absolute;
-}
-.ibu-indicator.ibu-element-0{
-	top: 5px;
-	left: 35px;
-}
-.ibu-indicator.ibu-element-1{
-	top: 5px;
-	left: 55px;
-}
-.ibu-indicator.ibu-element-2{
-	top: 5px;
-	left: 75px;
-}	
-.ibu-indicator.ibu-element-3{	
-	top: 32px;
-	left: 25px;
-}
-.ibu-indicator.ibu-element-4{	
-	top: 32px;
-	left: 45px;
-}
-.ibu-indicator.ibu-element-5{	
-	top: 32px;
-	left: 65px;
-}
-.ibu-indicator.ibu-element-6{	
-	top: 32px;
-	left: 85px;
-}
-.ibu-indicator.ibu-element-7{
-	top: 59px;
-	left: 35px;
-}
-.ibu-indicator.ibu-element-8{
-	top: 59px;
-	left: 55px;
-}
-.ibu-indicator.ibu-element-9{
-	top: 59px;
-	left: 75px;
-}	
+	
 .ibu-max{
 	position: absolute;
 	top: -5px;
@@ -246,17 +225,15 @@ table p{
 .abv-container{
 	position: relative;
 	height: 100px;
-	width: 125px;
-	margin: 8px 0 8px 50%;
-	left: -65px;
+	width: 115px;
+	margin: 8px auto;
 }	
 .abv-indicator{
 	display: inline-block;
 	position: relative;
-	height:100px;
-	width:55px;
-	background: url(img/abv/empty.png) no-repeat bottom left;
-	margin: 2px;
+	height:100%;
+	width:50%;
+	background: url(img/abv/stroke.png) no-repeat bottom left;
 }
 .abv-indicator .abv-full{
 	position: absolute;
@@ -270,15 +247,20 @@ table p{
 	bottom: -2px;
 	left: 8px;
 }
-.KegImage{
-	height: 100px;
-	padding: 5px 0 10px;
-}	
-.keg-indicator{
-	display: inline-block;
+
+.keg-container{
 	position: relative;
-	height:100px;
-	width:67px;
+	height: 100px;
+	width: 67px;
+	margin: 8px auto;
+}
+
+.keg-indicator{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
 	background: url(img/keg/stroke.png) no-repeat bottom left;	
 }
 .keg-indicator .keg-full{

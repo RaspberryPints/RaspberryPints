@@ -143,8 +143,9 @@
 								<td class="srm">
 									<h3><?php echo $beers[$i]['og']; ?> OG</h3>
 									
-									<div class="srm-container" style="background-color: rgb(<?php echo $beers[$i]['srmRgb'] ?>)">
-										<img class="srm-stroke" src="img/srm/pint-stroke.png"/>
+									<div class="srm-container">
+										<div class="srm-indicator" style="background-color: rgb(<?php echo $beers[$i]['srmRgb'] ?>)"></div>
+										<div class="srm-stroke"></div> 
 									</div>
 									
 									<h2><?php echo $beers[$i]['srm']; ?> SRM</h2>
@@ -153,26 +154,24 @@
 						
 							<?php if($config[ConfigNames::ShowIbuCol]){ ?>
 								<td class="ibu">
-									<h3><?php echo number_format((($beers[$i]['ibu'])/(($beers[$i]['og']-1)*1000)), 2, '.', ''); ?> BU:GU</h3>					
+									<h3><?php echo number_format((($beers[$i]['ibu'])/(($beers[$i]['og']-1)*1000)), 2, '.', ''); ?> BU:GU</h3>
+									<?php 
+										$ibu = $beers[$i]['ibu'];
+										if( $ibu > 100 )
+											$ibu = 100;
+									?>
+									
+
+									
 									<div class="ibu-container">
-										<?php
-											$numHops = 0;
-											$remaining = $beers[$i]['ibu'];
-											for( $h = 0; $h < 10; $h++){                                                
-												if( $remaining < 10 ){
-													$level = $remaining;
-												}else{
-													$level = 10;
-												}
-												?><div class="ibu-indicator ibu-element ibu-element-<?php echo $h ?>"><div class="ibu-full" style="height:<?php echo $level * 10; ?>%"></div></div><?php
-												
-												$remaining = $remaining - $level;
-												$numHops++;
-											}
+										<div class="ibu-indicator"><div class="ibu-full" style="height:<?php echo $ibu; ?>%"></div></div>
 											
+										<?php 
+											/*
 											if( $remaining > 0 ){
 												?><img class="ibu-max" src="img/ibu/offthechart.png" /><?php
 											}
+											*/
 										?>
 									</div>								
 									<h2><?php echo $beers[$i]['ibu']; ?> IBU</h2>
@@ -238,7 +237,9 @@
 										else if( $percentRemaining >= 100 )
 											$kegImgClass = "keg-full";
 									?>
-									<div class="keg-indicator"><div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%"></div></div>
+									<div class="keg-container">
+										<div class="keg-indicator"><div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%"></div></div>
+									</div>
 									<h2><?php echo number_format(($beers[$i]['kegremain'] * 128)); ?> fl oz left</h2>
 								</td>
 							<?php } ?>
