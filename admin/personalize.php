@@ -6,6 +6,8 @@ header("location:index.php");
 
 require 'includes/conn.php';
 require '../includes/config_names.php';
+require 'includes/congifp.php';
+
 ?> 
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -23,9 +25,10 @@ require '../includes/config_names.php';
 
 #welcome
 { font-family: 'Fredoka One', cursive; font-weight: 400; color: white; font-size:140% }
+#ckbx
+{text-align:center}
 
-</style>
-
+</style> 
 
 </head>
 <div id="header">
@@ -54,47 +57,20 @@ require '../includes/config_names.php';
                 <h2>Configure Your Tap List Display Settings</h2>
             </div>
             <div class="contentbox">
-			<h2>Disable Sections</h2><br /> 
-			<?php
-			$sql="SELECT * FROM config";
-$result=mysql_query($sql);
+			<h2>Enable/Disable Features</h2><br /> 
+			<form method="post" action="update_column.php">
+<?php
+foreach($result as $row) {
+echo '<h3>' . $row['display_name'] . '</h3>' .
+'On<input type="radio" ' . ($row['config_value']?'checked':'') . ' name="' . str_replace(' ','',$row['id']) . '" value="1">' .
+'Off<input type="radio" ' . (!$row['config_value']?'checked':'') . ' name="' . str_replace(' ','',$row['id']) . '" value="0"><br>' .
+'<br>';
+ }
 
-$rows=mysql_fetch_array($result);?>
-<form method="post" action="update_personalize.php">
-             <b>Tap Column</b><br />
-			On:<input type="radio" value="1" name="config_value"> &nbsp
-			Off:<input type="radio" value="0" name="config_value"><br />
-			<input name="id" type="hidden" id="id" value="9">
-			<input type="submit" class="btn" name="Submit" value="Submit">
-			</form>
-			<br /><form method="post" action="update_personalize.php">
-             <b>SRM Column</b><br />
-			On:<input type="radio" value="1" name="config_value"> &nbsp
-			Off:<input type="radio" value="0" name="config_value"><br />
-			<input name="id" type="hidden" id="id" value="10">
-			<input type="submit" class="btn" name="Submit" value="Submit">
-			</form>
-			<br /><form method="post" action="update_personalize.php">
-             <b>IBU Column</b><br />
-			On:<input type="radio" value="1" name="config_value"> &nbsp
-			Off:<input type="radio" value="0" name="config_value"><br />
-			<input name="id" type="hidden" id="id" value="11">
-			<input type="submit" class="btn" name="Submit" value="Submit">
-			</form>
-			<br /><form method="post" action="update_personalize.php">
-             <b>ABV Column</b><br />
-			On:<input type="radio" value="1" name="config_value"> &nbsp
-			Off:<input type="radio" value="0" name="config_value"><br />
-			<input name="id" type="hidden" id="id" value="12">
-			<input type="submit" class="btn" name="Submit" value="Submit">
-			</form>
-			<br /><form method="post" action="update_personalize.php">
-             <b>Keg Column</b><br />
-			On:<input type="radio" value="1" name="config_value"> &nbsp
-			Off:<input type="radio" value="0" name="config_value"><br />
-			<input name="id" type="hidden" id="id" value="13">
-			<input type="submit" class="btn" name="Submit" value="Submit">
-			</form><br />
+?>
+<input type="submit" class="btn" value="Save" />
+</form>
+<hr />
 			<?php
 			$sql="SELECT * FROM profile";
 $result=mysql_query($sql);
@@ -106,23 +82,26 @@ $rows=mysql_fetch_array($result);?>
 			<input type="text" value="<? echo $rows['header_text']; ?>" name="header_text"> &nbsp <br />
 			<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
-			
+		<hr />	
 		<form enctype="multipart/form-data" action="update_logo.php" method="POST">
 		<br />
-		<h2>Change Site And Admin Logo</h2><br /><input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/><br />
+		<h2>Change Site And Admin Logo</h2><br /><input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/><br /><br />
 		<input type="submit" class="btn" value="Upload" />
 		</form> 
-		
+		<hr />
 		<form enctype="multipart/form-data" action="update_background.php" method="POST">
 		<br />
-		<h2>Change Background Image</h2><br /><input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/><br />
+		<h2>Change Background Image</h2><br /><input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/><br /><br />
 		<input type="submit" class="btn" value="Upload" /><br /><br />
 		</form> 
 		<form action="restore_background.php" method="POST">
-
+<hr />
 		<input type="submit" class="btn" value="Restore Default Background" />
 		</form> 
+		<br />
+		
             </div>
+
         </div>
         <div id="footer">
         	&copy; Copyright 2012-2014 RaspberryPints
