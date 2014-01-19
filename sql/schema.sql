@@ -70,7 +70,7 @@ INSERT INTO `config` VALUES(9, 'showTapNumCol', '1', 'Tap Column');
 INSERT INTO `config` VALUES(10, 'showSrmCol', '1', 'SRM Column');
 INSERT INTO `config` VALUES(11, 'showIbuCol', '1', 'IBU Column');
 INSERT INTO `config` VALUES(12, 'showAbvCol', '1', 'ABV Column');
-INSERT INTO `config` VALUES(13, 'showKegCol', '1', 'Keg Column');
+INSERT INTO `config` VALUES(13, 'showKegCol', '0', 'Keg Column');
 INSERT INTO `config` VALUES(14, 'useHighResolution', '0', '4k Monitor Support');
 
 
