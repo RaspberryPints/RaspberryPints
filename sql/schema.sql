@@ -53,21 +53,26 @@ CREATE TABLE IF NOT EXISTS `beers` (
 -- Table structure for table `config`
 --
 
-CREATE TABLE IF NOT EXISTS `config` (
+CREATE TABLE `config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `config_name` varchar(50) NOT NULL,
   `config_value` longtext NOT NULL,
+  `display_name` varchar(65) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `config_name_UNIQUE` (`config_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
--- Data for table `config`
-INSERT INTO `config` (config_name, config_value) VALUES ('showTapNumCol', 1);
-INSERT INTO `config` (config_name, config_value) VALUES ('showSrmCol', 1);
-INSERT INTO `config` (config_name, config_value) VALUES ('showIbuCol', 1);
-INSERT INTO `config` (config_name, config_value) VALUES ('showAbvCol', 1);
-INSERT INTO `config` (config_name, config_value) VALUES ('showKegCol', 1);
-INSERT INTO `config` (config_name, config_value) VALUES ('useHighResolution', 0);
+--
+-- Dumping data for table `config`
+--
+
+INSERT INTO `config` VALUES(9, 'showTapNumCol', '1', 'Tap Column');
+INSERT INTO `config` VALUES(10, 'showSrmCol', '1', 'SRM Column');
+INSERT INTO `config` VALUES(11, 'showIbuCol', '1', 'IBU Column');
+INSERT INTO `config` VALUES(12, 'showAbvCol', '1', 'ABV Column');
+INSERT INTO `config` VALUES(13, 'showKegCol', '1', 'Keg Column');
+INSERT INTO `config` VALUES(14, 'useHighResolution', '0', '4k Monitor Support');
+
 
 
 -- --------------------------------------------------------
