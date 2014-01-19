@@ -244,10 +244,13 @@ table p{
 	width: 100%;
 	background: url(img/abv/full.png) no-repeat bottom left;
 }
-.abv-max{
+.abv-offthechart{
 	position: absolute;
 	bottom: -2px;
 	left: 8px;
+	height: 55px;
+	width: 114px;
+	background: url(img/abv/offthechart.png) no-repeat bottom left;	
 }
 
 .keg-container{

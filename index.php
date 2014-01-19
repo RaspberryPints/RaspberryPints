@@ -208,8 +208,7 @@
 											}while($remaining > 0 && $numCups < 2);
 											
 											if( $remaining > 0 ){
-													?><img class="abv-max" src="img/abv/offthechart.png" />
-												<?php
+												?><div class="abv-offthechart"></div><?php
 											}
 										?>
 									</div>

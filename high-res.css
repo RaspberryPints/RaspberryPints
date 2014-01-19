@@ -57,6 +57,11 @@ span.tapcircle {
 .abv-indicator .abv-full{
 	background-image: url(img/abv/full-4k.png);
 }
+.abv-offthechart{
+	height: 110px;
+	width: 229px;
+	background-image: url(img/abv/offthechart-4k.png);
+}
 
 .keg-container{
 	height: 200px;
