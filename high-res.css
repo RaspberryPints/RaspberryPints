@@ -1,20 +1,22 @@
 table .tap-num{
-	width: 50px;
+	width: 80px;
 }
 table .srm{
-	width: 125px;
+	width: 150px;
 }
 table .ibu{
-	width: 125px;
+	width: 150px;
 }
-table td.name{
-	text-align: left;
-}
+
 table .abv{
-	width: 125px;
+	width: 250px;
 }
 table .keg{
-	width: 150px;
+	width: 175px;
+}
+
+span.tapcircle {	
+  font-size: 30px;
 }
 
 .srm-container{

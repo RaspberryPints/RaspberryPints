@@ -109,6 +109,8 @@ table .ibu{
 }
 table td.name{
 	text-align: left;
+	vertical-align: top;
+	padding: 5px;
 }
 table .abv{
 	width: 125px;
