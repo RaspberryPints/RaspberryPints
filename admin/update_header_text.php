@@ -14,7 +14,7 @@ $header_text=$_POST['header_text'];
 
 
 // update data in mysql database
-$sql="UPDATE profile SET header_text='$header_text'";
+$sql="UPDATE config SET configValue='$header_text' WHERE configName ='headerText'";
 $result=mysql_query($sql);
 
 // if successfully updated.
