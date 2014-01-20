@@ -51,7 +51,7 @@ require 'includes/conn.php';
 <div id="welcome"> &nbsp &nbsp Hello: &nbsp
   <?php
   
-  $sql="SELECT `name` FROM `Users` WHERE username='$_SESSION[myusername]'";
+  $sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
   $result=mysql_query($sql);
 
 echo mysql_result($result, 0, 'name');
@@ -121,7 +121,7 @@ echo mysql_result($result, 0, 'name');
  <font size="2" Color="Black" font-family="Impact">Name:</font>
  <b><?php
   
-  $sql="SELECT `name` FROM `Users` WHERE username='$_SESSION[myusername]'";
+  $sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
   $result=mysql_query($sql);
 
 echo mysql_result($result, 0, 'name');
@@ -129,7 +129,7 @@ echo mysql_result($result, 0, 'name');
  <font size="2" Color="Black" font-family="Impact">Username:</font>
    <?php
   
-  $sql="SELECT `username` FROM `Users` WHERE username='$_SESSION[myusername]'";
+  $sql="SELECT `username` FROM `users` WHERE username='$_SESSION[myusername]'";
 $result=mysql_query($sql);
 
 echo mysql_result($result, 0, 'username');
@@ -138,7 +138,7 @@ echo mysql_result($result, 0, 'username');
 <font size="2" Color="Black" font-family="Impact"> Email:</font>
   <?php
   
-  $sql="SELECT `email` FROM `Users` WHERE username='$_SESSION[myusername]'";
+  $sql="SELECT `email` FROM `users` WHERE username='$_SESSION[myusername]'";
 $result=mysql_query($sql);
 
 echo mysql_result($result, 0, 'email');
