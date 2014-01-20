@@ -5,5 +5,4 @@ function db(){
 	mysql_select_db("raspberrypints");
 }
 
-
 ?>
