@@ -68,7 +68,7 @@ require 'includes/conn.php';
     <div id="leftside">
 <div id="welcome"> &nbsp &nbsp Hello: &nbsp <?php
   
-  $sql="SELECT `name` FROM `Users` WHERE username='$_SESSION[myusername]'";
+  $sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
   $result=mysql_query($sql);
 
 echo mysql_result($result, 0, 'name');
