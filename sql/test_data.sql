@@ -47,9 +47,9 @@ INSERT INTO `beers` (`name`, `style`, `notes`, `ogEst`, `fgEst`, `srmEst`, `ibuE
 -- Put all beers into the `taps` table
 --
 
-INSERT INTO taps(`beerId`, `kegTypeId`, `tapNumber`, `active`, `ogAct`, `fgAct`, `srmAct`, `ibuAct`, `startAmount`, `createdDate`, `modifiedDate`)
-SELECT b.id, kegType.id as kegTypeId, '1' as tapNumber, 1 as active, b.ogEst as ogAct, b.fgEst as fgAct, b.srmEst as srmAct, b.ibuEst as ibuAct, kegType.maxAmount as startAmount, NOW() as createdDate, NOW() as modifiedDate
-FROM `beers` as b, (SELECT * FROM kegtypes ORDER BY Id LIMIT 1) as kegType;
+INSERT INTO taps(`beerId`, `kegTypesId`, `tapNumber`, `active`, `ogAct`, `fgAct`, `srmAct`, `ibuAct`, `startAmount`, `createdDate`, `modifiedDate`)
+SELECT b.id, kegTypes.id as kegTypesId, '1' as tapNumber, 1 as active, b.ogEst as ogAct, b.fgEst as fgAct, b.srmEst as srmAct, b.ibuEst as ibuAct, kegTypes.maxAmount as startAmount, NOW() as createdDate, NOW() as modifiedDate
+FROM `beers` as b, (SELECT * FROM kegTypes ORDER BY Id LIMIT 1) as kegTypes;
 
 
 
