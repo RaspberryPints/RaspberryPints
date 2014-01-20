@@ -18,7 +18,7 @@
 		$qry = mysql_query($sql);
 		while($b = mysql_fetch_array($qry))
 		{
-			$config[$b['config_name']] = $b['config_value'];
+			$config[$b['configName']] = $b['configValue'];
 		}
 		
 		$srmRgb = array();
@@ -29,33 +29,40 @@
 			$srmRgb[$b['srm']] = $b['rgb'];
 		}
 		
-		$sql = "SELECT b.*, s.rgb as srmRgb FROM beers b LEFT JOIN srmRgb s ON s.srm = b.srm WHERE active = true ORDER BY tapnumber";
+		$sql =  "SELECT " .
+					"t.*, " .
+					"b.*, " .
+					"s.rgb as srmRgb, " .
+					"IFNULL(p.amountPoured, 0) as amountPoured, " .
+					"t.startAmount - IFNULL(p.amountPoured, 0) as remainAmount " .
+				"FROM taps t " .
+					"LEFT JOIN beers b ON b.id = t.beerId " .
+					"LEFT JOIN srmRgb s ON s.srm = t.srmAct " .
+					"LEFT JOIN (SELECT tapId, SUM(amountPoured) as amountPoured FROM pours GROUP BY tapId) as p ON p.tapId = t.Id " .
+				"WHERE active = true " .
+				"ORDER BY t.tapNumber";
 		$qry = mysql_query($sql);
 		while($b = mysql_fetch_array($qry))
 		{
 			$beeritem = array(
-				"id" => $b['beerid'],
+				"id" => $b['id'],
 				"beername" => $b['name'],
 				"style" => $b['style'],
 				"notes" => $b['notes'],
-				"og" => $b['og'],
-				"fg" => $b['fg'],
-				"srm" => $b['srm'],
-				"ibu" => $b['ibu'],
-				"kegstart" => $b['kegstart'],
-				"kegremain" => $b['kegremain'],
-				"tapnumber" => $b['tapnumber'],
+				"og" => $b['ogAct'],
+				"fg" => $b['fgAct'],
+				"srm" => $b['srmAct'],
+				"ibu" => $b['ibuAct'],
+				"startAmount" => $b['startAmount'],
+				"amountPoured" => $b['amountPoured'],
+				"remainAmount" => $b['remainAmount'],
+				"tapNumber" => $b['tapNumber'],
 				"srmRgb" => $b['srmRgb']
 			);
 			array_push($beers, $beeritem);
 		}
 	} else {
 	}
-	
-	$sql="SELECT * FROM profile";
-	$result=mysql_query($sql);
-	$rows=mysql_fetch_array($result);
-	
 	
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -81,10 +88,10 @@
         	<!-- Header with Brewery Logo and Project Name -->
             <div class="header clearfix">
                 <div class="HeaderLeft">
-                   <a href="admin/admin.php"><img src="<?php echo $rows['logo_url']; ?>" height="100" alt=""></a>
+                   <a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl]; ?>" height="100" alt=""></a>
                 </div>
                 <div class="HeaderCenter">
-                    <h1 id="HeaderTitle"><? echo $rows['header_text']; ?></h1>
+                    <h1 id="HeaderTitle"><? echo $config[ConfigNames::HeaderText]; ?></h1>
                 </div>
                 <div class="HeaderRight">
                    <a href="https://github.com/raspberrypints/raspberrypints"><img src="img/RaspberryPints.png" height="100" alt=""></a>
@@ -135,7 +142,7 @@
 						<tr class="<?php if($i%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beers[$i]['id']; ?>">
 							<?php if($config[ConfigNames::ShowTapNumCol]){ ?>
 								<td class="tap-num">
-									<span class="tapcircle"><?php echo $beers[$i]['tapnumber']; ?></span>
+									<span class="tapcircle"><?php echo $beers[$i]['tapNumber']; ?></span>
 								</td>
 							<?php } ?>
 						
@@ -218,11 +225,11 @@
 						
 							<?php if($config[ConfigNames::ShowKegCol]){ ?>
 								<td class="keg">
-									<h3><?php echo number_format((($beers[$i]['kegstart'] - $beers[$i]['kegremain']) * 128)); ?> fl oz poured</h3>
+									<h3><?php echo number_format((($beers[$i]['startAmount'] - $beers[$i]['remainAmount']) * 128)); ?> fl oz poured</h3>
 									<?php 
 										$kegImgClass = "";
-										$percentRemaining = $beers[$i]['kegremain'] / $beers[$i]['kegstart'] * 100;
-										if( $beers[$i]['kegremain'] <= 0 ) {
+										$percentRemaining = $beers[$i]['remainAmount'] / $beers[$i]['startAmount'] * 100;
+										if( $beers[$i]['remainAmount'] <= 0 ) {
 											$kegImgClass = "keg-empty";
 											$percentRemaining = 100; }
 										else if( $percentRemaining < 15 )
@@ -239,7 +246,7 @@
 									<div class="keg-container">
 										<div class="keg-indicator"><div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%"></div></div>
 									</div>
-									<h2><?php echo number_format(($beers[$i]['kegremain'] * 128)); ?> fl oz left</h2>
+									<h2><?php echo number_format(($beers[$i]['remainAmount'] * 128)); ?> fl oz left</h2>
 								</td>
 							<?php } ?>
 						</tr>

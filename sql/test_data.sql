@@ -40,6 +40,22 @@ INSERT INTO `beers` (`name`, `style`, `notes`, `ogEst`, `fgEst`, `srmEst`, `ibuE
 ('Darth Vader4', 'Cascadian Dark Ale', 'Rich, toasty malt flavor. Generous amounts of pine, citrus and roasted coffee. Herbal aroma with a punch of IPA hops at the finish.', '1.066', '1.016', 38, 66);
 
 
+
+-- --------------------------------------------------------
+
+--
+-- Put all beers into the `taps` table
+--
+
+INSERT INTO taps(`beerId`, `kegTypeId`, `tapNumber`, `active`, `ogAct`, `fgAct`, `srmAct`, `ibuAct`, `startAmount`, `createdDate`, `modifiedDate`)
+SELECT b.id, kegType.id as kegTypeId, '1' as tapNumber, 1 as active, b.ogEst as ogAct, b.fgEst as fgAct, b.srmEst as srmAct, b.ibuEst as ibuAct, kegType.maxAmount as startAmount, NOW() as createdDate, NOW() as modifiedDate
+FROM `beers` as b, (SELECT * FROM kegtypes ORDER BY Id LIMIT 1) as kegType
+
+
+
+
+
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
