@@ -3,7 +3,7 @@
 $username="root"; // Mysql username
 $password="root"; // Mysql password
 $db_name="raspberrypints"; // Database name
-$tbl_name="Users";
+$tbl_name="users";
 
 
 
