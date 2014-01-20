@@ -177,7 +177,13 @@
 									<h3><?php
 										$calfromalc = (1881.22 * ($beers[$i]['fg'] * ($beers[$i]['og'] - $beers[$i]['fg'])))/(1.775 - $beers[$i]['og']);									
 										$calfromcarbs = 3550.0 * $beers[$i]['fg'] * ((0.1808 * $beers[$i]['og']) + (0.8192 * $beers[$i]['fg']) - 1.0004);
-										echo number_format($calfromalc + $calfromcarbs); ?> kCal</h3>
+										if ( ($beers[$i]['og'] == 1) && ($beers[$i]['fg'] == 1 ) ) {
+											$calfromalc = 0;
+											$calfromcarbs = 0;
+											}
+										echo number_format($calfromalc + $calfromcarbs), " kCal";
+										?>
+									</h3>
 									<div class="abv-container">
 										<?php
 											$abv = ($beers[$i]['og'] - $beers[$i]['fg']) * 131;

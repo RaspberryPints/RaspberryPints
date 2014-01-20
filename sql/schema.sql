@@ -197,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `srmRgb` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data for table `srmRgb`
-INSERT INTO srmRgb(srm, rgb, createdDate, modifiedDate) VALUES('0.0','255,255,255', NOW(), NOW());
+INSERT INTO srmRgb(srm, rgb, createdDate, modifiedDate) VALUES('0.0','252,252,243', NOW(), NOW());
 INSERT INTO srmRgb(srm, rgb, createdDate, modifiedDate) VALUES('0.1','248,248,230', NOW(), NOW());
 INSERT INTO srmRgb(srm, rgb, createdDate, modifiedDate) VALUES('0.2','248,248,220', NOW(), NOW());
 INSERT INTO srmRgb(srm, rgb, createdDate, modifiedDate) VALUES('0.3','247,247,199', NOW(), NOW());
