@@ -3,7 +3,7 @@ session_start();
 if(!isset( $_SESSION['myusername'] )){
 header("location:index.php");
 }
-require 'includes/connn.php';
+require 'includes/conn.php';
 
 
 // Get values from form 
