@@ -113,13 +113,7 @@ CREATE TABLE IF NOT EXISTS `taps` (
 CREATE TABLE IF NOT EXISTS `pours` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tapId` int(11) NOT NULL,
-  `active` tinyint(1) NOT NULL,
-  `ogAct` decimal(4,3) NOT NULL,
-  `fgAct` decimal(4,3) NOT NULL,
-  `srmAct` decimal(3,1) NOT NULL,
-  `ibuAct` int(4) NOT NULL,
-  `kegTypeId` int(11) NOT NULL,
-  `kegstart` decimal(6,1) NOT NULL,
+  `amountPoured` decimal(6,1) NOT NULL,
   `createdDate` TIMESTAMP NULL,
   `modifiedDate` TIMESTAMP NULL,
   
@@ -605,6 +599,48 @@ INSERT INTO srmRgb(srm, rgb, createdDate, modifiedDate) VALUES('39.8','3,4,3',  
 INSERT INTO srmRgb(srm, rgb, createdDate, modifiedDate) VALUES('39.9','3,4,3',      NOW(), NOW());
 INSERT INTO srmRgb(srm, rgb, createdDate, modifiedDate) VALUES('40.0','3,4,3',      NOW(), NOW());
 
+
+-- --------------------------------------------------------
+
+--
+-- Create View `vwGetTapsAmountPoured`
+--
+
+
+CREATE VIEW vwGetTapsAmountPoured
+AS
+SELECT tapId, SUM(amountPoured) as amountPoured FROM pours GROUP BY tapId;
+
+-- --------------------------------------------------------
+
+--
+-- Create View `vwGetActiveTaps`
+--
+
+
+CREATE VIEW vwGetActiveTaps
+AS
+
+SELECT 
+	t.id, 
+	b.name,
+	b.style,
+	b.notes,
+	t.ogAct,
+	t.fgAct,
+	t.srmAct,
+	t.ibuAct,
+	t.startAmount,
+	IFNULL(p.amountPoured, 0) as amountPoured,
+	t.startAmount - IFNULL(p.amountPoured, 0) as remainAmount,
+	t.tapNumber,
+	s.rgb as srmRgb
+FROM taps t 
+	LEFT JOIN beers b ON b.id = t.beerId
+	LEFT JOIN srmRgb s ON s.srm = t.srmAct
+	LEFT JOIN vwGetTapsAmountPoured as p ON p.tapId = t.Id
+WHERE active = true 
+ORDER BY t.tapNumber;
 
 
 

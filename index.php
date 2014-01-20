@@ -21,26 +21,7 @@
 			$config[$b['configName']] = $b['configValue'];
 		}
 		
-		$srmRgb = array();
-		$sql = "SELECT * FROM srmRgb";
-		$qry = mysql_query($sql);
-		while($b = mysql_fetch_array($qry))
-		{
-			$srmRgb[$b['srm']] = $b['rgb'];
-		}
-		
-		$sql =  "SELECT " .
-					"t.*, " .
-					"b.*, " .
-					"s.rgb as srmRgb, " .
-					"IFNULL(p.amountPoured, 0) as amountPoured, " .
-					"t.startAmount - IFNULL(p.amountPoured, 0) as remainAmount " .
-				"FROM taps t " .
-					"LEFT JOIN beers b ON b.id = t.beerId " .
-					"LEFT JOIN srmRgb s ON s.srm = t.srmAct " .
-					"LEFT JOIN (SELECT tapId, SUM(amountPoured) as amountPoured FROM pours GROUP BY tapId) as p ON p.tapId = t.Id " .
-				"WHERE active = true " .
-				"ORDER BY t.tapNumber";
+		$sql =  "SELECT * FROM vwGetActiveTaps";
 		$qry = mysql_query($sql);
 		while($b = mysql_fetch_array($qry))
 		{
