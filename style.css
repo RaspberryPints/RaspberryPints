@@ -79,6 +79,7 @@ table td{
 	border-left: 1px white dashed;
 	padding: 1px 5px;
 	text-align: center;
+	vertical-align: top;
 	color: white;
 }
 table th:first-child,
@@ -109,7 +110,6 @@ table .ibu{
 }
 table td.name{
 	text-align: left;
-	vertical-align: top;
 	padding: 5px;
 }
 table .abv{

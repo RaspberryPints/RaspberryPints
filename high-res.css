@@ -1,18 +1,23 @@
+body{
+	font-size: 2.5em;
+}
+
+
 table .tap-num{
 	width: 80px;
 }
 table .srm{
-	width: 150px;
+	width: 250px;
 }
 table .ibu{
-	width: 150px;
+	width: 250px;
 }
 
 table .abv{
-	width: 250px;
+	width: 350px;
 }
 table .keg{
-	width: 175px;
+	width: 250px;
 }
 
 span.tapcircle {	
