@@ -3,7 +3,7 @@ session_start();
 if(!isset( $_SESSION['myusername'] )){
 header("location:index.php");
 }
-require 'includes/config.php';
+require 'includes/conn.php';
 require '../includes/config_names.php';
 
 
