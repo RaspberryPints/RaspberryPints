@@ -50,41 +50,41 @@ require 'includes/conn.php';
 	
 		 <div class="contentcontainer med left">
             	<p>
-<?php
-require 'includes/config.php';
 
-$sql="SELECT * FROM $tbl_name WHERE active='1'";
-$result=mysql_query($sql);
-?>	
-<div class="headings alt">
-                <h2>Tap List</h2>
-</div>
 
-<?php
-require 'includes/config.php';
 
-$sql="SELECT * FROM $tbl_name";
-$result=mysql_query($sql);
+<br />
+<p><b>Number Of Taps:</b> &nbsp <input type="text" class="smallbox"> &nbsp <input type="submit" class="btn" value="Update" /></p><br />
+</b></p>
 
-$beerid=$_GET['beerid'];
 
-?>	
+
+<table width="950" border="0" cellspacing="0" cellpadding="0">
+<thead>
 <tr>
-<td>
-<table width="400" border="0" cellspacing="0" cellpadding="3">
-<?php
-while($rows=mysql_fetch_array($result)){
-?>
-<tr>
-<td><b><input class="smallbox" name="tapnumber" type="text" id="tapnumber" value="<? echo $rows['tapnumber']; ?>"></b></td>
-<td><b><? echo $rows['name']; ?></b></td>
-<td><b><input name="beerid" type="hidden" id="beerid" value="<? echo $rows['beerid']; ?>"></b></td>
-<?php
-}
-?>
-</td>
+<th>
+<b>Tap #</b>
+</th>
+<th>
+<b>Beer Name</b>
+</th>
+<th>
+<b>Vitals This Batch</b>
+</th>
+<th>
+<b>Keg Info</b>
+</th>
 </tr>
+</thead>
+<tbody>
+
+
+</tbody>
 </table>
+<br />
+<div align="right">
+<input type="submit" class="btn" value="Save" /> &nbsp &nbsp <input type="submit" class="btn" value="Reset" />
+</div>
         </div>
         <div id="footer">
         	&copy; Copyright 2012-2014 RaspberryPints
@@ -108,7 +108,7 @@ echo mysql_result($result, 0, 'name');
 			</div>
 
         
-        <ul id="nav">
+             <ul id="nav">
         	<li>
                 <ul class="navigation">
                     <li class="heading selected">Welcome</li>
@@ -127,9 +127,9 @@ echo mysql_result($result, 0, 'name');
 			 <li>
                 <a class="expanded heading">Analytics</a>
                  <ul class="navigation">
-                    <li><a href="#" target="" title="temperature">Temperature Monitoring</a>Comming soon</li>
-                    <li><a href="#" title="GPT">Gallons Per Tap</a>Comming soon</li>
-                    <li><a href="#" title="rank">Beer Rank</a>Comming soon</li>
+                    <li><a href="#" target="" title="temperature">Temperature Monitoring</a>Coming soon</li>
+                    <li><a href="#" title="GPT">Gallons Per Tap</a>Coming soon</li>
+                    <li><a href="#" title="rank">Beer Rank</a>Coming soon</li>
                 </ul>
             </li>
 			            <li>
@@ -139,7 +139,7 @@ echo mysql_result($result, 0, 'name');
 					<li><a href="report_bug.php" title="faq">Report Bug</a></li>
 					<li><a href="feedback.php" title="faq">FeedBack</a></li>					
                 </ul>
-            </li>            
+            </li>          
         </ul>
     </div>
     <!-- Left Dark Bar End --> 
