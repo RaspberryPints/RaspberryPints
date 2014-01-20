@@ -6,7 +6,7 @@ header("location:index.php");
 
 require 'includes/conn.php';
 require '../includes/config_names.php';
-require 'includes/congifp.php';
+require 'includes/configp.php';
 
 ?> 
 
@@ -72,7 +72,7 @@ echo '<h3>' . $row['display_name'] . '</h3>' .
 </form>
 <hr />
 			<?php
-			$sql="SELECT * FROM profile";
+			$sql="SELECT * FROM config";
 $result=mysql_query($sql);
 
 $rows=mysql_fetch_array($result);?>
@@ -115,7 +115,7 @@ $rows=mysql_fetch_array($result);?>
 <div id="welcome"> &nbsp &nbsp Hello: &nbsp
   <?php
   
-  $sql="SELECT `name` FROM `Users` WHERE username='$_SESSION[myusername]'";
+  $sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
   $result=mysql_query($sql);
 
 echo mysql_result($result, 0, 'name');
