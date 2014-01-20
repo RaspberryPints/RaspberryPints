@@ -61,9 +61,9 @@ require 'includes/configp.php';
 			<form method="post" action="update_column.php">
 <?php
 foreach($result as $row) {
-echo '<h3>' . $row['display_name'] . '</h3>' .
-'On<input type="radio" ' . ($row['config_value']?'checked':'') . ' name="' . str_replace(' ','',$row['id']) . '" value="1">' .
-'Off<input type="radio" ' . (!$row['config_value']?'checked':'') . ' name="' . str_replace(' ','',$row['id']) . '" value="0"><br>' .
+echo '<h3>' . $row['displayName'] . '</h3>' .
+'On<input type="radio" ' . ($row['configValue']?'checked':'') . ' name="' . str_replace(' ','',$row['id']) . '" value="1">' .
+'Off<input type="radio" ' . (!$row['configValue']?'checked':'') . ' name="' . str_replace(' ','',$row['id']) . '" value="0"><br>' .
 '<br>';
  }
 
@@ -72,14 +72,14 @@ echo '<h3>' . $row['display_name'] . '</h3>' .
 </form>
 <hr />
 			<?php
-			$sql="SELECT * FROM config";
+			$sql="SELECT configValue FROM config WHERE configName ='headerText'";
 $result=mysql_query($sql);
 
 $rows=mysql_fetch_array($result);?>
 <h2>Change Header Text</h2>
 			<form method="post" action="update_header_text.php"><br />
              <b>Header text</b><br />
-			<input type="text" value="<? echo $rows['header_text']; ?>" name="header_text"> &nbsp <br />
+			<input type="text" value="<? echo $rows['configValue']; ?>" name="header_text"> &nbsp <br />
 			<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
 		<hr />	
