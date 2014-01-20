@@ -8,4 +8,6 @@ abstract class ConfigNames
     const ShowAbvCol = 'showAbvCol';
 	const ShowKegCol = 'showKegCol';	
 	const UseHighResolution = 'useHighResolution';
+	const LogoUrl = 'logoUrl';	
+	const HeaderText = 'headerText';	
 }
