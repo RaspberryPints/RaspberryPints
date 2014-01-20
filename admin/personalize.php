@@ -72,14 +72,14 @@ echo '<h3>' . $row['displayName'] . '</h3>' .
 </form>
 <hr />
 			<?php
-			$sql="SELECT configValue FROM config WHERE configName ='headerText'";
+			$sql="SELECT configValue FROM config WHERE configName ='".ConfigNames::HeaderText."'";
 $result=mysql_query($sql);
+$headerText=mysql_fetch_array($result);?>
 
-$rows=mysql_fetch_array($result);?>
 <h2>Change Header Text</h2>
 			<form method="post" action="update_header_text.php"><br />
              <b>Header text</b><br />
-			<input type="text" value="<? echo $rows['configValue']; ?>" name="header_text"> &nbsp <br />
+			<input type="text" value="<? echo $headerText['configValue']; ?>" name="header_text"> &nbsp <br />
 			<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
 		<hr />	
