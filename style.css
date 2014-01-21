@@ -118,6 +118,11 @@ table .abv{
 table .keg{
 	width: 150px;
 }
+
+table td.tap-num{
+	vertical-align: middle;
+}
+
 span.tapcircle {
   background-color: rgba(153,153,153,.3);
   border-radius: 1em;
