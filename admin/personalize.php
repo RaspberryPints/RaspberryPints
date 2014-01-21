@@ -79,7 +79,7 @@ $headerText=mysql_fetch_array($result);?>
 <h2>Change Header Text</h2>
 			<form method="post" action="update_header_text.php"><br />
              <b>Header text</b><br />
-			<input type="text" value="<? echo $headerText['configValue']; ?>" name="header_text"> &nbsp <br />
+			<input type="text" class="mediumbox" value="<? echo $headerText['configValue']; ?>" name="header_text"> &nbsp <br />
 			<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
 		<hr />	
