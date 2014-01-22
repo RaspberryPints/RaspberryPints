@@ -32,7 +32,7 @@ echo mysql_result($result, 0, 'name');
                 </ul>
             </li>
 			 <li>
-                <a class="expanded heading">Analytics</a>
+                <a class="collapsed heading">Analytics-<small> Coming Soon</small></a>
                  <ul class="navigation">
                     <li><a href="#" target="" title="temperature">Temperature Monitoring</a>Coming soon</li>
                     <li><a href="#" title="GPT">Gallons Per Tap</a>Coming soon</li>
