@@ -151,6 +151,7 @@ INSERT INTO `config`(configName, configValue, displayName, createdDate, modified
 INSERT INTO `config`(configName, configValue, displayName, createdDate, modifiedDate) VALUES('useHighResolution', '0', '4k Monitor Support', NOW(), NOW());
 INSERT INTO `config`(configName, configValue, displayName, createdDate, modifiedDate) VALUES('logoUrl', 'admin/img/logo.png', 'Logo Url', NOW(), NOW());
 INSERT INTO `config`(configName, configValue, displayName, createdDate, modifiedDate) VALUES('headerText', 'Beers On Tap', 'Header Text', NOW(), NOW());
+INSERT INTO `config`(configName, configValue, displayName, createdDate, modifiedDate) VALUES('numberOfTaps', '0', 'Number of Taps', NOW(), NOW());
 
 
 -- --------------------------------------------------------

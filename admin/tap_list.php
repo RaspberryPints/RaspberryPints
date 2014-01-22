@@ -1,10 +1,25 @@
-<?
+<?php
 session_start();
 if(!isset( $_SESSION['myusername'] )){
-header("location:index.php");
+	header("location:index.php");
 }
 
 require 'includes/conn.php';
+require '../includes/config_names.php';
+require 'includes/functions.php';
+require 'includes/beer_functions.php';
+require 'includes/kegType_functions.php';
+require 'includes/tap_functions.php';
+
+
+if( isset($_POST['updateNumberOfTaps'])) {
+	updateTapNumber($_POST['numberOfTaps']);	
+}
+
+$numberOfTaps = getTapNumber();
+$beers = getAllBeers();
+$kegTypes = getAllKegTypes();
+$activeTaps = getActiveTaps();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -42,8 +57,8 @@ include 'header.php';
 		 <div class="contentcontainer med left">
 	<p>
 	<!-- Set Tap Number Form -->
-		<form action="" method="POST" name="taplimit">
-			<b>Number Of Taps:</b> &nbsp <input type="text" class="xsmallbox"> &nbsp <input type="submit" class="btn" value="Update" />
+		<form method="POST" name="taplimit">
+			<b>Number Of Taps:</b> &nbsp <input type="text" name="numberOfTaps" class="smallbox" value="<?php echo $numberOfTaps ?>"> &nbsp <input type="submit" name="updateNumberOfTaps" class="btn" value="Update Number of Taps" />
 		</form>
 	</p>
 	<!-- End Tap Number Form -->
@@ -52,21 +67,41 @@ include 'header.php';
 		<table width="950" border="0" cellspacing="0" cellpadding="0">
 			<thead>
 			<tr>
-			<th>
-				<b>Tap #</b>
-			</th>
-			<th>
-				<b>Beer Name</b>
-			</th>
-			<th>
-				<b>Vitals This Batch</b>
-			</th>
-			<th>
-				<b>Keg Info</b>
-			</th>
+				<th>
+					<b>Tap #</b>
+				</th>
+				<th>
+					<b>Beer Name</b>
+				</th>
+				<th>
+					<b>Vitals This Batch</b>
+				</th>
+				<th>
+					<b>Keg Info</b>
+				</th>
 			</tr>
 			</thead>
 		<tbody>
+		
+			<?php 
+				for($c = 1; $c <= $numberOfTaps; $c++ ){ 
+					$tap = null;
+					if( array_key_exists($c, $activeTaps) )
+						$tap = $activeTaps[$c];
+			?>
+					<tr>
+						<td>
+							<?php echo $c ?>
+						</td>
+						
+						<td>
+							<?php echo toSelectList($beers, "name", "id", $tap != null ? $tap['beerId'] : null, "~Inactive~") ?>
+						</td>
+					</tr>
+			<?php 
+				} 
+			?>
+		
 
 		</tbody>
 		</table>

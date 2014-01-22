@@ -9,5 +9,6 @@ abstract class ConfigNames
 	const ShowKegCol = 'showKegCol';	
 	const UseHighResolution = 'useHighResolution';
 	const LogoUrl = 'logoUrl';	
-	const HeaderText = 'headerText';	
+	const HeaderText = 'headerText';
+	const NumberOfTaps = 'numberOfTaps';
 }
