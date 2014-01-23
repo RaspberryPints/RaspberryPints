@@ -20,43 +20,6 @@ function getTapNumber(){
 	}
 }
 
-function getAllBeers(){
-	$sql="SELECT * FROM beers";
-	$qry = mysql_query($sql);
-	
-	$beers = array();
-	while($b = mysql_fetch_array($qry)){
-		$beer = array(
-			"id" => $b['id'],
-			"name" => $b['name'],
-			"og" => $b['ogEst'],
-			"fg" => $b['fgEst'],
-			"srm" => $b['srmEst'],
-			"ibu" => $b['ibuEst']
-		);
-		$beers[$b['id']] = $beer;
-	}
-	
-	return $beers;
-}
-
-function getAllKegTypes(){
-	$sql="SELECT * FROM kegTypes";
-	$qry = mysql_query($sql);
-	
-	$types = array();
-	while($t = mysql_fetch_array($qry)){
-		$type = array(
-			"id" => $t['id'],
-			"name" => $t['displayName'],
-			"maxAmount" => $t['maxAmount']
-		);
-		$types[$t['id']] = $type;
-	}
-	
-	return $types;
-}
-
 function getActiveTaps(){
 	$sql="SELECT * FROM taps WHERE active = 1";
 	$qry = mysql_query($sql);
