@@ -4,12 +4,14 @@ if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
 
-require 'includes/conn.php';
-require '../includes/config_names.php';
-require 'includes/html_helper.php';
-require 'managers/beer_manager.php';
-require 'managers/kegType_manager.php';
-require 'managers/tap_manager.php';
+require_once 'includes/models/tap.php';
+
+require_once 'includes/conn.php';
+require_once '../includes/config_names.php';
+require_once 'includes/html_helper.php';
+require_once 'includes/managers/beer_manager.php';
+require_once 'includes/managers/kegType_manager.php';
+require_once 'includes/managers/tap_manager.php';
 
 $htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
@@ -68,6 +70,7 @@ include 'header.php';
 	<!-- End Tap Number Form -->
 <br />
 	<!-- Start On Tap Section -->
+		<form>
 		<table width="950" border="0" cellspacing="0" cellpadding="0">
 			<thead>
 			<tr>
@@ -77,10 +80,10 @@ include 'header.php';
 				<th>
 					<b>Beer Name</b>
 				</th>
-				<th>
+				<th colspan="8">
 					<b>Vitals This Batch</b>
 				</th>
-				<th>
+				<th colspan="3">
 					<b>Keg Info</b>
 				</th>
 			</tr>
@@ -89,9 +92,10 @@ include 'header.php';
 		
 			<?php 
 				for($c = 1; $c <= $numberOfTaps; $c++ ){ 
-					$tap = null;
 					if( array_key_exists($c, $activeTaps) )
 						$tap = $activeTaps[$c];
+					else
+						$tap = new Tap();
 			?>
 					<tr>
 						<td>
@@ -99,7 +103,36 @@ include 'header.php';
 						</td>
 						
 						<td>
-							<?php echo $htmlHelper->ToSelectList($beers, "name", "id", $tap != null ? $tap['beerId'] : null, "~Inactive~") ?>
+							<?php echo $htmlHelper->ToSelectList($c."_beerId", $beers, "name", "id", $tap->get_beerId(), "~Inactive~") ?>
+						</td>
+						
+						<td>
+							<label for="<?php echo $c?>_srm">srm:</label>
+						</td>						
+						<td>
+							<input type="text" id="<?php echo $c?>_srm" name="<?php echo $c?>_srm" class="smallbox" value="<?php echo $tap->get_srm() ?>">
+						</td>						
+						<td>							
+							<label for="<?php echo $c?>_ibu">ibu:</label>
+						</td>
+						
+						<td>
+							<input type="text" id="<?php echo $c?>_ibu" name="<?php echo $c?>_ibu" class="smallbox" value="<?php echo $tap->get_ibu() ?>">
+						</td>						
+						<td>							
+							<label for="<?php echo $c?>_og">og:</label>
+						</td>
+						
+						<td>
+							<input type="text" id="<?php echo $c?>_og" name="<?php echo $c?>_og" class="smallbox" value="<?php echo $tap->get_og() ?>">
+						</td>						
+						<td>
+							<label for="<?php echo $c?>_fg">fg:</label>
+						</td>
+						
+						<td>
+							<input type="text" id="<?php echo $c?>_fg" name="<?php echo $c?>_fg" class="smallbox" value="<?php echo $tap->get_fg() ?>">
+							
 						</td>
 					</tr>
 			<?php 
