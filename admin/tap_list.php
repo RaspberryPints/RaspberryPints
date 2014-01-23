@@ -6,20 +6,24 @@ if(!isset( $_SESSION['myusername'] )){
 
 require 'includes/conn.php';
 require '../includes/config_names.php';
-require 'includes/functions.php';
-require 'includes/beer_functions.php';
-require 'includes/kegType_functions.php';
-require 'includes/tap_functions.php';
+require 'includes/html_helper.php';
+require 'managers/beer_manager.php';
+require 'managers/kegType_manager.php';
+require 'managers/tap_manager.php';
 
+$htmlHelper = new HtmlHelper();
+$tapManager = new TapManager();
+$beerManager = new BeerManager();
+$kegTypeManager = new KegTypeManager();
 
 if( isset($_POST['updateNumberOfTaps'])) {
-	updateTapNumber($_POST['numberOfTaps']);	
+	$tapManager->updateTapNumber($_POST['numberOfTaps']);	
 }
 
-$numberOfTaps = getTapNumber();
-$beers = getAllBeers();
-$kegTypes = getAllKegTypes();
-$activeTaps = getActiveTaps();
+$numberOfTaps = $tapManager->getTapNumber();
+$beers = $beerManager->getAllBeers();
+$kegTypes = $kegTypeManager->getAllKegTypes();
+$activeTaps = $tapManager->getActiveTaps();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -95,7 +99,7 @@ include 'header.php';
 						</td>
 						
 						<td>
-							<?php echo toSelectList($beers, "name", "id", $tap != null ? $tap['beerId'] : null, "~Inactive~") ?>
+							<?php echo $htmlHelper->ToSelectList($beers, "name", "id", $tap != null ? $tap['beerId'] : null, "~Inactive~") ?>
 						</td>
 					</tr>
 			<?php 
