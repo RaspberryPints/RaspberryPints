@@ -51,9 +51,13 @@ INSERT INTO taps(`beerId`, `kegTypeId`, `tapNumber`, `active`, `ogAct`, `fgAct`,
 SELECT b.id, kegType.id as kegTypeId, b.id as tapNumber, 1 as active, b.ogEst as ogAct, b.fgEst as fgAct, b.srmEst as srmAct, b.ibuEst as ibuAct, kegType.maxAmount as startAmount, NOW() as createdDate, NOW() as modifiedDate
 FROM `beers` as b, (SELECT * FROM kegTypes ORDER BY Id LIMIT 1) as kegType;
 
+-- --------------------------------------------------------
 
+--
+-- Add number of taps to `config`
+--
 
-
+UPDATE `config` SET configValue='10' WHERE configname='numberOfTaps';
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
