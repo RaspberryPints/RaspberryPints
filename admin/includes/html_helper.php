@@ -1,9 +1,9 @@
 <?php
 class HtmlHelper{
 
-	function ToSelectList($selectName, $items, $nameProperty, $valueProperty, $selectedValue, $defaultName = null){
+	function ToSelectList($selectName, $items, $nameProperty, $valueProperty, $selectedValue, $defaultName = null, $cssClasses = ""){
 		
-		$str = "<select id='$selectName' name='$selectName'>";
+		$str = "<select id='$selectName' name='$selectName' class='$cssClasses'>";
 		
 			if( $defaultName ){
 				$str .= "<option value=''>" . $defaultName . "</option>";

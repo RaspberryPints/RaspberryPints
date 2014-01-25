@@ -187,35 +187,46 @@ include 'scripts.php';
 <script>
 	$(function() {
 		var beerList = { <?php foreach($beerList as $beerItem){ echo $beerItem->get_id() . ": " . $beerItem->toJson() . ", "; } ?> };
-		console.log(beerList);
-		
 		var kegTypeList = { <?php foreach($kegTypeList as $kegTypeItem){ echo $kegTypeItem->get_id() . ": " . $kegTypeItem->toJson() . ", "; } ?> };
-		console.log(kegTypeList);
 		
-		$('#tap-form').on('change', '#beerId', function(){
-			var $this = $(this);
-			
-			if( $this.val() ){
-				var $form = $('#tap-form'),
-					beer = beerList[$this.val()];
-					
-				$form
-					.find('#srm').val(beer['srm']).end()
-					.find('#ibu').val(beer['ibu']).end()
-					.find('#og').val(beer['og']).end()
-					.find('#fg').val(beer['fg']).end();
-			}
-		}).on('change', '#kegTypeId', function(){
-			var $this = $(this);
-			
-			if( $this.val() ){
-				var $form = $('#tap-form'),
-					kegType = kegTypeList[$this.val()];
-					
-				$form
-					.find('#startAmount').val(kegType['maxAmount']).end();
-			}
-		})
+		$('#tap-form')	
+			.on('change', '#beerId', function(){
+				var $this = $(this);
+				
+				if( $this.val() ){
+					var $form = $('#tap-form'),
+						beer = beerList[$this.val()];
+						
+					$form
+						.find('#srm').val(beer['srm']).end()
+						.find('#ibu').val(beer['ibu']).end()
+						.find('#og').val(beer['og']).end()
+						.find('#fg').val(beer['fg']).end();
+				}
+			})
+			.on('change', '#kegTypeId', function(){
+				var $this = $(this);
+				
+				if( $this.val() ){
+					var $form = $('#tap-form'),
+						kegType = kegTypeList[$this.val()];
+						
+					$form
+						.find('#startAmount').val(kegType['maxAmount']).end();
+				}
+			});
+		
+		$('#tap-form').validate({
+		  rules: {
+			beerId: { required: true },
+			srm: { required: true, number: true },
+			ibu: { required: true, number: true },
+			og: { required: true, number: true },
+			fg: { required: true, number: true },
+			kegTypeId: { required: true },
+			startAmount: { required: true, number: true }
+		  }
+		});
 		
 	});
 </script>
