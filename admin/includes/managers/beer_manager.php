@@ -1,23 +1,32 @@
 <?php
+require_once 'includes/models/beer.php';
+
 class BeerManager{
 
-	function getAllBeers(){
+	function GetAll(){
 		$sql="SELECT * FROM beers";
 		$qry = mysql_query($sql);
 		
 		$beers = array();
-		while($b = mysql_fetch_array($qry)){
-			$beer = array(
-				"id" => $b['id'],
-				"name" => $b['name'],
-				"og" => $b['ogEst'],
-				"fg" => $b['fgEst'],
-				"srm" => $b['srmEst'],
-				"ibu" => $b['ibuEst']
-			);
-			$beers[$b['id']] = $beer;
+		while($i = mysql_fetch_array($qry)){
+			$beer = new Beer();
+			$beer->setFromArray($i);
+			$beers[$beer->get_id()] = $beer;		
 		}
 		
 		return $beers;
+	}
+		
+	function GetById($id){
+		$sql="SELECT * FROM beers WHERE id = $id";
+		$qry = mysql_query($sql);
+		
+		if( $i = mysql_fetch_array($qry) ){		
+			$beer = new Beer();
+			$beer->setFromArray($i);
+			return $beer;
+		}
+
+		return null;
 	}
 }

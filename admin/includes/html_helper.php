@@ -1,23 +1,26 @@
 <?php
 class HtmlHelper{
 
-	function ToSelectList($selectName, $items, $name, $value, $selectedValue, $defaultName = null){
+	function ToSelectList($selectName, $items, $nameProperty, $valueProperty, $selectedValue, $defaultName = null){
 		
 		$str = "<select id='$selectName' name='$selectName'>";
 		
 			if( $defaultName ){
-				$str .= "<option>" . $defaultName . "</option>";
+				$str .= "<option value=''>" . $defaultName . "</option>";
 			}
 		
 			foreach($items as $item){
-				$str .= "<option value='".$item[$value]."' ";
+				$value = $item->{"get_$valueProperty"}();
+				$name = $item->{"get_$nameProperty"}();
 				
-				if( $selectedValue == $item[$value] ){
+				$str .= "<option value='$value' ";
+				
+				if( $selectedValue == $value ){
 					$str .= "selected ";
 				}
 				
 				$str .= ">";
-				$str .= $item[$name];
+				$str .= $name;
 				$str .= "</option>";
 			}
 		

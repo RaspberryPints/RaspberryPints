@@ -10,6 +10,10 @@ class Tap
 	private $_srm;  
 	private $_ibu;  
 	private $_startAmount; 
+	private $_currentAmount; 
+	private $_active;
+	private $_createdDate; 
+	private $_modifiedDate; 
 
 	public function __construct(){}
   
@@ -40,11 +44,20 @@ class Tap
 	public function get_startAmount(){ return $this->_startAmount; }
 	public function set_startAmount($_startAmount){ $this->_startAmount = $_startAmount; }
 	
+	public function get_currentAmount(){ return $this->_currentAmount; }
+	public function set_currentAmount($_currentAmount){ $this->_currentAmount = $_currentAmount; }
+	
+	public function get_active(){ return $this->_active; }
+	public function set_active($_active){ $this->_active = $_active; }
+	
+	public function get_createdDate(){ return $this->_createdDate; }
+	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
+	
+	public function get_modifiedDate(){ return $this->_modifiedDate; }
+	public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
 	
     public function setFromArray($postArr)  
-    {  
-	
-	
+    {  	
 		if( isset($postArr['id']) )
 			$this->set_id($postArr['id']);
 		else
@@ -65,35 +78,36 @@ class Tap
 		else
 			$this->set_tapNumber(null);
 			
-		if( isset($postArr['ogAct']) )
+		if( isset($postArr['og']) )
+			$this->set_og($postArr['og']);
+		else if( isset($postArr['ogAct']) )
 			$this->set_og($postArr['ogAct']);
 		else if( isset($postArr['ogEst']) )
 			$this->set_og($postArr['ogEst']);
 		else
 			$this->set_og(null);
 			
-		if( isset($postArr['fgAct']) )
+		if( isset($postArr['fg']) )
+			$this->set_fg($postArr['fg']);
+		else if( isset($postArr['fgAct']) )
 			$this->set_fg($postArr['fgAct']);
 		else if( isset($postArr['fgEst']) )
 			$this->set_fg($postArr['fgEst']);
 		else
 			$this->set_fg(null);
 			
-		if( isset($postArr['srmAct']) )
+		if( isset($postArr['srm']) )
+			$this->set_srm($postArr['srm']);
+		else if( isset($postArr['srmAct']) )
 			$this->set_srm($postArr['srmAct']);
 		else if( isset($postArr['srmEst']) )
 			$this->set_srm($postArr['srmEst']);
 		else
 			$this->set_srm(null);
 			
-		if( isset($postArr['srmAct']) )
-			$this->set_srm($postArr['srmAct']);
-		else if( isset($postArr['srmEst']) )
-			$this->set_srm($postArr['srmEst']);
-		else
-			$this->set_srm(null);
-			
-		if( isset($postArr['ibuAct']) )
+		if( isset($postArr['ibu']) )
+			$this->set_ibu($postArr['ibu']);
+		else if( isset($postArr['ibuAct']) )
 			$this->set_ibu($postArr['ibuAct']);
 		else if( isset($postArr['ibuEst']) )
 			$this->set_ibu($postArr['ibuEst']);
@@ -104,6 +118,25 @@ class Tap
 			$this->set_startAmount($postArr['startAmount']);
 		else
 			$this->set_startAmount(null);
+				
+		if( isset($postArr['currentAmount']) )
+			$this->set_currentAmount($postArr['currentAmount']);
+		else
+			$this->set_currentAmount(null);
 		
+		if( isset($postArr['active']) )
+			$this->set_active($postArr['active']);
+		else
+			$this->set_active(false);
+		
+		if( isset($postArr['createdDate']) )
+			$this->set_createdDate($postArr['createdDate']);
+		else
+			$this->set_createdDate(null);
+			
+		if( isset($postArr['modifiedDate']) )
+			$this->set_modifiedDate($postArr['modifiedDate']);
+		else
+			$this->set_modifiedDate(null);
     }  
 }

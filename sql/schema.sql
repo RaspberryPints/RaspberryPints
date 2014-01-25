@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `beers` (
 
 CREATE TABLE IF NOT EXISTS `kegTypes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `displayName` int(11) NOT NULL,
+  `displayName` text NOT NULL,
   `maxAmount` decimal(6,2) NOT NULL,
   `createdDate` TIMESTAMP NULL,
   `modifiedDate` TIMESTAMP NULL,
@@ -95,6 +95,7 @@ CREATE TABLE IF NOT EXISTS `taps` (
   `srmAct` decimal(3,1) NOT NULL,
   `ibuAct` int(4) NOT NULL,
   `startAmount` decimal(6,1) NOT NULL,
+  `currentAmount` decimal(6,1) NOT NULL,
   `createdDate` TIMESTAMP NULL,
   `modifiedDate` TIMESTAMP NULL,
   
