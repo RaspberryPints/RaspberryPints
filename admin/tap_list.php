@@ -87,21 +87,16 @@ include 'header.php';
 		<table width="950" border="0" cellspacing="0" cellpadding="0">
 			<thead>
 				<tr>
-					<th>
-						<b>Tap #</b>
-					</th>
-					<th>
-						<b>Beer Name</b>
-					</th>
-					<th colspan="4">
-						<b>Vitals This Batch</b>
-					</th>
-					<th colspan="2">
-						<b>Keg Info</b>
-					</th>
-					<th colspan="3">
-					
-					</th>
+					<th>Tap #</th>
+					<th>Beer Name</th>
+					<th>SRM</th>
+					<th>IBU</th>
+					<th>OG</th>
+					<th>FG</th>
+					<th>Keg Type</th>
+					<th>Start Amount</th>
+					<th>Current Amount</th>
+					<th colspan="3"></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -124,19 +119,19 @@ include 'header.php';
 									</td>
 									
 									<td>
-										SRM: <?php echo $tap->get_srm() ?>
+										<?php echo $tap->get_srm() ?>
 									</td>
 									
 									<td>							
-										IBU: <?php echo $tap->get_ibu() ?>
+										<?php echo $tap->get_ibu() ?>
 									</td>
 									
 									<td>							
-										OG: <?php echo $tap->get_og() ?>
+										<?php echo $tap->get_og() ?>
 									</td>
 									
 									<td>
-										FG: <?php echo $tap->get_fg() ?>
+										<?php echo $tap->get_fg() ?>
 									</td>
 																
 									<td>
@@ -144,7 +139,11 @@ include 'header.php';
 									</td>
 									
 									<td>
-										Fill Level: <?php echo $tap->get_startAmount() ?>
+										<?php echo $tap->get_startAmount() ?>
+									</td>
+									
+									<td>
+										<?php echo $tap->get_currentAmount() ?>
 									</td>
 									
 									<td>
