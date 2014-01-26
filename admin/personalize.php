@@ -90,7 +90,7 @@ include 'header.php';
 		<h2>Background Image</h2>
 		<p>This background appears on the taplist.</p>
 			<b>Current image:</b><br /><br />
-				<img src="img/background.jpg" width="200" alt="Background" style="border-style: solid; border-width: 2px; border-color: #d6264f;" />
+				<img src="../img/background.jpg" width="200" alt="Background" style="border-style: solid; border-width: 2px; border-color: #d6264f;" />
 			<form enctype="multipart/form-data" action="update_background.php" method="POST">
 				<input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/>
 				<input type="submit" class="btn" value="Upload" /><br /><br />
