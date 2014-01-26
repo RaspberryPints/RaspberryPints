@@ -155,15 +155,16 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 	`kegStampedOwner` text NOT NULL,
 	`kegStampedLoc` text NOT NULL,
 	`kegNotes` text NOT NULL,
-	`kegStatus` text NOT NULL,
+	`kegStatusId` int(11) NOT NULL,
 	`beerId` int(11) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
-	FOREIGN KEY (`kegStatus`) REFERENCES kegStatuses(`status`) ON DELETE CASCADE,
+	FOREIGN KEY (`kegStatusId`) REFERENCES kegStatuses(`status`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
 
 -- --------------------------------------------------------
 

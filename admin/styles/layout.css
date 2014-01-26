@@ -122,6 +122,7 @@ body {height: 100%; font-family: Arial, Helvetica, sans-serif; font-size: 13px; 
 	/* Table Styles */
 	
 	table {border-collapse: collapse;}
+		thead th{ white-space: nowrap; }
 		th,td {text-align: left; padding: 8px;}
 		th {background: #E0E0E0 url(../img/bg_th.png) repeat-x top; text-shadow: 1px 1px 1px #fff; font-size: 14px;}
 		tr.alt td{background: #F2F2F2 url(../img/bg_td_alt.png) repeat-x top; text-shadow: 1px 1px 1px #fff;}
