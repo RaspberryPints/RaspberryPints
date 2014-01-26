@@ -52,7 +52,7 @@ $activeTaps = $tapManager->getActiveTaps();
 <link href='http://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
 </head>
 	<!-- Start Header  -->
-<?
+<?php
 include 'header.php';
 ?>
 	<!-- End Header -->
@@ -62,9 +62,7 @@ include 'header.php';
     	<ul>	
         	<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
         	<li><strong>Location:</strong></li>
-            <li><a href="#" title="">Sub Section</a></li>
-            <li>/</li>
-            <li class="current">Tap List</li>
+            <li class="current">Tap List</li>            
         </ul>
     </div>
     <!-- Top Breadcrumb End --> 
@@ -186,7 +184,7 @@ include 'header.php';
 	<!-- End On Tap Section -->
 
     <!-- Start Footer -->   
-<? 
+<?php
 include 'footer.php';
 ?>
 
@@ -195,12 +193,12 @@ include 'footer.php';
     </div>
     <!-- Right Side/Main Content End -->
 	<!-- Start Left Bar Menu -->   
-<? 
+<?php
 include 'left_bar.php';
 ?>
 	<!-- End Left Bar Menu -->  
 	<!-- Start Js  -->
-<?
+<?php
 include 'scripts.php';
 ?>
 	<!-- End Js -->

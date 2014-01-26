@@ -23,9 +23,11 @@ $kegTypeManager = new KegTypeManager();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$tap = new Tap();
-	$tap->setFromArray($_POST);
-	$tapManager->Save($tap);
+	if( isset($_POST['saveTap']) ){
+		$tap = new Tap();
+		$tap->setFromArray($_POST);
+		$tapManager->Save($tap);
+	}
 	redirect('tap_list.php');
 }
 
@@ -142,6 +144,7 @@ include 'header.php';
 			<tr>
 				<td colspan="2">
 					<input name="saveTap" type="submit" class="btn" value="Save" />
+					<input name="cancel" type="submit" class="btn" value="Cancel" />
 				</td>
 			</tr>
 											
