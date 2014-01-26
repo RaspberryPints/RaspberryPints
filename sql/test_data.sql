@@ -39,7 +39,27 @@ INSERT INTO `beers` (`name`, `style`, `notes`, `ogEst`, `fgEst`, `srmEst`, `ibuE
 ('Black Peach', 'Iced Tea', 'Black tea infused with the unmistakable summertime flavor of juicy, orchard-fresh peaches and just the right amount of natural milled cane sugar.', '1.000', '1.000', 0, 0),
 ('Aloha Morning', 'Hawaiian Punch', 'Children''s strawberry and citrus punch, thinned to suit an adult pallet using only the highest quality dihydrogen monoxide available.', '1.000', '1.000', 0, 0);
 
+-- --------------------------------------------------------
 
+--
+-- Dumping data for table `kegTypes`
+--
+
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, beerId, createdDate, modifiedDate ) VALUES ( '1', '1', 'Cornelius', 'Super Champion', '016530387', 'Johnstown Production Center', '', 'One hanndle cracked', '4', NOW(), NOW() );
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, beerId, createdDate, modifiedDate ) VALUES ( '2', '1', 'Spartanburg', 'Challenger VI', '81175979', 'Joyce Bev', 'Washington D.C.', 'Green handles', '', '4', '2', NOW(), NOW() );
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, createdDate, modifiedDate ) VALUES ( '3', '1', 'Cornelius', 'Super Champion', '75162875', 'Pepi Cola Btlg Co', 'Oskaloosa, IA' '', 'Empty', '2', NOW(), NOW() );
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, createdDate, modifiedDate ) VALUES ( '4', '1', 'Cornelius', 'Super Champion', '77320513', 'Binghamton Btlg Co', '', '', '3', '', NOW(), NOW() );
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, createdDate, modifiedDate ) VALUES ( '5',  '1', 'Cornelius', 'Super Champion', '80224203', 'Pepsi Btlg Co', 'Southern CA', 'Green handles', '3', '5', NOW(), NOW() );
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, createdDate, modifiedDate ) VALUES ( '6',  '1', 'Spartanburg', 'Challenger VI', '290880483', 'Pepsi Cola Btlg Co', 'San Diego', '', 'Empty', '', NOW(), NOW() );
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, createdDate, modifiedDate ) VALUES ( '7',  '1', 'Cornelius', 'Super Champion', '83129068', 'Pepsi Cola Btlg Co', '', 'Empty', '', NOW(), NOW() );
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, createdDate, modifiedDate ) VALUES ( '8',  '1', 'Cornelius', 'Super Champion', '78143233', 'Pepsi Cola Btlg Co', 'Parkersburg WVA', '', 'Empty', '', NOW(), NOW() );
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, createdDate, modifiedDate ) VALUES ( '9',  '1', 'Spantanburg', 'Challenger VI', '112620585', 'Pepsi Cola Btlg Co', 'Aleghany, NY', 'Blue handles', 'Empty', '', NOW(), NOW() );
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, createdDate, modifiedDate ) VALUES ( '10',  '1', 'Cornelius', 'Super Champion', '82217553', 'Pepsi Cola Seven Up', 'Mpls St Paul', 
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, createdDate, modifiedDate ) VALUES ( '11',  '1', 'Cornelius', 'Super Champion', '77143229', 'So Conn Seven Up', 'S Norwalk Conn', 'Green handles', 'Empty', '', NOW(), NOW() );
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, createdDate, modifiedDate ) VALUES ( '12',  '1', 'Cornelius', 'Super Champion', '86018983', 'Seltzer Rydholm', 'Aub Port Aug', '', 'Empty', '', NOW(), NOW() );
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, createdDate, modifiedDate ) VALUES ( '13',  '1', 'Cornelius', 'Super Champion', '84405189', 'Pepsi Cola Btlg Co', 'Williamsport, PA', '', 'Empty', '', NOW(), NOW() );
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, createdDate, modifiedDate ) VALUES ( '14',  '1', 'Cornelius', 'Super Champion', '80273216', 'Pepsi Cola Btlg Co', 'Waterloo, IA', '', 'Empty', '', NOW(), NOW() );
+INSERT INTO `kegs` ( kegLabel, kegTypeId, kegMake, kegModel, kegSerial, kegStampedOwner, kegStampedLoc, kegNotes, kegStatus, createdDate, modifiedDate ) VALUES ( '15',  '1', 'Cornelius', 'Super Champion', '78225083', 'Pepsi Cola Btlg Co', 'San Diego', '', 'Empty', '', NOW(), NOW() );
 
 -- --------------------------------------------------------
 
