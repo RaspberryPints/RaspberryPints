@@ -34,10 +34,10 @@
 		<li>
 		<a class="expanded heading">Personalization</a>
 		<ul class="navigation">
-			<li><a href="personalize.php" title="personalize">Show/Hide Columns</a></li>
-			<li><a href="personalize.php" title="personalize">Headers</a></li>
-			<li><a href="personalize.php" title="personalize">Brewery Logo</a></li>
-			<li><a href="personalize.php" title="personalize">Background Image</a></li>
+			<li><a href="personalize.php#columns" title="personalize">Show/Hide Columns</a></li>
+			<li><a href="personalize.php#header" title="personalize">Headers</a></li>
+			<li><a href="personalize.php#logo" title="personalize">Brewery Logo</a></li>
+			<li><a href="personalize.php#background" title="personalize">Background Image</a></li>
 			<li><a href="#" title="theme">Themes <small>(coming v3.0.0)</small></a></li>
 			<li><a href="#" title="drinker-acct">Drinker Accounts <small>(coming v2.0.0)</small></a></li>
 			<li><a href="#" title="personalize">Units of Measure <small>(coming v3.0.0)</small></a></li>
