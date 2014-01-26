@@ -3,6 +3,20 @@ session_start();
 if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
+
+if( isset($_POST['newTap'])){
+	$tapNumber=$_POST['tapNumber'];
+	header("Location: tap_form.php?tapNumber=$tapNumber");
+	exit();
+	
+}else if( isset($_POST['editTap'])){
+	$tapNumber=$_POST['tapNumber'];
+	$id=$_POST['id'];
+	header("Location: tap_form.php?tapNumber=$tapNumber&id=$id");
+	exit();
+
+}
+
 require_once 'includes/conn.php';
 
 require_once 'includes/models/tap.php';
@@ -20,17 +34,6 @@ $kegTypeManager = new KegTypeManager();
 if( isset($_POST['updateNumberOfTaps'])) {
 	$tapManager->updateTapNumber($_POST['numberOfTaps']);	
 	
-}else if( isset($_POST['newTap'])){
-	$tapNumber=$_POST['tapNumber'];
-	header("Location: tap_form.php?tapNumber=$tapNumber");
-	exit();
-	
-}else if( isset($_POST['editTap'])){
-	$tapNumber=$_POST['tapNumber'];
-	$id=$_POST['id'];
-	header("Location: tap_form.php?tapNumber=$tapNumber&id=$id");
-	exit();
-
 }else if( isset($_POST['closeTap'])){
 	$tapManager->closeTap($_POST['id']);	
 }
