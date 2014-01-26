@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$tap = new Tap();
 	$tap->setFromArray($_POST);
 	$tapManager->Save($tap);
-	header("Location: tap_list.php");
+	echo "<script>window.location = 'tap_list.php';</script>";
 	exit();
 }
 
