@@ -11,6 +11,7 @@ require_once 'includes/models/kegType.php';
 require_once 'includes/conn.php';
 require_once '../includes/config_names.php';
 require_once 'includes/html_helper.php';
+require_once 'includes/functions.php';
 require_once 'includes/managers/beer_manager.php';
 require_once 'includes/managers/kegType_manager.php';
 require_once 'includes/managers/tap_manager.php';
@@ -25,8 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$tap = new Tap();
 	$tap->setFromArray($_POST);
 	$tapManager->Save($tap);
-	header("Location: tap_list.php");
-	exit();
+	redirect('tap_list.php');
 }
 
 $tapNumber = $_GET['tapNumber'];

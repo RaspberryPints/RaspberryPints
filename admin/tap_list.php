@@ -5,6 +5,7 @@ if(!isset( $_SESSION['myusername'] )){
 }
 
 require_once 'includes/conn.php';
+require_once 'includes/functions.php';
 
 require_once 'includes/models/tap.php';
 require_once 'includes/models/beer.php';
@@ -14,6 +15,7 @@ require_once 'includes/managers/beer_manager.php';
 require_once 'includes/managers/kegType_manager.php';
 require_once 'includes/managers/tap_manager.php';
 
+
 $tapManager = new TapManager();
 $beerManager = new BeerManager();
 $kegTypeManager = new KegTypeManager();
@@ -22,14 +24,12 @@ if( isset($_POST['updateNumberOfTaps'])) {
 	$tapManager->updateTapNumber($_POST['numberOfTaps']);	
 }else if( isset($_POST['newTap'])){
 	$tapNumber=$_POST['tapNumber'];
-	echo "<script>window.location = 'tap_form.php?tapNumber=$tapNumber';</script>";
-	exit();
+	redirect("tap_form.php?tapNumber=$tapNumber");
 	
 }else if( isset($_POST['editTap'])){
 	$tapNumber=$_POST['tapNumber'];
 	$id=$_POST['id'];
-	echo "<script>window.location = 'tap_form.php?tapNumber=$tapNumber&id=$id';</script>";
-	exit();
+	redirect("tap_form.php?tapNumber=$tapNumber&id=$id");
 
 }else if( isset($_POST['closeTap'])){
 	$tapManager->closeTap($_POST['id']);	
