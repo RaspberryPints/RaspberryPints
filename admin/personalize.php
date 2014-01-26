@@ -47,6 +47,7 @@ include 'header.php';
 			<h2>Personalize </h2>
 		</div>
 		<div class="contentbox">
+		<a name="columns"></a> 
 		<h2>Show/Hide Columns</h2><br /> 
 		<form method="post" action="update_column.php">
 			<?php
@@ -66,7 +67,7 @@ include 'header.php';
 			$result=mysql_query($sql);
 			$headerText=mysql_fetch_array($result);
 		?>
-
+      <a name="header"></a> 
 		<h2>Header Text</h2>
 		<p>This text appears at the very top of the taplist.</p>
 			<form method="post" action="update_header_text.php">
@@ -75,7 +76,7 @@ include 'header.php';
 			</form>
 
 		<hr />
-
+       <a name="logo"></a> 
 		<h2>Brewery Logo</h2>
 		<p>This logo appears on the taplist and the admin panel.</p>
 			<b>Current image:</b><br /><br />
@@ -86,7 +87,7 @@ include 'header.php';
 			</form> 
 
 		<hr />
-
+      <a name="background"></a> 
 		<h2>Background Image</h2>
 		<p>This background appears on the taplist.</p>
 			<b>Current image:</b><br /><br />
