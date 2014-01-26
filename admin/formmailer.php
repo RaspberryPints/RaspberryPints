@@ -2,7 +2,7 @@
 
 // $mail_to and $mail_from must be set.
 
-$mail_to = 'support@raspberrypints.com'; // Who is the E-Mail going to?
+$mail_to = 'issues@raspberrypints.com'; // Who is the E-Mail going to?
 $mail_from = 'bug@raspberrypints.com'; // Where does the E-Mail appear to be from?
 
 // OPTIONAL SETTING
