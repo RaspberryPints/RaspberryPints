@@ -1,0 +1,70 @@
+<?php
+require_once 'includes/models/keg.php';
+
+class KegManager{
+
+	function GetAll(){
+		$sql="SELECT * FROM kegs";
+		$qry = mysql_query($sql);
+		
+		$kegs = array();
+		while($i = mysql_fetch_array($qry)){
+			$keg = new Keg();
+			$keg->setFromArray($i);
+			$kegs[$keg->get_id()] = $keg;
+		}
+		
+		return $kegs;
+	}
+		
+	function GetById($id){
+		$sql="SELECT * FROM kegs WHERE id = $id";
+		$qry = mysql_query($sql);
+		
+		if( $i = mysql_fetch_array($qry) ){		
+			$keg = new Keg();
+			$keg->setFromArray($i);
+			return $keg;
+		}
+
+		return null;
+	}
+	
+	
+	function Save($keg){
+		$sql = "";
+		if($keg->get_id()){
+			$sql = 	"UPDATE kegs " .
+					"SET " .
+						"label = '" . $keg->get_label() . "', " .
+						"kegTypeId = " . $keg->get_kegTypeId() . ", " .
+						"make = '" . $keg->get_make() . "', " .
+						"model = '" . $keg->get_model() . "', " .
+						"serial = '" . $keg->get_serial() . "', " .
+						"stampedOwner = '" . $keg->get_stampedOwner() . "', " .
+						"stampedLoc = '" . $keg->get_stampedLoc() . "', " .
+						"notes = '" . $keg->get_notes() . "', " .
+						"kegStatusCode = '" . $keg->get_kegStatusCode() . "', " .
+						"modifiedDate = NOW() ".
+					"WHERE id = " . $keg->get_id();
+					
+		}else{
+			$sql = 	"INSERT INTO kegs(label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) " .
+					"VALUES(" . 
+						"'". $keg->get_label() . "', " . 
+						$keg->get_kegTypeId() . ", " . 
+						"'". $keg->get_make() . "', " . 
+						"'". $keg->get_model() . "', " . 
+						"'". $keg->get_serial() . "', " . 
+						"'". $keg->get_stampedOwner() . "', " . 
+						"'". $keg->get_stampedLoc() . "', " . 
+						"'". $keg->get_notes() . "', " . 
+						"'". $keg->get_kegStatusCode() . "', " . 
+						"NOW(), NOW())";
+		}
+		
+		//echo $sql; exit();
+		
+		mysql_query($sql);
+	}
+}
