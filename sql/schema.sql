@@ -147,22 +147,22 @@ INSERT INTO `kegStatuses` ( status, createdDate, modifiedDate ) VALUES ( 'Broken
 
 CREATE TABLE IF NOT EXISTS `kegs` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`kegLabel` text NOT NULL,
+	`label` text NOT NULL,
 	`kegTypeId` int(11) NOT NULL,
-	`kegMake` text NOT NULL,
-	`kegModel` text NOT NULL,
-	`kegSerial` text NOT NULL,
-	`kegStampedOwner` text NOT NULL,
-	`kegStampedLoc` text NOT NULL,
-	`kegNotes` text NOT NULL,
+	`make` text NOT NULL,
+	`model` text NOT NULL,
+	`serial` text NOT NULL,
+	`stampedOwner` text NOT NULL,
+	`stampedLoc` text NOT NULL,
+	`notes` text NOT NULL,
 	`kegStatusId` int(11) NOT NULL,
 	`beerId` int(11) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
 	PRIMARY KEY (`id`),
-	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
-	FOREIGN KEY (`kegStatusId`) REFERENCES kegStatuses(`id`) ON DELETE CASCADE
+	FOREIGN KEY (`kegStatusId`) REFERENCES kegStatuses(`id`) ON DELETE CASCADE,
+	FOREIGN KEY (`kegTypeId`) REFERENCES kegTypes(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 
