@@ -106,7 +106,7 @@ include 'header.php';
 					IBU:
 				</td>
 				<td>
-					<input type="text" id="ibu" name="ibu" value="<?php echo $tap->get_srm() ?>" />
+					<input type="text" id="ibu" name="ibu" value="<?php echo $tap->get_ibu() ?>" />
 				</td>
 			</tr>
 			<tr>
