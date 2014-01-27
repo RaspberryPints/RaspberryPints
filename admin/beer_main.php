@@ -43,20 +43,28 @@ include 'header.php';
 	
 		<div class="contentcontainer med left">
             <div class="headings alt">
-                <h2>Add Or Remove Beer</h2>
+                <h2>Add A Beer</h2>
             </div>
             <div class="contentbox">
 			<form action="includes/insert.php" method="post">
-<label for="textfield"><strong>Beer Name:</strong></label> <input class="inputbox" type="text" name="name" required> <br />
+<label for="textfield"><strong>Beer Name:</strong></label> <input class="inputbox" type="text" name="name"> <br />
 <label for="textfield"><strong>Style:</strong></label> <input class="inputbox" type="text" name="style"> <br />
 <label for="textfield"><strong>Notes:</strong></label> <textarea class="inputbox" name="notes"></textarea> <br />
-<label for="textfield"><strong>OG:</strong></label> <input class="inputbox" type="text" name="og"> <br />
-<label for="textfield"><strong>FG:</strong></label> <input class="inputbox" type="text" name="fg"> <br />
-<label for="textfield"><strong>SRM:</strong></label> <input class="inputbox" type="text" name="srm"> <br />
-<label for="textfield"><strong>IBU's:</strong></label> <input class="inputbox" type="text" name="ibu"> <br />
+<label for="textfield"><strong>OG:</strong></label> <input class="inputbox" type="text" name="ogEst"> <br />
+<label for="textfield"><strong>FG:</strong></label> <input class="inputbox" type="text" name="fgEst"> <br />
+<label for="textfield"><strong>SRM:</strong></label> <input class="inputbox" type="text" name="srmEst"> <br />
+<label for="textfield"><strong>IBU's:</strong></label> <input class="inputbox" type="text" name="ibuEst"> <br />
 <input class="btn" type="submit" value="Add Beer">
 </form>
+
      </div>
+<br />  
+ 
+	 <div class="headings alt">
+                <h2>Remove A Beer</h2>
+            </div>
+			 <div class="contentbox">
+			</div>
     <!-- Start Footer -->   
 <? 
 include 'footer.php';
