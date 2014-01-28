@@ -9,26 +9,19 @@ require_once __DIR__.'/../includes/config_names.php';
 require_once __DIR__.'/includes/html_helper.php';
 require_once __DIR__.'/includes/functions.php';
 
-require_once __DIR__.'/includes/models/keg.php';
-require_once __DIR__.'/includes/models/kegType.php';
-require_once __DIR__.'/includes/models/kegStatus.php';
+require_once __DIR__.'/includes/models/beer.php';
 
-require_once __DIR__.'/includes/managers/keg_manager.php';
-require_once __DIR__.'/includes/managers/kegStatus_manager.php';
-require_once __DIR__.'/includes/managers/kegType_manager.php';
+require_once __DIR__.'/includes/managers/beer_manager.php';
+
 
 $htmlHelper = new HtmlHelper();
-$kegManager = new KegManager();
-$kegStatusManager = new KegStatusManager();
-$kegTypeManager = new KegTypeManager();
+$beerManager = new BeerManager();
 
-
-
-if (isset($_POST['inactivateKeg'])) {
-	$kegManager->Inactivate($_POST['id']);		
+if (isset($_POST['inactivateBeer'])) {
+	$beerManager->Inactivate($_POST['id']);		
 }
 
-$kegs = $kegManager->GetAllActive();
+$beers = $beerManager->GetAllActive();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -54,7 +47,7 @@ include 'header.php';
     	<ul>	
         	<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
         	<li><strong>Location:</strong></li>
-            <li class="current">Keg List</li>            
+            <li class="current">Beer List</li>            
         </ul>
     </div>
     <!-- Top Breadcrumb End --> 
@@ -66,91 +59,69 @@ include 'header.php';
 			
 			<?php $htmlHelper->ShowMessage(); ?>
 			
-			<input type="submit" class="btn" value="Add Keg" onclick="window.location='keg_form.php'" />
+			<input type="submit" class="btn" value="Add Beer" onclick="window.location='beer_form.php'" />
 			<br/><br/>
 			
 			<table width="950" border="0" cellspacing="0" cellpadding="0">
 				<thead>
 					<tr>
 						<th>Name</th>
-						<th>Keg Type</th>
-						<th>Make</th>
-						<th>Model</th>
-						<th>Serial</th>
-						<th>Stamped Owner</th>
-						<th>Stamped Loc</th>
+						<th>Style</th>						
+						<th>OG</th>
+						<th>FG</th>
+						<th>SRM</th>
+						<th>IBU</th>
 						<th>Notes</th>
-						<th>Status</th>
-						<th></th>
+						<th></th>					
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php 
-						if( count($kegs) == 0 ){  
+						if( count($beers) == 0 ){  
 					?>
-							<tr><td class="no-results" colspan="99">No kegs</td></tr>
+							<tr><td class="no-results" colspan="99">No beers</td></tr>
 					<?php 
 						}else{  
-							foreach ($kegs as $keg){
-								
-								if( $keg->get_kegStatusCode() != null ){
-									$kegStatus = $kegStatusManager->GetByCode($keg->get_kegStatusCode());
-								}else{
-									$kegStatus = new KegStatus();
-								}
-								
-								if( $keg->get_kegTypeId() != null ){
-									$kegType = $kegTypeManager->GetById($keg->get_kegTypeId());
-								}else{
-									$kegType = new KegType();
-								}
+							foreach ($beers as $beer){
 					?>
 								<tr>
 									<td>
-										<?php echo $keg->get_label() ?>
+										<?php echo $beer->get_name() ?>
 									</td>
 									
 									<td>							
-										<?php echo $kegType->get_name() ?>
+										<?php echo $beer->get_style() ?>
 									</td>
 									
 									<td>
-										<?php echo $keg->get_make() ?>
+										<?php echo $beer->get_og() ?>
 									</td>
 									
 									<td>							
-										<?php echo $keg->get_model() ?>
+										<?php echo $beer->get_fg() ?>
 									</td>
 									
 									<td>							
-										<?php echo $keg->get_serial() ?>
+										<?php echo $beer->get_srm() ?>
 									</td>
 									
 									<td>
-										<?php echo $keg->get_stampedOwner() ?>
-									</td>
-																
-									<td>
-										<?php echo $keg->get_stampedLoc() ?>
+										<?php echo $beer->get_ibu() ?>
 									</td>
 									
 									<td>
-										<?php echo $keg->get_notes() ?>
+										<?php echo $beer->get_notes() ?>
 									</td>
-									
+																		
 									<td>
-										<?php echo $kegStatus->get_name() ?>
-									</td>
-									
-									<td>
-										<input name="editTap" type="button" class="btn" value="Edit" onclick="window.location='keg_form.php?id=<?php echo $keg->get_id()?>'" />
+										<input name="editBeer" type="button" class="btn" value="Edit" onclick="window.location='beer_form.php?id=<?php echo $beer->get_id()?>'" />
 									</td>
 									
 									<td>
 										<form method="POST">
-											<input type='hidden' name='id' value='<?php echo $keg->get_id()?>'/>
-											<input class="inactivateKeg btn" name="inactivateKeg" type="submit" value="Delete" />
+											<input type='hidden' name='id' value='<?php echo $beer->get_id()?>'/>
+											<input class="inactivateBeer btn" name="inactivateBeer" type="submit" value="Delete" />
 										</form>
 									</td>
 									
@@ -186,8 +157,8 @@ include 'scripts.php';
 ?>
 <script>
 	$(function(){
-		$('.inactivateKeg').on('click', function(){
-			if(!confirm('Are you sure you want to delete this keg?')){
+		$('.inactivateBeer').on('click', function(){
+			if(!confirm('Are you sure you want to delete this beer?')){
 				return false;
 			}
 		});

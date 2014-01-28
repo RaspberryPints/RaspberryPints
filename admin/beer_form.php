@@ -3,40 +3,31 @@ session_start();
 if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
-require_once 'includes/conn.php';
-require_once '../includes/config_names.php';
-require_once 'includes/html_helper.php';
-require_once 'includes/functions.php';
+require_once __DIR__.'/includes/conn.php';
+require_once __DIR__.'/../includes/config_names.php';
+require_once __DIR__.'/includes/html_helper.php';
+require_once __DIR__.'/includes/functions.php';
 
-require_once 'includes/models/keg.php';
-require_once 'includes/models/kegType.php';
-require_once 'includes/models/kegStatus.php';
+require_once __DIR__.'/includes/models/beer.php';
 
-require_once 'includes/managers/keg_manager.php';
-require_once 'includes/managers/kegStatus_manager.php';
-require_once 'includes/managers/kegType_manager.php';
+require_once __DIR__.'/includes/managers/beer_manager.php';
 
 $htmlHelper = new HtmlHelper();
-$kegManager = new KegManager();
-$kegStatusManager = new KegStatusManager();
-$kegTypeManager = new KegTypeManager();
+$beerManager = new BeerManager();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$keg = new Keg();
-	$keg->setFromArray($_POST);
-	$kegManager->Save($keg);
-	redirect('keg_list.php');
+	$beer = new Beer();
+	$beer->setFromArray($_POST);
+	$beerManager->Save($beer);
+	redirect('beer_list.php');
 }
 
 if( isset($_GET['id'])){
-	$keg = $kegManager->GetById($_GET['id']);
+	$beer = $beerManager->GetById($_GET['id']);
 }else{
-	$keg = new Keg();
+	$beer = new Beer();
 }
-
-$kegStatusList = $kegStatusManager->GetAll();
-$kegTypeList = $kegTypeManager->GetAll();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -53,7 +44,7 @@ $kegTypeList = $kegTypeManager->GetAll();
 </head>
 	<!-- Start Header  -->
 <?php
-include 'header.php';
+require __DIR__.'/header.php';
 ?>
 	<!-- End Header -->
         
@@ -62,9 +53,9 @@ include 'header.php';
     	<ul>	
         	<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
         	<li><strong>Location:</strong></li>
-            <li><a href="keg_list.php">Keg List</a></li>
+            <li><a href="beer_list.php">Beer List</a></li>
             <li>/</li>
-            <li class="current">Keg Form</li>
+            <li class="current">Beer Form</li>
         </ul>
     </div>
     <!-- Top Breadcrumb End --> 
@@ -75,86 +66,71 @@ include 'header.php';
 	<p>
 		fields marked with an * are required
 
-	<form id="keg-form" method="POST">
-		<input type="hidden" name="id" value="<?php echo $keg->get_id() ?>" />
+	<form id="beer-form" method="POST">
+		<input type="hidden" name="id" value="<?php echo $beer->get_id() ?>" />
+		<input type="hidden" name="active" value="<?php echo $beer->get_active() ?>" />
 
 		<table width="950" border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<td>
-					Label*
+					Name*
 				</td>
 				<td>
-					<input type="text" id="label" name="label" value="<?php echo $keg->get_label() ?>" />
+					<input type="text" id="name" name="name" value="<?php echo $beer->get_name() ?>" />
 				</td>
 			</tr>
 			<tr>
 				<td>
-					Type*
+					Style*
 				</td>
 				<td>
-					<?php echo $htmlHelper->ToSelectList("kegTypeId", $kegTypeList, "name", "id", $keg->get_kegTypeId(), "Select One"); ?>
+					<input type="text" id="style" name="style" value="<?php echo $beer->get_style() ?>" />
 				</td>
 			</tr>	
-			<tr>
-				<td>
-					Make
-				</td>
-				<td>
-					<input type="text" id="make" name="make" value="<?php echo $keg->get_make() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Model
-				</td>
-				<td>
-					<input type="text" id="model" name="model" value="<?php echo $keg->get_model() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Serial
-				</td>
-				<td>
-					<input type="text" id="serial" name="serial" value="<?php echo $keg->get_serial() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Stamped Owner
-				</td>
-				<td>
-					<input type="text" id="stampedOwner" name="stampedOwner" value="<?php echo $keg->get_stampedOwner() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Stamped Loc
-				</td>
-				<td>
-					<input type="text" id="stampedLoc" name="stampedLoc" value="<?php echo $keg->get_stampedLoc() ?>" />
-				</td>
-			</tr>
 			<tr>
 				<td>
 					Notes
 				</td>
 				<td>
-					<textarea id="notes" name="notes" style="width:500px;height:100px"><?php echo $keg->get_stampedOwner() ?></textarea>
+					<textarea type="text" id="notes" name="notes"><?php echo $beer->get_notes() ?></textarea>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					Status*
+					OG*
 				</td>
 				<td>
-					<?php echo $htmlHelper->ToSelectList("kegStatusCode", $kegStatusList, "name", "code", $keg->get_kegStatusCode(), "Select One"); ?>
+					<input type="text" id="og" name="og" value="<?php echo $beer->get_og() ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					FG*
+				</td>
+				<td>
+					<input type="text" id="fg" name="fg" value="<?php echo $beer->get_fg() ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					SRM*
+				</td>
+				<td>
+					<input type="text" id="srm" name="srm" value="<?php echo $beer->get_srm() ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					IBU*
+				</td>
+				<td>
+					<input type="text" id="ibu" name="ibu" value="<?php echo $beer->get_ibu() ?>" />
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2">
 					<input name="save" type="submit" class="btn" value="Save" />
-					<input type="button" class="btn" value="Cancel" onclick="window.location='keg_list.php'" />
+					<input type="button" class="btn" value="Cancel" onclick="window.location='beer_list.php'" />
 				</td>
 			</tr>								
 		</table>
@@ -169,7 +145,7 @@ include 'header.php';
 
     <!-- Start Footer -->   
 <?php 
-include 'footer.php';
+require __DIR__.'/footer.php';
 ?>
 
 	<!-- End Footer -->
@@ -178,22 +154,25 @@ include 'footer.php';
     <!-- Right Side/Main Content End -->
 	<!-- Start Left Bar Menu -->   
 <?php 
-include 'left_bar.php';
+require __DIR__.'/left_bar.php';
 ?>
 	<!-- End Left Bar Menu -->  
 	<!-- Start Js  -->
 <?php
-include 'scripts.php';
+require __DIR__.'/scripts.php';
 ?>
 
 <script>
 	$(function() {		
 		
-		$('#keg-form').validate({
+		$('#beer-form').validate({
 		  rules: {
-			label: { required: true },
-			kegTypeId: { required: true },			
-			kegStatusCode: { required: true }
+			name: { required: true },
+			style: { required: true },			
+			srm: { required: true, number: true },
+			ibu: { required: true, number: true },
+			og: { required: true, number: true },
+			fg: { required: true, number: true }
 		  }
 		});
 		
@@ -207,6 +186,6 @@ include 'scripts.php';
       DD_belatedPNG.fix('img, .notifycount, .selected');
     </script>
     <![endif]--> 
-	
+
 </body>
 </html>

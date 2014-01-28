@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `beers` (
 	`fgEst` decimal(4,3) NOT NULL,
 	`srmEst` decimal(3,1) NOT NULL,
 	`ibuEst` int(4) NOT NULL,
+	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 

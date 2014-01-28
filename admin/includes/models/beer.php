@@ -5,10 +5,13 @@ class Beer
 {  
     private $_id;  
     private $_name;
+	private $_style;
+	private $_notes;
 	private $_og; 
 	private $_fg;  
 	private $_srm;  
 	private $_ibu;
+	private $_active;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
@@ -20,6 +23,12 @@ class Beer
 	public function get_name(){ return $this->_name; }
 	public function set_name($_name){ $this->_name = $_name; }
 
+	public function get_style(){ return $this->_style; }
+	public function set_style($_style){ $this->_style = $_style; }
+	
+	public function get_notes(){ return $this->_notes; }
+	public function set_notes($_notes){ $this->_notes = $_notes; }
+	
 	public function get_og(){ return $this->_og; } 
 	public function set_og($_og){ $this->_og = $_og; }
 	
@@ -31,6 +40,9 @@ class Beer
 
 	public function get_ibu(){ return $this->_ibu; }
 	public function set_ibu($_ibu){ $this->_ibu = $_ibu; }
+	
+	public function get_active(){ return $this->_active; }
+	public function set_active($_active){ $this->_active = $_active; }
 	
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -50,10 +62,27 @@ class Beer
 		else
 			$this->set_name(null);
 			
+		if( isset($postArr['style']) )
+			$this->set_style($postArr['style']);
+		else
+			$this->set_style(null);
+			
+		if( isset($postArr['notes']) )
+			$this->set_notes($postArr['notes']);
+		else
+			$this->set_notes(null);
+			
+		if( isset($postArr['style']) )
+			$this->set_style($postArr['style']);
+		else
+			$this->set_style(null);
+			
 		if( isset($postArr['ogAct']) )
 			$this->set_og($postArr['ogAct']);
 		else if( isset($postArr['ogEst']) )
 			$this->set_og($postArr['ogEst']);
+		else if( isset($postArr['og']) )
+			$this->set_og($postArr['og']);
 		else
 			$this->set_og(null);
 			
@@ -61,6 +90,8 @@ class Beer
 			$this->set_fg($postArr['fgAct']);
 		else if( isset($postArr['fgEst']) )
 			$this->set_fg($postArr['fgEst']);
+		else if( isset($postArr['fg']) )
+			$this->set_fg($postArr['fg']);
 		else
 			$this->set_fg(null);
 			
@@ -68,6 +99,8 @@ class Beer
 			$this->set_srm($postArr['srmAct']);
 		else if( isset($postArr['srmEst']) )
 			$this->set_srm($postArr['srmEst']);
+		else if( isset($postArr['srm']) )
+			$this->set_srm($postArr['srm']);
 		else
 			$this->set_srm(null);
 			
@@ -75,6 +108,8 @@ class Beer
 			$this->set_srm($postArr['srmAct']);
 		else if( isset($postArr['srmEst']) )
 			$this->set_srm($postArr['srmEst']);
+		else if( isset($postArr['srm']) )
+			$this->set_srm($postArr['srm']);
 		else
 			$this->set_srm(null);
 			
@@ -82,9 +117,16 @@ class Beer
 			$this->set_ibu($postArr['ibuAct']);
 		else if( isset($postArr['ibuEst']) )
 			$this->set_ibu($postArr['ibuEst']);
+		else if( isset($postArr['ibu']) )
+			$this->set_ibu($postArr['ibu']);
 		else
 			$this->set_ibu(null);
-		
+			
+		if( isset($postArr['active']) )
+			$this->set_active($postArr['active']);
+		else
+			$this->set_active(null);
+			
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);
 		else
@@ -100,10 +142,13 @@ class Beer
 		return "{" . 
 			"id: " . $this->get_id() . ", " .
 			"name: '" . encode($this->get_name()) . "', " .
+			"style: '" . encode($this->get_style()) . "', " .
+			"notes: '" . encode($this->get_notes()) . "', " .
 			"srm: '" . $this->get_srm() . "', " .
 			"og: '" . $this->get_og() . "', " .
 			"fg: '" . $this->get_fg() . "', " .
 			"ibu: '" . $this->get_ibu() . "', " .
+			"active: '" . $this->get_active() . "', " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  
 		"}";

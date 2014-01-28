@@ -82,7 +82,7 @@ class KegManager{
 		mysql_query($sql);
 	}
 	
-	function InactivateKeg($id){
+	function Inactivate($id){
 		$sql = "SELECT * FROM taps WHERE kegId = $id AND active = 1";
 		$qry = mysql_query($sql);
 		
@@ -93,6 +93,9 @@ class KegManager{
 	
 		$sql="UPDATE kegs SET active = 0 WHERE id = $id";
 		//echo $sql; exit();
+		
 		$qry = mysql_query($sql);
+		
+		$_SESSION['successMessage'] = "Keg successfully deleted.";
 	}
 }

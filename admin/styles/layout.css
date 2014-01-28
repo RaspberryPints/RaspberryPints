@@ -149,28 +149,28 @@ body {height: 100%; font-family: Arial, Helvetica, sans-serif; font-size: 13px; 
 	/* Status Bars */
 	
 	.status {padding: 8px 10px 5px 10px; border-radius: 10px; -moz-border-radius: 10px; text-shadow: 1px 1px 1px #fff; overflow: auto; margin-bottom: 20px; clear: both;}
-		.status img {float: left; padding-right: 5px; padding: 10px;}
+		.status img {float: left; padding-right: 5px;}
 		.status p {padding: 0; margin: 0;}
 		.status p span {font-weight: 700;}
 		.status .closestatus {float: right; color: #fff; text-align: center; margin-left: 10px;}
 			.status .closestatus a {position: relative; color: #fff; text-decoration: none; padding: 5px; width: 10px; height: 10px; display: block; border-radius: 5px; -moz-border-radius: 5px; line-height: .6em; top: -2px; text-shadow: none;}
 	
-	.warning {border: 3px solid #BF9900; background: #FEEB9C url(../img/bg_fade_yellow_med.png) repeat-x top; padding: 10px;}
+	.warning {border: 3px solid #BF9900; background: #FEEB9C url(../img/bg_fade_yellow_med.png) repeat-x top;}
 		.warning span {color: #BF9900;}
 		.warning .closestatus a {background: #BF9900;}
 			.warning .closestatus a:hover {background: #9B7C00;}
 			
-	.success {border: 3px solid #8EA534; background: #CBDA8F url(../img/bg_fade_green_med.png) repeat-x top; padding: 10px;}
+	.success {border: 3px solid #8EA534; background: #CBDA8F url(../img/bg_fade_green_med.png) repeat-x top;}
 		.success span {color: #8EA534;}
 		.success .closestatus a {background: #8EA534;}
 			.success .closestatus a:hover {background: #829829;}
 			
-	.error {border: 3px solid #990000; background: #F5D0CD url(../img/bg_fade_red_med.png) repeat-x top; padding: 10px;}
+	.error {border: 3px solid #990000; background: #F5D0CD url(../img/bg_fade_red_med.png) repeat-x top;}
 		.error span {color: #990000;}
 		.error .closestatus a {background: #990000;}
 			.error .closestatus a:hover {background: #730D0D;}
 	
-	.info {border: 3px solid #2FADD7; background: #92D6ED url(../img/bg_fade_blue_med.png) repeat-x top; padding: 10px;}
+	.info {border: 3px solid #2FADD7; background: #92D6ED url(../img/bg_fade_blue_med.png) repeat-x top;}
 		.info span {color: #0E7A9F;}
 		.info .closestatus a {background: #2FADD7;}
 			.info .closestatus a:hover {background: #228DB0;}

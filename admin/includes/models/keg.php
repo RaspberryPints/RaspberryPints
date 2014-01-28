@@ -11,6 +11,7 @@ class Keg
 	private $_stampedLoc; 
 	private $_notes; 
 	private $_kegStatusCode;
+	private $_active;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
@@ -45,6 +46,9 @@ class Keg
 
 	public function get_kegStatusCode(){ return $this->_kegStatusCode; }
 	public function set_kegStatusCode($_kegStatusCode){ $this->_kegStatusCode = $_kegStatusCode; }
+	
+	public function get_active(){ return $this->_active; }
+	public function set_active($_active){ $this->_active = $_active; }
 	
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -104,6 +108,11 @@ class Keg
 		else
 			$this->set_kegStatusCode(null);
 		
+		if( isset($postArr['active']) )
+			$this->set_active($postArr['active']);
+		else
+			$this->set_active(null);
+			
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);
 		else
@@ -127,6 +136,7 @@ class Keg
 			"stampedLoc: " . $this->get_stampedLoc() . ", " .
 			"notes: " . $this->get_notes() . ", " .
 			"kegStatusCode: " . $this->get_kegStatusCode() . ", " .
+			"active: '" . $this->get_active() . "', " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  
 		"}";

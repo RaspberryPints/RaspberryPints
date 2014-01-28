@@ -35,33 +35,34 @@ class HtmlHelper{
 		$str = "";
 				
 		if( isset($_SESSION['errorMessage']) ){
-			$str .= "<div class='error'><span>".$_SESSION['errorMessage']."</span></div>";
+			echo $this->CreateMessage('error', $_SESSION['errorMessage']);
 			unset($_SESSION['errorMessage']);
 		}
 		
 		if( isset($_SESSION['infoMessage']) ){
-			$str .= "<div class='info'><span>".$_SESSION['infoMessage']."</span></div>";
+			echo $this->CreateMessage('info', $_SESSION['infoMessage']);
 			unset($_SESSION['infoMessage']);
 		}
 		
 		if( isset($_SESSION['successMessage']) ){
-			$str .= "<div class='success'><span>".$_SESSION['successMessage']."</span></div>";
+			echo $this->CreateMessage('success', $_SESSION['successMessage']);
 			unset($_SESSION['successMessage']);
 		}
 		
 		if( isset($_SESSION['warningMessage']) ){
-			$str .= "<div class='warning'><span>".$_SESSION['warningMessage']."</span></div>";
+			echo $this->CreateMessage('warning', $_SESSION['warningMessage']);
 			unset($_SESSION['warningMessage']);
 		}
 		
 		
 		if( isset($_SESSION['statusMessage']) ){
-			$str .= "<div class='status'><span>".$_SESSION['statusMessage']."</span></div>";
+			echo $this->CreateMessage('status', $_SESSION['statusMessage']);
 			unset($_SESSION['statusMessage']);
 		}
-		
-		return $str;
 	}
 	
+	function CreateMessage($class, $message){
+		return "<div class='$class status'><span>$message</span></div>";
+	}
 	
 }

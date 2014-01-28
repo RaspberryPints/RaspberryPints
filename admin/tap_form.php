@@ -81,6 +81,7 @@ include 'header.php';
     <div id="rightside">
 		 <div class="contentcontainer med left">
 	<p>
+		fields marked with an * are required
 
 	<form id="tap-form" method="POST">
 		<input type="hidden" name="id" value="<?php echo $tap->get_id() ?>" />
@@ -90,7 +91,7 @@ include 'header.php';
 		<table width="950" border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<td>
-					beer:
+					Beer*
 				</td>
 				<td>
 					<?php echo $htmlHelper->ToSelectList("beerId", $beerList, "name", "id", $tap->get_beerId(), "Select One"); ?>
@@ -98,7 +99,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					SRM:
+					SRM*
 				</td>
 				<td>
 					<input type="text" id="srm" name="srm" value="<?php echo $tap->get_srm() ?>" />
@@ -106,7 +107,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					IBU:
+					IBU*
 				</td>
 				<td>
 					<input type="text" id="ibu" name="ibu" value="<?php echo $tap->get_ibu() ?>" />
@@ -114,7 +115,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					OG:
+					OG*
 				</td>
 				<td>
 					<input type="text" id="og" name="og" value="<?php echo $tap->get_og() ?>" />
@@ -122,7 +123,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					FG:
+					FG*
 				</td>
 				<td>
 					<input type="text" id="fg" name="fg" value="<?php echo $tap->get_fg() ?>" />
@@ -130,7 +131,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Keg:
+					Keg*
 				</td>
 				<td>
 					<?php echo $htmlHelper->ToSelectList("kegId", $kegList, "label", "id", $tap->get_kegId(), "Select One"); ?>
@@ -138,7 +139,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Start Amount:
+					Start Amount*
 				</td>
 				<td>
 					<input type="text" id="startAmount" name="startAmount" value="<?php echo $tap->get_startAmount() ?>" />
@@ -240,7 +241,7 @@ include 'scripts.php';
 			ibu: { required: true, number: true },
 			og: { required: true, number: true },
 			fg: { required: true, number: true },
-			kegTypeId: { required: true },
+			kegId: { required: true },
 			startAmount: { required: true, number: true }
 		  }
 		});
