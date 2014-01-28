@@ -10,7 +10,7 @@ class TapManager{
 			$sql = 	"UPDATE taps " .
 					"SET " .
 						"beerId = " . $tap->get_beerId() . ", " .
-						"kegTypeId = " . $tap->get_kegTypeId() . ", " .
+						"kegId = " . $tap->get_kegId() . ", " .
 						"tapNumber = " . $tap->get_tapNumber() . ", " .
 						"ogAct = " . $tap->get_og() . ", " .
 						"fgAct = " . $tap->get_fg() . ", " .
@@ -25,11 +25,11 @@ class TapManager{
 			$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE active = 1 AND tapNumber = " . $tap->get_tapNumber();
 			mysql_query($sql);		
 		
-			$sql = 	"INSERT INTO taps(beerId, kegTypeId, tapNumber, ogAct, fgAct, srmAct, ibuAct, startAmount, currentAmount, active, createdDate, modifiedDate ) " .
-					"VALUES(" . $tap->get_beerId() . ", " . $tap->get_kegTypeId() . ", " . $tap->get_tapNumber() . ", " . $tap->get_og() . ", " . $tap->get_fg() . ", " . $tap->get_srm() . ", " . $tap->get_ibu() . ", " . $tap->get_startAmount() . ", " . $tap->get_startAmount() . ", " . $tap->get_active	() . ", NOW(), NOW())";
+			$sql = 	"INSERT INTO taps(beerId, kegId, tapNumber, ogAct, fgAct, srmAct, ibuAct, startAmount, currentAmount, active, createdDate, modifiedDate ) " .
+					"VALUES(" . $tap->get_beerId() . ", " . $tap->get_kegId() . ", " . $tap->get_tapNumber() . ", " . $tap->get_og() . ", " . $tap->get_fg() . ", " . $tap->get_srm() . ", " . $tap->get_ibu() . ", " . $tap->get_startAmount() . ", " . $tap->get_startAmount() . ", " . $tap->get_active	() . ", NOW(), NOW())";
 		}
 		
-		//echo $sql;
+		//echo $sql; exit();
 		
 		mysql_query($sql);
 	}

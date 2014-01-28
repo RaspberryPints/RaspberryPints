@@ -16,9 +16,9 @@
 		$config = array();
 		$sql = "SELECT * FROM config";
 		$qry = mysql_query($sql);
-		while($b = mysql_fetch_array($qry))
+		while($c = mysql_fetch_array($qry))
 		{
-			$config[$b['configName']] = $b['configValue'];
+			$config[$c['configName']] = $c['configValue'];
 		}
 		
 		$sql =  "SELECT * FROM vwGetActiveTaps";

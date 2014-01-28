@@ -15,9 +15,7 @@ class KegStatusManager{
 		}
 		
 		return $kegStatuses;
-	}
-	
-	
+	}	
 		
 	function GetByCode($code){
 		$sql="SELECT * FROM kegStatuses WHERE code = '$code'";

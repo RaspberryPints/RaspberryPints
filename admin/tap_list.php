@@ -9,16 +9,16 @@ require_once 'includes/functions.php';
 
 require_once 'includes/models/tap.php';
 require_once 'includes/models/beer.php';
-require_once 'includes/models/kegType.php';
+require_once 'includes/models/keg.php';
 
 require_once 'includes/managers/beer_manager.php';
-require_once 'includes/managers/kegType_manager.php';
+require_once 'includes/managers/keg_manager.php';
 require_once 'includes/managers/tap_manager.php';
 
 
 $tapManager = new TapManager();
 $beerManager = new BeerManager();
-$kegTypeManager = new KegTypeManager();
+$kegManager = new KegManager();
 
 if( isset($_POST['updateNumberOfTaps'])) {
 	$tapManager->updateTapNumber($_POST['numberOfTaps']);	
@@ -103,7 +103,7 @@ include 'header.php';
 						<?php if( array_key_exists($c, $activeTaps) ){
 								$tap = $activeTaps[$c];							
 								$beer = $beerManager->GetById($tap->get_beerId());
-								$kegType = $kegTypeManager->GetById($tap->get_kegTypeId());
+								$keg = $kegManager->GetById($tap->get_kegId());
 						?>
 								<input type="hidden" name="id" value="<?php echo $tap->get_id()?>" />
 								<input type="hidden" name="tapNumber" value="<?php echo $c?>" />
@@ -133,7 +133,7 @@ include 'header.php';
 									</td>
 																
 									<td>
-										<?php echo $kegType->get_name() ?>
+										<?php echo $keg->get_label() ?>
 									</td>
 									
 									<td>

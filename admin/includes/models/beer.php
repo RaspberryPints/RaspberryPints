@@ -1,4 +1,6 @@
 <?php
+require_once 'includes/functions.php';
+
 class Beer  
 {  
     private $_id;  
@@ -97,11 +99,11 @@ class Beer
 	function toJson(){
 		return "{" . 
 			"id: " . $this->get_id() . ", " .
-			"name: '" . $this->get_name() . "', " .
-			"srm: " . $this->get_srm() . ", " .
-			"og: " . $this->get_og() . ", " .
-			"fg: " . $this->get_fg() . ", " .
-			"ibu: " . $this->get_ibu() . ", " .
+			"name: '" . encode($this->get_name()) . "', " .
+			"srm: '" . $this->get_srm() . "', " .
+			"og: '" . $this->get_og() . "', " .
+			"fg: '" . $this->get_fg() . "', " .
+			"ibu: '" . $this->get_ibu() . "', " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  
 		"}";

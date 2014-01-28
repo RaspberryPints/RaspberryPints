@@ -118,6 +118,15 @@ class Keg
 	function toJson(){
 		return "{" . 
 			"id: " . $this->get_id() . ", " .
+			"label: " . $this->get_label() . ", " .
+			"kegTypeId: " . $this->get_kegTypeId() . ", " .
+			"make: " . $this->get_maked() . ", " .
+			"model: " . $this->get_model() . ", " .
+			"serial: " . $this->get_serial() . ", " .
+			"stampedOwner: " . $this->get_stampedOwner() . ", " .
+			"stampedLoc: " . $this->get_stampedLoc() . ", " .
+			"notes: " . $this->get_notes() . ", " .
+			"kegStatusCode: " . $this->get_kegStatusCode() . ", " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  
 		"}";

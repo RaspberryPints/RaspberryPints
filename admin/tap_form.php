@@ -6,6 +6,7 @@ if(!isset( $_SESSION['myusername'] )){
 
 require_once 'includes/models/tap.php';
 require_once 'includes/models/beer.php';
+require_once 'includes/models/keg.php';
 require_once 'includes/models/kegType.php';
 
 require_once 'includes/conn.php';
@@ -13,12 +14,14 @@ require_once '../includes/config_names.php';
 require_once 'includes/html_helper.php';
 require_once 'includes/functions.php';
 require_once 'includes/managers/beer_manager.php';
+require_once 'includes/managers/keg_manager.php';
 require_once 'includes/managers/kegType_manager.php';
 require_once 'includes/managers/tap_manager.php';
 
 $htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
 $beerManager = new BeerManager();
+$kegManager = new KegManager();
 $kegTypeManager = new KegTypeManager();
 
 
@@ -41,7 +44,7 @@ if( isset($_GET['id'])){
 }
 
 $beerList = $beerManager->GetAll();
-$kegTypeList = $kegTypeManager->GetAll();
+$kegList = $kegManager->GetAll();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -127,15 +130,15 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Keg Type:
+					Keg:
 				</td>
 				<td>
-					<?php echo $htmlHelper->ToSelectList("kegTypeId", $kegTypeList, "name", "id", $tap->get_kegTypeId(), "Select One"); ?>
+					<?php echo $htmlHelper->ToSelectList("kegId", $kegList, "label", "id", $tap->get_kegId(), "Select One"); ?>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					Fill Level:
+					Start Amount:
 				</td>
 				<td>
 					<input type="text" id="startAmount" name="startAmount" value="<?php echo $tap->get_startAmount() ?>" />
@@ -189,8 +192,19 @@ include 'scripts.php';
 	
 <script>
 	$(function() {
-		var beerList = { <?php foreach($beerList as $beerItem){ echo $beerItem->get_id() . ": " . $beerItem->toJson() . ", "; } ?> };
-		var kegTypeList = { <?php foreach($kegTypeList as $kegTypeItem){ echo $kegTypeItem->get_id() . ": " . $kegTypeItem->toJson() . ", "; } ?> };
+		var beerList = { 
+			<?php foreach($beerList as $beerItem){ 
+				echo $beerItem->get_id() . ": " . $beerItem->toJson() . ", "; 
+			} ?>
+		};
+		
+		var kegList = { 
+			<?php foreach($kegList as $keg){ 
+				echo $keg->get_id() . ": { " . 
+					"maxAmount: '" . $kegTypeManager->GetById($keg->get_kegTypeId())->get_maxAmount() , "'" .
+				"}, "; 
+			} ?>
+		};
 		
 		$('#tap-form')	
 			.on('change', '#beerId', function(){
@@ -207,15 +221,15 @@ include 'scripts.php';
 						.find('#fg').val(beer['fg']).end();
 				}
 			})
-			.on('change', '#kegTypeId', function(){
+			.on('change', '#kegId', function(){
 				var $this = $(this);
 				
 				if( $this.val() ){
 					var $form = $('#tap-form'),
-						kegType = kegTypeList[$this.val()];
+						keg = kegList[$this.val()];
 						
 					$form
-						.find('#startAmount').val(kegType['maxAmount']).end();
+						.find('#startAmount').val(keg['maxAmount']).end();
 				}
 			});
 		

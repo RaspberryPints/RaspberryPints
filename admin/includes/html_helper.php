@@ -1,4 +1,6 @@
 <?php
+require_once 'includes/functions.php';
+
 class HtmlHelper{
 
 	function ToSelectList($selectName, $items, $nameProperty, $valueProperty, $selectedValue, $defaultName = null, $cssClasses = ""){
@@ -20,7 +22,7 @@ class HtmlHelper{
 				}
 				
 				$str .= ">";
-				$str .= $name;
+				$str .= encode($name);
 				$str .= "</option>";
 			}
 		

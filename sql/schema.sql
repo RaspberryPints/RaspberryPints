@@ -118,26 +118,26 @@ INSERT INTO `kegTypes` ( displayName, maxAmount, createdDate, modifiedDate ) VAL
 --
 
 CREATE TABLE IF NOT EXISTS `kegStatuses` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`status` text NOT NULL,
+	`code` varchar(20) NOT NULL,
+	`name` text NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`code`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `kegStatuses`
 --
 
-INSERT INTO `kegStatuses` ( status, createdDate, modifiedDate ) VALUES ( 'Serving', NOW(), NOW() );
-INSERT INTO `kegStatuses` ( status, createdDate, modifiedDate ) VALUES ( 'Primary', NOW(), NOW() );
-INSERT INTO `kegStatuses` ( status, createdDate, modifiedDate ) VALUES ( 'Secondary', NOW(), NOW() );
-INSERT INTO `kegStatuses` ( status, createdDate, modifiedDate ) VALUES ( 'Bulk Aging', NOW(), NOW() );
-INSERT INTO `kegStatuses` ( status, createdDate, modifiedDate ) VALUES ( 'Flooded', NOW(), NOW() );
-INSERT INTO `kegStatuses` ( status, createdDate, modifiedDate ) VALUES ( 'Sanitized', NOW(), NOW() );
-INSERT INTO `kegStatuses` ( status, createdDate, modifiedDate ) VALUES ( 'Needs Cleaning', NOW(), NOW() );
-INSERT INTO `kegStatuses` ( status, createdDate, modifiedDate ) VALUES ( 'Broken', NOW(), NOW() );
+INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'SERVING', 'Serving', NOW(), NOW() );
+INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'PRIMARY', 'Primary', NOW(), NOW() );
+INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'SECONDARY', 'Secondary', NOW(), NOW() );
+INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'BULK_AGING', 'Bulk Aging', NOW(), NOW() );
+INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'FLOODED', 'Flooded', NOW(), NOW() );
+INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'SANITIZED', 'Sanitized', NOW(), NOW() );
+INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'NEEDS_CLEANING', 'Needs Cleaning', NOW(), NOW() );
+INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'BROKEN', 'Broken', NOW(), NOW() );
 
 -- --------------------------------------------------------
 
@@ -155,13 +155,12 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 	`stampedOwner` text NOT NULL,
 	`stampedLoc` text NOT NULL,
 	`notes` text NOT NULL,
-	`kegStatusId` int(11) NOT NULL,
-	`beerId` int(11) NOT NULL,
+	`kegStatusCode` varchar(20) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
 	PRIMARY KEY (`id`),
-	FOREIGN KEY (`kegStatusId`) REFERENCES kegStatuses(`id`) ON DELETE CASCADE,
+	FOREIGN KEY (`kegStatusCode`) REFERENCES kegStatuses(`Code`) ON DELETE CASCADE,
 	FOREIGN KEY (`kegTypeId`) REFERENCES kegTypes(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
@@ -175,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 CREATE TABLE IF NOT EXISTS `taps` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`beerId` int(11) NOT NULL,
-	`kegTypeId` int(11) NOT NULL,
+	`kegId` int(11) NOT NULL,
 	`tapNumber` int(11) NOT NULL,
 	`active` tinyint(1) NOT NULL,
 	`ogAct` decimal(4,3) NOT NULL,
@@ -189,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `taps` (
 	
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
-	FOREIGN KEY (`kegTypeId`) REFERENCES kegTypes(`id`) ON DELETE CASCADE
+	FOREIGN KEY (`kegId`) REFERENCES kegs(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

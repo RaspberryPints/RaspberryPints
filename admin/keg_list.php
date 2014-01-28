@@ -83,8 +83,7 @@ include 'header.php';
 							<tr><td class="no-results" colspan="99">No kegs</td></tr>
 					<?php 
 						}else{  
-							for($c = 1; $c <= count($kegs); $c++ ){ 
-								$keg = $kegs[$c];
+							foreach ($kegs as $keg){
 								
 								if( $keg->get_kegStatusCode() != null ){
 									$kegStatus = $kegStatusManager->GetByCode($keg->get_kegStatusCode());
