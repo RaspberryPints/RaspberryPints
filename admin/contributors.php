@@ -58,6 +58,9 @@ include 'header.php';
 <td>
 <b>Connect on HBT</b>
 </td>
+<td>
+<b>Connect on Untappd</b>
+</td>
 </tr>
 </thead>
 <tbody>
@@ -71,6 +74,8 @@ Project Manager
 <td>
 <a href="http://www.homebrewtalk.com/members/thadius856" target="_blank">thadius856</a>
 </td>
+<td>
+</td>
 </tr>
 <tr>
 <td>
@@ -82,6 +87,10 @@ Application Developer
 <td>
 <a href="http://www.homebrewtalk.com/members/jayunt" target="_blank">JayUnt</a>
 </td>
+<td>
+<a href="https://untappd.com/user/jayunt" target="_blank">Jayunt</a>
+
+</td>
 </tr>
 <tr>
 <td>
@@ -92,6 +101,9 @@ Application Developer
 </td>
 <td>
 <a href="http://www.homebrewtalk.com/members/skemp45" target="_blank">Skemp45</a>
+</td>
+<td>
+<a href="https://untappd.com/user/Shawnkemp" target="_blank">Shawn Kemp</a>
 </td>
 </tr>
 </tbody>
