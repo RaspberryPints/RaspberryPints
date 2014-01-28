@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/models/kegType.php';
+require_once __DIR__.'/../models/kegType.php';
 
 class KegTypeManager{
 

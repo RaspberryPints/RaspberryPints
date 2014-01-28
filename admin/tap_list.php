@@ -4,16 +4,16 @@ if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
 
-require_once 'includes/conn.php';
-require_once 'includes/functions.php';
+require_once __DIR__.'/includes/conn.php';
+require_once __DIR__.'/includes/functions.php';
 
-require_once 'includes/models/tap.php';
-require_once 'includes/models/beer.php';
-require_once 'includes/models/keg.php';
+require_once __DIR__.'/includes/models/tap.php';
+require_once __DIR__.'/includes/models/beer.php';
+require_once __DIR__.'/includes/models/keg.php';
 
-require_once 'includes/managers/beer_manager.php';
-require_once 'includes/managers/keg_manager.php';
-require_once 'includes/managers/tap_manager.php';
+require_once __DIR__.'/includes/managers/beer_manager.php';
+require_once __DIR__.'/includes/managers/keg_manager.php';
+require_once __DIR__.'/includes/managers/tap_manager.php';
 
 
 $tapManager = new TapManager();
@@ -91,7 +91,7 @@ include 'header.php';
 					<th>IBU</th>
 					<th>OG</th>
 					<th>FG</th>
-					<th>Keg Type</th>
+					<th>Keg</th>
 					<th>Start Amount</th>
 					<th>Current Amount</th>
 					<th colspan="3"></th>

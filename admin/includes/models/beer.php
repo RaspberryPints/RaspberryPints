@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/functions.php';
+require_once __DIR__.'/../functions.php';
 
 class Beer  
 {  

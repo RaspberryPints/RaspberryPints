@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/models/beer.php';
+require_once __DIR__.'/../models/beer.php';
 
 class BeerManager{
 

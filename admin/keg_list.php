@@ -4,25 +4,31 @@ if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
 
-require_once 'includes/conn.php';
-require_once '../includes/config_names.php';
+require_once __DIR__.'/includes/conn.php';
+require_once __DIR__.'/../includes/config_names.php';
+require_once __DIR__.'/includes/html_helper.php';
+require_once __DIR__.'/includes/functions.php';
 
-require_once 'includes/html_helper.php';
-require_once 'includes/functions.php';
+require_once __DIR__.'/includes/models/keg.php';
+require_once __DIR__.'/includes/models/kegType.php';
+require_once __DIR__.'/includes/models/kegStatus.php';
 
-require_once 'includes/models/keg.php';
-require_once 'includes/models/kegType.php';
-require_once 'includes/models/kegStatus.php';
+require_once __DIR__.'/includes/managers/keg_manager.php';
+require_once __DIR__.'/includes/managers/kegStatus_manager.php';
+require_once __DIR__.'/includes/managers/kegType_manager.php';
 
-require_once 'includes/managers/keg_manager.php';
-require_once 'includes/managers/kegStatus_manager.php';
-require_once 'includes/managers/kegType_manager.php';
-
+$htmlHelper = new HtmlHelper();
 $kegManager = new KegManager();
 $kegStatusManager = new KegStatusManager();
 $kegTypeManager = new KegTypeManager();
 
-$kegs = $kegManager->getAll();
+
+
+if (isset($_POST['inactivateKeg'])) {
+	$kegManager->InactivateKeg($_POST['id']);		
+}
+
+$kegs = $kegManager->GetAllActive();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -58,6 +64,8 @@ include 'header.php';
 		 <div class="contentcontainer med left">		
 			<!-- Start On Tap Section -->
 			
+			<?php echo $htmlHelper->ShowMessage(); ?>
+			
 			<input type="submit" class="btn" value="Add Keg" onclick="window.location='keg_form.php'" />
 			<br/><br/>
 			
@@ -73,6 +81,7 @@ include 'header.php';
 						<th>Stamped Loc</th>
 						<th>Notes</th>
 						<th>Status</th>
+						<th></th>
 						<th></th>
 					</tr>
 				</thead>
@@ -135,7 +144,14 @@ include 'header.php';
 									</td>
 									
 									<td>
-										<input name="editTap" type="submit" class="btn" value="Edit" onclick="window.location='keg_form.php?id=<?php echo $keg->get_id()?>'" />
+										<input name="editTap" type="button" class="btn" value="Edit" onclick="window.location='keg_form.php?id=<?php echo $keg->get_id()?>'" />
+									</td>
+									
+									<td>
+										<form method="POST">
+											<input type='hidden' name='id' value='<?php echo $keg->get_id()?>'/>
+											<input class="inactivateKeg btn" name="inactivateKeg" type="submit" value="Delete" />
+										</form>
 									</td>
 									
 								</tr>
@@ -147,6 +163,7 @@ include 'header.php';
 			</table>
 		</div>
     </div>
+	
 	<!-- End On Tap Section -->
 
     <!-- Start Footer -->   
@@ -167,6 +184,16 @@ include 'left_bar.php';
 <?php
 include 'scripts.php';
 ?>
+<script>
+	$(function(){
+		$('.inactivateKeg').on('click', function(){
+			if(!confirm('Are you sure you want to delete this keg?')){
+				return false;
+			}
+		});
+	});
+</script>
+
 	<!-- End Js -->
     <!--[if IE 6]>
     <script type='text/javascript' src='scripts/png_fix.js'></script>

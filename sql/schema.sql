@@ -155,7 +155,8 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 	`stampedOwner` text NOT NULL,
 	`stampedLoc` text NOT NULL,
 	`notes` text NOT NULL,
-	`kegStatusCode` varchar(20) NOT NULL,
+	`kegStatusCode` varchar(20) NOT NULL,	
+	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	

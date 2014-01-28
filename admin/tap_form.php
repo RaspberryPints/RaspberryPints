@@ -3,20 +3,20 @@ session_start();
 if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
+require_once __DIR__.'/includes/conn.php';
+require_once __DIR__.'/../includes/config_names.php';
+require_once __DIR__.'/includes/html_helper.php';
+require_once __DIR__.'/includes/functions.php';
 
-require_once 'includes/models/tap.php';
-require_once 'includes/models/beer.php';
-require_once 'includes/models/keg.php';
-require_once 'includes/models/kegType.php';
+require_once __DIR__.'/includes/models/tap.php';
+require_once __DIR__.'/includes/models/beer.php';
+require_once __DIR__.'/includes/models/keg.php';
+require_once __DIR__.'/includes/models/kegType.php';
 
-require_once 'includes/conn.php';
-require_once '../includes/config_names.php';
-require_once 'includes/html_helper.php';
-require_once 'includes/functions.php';
-require_once 'includes/managers/beer_manager.php';
-require_once 'includes/managers/keg_manager.php';
-require_once 'includes/managers/kegType_manager.php';
-require_once 'includes/managers/tap_manager.php';
+require_once __DIR__.'/includes/managers/beer_manager.php';
+require_once __DIR__.'/includes/managers/keg_manager.php';
+require_once __DIR__.'/includes/managers/kegType_manager.php';
+require_once __DIR__.'/includes/managers/tap_manager.php';
 
 $htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
@@ -44,7 +44,7 @@ if( isset($_GET['id'])){
 }
 
 $beerList = $beerManager->GetAll();
-$kegList = $kegManager->GetAll();
+$kegList = $kegManager->GetAllActive();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -147,7 +147,7 @@ include 'header.php';
 			<tr>
 				<td colspan="2">
 					<input name="saveTap" type="submit" class="btn" value="Save" />
-					<input name="cancel" type="submit" class="btn" value="Cancel" />
+					<input name="cancel" type="button" class="btn" value="Cancel" onclick="window.location='tap_list.php'"/>
 				</td>
 			</tr>
 											

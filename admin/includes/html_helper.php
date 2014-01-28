@@ -30,4 +30,38 @@ class HtmlHelper{
 		
 		return $str;
 	}
+	
+	function ShowMessage(){
+		$str = "";
+				
+		if( isset($_SESSION['errorMessage']) ){
+			$str .= "<div class='error'><span>".$_SESSION['errorMessage']."</span></div>";
+			unset($_SESSION['errorMessage']);
+		}
+		
+		if( isset($_SESSION['infoMessage']) ){
+			$str .= "<div class='info'><span>".$_SESSION['infoMessage']."</span></div>";
+			unset($_SESSION['infoMessage']);
+		}
+		
+		if( isset($_SESSION['successMessage']) ){
+			$str .= "<div class='success'><span>".$_SESSION['successMessage']."</span></div>";
+			unset($_SESSION['successMessage']);
+		}
+		
+		if( isset($_SESSION['warningMessage']) ){
+			$str .= "<div class='warning'><span>".$_SESSION['warningMessage']."</span></div>";
+			unset($_SESSION['warningMessage']);
+		}
+		
+		
+		if( isset($_SESSION['statusMessage']) ){
+			$str .= "<div class='status'><span>".$_SESSION['statusMessage']."</span></div>";
+			unset($_SESSION['statusMessage']);
+		}
+		
+		return $str;
+	}
+	
+	
 }

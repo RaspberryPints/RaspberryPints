@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/models/keg.php';
+require_once __DIR__.'/../models/keg.php';
 
 class KegManager{
 
@@ -16,7 +16,21 @@ class KegManager{
 		
 		return $kegs;
 	}
+	
+	function GetAllActive(){
+		$sql="SELECT * FROM kegs WHERE active = 1";
+		$qry = mysql_query($sql);
 		
+		$kegs = array();
+		while($i = mysql_fetch_array($qry)){
+			$keg = new Keg();
+			$keg->setFromArray($i);
+			$kegs[$keg->get_id()] = $keg;
+		}
+		
+		return $kegs;
+	}
+			
 	function GetById($id){
 		$sql="SELECT * FROM kegs WHERE id = $id";
 		$qry = mysql_query($sql);
@@ -66,5 +80,19 @@ class KegManager{
 		//echo $sql; exit();
 		
 		mysql_query($sql);
+	}
+	
+	function InactivateKeg($id){
+		$sql = "SELECT * FROM taps WHERE kegId = $id AND active = 1";
+		$qry = mysql_query($sql);
+		
+		if( mysql_fetch_array($qry) ){		
+			$_SESSION['errorMessage'] = "Keg is associated with an active tap and could not be deleted.";
+			return;
+		}
+	
+		$sql="UPDATE kegs SET active = 0 WHERE id = $id";
+		//echo $sql; exit();
+		$qry = mysql_query($sql);
 	}
 }

@@ -5,7 +5,6 @@ if(!isset( $_SESSION['myusername'] )){
 }
 require_once 'includes/conn.php';
 require_once '../includes/config_names.php';
-
 require_once 'includes/html_helper.php';
 require_once 'includes/functions.php';
 

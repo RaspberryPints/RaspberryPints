@@ -1,6 +1,6 @@
 <?php
-require_once '../includes/config_names.php';
-require_once 'includes/models/tap.php';
+require_once __DIR__.'/../../../includes/config_names.php';
+require_once __DIR__.'/../models/tap.php';
 
 class TapManager{
 	
