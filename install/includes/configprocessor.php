@@ -9,6 +9,8 @@
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
 
+require_once __DIR__.'/sql_parse.php';
+
 //Process and load form data
 $servername = $_POST["servername"];
 $rootpass = $_POST["rootpass"];
@@ -19,7 +21,7 @@ $adminuser = $_POST["adminuser"];
 $adminpass1 = $_POST["adminpass1"];
 $adminpass2 = $_POST["adminpass2"];
 $action = $_POST["selectaction"];
-$sampledata = $_POST["sampledata"];
+//$sampledata = $_POST["sampledata"];
 
 //Create the MD5 hash value for the admin password
 $adminhash = md5($adminpass1);
@@ -122,8 +124,25 @@ if ($action == 'install')
 	//-----------------Run The Schema File-------------------------
 	echo "Running Database Script...";
 	flush();
-	$command = "mysql -uroot -p".$rootpass . " -h " . $servername . " < /var/www/sql/schema.sql";
-	$output = shell_exec($command);
+	$dbms_schema = "../../sql/schema.sql";
+
+		
+	$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema)) or die('Cannot find SQL schema file. ');
+	
+	$sql_query = remove_remarks($sql_query);
+	$sql_query = split_sql_file($sql_query, ';');
+
+
+	mysql_connect($servername,'root',$rootpass) or die('error connection');
+
+	$i=1;
+	foreach($sql_query as $sql){
+	echo $i++;
+	echo "
+	";
+	mysql_query($sql) or die('error in query');
+	}
+
 	echo "Done<br>";
 	flush();
 
