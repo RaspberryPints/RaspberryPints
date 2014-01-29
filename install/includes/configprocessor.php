@@ -55,6 +55,7 @@ if (mysqli_connect_errno())
   $validerror .= "<br><strong>Cannot connect the the database using the supplied information.</strong>";
   }
 //##TODO## Validate that there is no raspberrypints DB (not an upgrade)
+//##TODO## Check if administrator account already exists
 
 echo "Done<br>";
 flush();
@@ -91,20 +92,13 @@ if ($action == 'remove')
 if ($action == 'install')
 {
 	
-	//##TODO## -----------------Create the main config file-----------------
+require_once __DIR__.'/config_files.php';
+	
+	//-----------------Create the main config file-----------------
 	echo "Update config files...";
 	flush();
 	
-	$configstring = "<?php \n";
-	$configstring .= "    function db() {\n";
-	$configstring .= '        $link = ';
-	$configstring .= "mysql_connect('" . $servername . "', '" . $dbuser . "', '" . $dbpass1 . "');\n";
-	$configstring .= "        mysql_select_db('raspberrypints');\n";
-	$configstring .= "	}\n";
-	$configstring .= "?>";
-	
-	
-	file_put_contents('../../includes/config.php', $configstring);
+	file_put_contents('../../includes/config.php', $mainconfigstring);
 
 	echo "Done<br>";
 	flush();
@@ -112,8 +106,8 @@ if ($action == 'install')
 	echo "Update admin config files...";
 	flush();
 
-	echo "Done<br>";
-	flush();
+	file_put_contents('../../admin/includes/conn.php', $adminconfig1);
+	file_put_contents('../../admin/includes/configp.php', $adminconfig2);
 
 	//-----------------Create RPints User--------------------------
 	echo "Creating RPints database user...";
@@ -169,7 +163,7 @@ if ($action == 'install')
 	  }
 	$currentdate = Date('Y-m-d H:i:s');
 	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','name','email','" . $currentdate . "','" . $currentdate . "');";
-
+	echo "<br>" . $sql . "<br>";
 	$result = mysqli_query($con,$sql);
 	mysqli_close($con);
 	echo "Done<br>";
