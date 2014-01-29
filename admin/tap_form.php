@@ -102,7 +102,7 @@ include 'header.php';
 					SRM*
 				</td>
 				<td>
-					<input type="text" id="srm" name="srm" value="<?php echo $tap->get_srm() ?>" />
+					<input type="text" id="srm" class="mediumbox" name="srm" value="<?php echo $tap->get_srm() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -110,7 +110,7 @@ include 'header.php';
 					IBU*
 				</td>
 				<td>
-					<input type="text" id="ibu" name="ibu" value="<?php echo $tap->get_ibu() ?>" />
+					<input type="text" id="ibu" class="mediumbox" name="ibu" value="<?php echo $tap->get_ibu() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -118,7 +118,7 @@ include 'header.php';
 					OG*
 				</td>
 				<td>
-					<input type="text" id="og" name="og" value="<?php echo $tap->get_og() ?>" />
+					<input type="text" id="og" class="mediumbox" name="og" value="<?php echo $tap->get_og() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -126,7 +126,7 @@ include 'header.php';
 					FG*
 				</td>
 				<td>
-					<input type="text" id="fg" name="fg" value="<?php echo $tap->get_fg() ?>" />
+					<input type="text" id="fg" class="mediumbox" name="fg" value="<?php echo $tap->get_fg() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -142,7 +142,7 @@ include 'header.php';
 					Start Amount*
 				</td>
 				<td>
-					<input type="text" id="startAmount" name="startAmount" value="<?php echo $tap->get_startAmount() ?>" />
+					<input type="text" id="startAmount" class="mediumbox" name="startAmount" value="<?php echo $tap->get_startAmount() ?>" />
 				</td>
 			</tr>
 			<tr>
