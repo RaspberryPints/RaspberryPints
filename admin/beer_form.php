@@ -53,7 +53,7 @@ require __DIR__.'/header.php';
     	<ul>	
         	<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
         	<li><strong>Location:</strong></li>
-            <li><a href="beer_list.php">Beer List</a></li>
+            <li><a href="beer_list.php">My Beers</a></li>
             <li>/</li>
             <li class="current">Beer Form</li>
         </ul>
