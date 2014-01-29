@@ -94,6 +94,17 @@ if ($action == 'install')
 	//##TODO## -----------------Create the main config file-----------------
 	echo "Update config files...";
 	flush();
+	
+	$configstring = "<?php \n";
+	$configstring .= "    function db() {\n";
+	$configstring .= '        $link = ';
+	$configstring .= "mysql_connect('" . $servername . "', '" . $dbuser . "', '" . $dbpass1 . "');\n";
+	$configstring .= "        mysql_select_db('raspberrypints');\n";
+	$configstring .= "	}\n";
+	$configstring .= "?>";
+	
+	
+	file_put_contents('../../includes/config.php', $configstring);
 
 	echo "Done<br>";
 	flush();
@@ -178,14 +189,7 @@ if ($action == 'install')
 		}
 }
 
-/*
-if ($key != '' && $color != '') {
-    $f = fopen('config.php', 'w') or die("can't open file");
-    fwrite($f, '<?php $keyword=' . $key . ';$color=' . $color . ';?>');
-    fclose($f);
-} else { // write default values or show an error message }
 
-*/
 
 ##TODO## On Success - redirect to /index.php
 
