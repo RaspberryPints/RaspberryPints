@@ -84,7 +84,7 @@ include 'header.php';
 					Label*
 				</td>
 				<td>
-					<input type="text" id="label" name="label" value="<?php echo $keg->get_label() ?>" />
+					<input type="text" id="label" class="mediumbox" name="label" value="<?php echo $keg->get_label() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -100,7 +100,7 @@ include 'header.php';
 					Make
 				</td>
 				<td>
-					<input type="text" id="make" name="make" value="<?php echo $keg->get_make() ?>" />
+					<input type="text" id="make" class="mediumbox" name="make" value="<?php echo $keg->get_make() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -108,7 +108,7 @@ include 'header.php';
 					Model
 				</td>
 				<td>
-					<input type="text" id="model" name="model" value="<?php echo $keg->get_model() ?>" />
+					<input type="text" id="model" class="mediumbox" name="model" value="<?php echo $keg->get_model() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -116,7 +116,7 @@ include 'header.php';
 					Serial
 				</td>
 				<td>
-					<input type="text" id="serial" name="serial" value="<?php echo $keg->get_serial() ?>" />
+					<input type="text" id="serial" class="mediumbox" name="serial" value="<?php echo $keg->get_serial() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -124,7 +124,7 @@ include 'header.php';
 					Stamped Owner
 				</td>
 				<td>
-					<input type="text" id="stampedOwner" name="stampedOwner" value="<?php echo $keg->get_stampedOwner() ?>" />
+					<input type="text" id="stampedOwner" class="mediumbox" name="stampedOwner" value="<?php echo $keg->get_stampedOwner() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -132,7 +132,7 @@ include 'header.php';
 					Stamped Loc
 				</td>
 				<td>
-					<input type="text" id="stampedLoc" name="stampedLoc" value="<?php echo $keg->get_stampedLoc() ?>" />
+					<input type="text" id="stampedLoc" class="mediumbox" name="stampedLoc" value="<?php echo $keg->get_stampedLoc() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -140,7 +140,7 @@ include 'header.php';
 					Notes
 				</td>
 				<td>
-					<textarea id="notes" name="notes" style="width:500px;height:100px"><?php echo $keg->get_stampedOwner() ?></textarea>
+					<textarea id="notes" class="text-input textarea" name="notes" style="width:500px;height:100px"><?php echo $keg->get_stampedOwner() ?></textarea>
 				</td>
 			</tr>
 			<tr>
