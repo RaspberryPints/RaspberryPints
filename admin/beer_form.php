@@ -76,7 +76,7 @@ require __DIR__.'/header.php';
 					Name*
 				</td>
 				<td>
-					<input type="text" id="name" name="name" value="<?php echo $beer->get_name() ?>" />
+					<input type="text" id="name" class="mediumbox" name="name" value="<?php echo $beer->get_name() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -84,7 +84,7 @@ require __DIR__.'/header.php';
 					Style*
 				</td>
 				<td>
-					<input type="text" id="style" name="style" value="<?php echo $beer->get_style() ?>" />
+					<input type="text" id="style" class="mediumbox" name="style" value="<?php echo $beer->get_style() ?>" />
 				</td>
 			</tr>	
 			<tr>
@@ -92,7 +92,7 @@ require __DIR__.'/header.php';
 					Notes
 				</td>
 				<td>
-					<textarea type="text" id="notes" name="notes"><?php echo $beer->get_notes() ?></textarea>
+					<textarea type="text" id="notes" class="text-input textarea" style="width:165px;height:80px" name="notes"><?php echo $beer->get_notes() ?></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -100,7 +100,7 @@ require __DIR__.'/header.php';
 					OG*
 				</td>
 				<td>
-					<input type="text" id="og" name="og" value="<?php echo $beer->get_og() ?>" />
+					<input type="text" id="og" class="mediumbox" name="og" value="<?php echo $beer->get_og() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -108,7 +108,7 @@ require __DIR__.'/header.php';
 					FG*
 				</td>
 				<td>
-					<input type="text" id="fg" name="fg" value="<?php echo $beer->get_fg() ?>" />
+					<input type="text" id="fg" class="mediumbox" name="fg" value="<?php echo $beer->get_fg() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -116,7 +116,7 @@ require __DIR__.'/header.php';
 					SRM*
 				</td>
 				<td>
-					<input type="text" id="srm" name="srm" value="<?php echo $beer->get_srm() ?>" />
+					<input type="text" id="srm" class="mediumbox" name="srm" value="<?php echo $beer->get_srm() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -124,7 +124,7 @@ require __DIR__.'/header.php';
 					IBU*
 				</td>
 				<td>
-					<input type="text" id="ibu" name="ibu" value="<?php echo $beer->get_ibu() ?>" />
+					<input type="text" id="ibu" class="mediumbox" name="ibu" value="<?php echo $beer->get_ibu() ?>" />
 				</td>
 			</tr>
 			<tr>
