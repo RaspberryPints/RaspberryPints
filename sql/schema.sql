@@ -692,7 +692,7 @@ FROM taps t
 	LEFT JOIN beers b ON b.id = t.beerId
 	LEFT JOIN srmRgb s ON s.srm = t.srmAct
 	LEFT JOIN vwGetTapsAmountPoured as p ON p.tapId = t.Id
-WHERE active = true 
+WHERE t.active = true 
 ORDER BY t.tapNumber;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
