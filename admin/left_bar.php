@@ -76,7 +76,7 @@
 	<li>
 		<a class="expanded heading">Everything Else</a>
 		<ul class="navigation">
-			<li><a href="http://www.raspberrypints.com/" title="faq">Official Website <small>(coming soon)</small></a></li>
+			<li><a href="http://www.raspberrypints.com/" target="_blank" title="faq">Official Website <small>(coming soon)</small></a></li>
 			<li><a href="#" title="about">About <small>(coming soon)</small></a></li>
 			<li><a href="contributors.php" title="contributors">Contributors</a></li>
 			<li><a href="#" title="licensing">Licensing <small>(coming soon)</small></a></li>

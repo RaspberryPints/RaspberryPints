@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 if(!isset( $_SESSION['myusername'] )){
 header("location:index.php");
@@ -20,7 +20,7 @@ require 'includes/conn.php';
 </head>
 <body id="homepage">
 	<!-- Start Header  -->
-<?
+<?php
 include 'header.php';
 ?>
 	<!-- End Header -->
@@ -47,7 +47,7 @@ include 'header.php';
 				<br/>
 
     <!-- Start Footer -->   
-<? 
+<?php 
 include 'footer.php';
 ?>
 
@@ -57,12 +57,12 @@ include 'footer.php';
     
        
 	<!-- Start Left Bar Menu -->   
-<? 
+<?php
 include 'left_bar.php';
 ?>
 	<!-- End Left Bar Menu -->  
 	<!-- Start Js  -->
-<?
+<?php
 include 'scripts.php';
 ?>
 	<!-- End Js -->

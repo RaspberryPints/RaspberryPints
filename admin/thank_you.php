@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 if(!isset( $_SESSION['myusername'] )){
 header("location:index.php");
@@ -20,7 +20,7 @@ require 'includes/conn.php';
 <link href='http://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
 </head>
 	<!-- Start Header  -->
-<?
+<?php
 include 'header.php';
 ?>
 	<!-- End Header -->
@@ -49,7 +49,7 @@ Thank you for your assistance in making Raspberry pints a better tool!
             </div>
         </div>
     <!-- Start Footer -->   
-<? 
+<?php 
 include 'footer.php';
 ?>
 
@@ -59,12 +59,12 @@ include 'footer.php';
     <!-- Right Side/Main Content End -->
     
 	<!-- Start Left Bar Menu -->   
-<? 
+<?php 
 include 'left_bar.php';
 ?>
 	<!-- End Left Bar Menu -->  
 	<!-- Start Js  -->
-<?
+<?php
 include 'scripts.php';
 ?>
 	<!-- End Js -->
