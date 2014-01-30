@@ -1,14 +1,25 @@
-RaspberryPints - a web-based digital tap list.
-===============
+RaspberryPints (RPints) is a digital upgrade to the conventional chalkboard taplist, created just for the home brewer. Display your current beers on tap with a sleek, digital presentation. Manage your beers, recipes, kegs, and taps with our built-in tracking system.
 
-NB: As of Commit 49 (11 Jan 2014), extensive changes have been made to the SQL database. The default database has been renamed from 'kegerface' to 'raspberrypints'. To this end, the included .sql file has been updated to reflect the new name. You will need to import the new raspberrypints.sql file before the website will function properly again. See Commit #49 commit notes for change details.
 
-NB: As of Commit 47 (11 Jan 2014), you will need to create a new SQL user, usename 'beer', password 'beer'. Please assign this user *only* SELECT privledges and place the user in localhost (not % or ANY).
+=== License ===
 
-A Kegerator Interface!
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+For full license text, see included file 'LICENSE.md'
+
 
 Questions? Comments? Want to Contribute?
-http://www.homebrewtalk.com/f51/feeler-any-interest-digital-tap-lists-450400/
+http://www.homebrewtalk.com/f51/initial-release-raspberrypints-digital-taplist-solution-456809/
 
-Based on the master branch of Kegerface:
+Inspired by Kegerface:
 http://github.com/kegerface/kegerface
