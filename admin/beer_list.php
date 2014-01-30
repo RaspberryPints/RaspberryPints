@@ -47,7 +47,7 @@ include 'header.php';
     	<ul>	
         	<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
         	<li><strong>Location:</strong></li>
-            <li class="current">Beer List</li>            
+            <li class="current">My Beers</li>            
         </ul>
     </div>
     <!-- Top Breadcrumb End --> 
