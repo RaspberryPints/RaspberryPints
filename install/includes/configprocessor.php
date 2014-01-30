@@ -87,6 +87,14 @@ if ($action == 'remove')
 	mysqli_close($con);
 	echo "Done<br>";
 	flush();
+	
+	echo "Removing configuration files...";
+	flush();
+	unlink('../../includes/config.php');
+	unlink('../../admin/includes/conn.php');
+	unlink('../../admin/includes/configp.php');
+	echo "Done<br>";
+	flush();
 }
 	
 if ($action == 'install')
@@ -163,7 +171,6 @@ require_once __DIR__.'/config_files.php';
 	  }
 	$currentdate = Date('Y-m-d H:i:s');
 	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','name','email','" . $currentdate . "','" . $currentdate . "');";
-	echo "<br>" . $sql . "<br>";
 	$result = mysqli_query($con,$sql);
 	mysqli_close($con);
 	echo "Done<br>";
