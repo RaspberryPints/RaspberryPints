@@ -72,7 +72,7 @@ INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifi
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showKegCol', '0', 'Keg Column', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'useHighResolution', '0', '4k Monitor Support', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'logoUrl', 'admin/img/logo.png', 'Logo Url', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'headerText', 'Beers On Tap', 'Header Text', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'headerText', 'Currently On Tap', 'Header Text', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'numberOfTaps', '0', 'Number of Taps', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'numberOfKegs', '0', 'Number of Kegs', NOW(), NOW() );
 
