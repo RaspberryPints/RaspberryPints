@@ -93,10 +93,9 @@ table thead{
 }
 table thead th{
 	min-height:35px;
-	font: .65em arial, verdana, sans-serif;
+	font: .65em Georgia;
 	color: white;
 	font-weight: bold;
-	font-style: italic;
 	vertical-align: top;
 }
 table .tap-num{
