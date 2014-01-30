@@ -27,6 +27,7 @@ $(document).ready(function () {
    $("#txtConfirmAdminPassword").keyup(checkAdminPasswordMatch);
 });
     </script>
+<<<<<<< HEAD
 <script>
 $.validator.setDefaults({
 	submitHandler: function() { alert("submitted!"); }
@@ -124,11 +125,18 @@ $().ready(function() {
 }
 </style>
 
+=======
+<?
+//##TODO## verify that this is a new install
+//##TODO## add menu if the DB exists
+?>
+>>>>>>> master
 
 	<head>
     <title>RaspberryPints Installation</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <!-- Set location of Cascading Style Sheet -->
+<<<<<<< HEAD
     <link rel="stylesheet" type="text/css" href="styles.css" />
 	<link rel="shortcut icon" href="../img/pint.ico" />
 	
@@ -136,20 +144,40 @@ $().ready(function() {
 	<script src="includes/jquery.js"></script>
 	<script src="includes/jquery.validate.js"></script>
     
+=======
+    <link rel="stylesheet" type="text/css" href="../admin/styles.css" />
+    <link rel="shortcut icon" href="../img/pint.ico" />
+>>>>>>> master
   </head>
   <body>
   <h1>Welcome to Raspberry Pints!</h1>
   
+<<<<<<< HEAD
      <form action="includes/configprocessor.php" method="post">
 
 	<table border="1">
 	<tr><td>
 	<h4>What do you want to do? ##TODO - Automate this##</h4>
 	<select name="selectaction">
+=======
+ 
+  
+  <h3>Installation Information</h3>
+  <br>
+  In order to get started, we'll need a little information from you. When you installed mySQL, you were asked for a "root" password.
+  You'll need to enter that here for us to configure RPints for you. You should leave the Database Server name as the default, unless
+  you are certain you need to change it.
+    <form action="includes/configprocessor.php" method="post">
+
+	<h4>What do you want to do?</h4>
+	<select name="selectaction">
+	  <option value="">Select...</option>
+>>>>>>> master
 	  <option value="install">Install</option>
 	  <option value="upgrade">Upgrade</option>
 	  <option value="remove">Clear Data</option>
 	</select>
+<<<<<<< HEAD
 	</td></tr>
 	</table>
 	<br><br><br>
@@ -164,21 +192,41 @@ you are certain you need to change it.
 				</td>
 				<td>
 					<input minlength="2" required class="inputbox" value="localhost" type="text" name="servername" required>				
+=======
+	
+	<table>
+			<tr>
+				<td>
+					<label for="textfield"><strong>Database Server:</strong></label> 
+				</td>
+				<td>
+					<input class="inputbox" value="localhost" type="text" name="servername" required>				
+>>>>>>> master
 				</td>
 			</tr>
 			<tr>
 				<td>
+<<<<<<< HEAD
 					<label for="textfield"><strong>Root Password: (required)</strong></label> 
 				</td>
 				<td>
 					<input class="inputbox" required type="password" name="rootpass">			
+=======
+					<label for="textfield"><strong>Root Password:</strong></label> 
+				</td>
+				<td>
+					<input class="inputbox" type="password" name="rootpass">			
+>>>>>>> master
 				</td>
 			</tr>
 		</table>
 		<br />				
 		<br />
+<<<<<<< HEAD
 	<br>
 	<h3>Step<span class="tapcircle">2</span></h3>
+=======
+>>>>>>> master
 		Now it's time to create the database user for Raspberry Pints to use. The default is "beers" and you can keep the default if you would like.
 		This database account is just used by the software to access the database. This is not your administration account.
 		<table>
@@ -187,7 +235,11 @@ you are certain you need to change it.
 					<label for="textfield"><strong>Database Username:</strong> 
 				</td>
 				<td>
+<<<<<<< HEAD
 					</label> <input required class="inputbox" value="beers" name="dbuser">				
+=======
+					</label> <input class="inputbox" value="beers" name="dbuser">				
+>>>>>>> master
 				</td>
 			</tr>
 			<tr>
@@ -195,14 +247,22 @@ you are certain you need to change it.
 					<label for="textfield"><strong>Database Password:</strong></label>
 				</td>
 				<td>
+<<<<<<< HEAD
 					<input required class="inputbox" id="txtNewPassword" type="password" name="dbpass1">		
+=======
+					<input class="inputbox" id="txtNewPassword" type="password" name="dbpass1">		
+>>>>>>> master
 				</td>
 			</tr>			<tr>
 				<td>
 					<label for="textfield"><strong>Confirm Password:</strong></label>
 				</td>
 				<td>
+<<<<<<< HEAD
 					<input required class="inputbox" id="txtConfirmPassword" type="password" name="dbpass2" onChange="checkPasswordMatch()";>
+=======
+					<input class="inputbox" id="txtConfirmPassword" type="password" name="dbpass2" onChange="checkPasswordMatch()";>
+>>>>>>> master
 				</td>
 				<td>
 					<div class="registrationFormAlert" id="divCheckPasswordMatch"></div>
@@ -211,7 +271,10 @@ you are certain you need to change it.
 		</table>
 		<br />
 		<br />
+<<<<<<< HEAD
 	<h3>Step<span class="tapcircle">3</span></h3>
+=======
+>>>>>>> master
 				And at last, we'll need to create a management account. this account is used for adding / removing beers, etc.
 		<table>
 			<tr>
@@ -219,7 +282,11 @@ you are certain you need to change it.
 					<label for="textfield"><strong>RPints Username:</strong> 
 				</td>
 				<td>
+<<<<<<< HEAD
 					</label> <input required class="inputbox" value="admin" name="adminuser">				
+=======
+					</label> <input class="inputbox" value="admin" name="adminuser">				
+>>>>>>> master
 				</td>
 			</tr>
 			<tr>
@@ -227,7 +294,11 @@ you are certain you need to change it.
 					<label for="textfield"><strong>Email Address:</strong> 
 				</td>
 				<td>
+<<<<<<< HEAD
 					</label> <input required class="inputbox" name="adminemail">				
+=======
+					</label> <input class="inputbox" name="adminemail">				
+>>>>>>> master
 				</td>
 			</tr>
 			<tr>
@@ -235,7 +306,11 @@ you are certain you need to change it.
 					<label for="textfield"><strong>Your Name:</strong> 
 				</td>
 				<td>
+<<<<<<< HEAD
 					</label> <input required class="inputbox" name="adminname">				
+=======
+					</label> <input class="inputbox" name="adminname">				
+>>>>>>> master
 				</td>
 			</tr>
 			<tr>
@@ -243,14 +318,22 @@ you are certain you need to change it.
 					<label for="textfield"><strong>Admin Password:</strong></label>
 				</td>
 				<td>
+<<<<<<< HEAD
 					<input required class="inputbox" id="txtCheckAdminPassword" type="password" name="adminpass1">		
+=======
+					<input class="inputbox" id="txtCheckAdminPassword" type="password" name="adminpass1">		
+>>>>>>> master
 				</td>
 			</tr>			<tr>
 				<td>
 					<label for="textfield"><strong>Confirm Password:</strong></label>
 				</td>
 				<td>
+<<<<<<< HEAD
 					<input required class="inputbox" id="txtConfirmAdminPassword" type="password" name="adminpass2" onChange="checkAdminPasswordMatch()";>
+=======
+					<input class="inputbox" id="txtConfirmAdminPassword" type="password" name="adminpass2" onChange="checkAdminPasswordMatch()";>
+>>>>>>> master
 				</td>
 				<td>
 					<div class="registrationFormAlert" id="divCheckAdminPasswordMatch"></div>
