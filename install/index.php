@@ -1,32 +1,39 @@
-
+	<?php
+	$installed=0;
+	if (!file_exists("../includes/config22.php")) {
+		$installed=1;
+	} else {
+		$installed=0;
+	}
+	?> 
 
 <html>
-<script>
-//http://jsfiddle.net/rpP4K/
-function checkPasswordMatch() {
-    var password = $("#txtNewPassword").val();
-    var confirmPassword = $("#txtConfirmPassword").val();
+	<script>
+		//http://jsfiddle.net/rpP4K/
+		function checkPasswordMatch() {
+			var password = $("#txtNewPassword").val();
+			var confirmPassword = $("#txtConfirmPassword").val();
 
-    if (password != confirmPassword)
-        $("#divCheckPasswordMatch").html("Passwords do not match!");
-    else
-        $("#divCheckPasswordMatch").html("Passwords match.");
-}
-function checkAdminPasswordMatch() {
-    var password = $("#txtCheckAdminPassword").val();
-    var confirmPassword = $("#txtConfirmAdminPassword").val();
+			if (password != confirmPassword)
+				$("#divCheckPasswordMatch").html("Passwords do not match!");
+			else
+				$("#divCheckPasswordMatch").html("Passwords match.");
+		}
+		function checkAdminPasswordMatch() {
+			var password = $("#txtCheckAdminPassword").val();
+			var confirmPassword = $("#txtConfirmAdminPassword").val();
 
-    if (password != confirmPassword)
-        $("#divCheckAdminPasswordMatch").html("Passwords do not match!");
-    else
-        $("#divCheckAdminPasswordMatch").html("Passwords match.");
-}
+			if (password != confirmPassword)
+				$("#divCheckAdminPasswordMatch").html("Passwords do not match!");
+			else
+				$("#divCheckAdminPasswordMatch").html("Passwords match.");
+		}
 
-$(document).ready(function () {
-   $("#txtConfirmPassword").keyup(checkPasswordMatch);
-   $("#txtConfirmAdminPassword").keyup(checkAdminPasswordMatch);
-});
-    </script>
+		$(document).ready(function () {
+		   $("#txtConfirmPassword").keyup(checkPasswordMatch);
+		   $("#txtConfirmAdminPassword").keyup(checkAdminPasswordMatch);
+		});
+	</script>
 
 
 
@@ -42,21 +49,24 @@ $(document).ready(function () {
     
   </head>
   <body>
+
+   
   <h1>Welcome to Raspberry Pints!</h1>
   
      <form action="includes/configprocessor.php" method="post">
 
-	<table border="1">
-	<tr><td>
-	<h4>What do you want to do? ##TODO - Automate this##</h4>
-	<select name="selectaction">
-	  <option value="install">Install</option>
-	  <option value="upgrade">Upgrade</option>
-	  <option value="remove">Clear Data</option>
-	</select>
-	</td></tr>
-	</table>
-	<br><br><br>
+	<?php
+		if (file_exists("../includes/config2.php")) {
+		echo 'We noticed that you already have installed RPints. Please select an option from the menu below';
+		echo '<br><select name="selectaction">';
+		echo '<option value="upgrade">Upgrade</option>';
+		echo '<option value="remove">Clear Data</option>';
+		echo '</select>';
+		} else {
+		//echo '<option value="install" selected>Install</option>';
+		$_POST['selectaction'] = "install";
+	}
+	?> 
 	<h3>Step<span class="tapcircle">1</span></h3>
 In order to get started, we'll need a little information from you. When you installed mySQL, you were asked for a "root" password.
 You'll need to enter that here for us to configure RPints for you. You should leave the Database Server name as the default, unless
