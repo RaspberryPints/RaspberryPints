@@ -84,18 +84,15 @@ include 'header.php';
 	
 	<?php 
 		$tapsErrorMsg = "";
+		$beers = $beerManager->GetAll();
+		$kegs = $kegManager->GetAll();
 		
-		if( count($activeTaps) == 0 ){ 
-			$beers = $beerManager->GetAll();
-			$kegs = $kegManager->GetAll();
-			
-			if( count($beers) == 0 ){
-				$tapsErrorMsg .= "At least 1 beer needs to be created, before you can assign a tap. <a href='beer_form.php'>Click here to create a beer</a><br/>";
-			}
-			
-			if( count($kegs) == 0 ){
-				$tapsErrorMsg .= "At least 1 keg needs to be created, before you can assign a tap. <a href='keg_form.php'>Click here to create a keg</a><br/>";
-			}
+		if( count($beers) == 0 ){
+			$tapsErrorMsg .= "At least 1 beer needs to be created, before you can assign a tap. <a href='beer_form.php'>Click here to create a beer</a><br/>";
+		}
+		
+		if( count($kegs) == 0 ){
+			$tapsErrorMsg .= "At least 1 keg needs to be created, before you can assign a tap. <a href='keg_form.php'>Click here to create a keg</a><br/>";
 		}					
 		
 		if( strlen($tapsErrorMsg) > 0 ){ 
