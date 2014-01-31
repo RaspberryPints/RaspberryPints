@@ -1,5 +1,5 @@
 <?php
-class BeerType  
+class BeerStyle
 {  
     private $_id;  
     private $_name;

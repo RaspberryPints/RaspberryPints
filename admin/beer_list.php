@@ -10,15 +10,15 @@ require_once __DIR__.'/includes/html_helper.php';
 require_once __DIR__.'/includes/functions.php';
 
 require_once __DIR__.'/includes/models/beer.php';
-require_once __DIR__.'/includes/models/beerType.php';
+require_once __DIR__.'/includes/models/beerStyle.php';
 
 require_once __DIR__.'/includes/managers/beer_manager.php';
-require_once __DIR__.'/includes/managers/beerType_manager.php';
+require_once __DIR__.'/includes/managers/beerStyle_manager.php';
 
 
 $htmlHelper = new HtmlHelper();
 $beerManager = new BeerManager();
-$beerTypeManager = new BeerTypeManager();
+$beerStyleManager = new BeerStyleManager();
 
 if (isset($_POST['inactivateBeer'])) {
 	$beerManager->Inactivate($_POST['id']);		
@@ -95,8 +95,8 @@ include 'header.php';
 									
 									<td>							
 										<?php 
-											$beerType = $beerTypeManager->GetById($beer->get_beerTypeId());
-											echo $beerType->get_name();
+											$beerStyle = $beerStyleManager->GetById($beer->get_beerStyleId());
+											echo $beerStyle->get_name();
 										?>
 									</td>
 									

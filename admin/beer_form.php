@@ -11,11 +11,11 @@ require_once __DIR__.'/includes/functions.php';
 require_once __DIR__.'/includes/models/beer.php';
 
 require_once __DIR__.'/includes/managers/beer_manager.php';
-require_once __DIR__.'/includes/managers/beerType_manager.php';
+require_once __DIR__.'/includes/managers/beerStyle_manager.php';
 
 $htmlHelper = new HtmlHelper();
 $beerManager = new BeerManager();
-$beerTypeManager = new BeerTypeManager();
+$beerStyleManager = new BeerStyleManager();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -31,7 +31,7 @@ if( isset($_GET['id'])){
 	$beer = new Beer();
 }
 
-$beerTypeList = $beerTypeManager->GetAll();
+$beerStyleList = $beerStyleManager->GetAll();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -88,7 +88,7 @@ require __DIR__.'/header.php';
 					Style*
 				</td>
 				<td>
-					<?php echo $htmlHelper->ToSelectList("beerTypeId", $beerTypeList, "name", "id", $beer->get_beerTypeId(), "Select One"); ?>
+					<?php echo $htmlHelper->ToSelectList("beerStyleId", $beerStyleList, "name", "id", $beer->get_beerStyleId(), "Select One"); ?>
 				</td>
 			</tr>	
 			<tr>

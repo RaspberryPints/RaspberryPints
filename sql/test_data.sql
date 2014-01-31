@@ -27,7 +27,7 @@ USE `raspberrypints`;
 -- Dumping data for table `beers`
 --
 
-INSERT INTO `beers` (`name`, `beerTypeId`, `notes`, `ogEst`, `fgEst`, `srmEst`, `ibuEst`, `createdDate`, `modifiedDate`) VALUES
+INSERT INTO `beers` (`name`, `beerStyleId`, `notes`, `ogEst`, `fgEst`, `srmEst`, `ibuEst`, `createdDate`, `modifiedDate`) VALUES
 ('Darth Vader', 1, 'Rich, toasty malt flavor. Generous amounts of pine, citrus and roasted coffee. Herbal aroma with a punch of IPA hops at the finish.', '1.066', '1.016', 38.0, 66.0, NOW(), NOW()),
 ('Strong Scotch', 1, 'Slightly sweet. Hints of malt and toffee. Finishes with roasted nuts and coffee. Complex and roasty.', '1.074', '1.018', 17.8, 27.0, NOW(), NOW()),
 ('Cream of Three Crops', 1, 'Neutral, muted start. Highly carbonated with a soapy head. Unremarkably mild finish of noble hops. Dry and crisp with no distinguishable graininess.', '1.040', '1.009', 2.9, 14.3, NOW(), NOW()),
