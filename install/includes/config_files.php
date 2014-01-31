@@ -9,8 +9,8 @@
 	$mainconfigstring .= '        $link = ';
 	$mainconfigstring .= "mysql_connect('" . $servername . "', '" . $dbuser . "', '" . $dbpass1 . "');\n";
 	$mainconfigstring .= "        mysql_select_db('raspberrypints');\n";
-	$mainconfigstring .= '   $rpintsversion=1;';
 	$mainconfigstring .= "	}\n";
+	$mainconfigstring .= '    $rpintsversion=1;' . "\n";
 	$mainconfigstring .= "?>";
 	
 	//Admin config file - /admin/conn.php

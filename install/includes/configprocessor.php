@@ -54,8 +54,8 @@ if (mysqli_connect_errno())
   {
   $validerror .= "<br><strong>Cannot connect the the database using the supplied information.</strong>";
   }
-//##TODO## Validate that there is no raspberrypints DB (not an upgrade)
-//##TODO## Check if administrator account already exists
+
+  //##TODO## Check if administrator account already exists
 
 echo "Done<br>";
 flush();
@@ -110,7 +110,7 @@ require_once __DIR__.'/config_files.php';
 
 	echo "Done<br>";
 	flush();
-	//##TODO## -----------------Create the admin files----------------------
+	// -----------------Create the admin files----------------------
 	echo "Update admin config files...";
 	flush();
 
@@ -143,6 +143,7 @@ require_once __DIR__.'/config_files.php';
 	$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema)) or die('Cannot find SQL schema file. ');
 	
 	$sql_query = remove_remarks($sql_query);
+	$sql_query = remove_comments($sql_query);
 	$sql_query = split_sql_file($sql_query, ';');
 
 
@@ -151,8 +152,7 @@ require_once __DIR__.'/config_files.php';
 	$i=1;
 	foreach($sql_query as $sql){
 	echo $i++;
-	echo "
-	";
+	echo "	";
 	mysql_query($sql) or die('error in query');
 	}
 
@@ -191,8 +191,13 @@ require_once __DIR__.'/config_files.php';
 }
 
 
-
-##TODO## On Success - redirect to /index.php
+if ($action != 'remove')
+{
+	##TODO## Add better error handling before showing the Success message
+	echo '<br /><br /><br /><h3> Congratulations! Your Raspberry Pints has been setup successfully.<br />';
+	echo 'Tap List - <a href="http://localhost/index.php">http://localhost/index.php</a><br />';
+	echo 'Administration - <a href="http://localhost/admin/index.php">http://localhost/admin/index.php</a><br />';
+}
 
 ?>
 </body>

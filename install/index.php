@@ -58,21 +58,20 @@
 	<?php
 		if (file_exists("../includes/config.php")) {
 		echo 'We noticed that you already have installed RPints. Please select an option from the menu below';
-		echo '<br><select name="selectaction">';
 			//Check versions
-			require_once '../includes/config.php';
+			require '../includes/config.php';
 			db();
-			$sql = 'SELECT * FROM config where configname = "Version"';
+			$sql = 'SELECT * FROM config where configname = "version"';
 			$qry = mysql_query($sql);	
 			$dbversion = mysql_result($qry,0,2);
 		
+			echo '<br><select name="selectaction">';
 			if ($dbversion != $rpintsversion) {
 				echo '<option value="upgrade">Upgrade</option>';
 			}
-		echo '<option value="remove">Clear Data</option>';
+			echo '<option value="remove">Clear Data</option>';
 		echo '</select>';
 		} else {
-		//echo '<option value="install" selected>Install</option>';
 		echo '<input type="hidden" name="selectaction" value="install">';
 	}
 	?> 

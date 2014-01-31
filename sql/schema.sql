@@ -65,7 +65,7 @@ CREATE TABLE `config` (
 -- Dumping data for table `config`
 --
 
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'Version', '1', 'Version', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'version', '1', 'Version', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showTapNumCol', '1', 'Tap Column', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showSrmCol', '1', 'SRM Column', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showIbuCol', '1', 'IBU Column', NOW(), NOW() );
@@ -230,11 +230,7 @@ CREATE TABLE `users` (
 	UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---- --------------------------------------------------------
 
---
--- Table structure for table `srmRgb`
---
 
 CREATE TABLE IF NOT EXISTS `srmRgb` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
