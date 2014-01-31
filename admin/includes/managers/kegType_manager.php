@@ -4,7 +4,7 @@ require_once __DIR__.'/../models/kegType.php';
 class KegTypeManager{
 
 	function GetAll(){
-		$sql="SELECT * FROM kegTypes";
+		$sql="SELECT * FROM kegTypes ORDER BY displayName";
 		$qry = mysql_query($sql);
 		
 		$kegTypes = array();

@@ -4,7 +4,7 @@ require_once __DIR__.'/../models/keg.php';
 class KegManager{
 
 	function GetAll(){
-		$sql="SELECT * FROM kegs";
+		$sql="SELECT * FROM kegs ORDER BY label";
 		$qry = mysql_query($sql);
 		
 		$kegs = array();
@@ -18,7 +18,7 @@ class KegManager{
 	}
 	
 	function GetAllActive(){
-		$sql="SELECT * FROM kegs WHERE active = 1";
+		$sql="SELECT * FROM kegs WHERE active = 1 ORDER BY label";
 		$qry = mysql_query($sql);
 		
 		$kegs = array();

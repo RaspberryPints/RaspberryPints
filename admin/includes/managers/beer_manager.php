@@ -37,7 +37,7 @@ class BeerManager{
 	}
 	
 	function GetAll(){
-		$sql="SELECT * FROM beers";
+		$sql="SELECT * FROM beers ORDER BY name";
 		$qry = mysql_query($sql);
 		
 		$beers = array();
@@ -51,7 +51,7 @@ class BeerManager{
 	}
 	
 	function GetAllActive(){
-		$sql="SELECT * FROM beers WHERE active = 1";
+		$sql="SELECT * FROM beers WHERE active = 1 ORDER BY name";
 		$qry = mysql_query($sql);
 		
 		$beers = array();
