@@ -23,6 +23,48 @@ USE `raspberrypints`;
 
 -- --------------------------------------------------------
 
+
+CREATE TABLE IF NOT EXISTS `beerTypes` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` text NOT NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Light Lager', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Pilsner', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('European Amber Lager', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Dark Lager', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Bock', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Light Hybrid Beer', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Amber Hybrid Beer', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('English Pale Ale', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Scottish And Irish Ale', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('American Ale', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('English Brown Ale', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Porter', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Stout', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('India Pale Ale (ipa)', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('German Wheat And Rye Beer', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Belgian And French Ale', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Sour Ale', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Belgian Strong Ale', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Strong Ale', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Fruit Beer', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Spice / Herb / Vegetable Beer', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Smoke-flavored And Wood-aged Beer', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Specialty Beer', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Traditional Mead', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Melomel (fruit Mead)', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Other Mead', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Standard Cider And Perry', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Specialty Cider And Perry', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Other', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Soda', NOW(), NOW());
+INSERT INTO `beerTypes`(name, createdDate, modifiedDate) VALUES('Seltzer', NOW(), NOW());
+
 --
 -- Table structure for table `beers`
 --
@@ -30,7 +72,7 @@ USE `raspberrypints`;
 CREATE TABLE IF NOT EXISTS `beers` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` text NOT NULL,
-	`style` text NOT NULL,
+	`beerTypeId` int(11) NOT NULL,
 	`notes` text NOT NULL,
 	`ogEst` decimal(4,3) NOT NULL,
 	`fgEst` decimal(4,3) NOT NULL,
@@ -40,7 +82,8 @@ CREATE TABLE IF NOT EXISTS `beers` (
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`beerTypeId`) REFERENCES beerTypes(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -677,7 +720,7 @@ AS
 SELECT 
 	t.id, 
 	b.name,
-	b.style,
+	bt.name as 'style',
 	b.notes,
 	t.ogAct,
 	t.fgAct,
@@ -690,6 +733,7 @@ SELECT
 	s.rgb as srmRgb
 FROM taps t 
 	LEFT JOIN beers b ON b.id = t.beerId
+	LEFT JOIN beerTypes bt ON bt.id = b.beerTypeId
 	LEFT JOIN srmRgb s ON s.srm = t.srmAct
 	LEFT JOIN vwGetTapsAmountPoured as p ON p.tapId = t.Id
 WHERE t.active = true 
