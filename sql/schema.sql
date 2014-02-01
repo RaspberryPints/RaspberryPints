@@ -177,11 +177,13 @@ CREATE TABLE IF NOT EXISTS `kegStatuses` (
 INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'SERVING', 'Serving', NOW(), NOW() );
 INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'PRIMARY', 'Primary', NOW(), NOW() );
 INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'SECONDARY', 'Secondary', NOW(), NOW() );
+INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'DRY_HOPPING', 'Dry Hopping', NOW(), NOW() );
 INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'BULK_AGING', 'Bulk Aging', NOW(), NOW() );
 INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'FLOODED', 'Flooded', NOW(), NOW() );
 INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'SANITIZED', 'Sanitized', NOW(), NOW() );
 INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'NEEDS_CLEANING', 'Needs Cleaning', NOW(), NOW() );
-INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'BROKEN', 'Broken', NOW(), NOW() );
+INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'NEEDS_PARTS', 'Needs Parts', NOW(), NOW() );
+INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'NEEDS_REPAIRS', 'Needs Repairs', NOW(), NOW() );
 
 -- --------------------------------------------------------
 
@@ -191,7 +193,7 @@ INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES ( 'BR
 
 CREATE TABLE IF NOT EXISTS `kegs` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`label` text NOT NULL,
+	`label` int(11) NOT NULL,
 	`kegTypeId` int(11) NOT NULL,
 	`make` text NOT NULL,
 	`model` text NOT NULL,
@@ -199,7 +201,8 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 	`stampedOwner` text NOT NULL,
 	`stampedLoc` text NOT NULL,
 	`notes` text NOT NULL,
-	`kegStatusCode` varchar(20) NOT NULL,	
+	`kegStatusCode` varchar(20) NOT NULL,
+	`weight` decimal(11,4) NOT NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,

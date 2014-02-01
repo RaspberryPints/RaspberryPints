@@ -32,7 +32,14 @@ class KegManager{
 	}
 	
 	function GetAllAvailable(){
-		$sql="SELECT * FROM kegs WHERE active = 1 AND kegStatusCode != 'SERVING' AND kegStatusCode != 'BROKEN' AND kegStatusCode != 'FLOODED' ORDER BY label";
+		$sql="SELECT * FROM kegs WHERE active = 1
+			AND kegStatusCode != 'SERVING'
+			AND kegStatusCode != 'SANITIZED'
+			AND kegStatusCode != 'NEEDS_CLEANING'
+			AND kegStatusCode != 'NEEDS_PARTS'
+			AND kegStatusCode != 'NEEDS_REPAIRS'
+			AND kegStatusCode != 'FLOODED'
+		ORDER BY label";
 		$qry = mysql_query($sql);
 		
 		$kegs = array();
@@ -71,13 +78,14 @@ class KegManager{
 						"serial = '" . $keg->get_serial() . "', " .
 						"stampedOwner = '" . $keg->get_stampedOwner() . "', " .
 						"stampedLoc = '" . $keg->get_stampedLoc() . "', " .
+						"weight = '" . $keg->get_weight() . "', " .
 						"notes = '" . $keg->get_notes() . "', " .
 						"kegStatusCode = '" . $keg->get_kegStatusCode() . "', " .
 						"modifiedDate = NOW() ".
 					"WHERE id = " . $keg->get_id();
 					
 		}else{
-			$sql = 	"INSERT INTO kegs(label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) " .
+			$sql = 	"INSERT INTO kegs(label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, weight, notes, kegStatusCode, createdDate, modifiedDate ) " .
 					"VALUES(" . 
 						"'". $keg->get_label() . "', " . 
 						$keg->get_kegTypeId() . ", " . 
@@ -86,6 +94,7 @@ class KegManager{
 						"'". $keg->get_serial() . "', " . 
 						"'". $keg->get_stampedOwner() . "', " . 
 						"'". $keg->get_stampedLoc() . "', " . 
+						"'". $keg->get_weight() . "', " . 
 						"'". $keg->get_notes() . "', " . 
 						"'". $keg->get_kegStatusCode() . "', " . 
 						"NOW(), NOW())";

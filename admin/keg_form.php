@@ -81,7 +81,7 @@ include 'header.php';
 		<table width="950" border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<td>
-					Label*
+					Label: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<input type="text" id="label" class="mediumbox" name="label" value="<?php echo $keg->get_label() ?>" />
@@ -89,7 +89,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Type*
+					Type: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<?php echo $htmlHelper->ToSelectList("kegTypeId", $kegTypeList, "name", "id", $keg->get_kegTypeId(), "Select One"); ?>
@@ -97,7 +97,7 @@ include 'header.php';
 			</tr>	
 			<tr>
 				<td>
-					Make
+					Make:
 				</td>
 				<td>
 					<input type="text" id="make" class="mediumbox" name="make" value="<?php echo $keg->get_make() ?>" />
@@ -105,7 +105,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Model
+					Model:
 				</td>
 				<td>
 					<input type="text" id="model" class="mediumbox" name="model" value="<?php echo $keg->get_model() ?>" />
@@ -113,7 +113,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Serial
+					Serial:
 				</td>
 				<td>
 					<input type="text" id="serial" class="mediumbox" name="serial" value="<?php echo $keg->get_serial() ?>" />
@@ -121,7 +121,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Stamped Owner
+					Stamped Owner:
 				</td>
 				<td>
 					<input type="text" id="stampedOwner" class="mediumbox" name="stampedOwner" value="<?php echo $keg->get_stampedOwner() ?>" />
@@ -129,7 +129,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Stamped Loc
+					Stamped Location:
 				</td>
 				<td>
 					<input type="text" id="stampedLoc" class="mediumbox" name="stampedLoc" value="<?php echo $keg->get_stampedLoc() ?>" />
@@ -137,7 +137,15 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Notes
+					Empty Weight:
+				</td>
+				<td>
+					<input type="text" id="weight" class="mediumbox" name="weight" value="<?php echo $keg->get_weight() ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Notes:
 				</td>
 				<td>
 					<textarea id="notes" class="text-input textarea" name="notes" style="width:500px;height:100px"><?php echo $keg->get_stampedOwner() ?></textarea>
@@ -145,7 +153,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Status*
+					Status: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<?php echo $htmlHelper->ToSelectList("kegStatusCode", $kegStatusList, "name", "code", $keg->get_kegStatusCode(), "Select One"); ?>
@@ -192,7 +200,7 @@ include 'scripts.php';
 		$('#keg-form').validate({
 		  rules: {
 			label: { required: true },
-			kegTypeId: { required: true },			
+			kegTypeId: { required: true },
 			kegStatusCode: { required: true }
 		  }
 		});

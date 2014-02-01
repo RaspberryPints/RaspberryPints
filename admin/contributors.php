@@ -44,7 +44,7 @@ include 'header.php';
 				<h2>Contributors</h2>
 			</div>
 			<br><br>
-			<h3>Project Staffers:</h3>
+			<h3>Project Staffers:</h3><br>
 			<div class="contentbox">
 				<table style="width: 800px;">
 					<thead>
