@@ -268,7 +268,7 @@
 											<div class="srm-stroke"></div> 
 										</div>
 										
-										<h2><?php echo $beer['srm']; ?> SRM</h2>
+										<h2></h2>
 									</td>
 								<?php } ?>
 							
