@@ -4,7 +4,7 @@ require_once __DIR__.'/../models/kegStatus.php';
 class KegStatusManager{
 
 	function GetAll(){
-		$sql="SELECT * FROM kegStatuses";
+		$sql="SELECT * FROM kegStatuses ORDER BY name";
 		$qry = mysql_query($sql);
 		
 		$kegStatuses = array();

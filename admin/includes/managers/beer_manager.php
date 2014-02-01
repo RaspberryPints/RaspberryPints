@@ -9,7 +9,7 @@ class BeerManager{
 			$sql = 	"UPDATE beers " .
 					"SET " .
 						"name = '" . encode($beer->get_name()) . "', " .
-						"style = '" . encode($beer->get_style()) . "', " .
+						"beerStyleId = '" . encode($beer->get_beerStyleId()) . "', " .
 						"notes = '" . encode($beer->get_notes()) . "', " .
 						"ogEst = '" . $beer->get_og() . "', " .
 						"fgEst = '" . $beer->get_fg() . "', " .
@@ -19,10 +19,10 @@ class BeerManager{
 					"WHERE id = " . $beer->get_id();
 					
 		}else{		
-			$sql = 	"INSERT INTO beers(name, style, notes, ogEst, fgEst, srmEst, ibuEst, createdDate, modifiedDate ) " .
+			$sql = 	"INSERT INTO beers(name, beerStyleId, notes, ogEst, fgEst, srmEst, ibuEst, createdDate, modifiedDate ) " .
 					"VALUES(" . 
 					"'" . encode($beer->get_name()) . "', " .
-					"'" . encode($beer->get_style()) . "', " .
+					$beer->get_beerStyleId() . ", " .
 					"'" . encode($beer->get_notes()) . "', " .
 					"'" . $beer->get_og() . "', " . 
 					"'" . $beer->get_fg() . "', " . 
@@ -37,7 +37,7 @@ class BeerManager{
 	}
 	
 	function GetAll(){
-		$sql="SELECT * FROM beers";
+		$sql="SELECT * FROM beers ORDER BY name";
 		$qry = mysql_query($sql);
 		
 		$beers = array();
@@ -51,7 +51,7 @@ class BeerManager{
 	}
 	
 	function GetAllActive(){
-		$sql="SELECT * FROM beers WHERE active = 1";
+		$sql="SELECT * FROM beers WHERE active = 1 ORDER BY name";
 		$qry = mysql_query($sql);
 		
 		$beers = array();

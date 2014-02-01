@@ -4,7 +4,7 @@ require_once __DIR__.'/../models/keg.php';
 class KegManager{
 
 	function GetAll(){
-		$sql="SELECT * FROM kegs";
+		$sql="SELECT * FROM kegs ORDER BY label";
 		$qry = mysql_query($sql);
 		
 		$kegs = array();
@@ -18,7 +18,21 @@ class KegManager{
 	}
 	
 	function GetAllActive(){
-		$sql="SELECT * FROM kegs WHERE active = 1";
+		$sql="SELECT * FROM kegs WHERE active = 1 ORDER BY label";
+		$qry = mysql_query($sql);
+		
+		$kegs = array();
+		while($i = mysql_fetch_array($qry)){
+			$keg = new Keg();
+			$keg->setFromArray($i);
+			$kegs[$keg->get_id()] = $keg;
+		}
+		
+		return $kegs;
+	}
+	
+	function GetAllAvailable(){
+		$sql="SELECT * FROM kegs WHERE active = 1 AND kegStatusCode != 'SERVING' AND kegStatusCode != 'BROKEN' AND kegStatusCode != 'FLOODED' ORDER BY label";
 		$qry = mysql_query($sql);
 		
 		$kegs = array();

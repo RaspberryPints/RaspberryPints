@@ -6,6 +6,7 @@ if(!isset( $_SESSION['myusername'] )){
 
 require_once __DIR__.'/includes/conn.php';
 require_once __DIR__.'/includes/functions.php';
+require_once __DIR__.'/includes/html_helper.php';
 
 require_once __DIR__.'/includes/models/tap.php';
 require_once __DIR__.'/includes/models/beer.php';
@@ -16,6 +17,7 @@ require_once __DIR__.'/includes/managers/keg_manager.php';
 require_once __DIR__.'/includes/managers/tap_manager.php';
 
 
+$htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
 $beerManager = new BeerManager();
 $kegManager = new KegManager();
@@ -79,107 +81,128 @@ include 'header.php';
 	<!-- End Tap Number Form -->
 <br />
 	<!-- Start On Tap Section -->
-	<form method="POST">
-		<input type="hidden" name="numberOfTaps" value="<?php echo $numberOfTaps ?>" />
-		
-		<table width="950" border="0" cellspacing="0" cellpadding="0">
-			<thead>
-				<tr>
-					<th>Tap #</th>
-					<th>Beer Name</th>
-					<th>SRM</th>
-					<th>IBU</th>
-					<th>OG</th>
-					<th>FG</th>
-					<th>Keg</th>
-					<th>Start Amount</th>
-					<th>Current Amount</th>
-					<th colspan="3"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php for($c = 1; $c <= $numberOfTaps; $c++ ){ ?>
-					<form method="POST">
-						<?php if( array_key_exists($c, $activeTaps) ){
-								$tap = $activeTaps[$c];							
-								$beer = $beerManager->GetById($tap->get_beerId());
-								$keg = $kegManager->GetById($tap->get_kegId());
-						?>
-								<input type="hidden" name="id" value="<?php echo $tap->get_id()?>" />
-								<input type="hidden" name="tapNumber" value="<?php echo $c?>" />
-								<tr>
-									<td>
-										<?php echo $c ?>
-									</td>
-									
-									<td>							
-										<?php echo $beer->get_name() ?>
-									</td>
-									
-									<td>
-										<?php echo $tap->get_srm() ?>
-									</td>
-									
-									<td>							
-										<?php echo $tap->get_ibu() ?>
-									</td>
-									
-									<td>							
-										<?php echo $tap->get_og() ?>
-									</td>
-									
-									<td>
-										<?php echo $tap->get_fg() ?>
-									</td>
-																
-									<td>
-										<?php echo $keg->get_label() ?>
-									</td>
-									
-									<td>
-										<?php echo $tap->get_startAmount() ?>
-									</td>
-									
-									<td>
-										<?php echo $tap->get_currentAmount() ?>
-									</td>
-									
-									<td>
-										<input name="editTap" type="submit" class="btn" value="Update tap info" />
-										
-									</td>
-									
-									<td>
-										<input name="newTap" type="submit" class="btn" value="New keg" />
-									</td>
-									
-									<td>
-										<input name="closeTap" type="submit" class="btn" value="Kick keg" />
-									</td>
-									
-								</tr>
-						<?php } else { ?>
-								<input type="hidden" name="tapNumber" value="<?php echo $c?>" />
-								<tr>
-									<td>
-										<?php echo $c ?>
-									</td>
-									
-									<td colspan="99">
-										<input name="newTap" type="submit" class="btn" value="Tap a keg" />
-									</td>
-								</tr>								
-						<?php } ?>	
-					</form>						
-				<?php } ?>
-			</tbody>
-		</table>
-		<br />
-		<div align="right">			
-			 &nbsp &nbsp 
-		</div>
 	
-	</form>
+	<?php 
+		$tapsErrorMsg = "";
+		$beers = $beerManager->GetAll();
+		$kegs = $kegManager->GetAll();
+		
+		if( count($beers) == 0 ){
+			$tapsErrorMsg .= "At least 1 beer needs to be created, before you can assign a tap. <a href='beer_form.php'>Click here to create a beer</a><br/>";
+		}
+		
+		if( count($kegs) == 0 ){
+			$tapsErrorMsg .= "At least 1 keg needs to be created, before you can assign a tap. <a href='keg_form.php'>Click here to create a keg</a><br/>";
+		}					
+		
+		if( strlen($tapsErrorMsg) > 0 ){ 
+			echo $htmlHelper->CreateMessage('warning', $tapsErrorMsg);	
+			
+		}else{
+	?>	
+	
+			<form method="POST">
+				<input type="hidden" name="numberOfTaps" value="<?php echo $numberOfTaps ?>" />
+				
+				<table width="950" border="0" cellspacing="0" cellpadding="0">
+					<thead>
+						<tr>
+							<th>Tap #</th>
+							<th>Beer Name</th>
+							<th>SRM</th>
+							<th>IBU</th>
+							<th>OG</th>
+							<th>FG</th>
+							<th>Keg</th>
+							<th>Start Amount</th>
+							<th>Current Amount</th>
+							<th colspan="3"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php for($c = 1; $c <= $numberOfTaps; $c++ ){ ?>
+							<form method="POST">
+								<?php if( array_key_exists($c, $activeTaps) ){
+										$tap = $activeTaps[$c];							
+										$beer = $beerManager->GetById($tap->get_beerId());
+										$keg = $kegManager->GetById($tap->get_kegId());
+								?>
+										<input type="hidden" name="id" value="<?php echo $tap->get_id()?>" />
+										<input type="hidden" name="tapNumber" value="<?php echo $c?>" />
+										<tr>
+											<td>
+												<?php echo $c ?>
+											</td>
+											
+											<td>							
+												<?php echo $beer->get_name() ?>
+											</td>
+											
+											<td>
+												<?php echo $tap->get_srm() ?>
+											</td>
+											
+											<td>							
+												<?php echo $tap->get_ibu() ?>
+											</td>
+											
+											<td>							
+												<?php echo $tap->get_og() ?>
+											</td>
+											
+											<td>
+												<?php echo $tap->get_fg() ?>
+											</td>
+																		
+											<td>
+												<?php echo $keg->get_label() ?>
+											</td>
+											
+											<td>
+												<?php echo $tap->get_startAmount() ?>
+											</td>
+											
+											<td>
+												<?php echo $tap->get_currentAmount() ?>
+											</td>
+											
+											<td>
+												<input name="editTap" type="submit" class="btn" value="Update tap info" />
+												
+											</td>
+											
+											<td>
+												<input name="newTap" type="submit" class="btn" value="New keg" />
+											</td>
+											
+											<td>
+												<input name="closeTap" type="submit" class="btn" value="Kick keg" />
+											</td>
+											
+										</tr>
+								<?php } else { ?>
+										<input type="hidden" name="tapNumber" value="<?php echo $c?>" />
+										<tr>
+											<td>
+												<?php echo $c ?>
+											</td>
+											
+											<td colspan="99">
+												<input name="newTap" type="submit" class="btn" value="Tap a keg" />
+											</td>
+										</tr>								
+								<?php } ?>	
+							</form>						
+						<?php } ?>
+					</tbody>
+				</table>
+				<br />
+				<div align="right">			
+					 &nbsp &nbsp 
+				</div>
+			
+			</form>
+		<?php } ?>
     </div>
 	<!-- End On Tap Section -->
 

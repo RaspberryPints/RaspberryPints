@@ -5,7 +5,7 @@ class Beer
 {  
     private $_id;  
     private $_name;
-	private $_style;
+	private $_beerStyleId;
 	private $_notes;
 	private $_og; 
 	private $_fg;  
@@ -23,8 +23,8 @@ class Beer
 	public function get_name(){ return $this->_name; }
 	public function set_name($_name){ $this->_name = $_name; }
 
-	public function get_style(){ return $this->_style; }
-	public function set_style($_style){ $this->_style = $_style; }
+	public function get_beerStyleId(){ return $this->_beerStyleId; }
+	public function set_beerStyleId($_beerStyleId){ $this->_beerStyleId = $_beerStyleId; }
 	
 	public function get_notes(){ return $this->_notes; }
 	public function set_notes($_notes){ $this->_notes = $_notes; }
@@ -62,20 +62,17 @@ class Beer
 		else
 			$this->set_name(null);
 			
-		if( isset($postArr['style']) )
-			$this->set_style($postArr['style']);
-		else
-			$this->set_style(null);
+		if( isset($postArr['beerStyleId']) ){
+			$this->set_beerStyleId($postArr['beerStyleId']);
+		}else{
+			$this->set_beerStyleId(null);
+		}
 			
 		if( isset($postArr['notes']) )
 			$this->set_notes($postArr['notes']);
 		else
 			$this->set_notes(null);
 			
-		if( isset($postArr['style']) )
-			$this->set_style($postArr['style']);
-		else
-			$this->set_style(null);
 			
 		if( isset($postArr['ogAct']) )
 			$this->set_og($postArr['ogAct']);
@@ -142,7 +139,7 @@ class Beer
 		return "{" . 
 			"id: " . $this->get_id() . ", " .
 			"name: '" . encode($this->get_name()) . "', " .
-			"style: '" . encode($this->get_style()) . "', " .
+			"beerStyleId: " . $this->get_beerStyleId() . ", " .
 			"notes: '" . encode($this->get_notes()) . "', " .
 			"srm: '" . $this->get_srm() . "', " .
 			"og: '" . $this->get_og() . "', " .
