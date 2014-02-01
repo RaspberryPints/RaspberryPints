@@ -22,6 +22,9 @@ $adminpass1 = $_POST["adminpass1"];
 $adminpass2 = $_POST["adminpass2"];
 $action = $_POST["selectaction"];
 //$sampledata = $_POST["sampledata"];
+if(!empty($_POST['sampledata'])) {
+    $sampledata = 'yes';
+}
 
 //Create the MD5 hash value for the admin password
 $adminhash = md5($adminpass1);
@@ -182,8 +185,25 @@ require_once __DIR__.'/config_files.php';
 			echo "Adding sample data...";
 			flush();
 			
-			$command = "mysql -uroot -p".$rootpass . " -h " . $servername . " < /var/www/sql/test_data.sql";
-			$output = shell_exec($command);
+			$dbms_schema = "../../sql/test_data.sql";
+
+		
+			$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema)) or die('Cannot find SQL schema file. ');
+			
+			$sql_query = remove_remarks($sql_query);
+			$sql_query = remove_comments($sql_query);
+			$sql_query = split_sql_file($sql_query, ';');
+
+
+			mysql_connect($servername,'root',$rootpass) or die('error connection');
+
+			$i=1;
+			foreach($sql_query as $sql){
+			echo $i++;
+			echo "	";
+			mysql_query($sql) or die('error in query');
+			}
+
 			
 			echo "Done<br>";
 			flush();
@@ -195,8 +215,8 @@ if ($action != 'remove')
 {
 	##TODO## Add better error handling before showing the Success message
 	echo '<br /><br /><br /><h3> Congratulations! Your Raspberry Pints has been setup successfully.<br />';
-	echo 'Tap List - <a href="http://localhost/index.php">http://localhost/index.php</a><br />';
-	echo 'Administration - <a href="http://localhost/admin/index.php">http://localhost/admin/index.php</a><br />';
+	echo 'Tap List - <a href="http://' . $_SERVER['HTTP_HOST'] . '/index.php">http://' . $_SERVER['HTTP_HOST'] . '/index.php</a><br />';
+	echo 'Administration - <a href="http://' . $_SERVER['HTTP_HOST'] . '/admin/index.php">http://' . $_SERVER['HTTP_HOST'] . '/admin/index.php</a><br />';
 }
 
 ?>
