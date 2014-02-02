@@ -110,19 +110,20 @@ CREATE TABLE `config` (
 
 -- NOTE: Please add new config values to the BOTTOM of the list. Adding to the top or middle of the list may break things!
 
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showTapNumCol', '1', 'Tap Column', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showSrmCol', '1', 'SRM Column', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showIbuCol', '1', 'IBU Column', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showAbvCol', '1', 'ABV Column', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showKegCol', '0', 'Keg Column', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'useHighResolution', '0', '4k Monitor Support', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'logoUrl', 'admin/img/logo.png', 'Logo Url', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'headerText', 'Currently On Tap', 'Header Text', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'numberOfTaps', '0', 'Number of Taps', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'versionMajor', '1', 'Major Version', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'versionMinor', '0', 'Minor Version', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'versionRelease', '0', 'Release Number', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'versionBuild', '265', 'Build Number', NOW(), NOW() );
+INSERT INTO `config` VALUES(1, 'showTapNumCol', '1', 'Tap Column', '2014-02-02 10:17:36', '2014-02-02 10:17:36');
+INSERT INTO `config` VALUES(2, 'showSrmCol', '1', 'SRM Column', '2014-02-02 10:17:36', '2014-02-02 10:17:36');
+INSERT INTO `config` VALUES(3, 'showIbuCol', '1', 'IBU Column', '2014-02-02 10:17:36', '2014-02-02 10:17:36');
+INSERT INTO `config` VALUES(4, 'showAbvCol', '1', 'ABV Column', '2014-02-02 10:17:36', '2014-02-02 10:17:36');
+INSERT INTO `config` VALUES(5, 'showKegCol', '0', 'Keg Column', '2014-02-02 10:17:36', '2014-02-02 10:17:36');
+INSERT INTO `config` VALUES(6, 'useHighResolution', '0', '4k Monitor Support', '2014-02-02 10:17:36', '2014-02-02 10:17:36');
+INSERT INTO `config` VALUES(7, 'logoUrl', 'img/logo.png', 'Logo Url', '2014-02-02 10:46:31', '2014-02-02 10:17:36');
+INSERT INTO `config` VALUES(8, 'headerText', 'Currently On Tap', 'Header Text', '2014-02-02 10:17:36', '2014-02-02 10:17:36');
+INSERT INTO `config` VALUES(9, 'numberOfTaps', '10', 'Number of Taps', '2014-02-02 10:17:36', '2014-02-02 10:17:36');
+INSERT INTO `config` VALUES(10, 'versionMajor', '1', 'Major Version', '2014-02-02 10:17:36', '2014-02-02 10:17:36');
+INSERT INTO `config` VALUES(11, 'versionMinor', '0', 'Minor Version', '2014-02-02 10:17:36', '2014-02-02 10:17:36');
+INSERT INTO `config` VALUES(12, 'versionRelease', '0', 'Release Number', '2014-02-02 10:17:36', '2014-02-02 10:17:36');
+INSERT INTO `config` VALUES(13, 'versionBuild', '265', 'Build Number', '2014-02-02 10:17:36', '2014-02-02 10:17:36');
+INSERT INTO `config` VALUES(14, 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '2014-02-02 10:47:59', NULL);er', NOW(), NOW() );
 
 -- --------------------------------------------------------
 
