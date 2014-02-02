@@ -118,7 +118,7 @@ INSERT INTO `config` VALUES(5, 'showKegCol', '0', 'Keg Column', '2014-02-02 03:1
 INSERT INTO `config` VALUES(6, 'useHighResolution', '0', '4k Monitor Support', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
 INSERT INTO `config` VALUES(7, 'logoUrl', 'img/logo.png', 'Logo Url', '2014-02-02 11:08:45', '2014-02-02 03:17:36');
 INSERT INTO `config` VALUES(8, 'headerText', 'Currently On Tap', 'Header Text', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(9, 'numberOfTaps', '10', 'Number of Taps', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
+INSERT INTO `config` VALUES(9, 'numberOfTaps', '0', 'Number of Taps', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
 INSERT INTO `config` VALUES(10, 'versionMajor', '1', 'Major Version', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
 INSERT INTO `config` VALUES(11, 'versionMinor', '0', 'Minor Version', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
 INSERT INTO `config` VALUES(12, 'versionRelease', '0', 'Release Number', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
