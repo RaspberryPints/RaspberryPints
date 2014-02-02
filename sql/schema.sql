@@ -108,6 +108,7 @@ CREATE TABLE `config` (
 -- Dumping data for table `config`
 --
 
+INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'version', '1', 'Version', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showTapNumCol', '1', 'Tap Column', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showSrmCol', '1', 'SRM Column', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showIbuCol', '1', 'IBU Column', NOW(), NOW() );
@@ -275,17 +276,7 @@ CREATE TABLE `users` (
 	UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `Users`
---
 
-INSERT INTO `users` (`username`, `password`, `name`, `email`, createdDate, modifiedDate ) VALUES ( 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin', 'support@raspberrypints.com', NOW(), NOW() );
-
--- --------------------------------------------------------
-
---
--- Table structure for table `srmRgb`
---
 
 CREATE TABLE IF NOT EXISTS `srmRgb` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
