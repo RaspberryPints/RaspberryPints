@@ -108,7 +108,8 @@ CREATE TABLE `config` (
 -- Dumping data for table `config`
 --
 
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'version', '1', 'Version', NOW(), NOW() );
+-- NOTE: Please add new config values to the BOTTOM of the list. Adding to the top or middle of the list may break things!
+
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showTapNumCol', '1', 'Tap Column', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showSrmCol', '1', 'SRM Column', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'showIbuCol', '1', 'IBU Column', NOW(), NOW() );
@@ -118,7 +119,10 @@ INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifi
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'logoUrl', 'admin/img/logo.png', 'Logo Url', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'headerText', 'Currently On Tap', 'Header Text', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'numberOfTaps', '0', 'Number of Taps', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'numberOfKegs', '0', 'Number of Kegs', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'versionMajor', '1', 'Major Version', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'versionMinor', '0', 'Minor Version', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'versionRelease', '0', 'Release Number', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, createdDate, modifiedDate ) VALUES ( 'versionBuild', '265', 'Build Number', NOW(), NOW() );
 
 -- --------------------------------------------------------
 
