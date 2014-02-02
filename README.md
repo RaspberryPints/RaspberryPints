@@ -1,7 +1,10 @@
 RaspberryPints (RPints) is a digital upgrade to the conventional chalkboard taplist, created just for the home brewer. Display your current beers on tap with a sleek, digital presentation. Manage your beers, recipes, kegs, and taps with our built-in tracking system.
 
 
-=== License ===
+Licensing:
+
+	GNU GENERAL PUBLIC LICENSE
+	Version 3, 29 June 2007
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,7 +18,8 @@ RaspberryPints (RPints) is a digital upgrade to the conventional chalkboard tapl
 
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-For full license text, see included file 'LICENSE.md'
+
+Full license text available in 'LICENSE.md'.
 
 
 Questions? Comments? Want to Contribute?
