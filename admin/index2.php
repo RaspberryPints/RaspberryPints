@@ -19,7 +19,7 @@
             <div id="innerlogin">
             	<form name="login" action="includes/checklogin.php" method="POST">
                 	<p>Enter your username:</p>
-                	<input type="text" class="logininput" name="myusername" placeholder="Login Name" />
+                	<input type="text" class="logininput" autofocus="autofocus" name="myusername" placeholder="Login Name" />
                     <p>Enter your password:</p>
                 	<input type="password" class="logininput"  name="mypassword" placeholder="Password"/>
                                       <span class="bigtxt red">(Wrong Username Or Password)</span>
