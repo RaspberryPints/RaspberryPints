@@ -1,11 +1,3 @@
-	<?php
-	$installed=0;
-	if (!file_exists("../includes/config22.php")) {
-		$installed=1;
-	} else {
-		$installed=0;
-	}
-	?> 
 
 <html>
 	<script>
