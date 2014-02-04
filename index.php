@@ -1,5 +1,6 @@
 <?php
 	require_once __DIR__.'/includes/config_names.php';
+	
 	require_once __DIR__.'/includes/config.php';
 	
 	require_once __DIR__.'/admin/includes/managers/tap_manager.php';
@@ -187,7 +188,7 @@
 									<p><?php echo $beer['notes']; ?></p>
 								</td>
 							
-								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::showAbvImage])){ ?>
+								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::ShowAbvImage])){ ?>
 									<td class="abv">
 										<h3><?php
 											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);									
@@ -225,7 +226,7 @@
 									</td>
 								<?php } ?>
 								
-								<?php if(($config[ConfigNames::ShowAbvCol]) && ! ($config[ConfigNames::showAbvImage])){ ?>
+								<?php if(($config[ConfigNames::ShowAbvCol]) && ! ($config[ConfigNames::ShowAbvImage])){ ?>
 									<td class="abv">
 										<h3><?php
 											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);									

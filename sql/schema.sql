@@ -93,38 +93,37 @@ CREATE TABLE IF NOT EXISTS `beers` (
 --
 
 CREATE TABLE `config` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`configName` varchar(50) NOT NULL,
-	`configValue` longtext NOT NULL,
-	`displayName` varchar(65) NOT NULL,
-	`createdDate` TIMESTAMP NULL,
-	`modifiedDate` TIMESTAMP NULL,
-
-	PRIMARY KEY (`id`),
-	UNIQUE KEY `configName_UNIQUE` (`configName`)
-) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `configName` varchar(50) NOT NULL,
+  `configValue` longtext NOT NULL,
+  `displayName` varchar(65) NOT NULL,
+  `showOnPanel` tinyint(2) NOT NULL,
+  `createdDate` timestamp NULL DEFAULT NULL,
+  `modifiedDate` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `configName_UNIQUE` (`configName`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
 
 --
 -- Dumping data for table `config`
 --
 
--- NOTE: Please add new config values to the BOTTOM of the list. Adding to the top or middle of the list may break things!
-
-INSERT INTO `config` VALUES(1, 'showTapNumCol', '1', 'Tap Column', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(2, 'showSrmCol', '1', 'SRM Column', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(3, 'showIbuCol', '1', 'IBU Column', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(4, 'showAbvCol', '1', 'ABV Column', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(5, 'showKegCol', '0', 'Keg Column', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(6, 'useHighResolution', '0', '4k Monitor Support', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(7, 'logoUrl', 'img/logo.png', 'Logo Url', '2014-02-02 11:08:45', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(8, 'headerText', 'Currently On Tap', 'Header Text', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(9, 'numberOfTaps', '0', 'Number of Taps', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(10, 'versionMajor', '1', 'Major Version', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(11, 'versionMinor', '0', 'Minor Version', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(12, 'versionRelease', '0', 'Release Number', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(13, 'versionBuild', '265', 'Build Number', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(14, 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '2014-02-02 11:08:32', '2014-02-02 11:08:29');
-INSERT INTO `config` VALUES(15, 'showAbvImage', '1', 'ABV Image', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
+INSERT INTO `config` VALUES(1, 'showTapNumCol', '1', 'Tap Column', 1, '2014-02-04 08:42:15', '2014-02-01 20:17:36');
+INSERT INTO `config` VALUES(2, 'showSrmCol', '1', 'SRM Column', 1, '2014-02-04 08:42:15', '2014-02-01 20:17:36');
+INSERT INTO `config` VALUES(3, 'showIbuCol', '1', 'IBU Column', 1, '2014-02-04 08:42:15', '2014-02-01 20:17:36');
+INSERT INTO `config` VALUES(4, 'showAbvCol', '1', 'ABV Column', 1, '2014-02-04 08:42:15', '2014-02-01 20:17:36');
+INSERT INTO `config` VALUES(5, 'showAbvImage', '1', 'Show ABV Image', 1, '2014-02-04 08:42:15', '2014-02-04 07:40:26');
+INSERT INTO `config` VALUES(6, 'showKegCol', '0', 'Keg Column', 1, '2014-02-04 08:42:15', '2014-02-01 20:17:36');
+INSERT INTO `config` VALUES(7, 'useHighResolution', '0', '4k Monitor Support', 1, '2014-02-04 08:42:15', '2014-02-01 20:17:36');
+INSERT INTO `config` VALUES(8, 'showCalCol', '1', 'Calories Option', 1, '2014-02-04 08:42:15', '2014-02-04 07:12:14');
+INSERT INTO `config` VALUES(9, 'logoUrl', 'img/logo.png', 'Logo Url', 0, '2014-02-04 07:39:42', '2014-02-01 20:17:36');
+INSERT INTO `config` VALUES(10, 'headerText', 'Currently On Tap', 'Header Text', 0, '2014-02-04 07:39:35', '2014-02-01 20:17:36');
+INSERT INTO `config` VALUES(11, 'numberOfTaps', '10', 'Number of Taps', 0, '2014-02-04 07:39:30', '2014-02-01 20:17:36');
+INSERT INTO `config` VALUES(12, 'versionMajor', '1', 'Major Version', 0, '2014-02-04 07:39:25', '2014-02-01 20:17:36');
+INSERT INTO `config` VALUES(13, 'versionMinor', '0', 'Minor Version', 0, '2014-02-04 07:39:17', '2014-02-01 20:17:36');
+INSERT INTO `config` VALUES(14, 'versionRelease', '0', 'Release Number', 0, '2014-02-04 07:39:12', '2014-02-01 20:17:36');
+INSERT INTO `config` VALUES(15, 'versionBuild', '265', 'Build Number', 0, '2014-02-04 07:39:06', '2014-02-01 20:17:36');
+INSERT INTO `config` VALUES(16, 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', 0, '2014-02-04 07:38:58', '2014-02-02 04:08:29');
 
 -- --------------------------------------------------------
 
