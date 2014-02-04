@@ -40,7 +40,7 @@ include 'header.php';
 
 <!-- Right Side/Main Content Start -->
 <div id="rightside">
-	<div class="contentcontainer med left">
+	<div class="contentcontainer lg left">
 		<div class="headings alt">
 			<h2>Personalize </h2>
 		</div>

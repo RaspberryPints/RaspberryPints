@@ -3,7 +3,8 @@ body {height: 100%; font-family: Arial, Helvetica, sans-serif; font-size: 13px; 
 	p {padding: 0; margin: 0;}
 	ul, li {list-style: none; padding: 0; margin: 0;}
 	img {border: none;}
-	h1, h2, h3, h4, h5 {padding: 0; margin: 0;}
+	h1, h2, h3, h4, h5 {padding: 0px; margin: 0px;}
+	h3 {color: black;}
 	.left {float: left;}
 	.right {float: right;}
 	.red {color: #C61B1B;}
@@ -124,8 +125,8 @@ body {height: 100%; font-family: Arial, Helvetica, sans-serif; font-size: 13px; 
 	
 	table {border-collapse: collapse;}
 		thead th{ white-space: nowrap; }
-		th,td {text-align: left; padding: 8px;}
-		th {background: #E0E0E0 url(../img/bg_th.png) repeat-x top; text-shadow: 1px 1px 1px #fff; font-size: 14px;}
+		th,td {text-align: left; padding: 8px; vertical-align: top;}
+		th {background: #E0E0E0 url(../img/bg_th.png) repeat-x top; text-shadow: 1px 1px 1px #fff; font-size: 14px; text-decoration: underline;}
 		tr.alt td{background: #F2F2F2 url(../img/bg_td_alt.png) repeat-x top; text-shadow: 1px 1px 1px #fff;}
 	
 	.extrabottom {padding: 15px; height: 40px; background: url(../img/bg_fade_sml.png) repeat-x top; border-radius: 10px; -moz-border-radius: 10px; margin-top: 10px;}
@@ -135,7 +136,7 @@ body {height: 100%; font-family: Arial, Helvetica, sans-serif; font-size: 13px; 
 		.bulkactions {float: right;}
 	
 	.intborder {border-bottom: solid 2px black;}
-	.intborder td {border-bottom: solid 2px black;}
+	.intborder td tr{border-bottom: solid 2px black;}
 	.intborder th {border-right: solid 1px black;}
 	.outerborder {border: solid 2px black;}
 	.leftborder {border-left: solid 1px black;}

@@ -56,8 +56,13 @@ include 'header.php';
     <!-- Top Breadcrumb End --> 
      
     <!-- Right Side/Main Content Start -->
-    <div id="rightside">
-		 <div class="contentcontainer med left">		
+<div id="rightside">
+	<div class="contentcontainer lg left">
+		<div class="headings alt">
+			<h2>My Beers </h2>
+		</div>
+		<div class="contentbox">
+		
 			<!-- Start On Tap Section -->
 			
 			<?php $htmlHelper->ShowMessage(); ?>
@@ -65,70 +70,88 @@ include 'header.php';
 			<input type="submit" class="btn" value="Add Beer" onclick="window.location='beer_form.php'" />
 			<br/><br/>
 			
-			<table width="800" border="0" cellspacing="0" cellpadding="0">
+			<table width="770px" border="0" cellspacing="0" cellpadding="0">
 				<thead>
 					<tr>
-						<th>Name</th>
-						<th>Style</th>						
-						<th>SRM</th>
-						<th>IBU</th>
-						<th>O.G.</th>
-						<th>F.G.</th>
-						<th colspan="3">Tasting Notes</th>
+						<th width="28%">Name</th>
+						<th width="10%">Vitals</th>
+						<th width="22%">Yeast/Water/etc</th>
+						<th width="40%" colspan="3">Hop Additions</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php 
 						if( count($beers) == 0 ){  
 					?>
-							<tr><td class="no-results" colspan="99">No beers</td></tr>
+							<tr><td class="no-results" colspan="99">No beers :( Add some?</td></tr>
 					<?php 
 						}else{  
 							foreach ($beers as $beer){
 					?>
 								<tr>
 									<td>
-										<?php echo $beer->get_name() ?>
-									</td>
-									
-									<td>							
-										<?php 
+										<h3><?php echo $beer->get_name() ?></h3><br>
+										<b><?php 
 											$beerStyle = $beerStyleManager->GetById($beer->get_beerStyleId());
 											echo $beerStyle->get_name();
+										?></b><br>
+										(BJCP 1A - Light Lager)</b><br><br>
+									</td>
+									
+									<td>
+										<?php
+											if ( $beer->get_srm() != 0 )
+												echo "<b>SRM:</b> " , $beer->get_srm() , "<br>" ;
+											else
+												echo ""
+										?>
+										<?php
+											if ( $beer->get_ibu() != 0 )
+												echo "<b>IBU:</b> " , $beer->get_ibu() , "<br>" ;
+											else
+												echo ""
+										?>
+										<?php
+											if ( $beer->get_og() != 1 && $beer->get_og() != 0 )
+												echo "<b>OG:</b> " , $beer->get_og() , "<br>" ;
+											else
+												echo ""
+										?>
+										<?php
+											if ( $beer->get_fg() != 1 && $beer->get_fg() != 0 )
+												echo "<b>FG:</b> " , $beer->get_fg() , "<br>" ;
+											else
+												echo ""
 										?>
 									</td>
 									
 									<td>
-										<?php echo $beer->get_srm() ?>
+										<b>Yeast</b>: Fermentis S-04<br>
+										<b>Water:</b> Sacramento, CA<br>
+										<b>More:</b> Info Here...<br>
+										<b>More:</b> Info Here...<br>
 									</td>
 									
-									<td>
-										<?php echo $beer->get_ibu() ?>
+									<td colspan="3">
+										1.42 oz Northern Brewer (6.8%) @ 60 min<br>
+										2.14 oz Nelson Sauvin (9.1%) @ 30 min<br>
+										2.41 oz Columbus/Tomahawk (8.6%) @ 15 min<br>
+										1.24 oz East Kent Goldings (2.1%) @ 0 min<br>
 									</td>
-									
-									<td>
-										<?php echo $beer->get_og() ?>
+								</tr>
+								<tr class="intborder">
+									<td colspan="3">
+										<?php if ($beer->get_notes()) echo '"' ?><?php echo $beer->get_notes() ?><?php if ($beer->get_notes()) echo '"' ?>
 									</td>
-									
-									<td>							
-										<?php echo $beer->get_fg() ?>
-									</td>
-									
-									<td>
-										<?php echo $beer->get_notes() ?>
-									</td>
-																		
-									<td>
+									<td align="center" width="50px">
 										<input name="editBeer" type="button" class="btn" value="Edit" onclick="window.location='beer_form.php?id=<?php echo $beer->get_id()?>'" />
 									</td>
-									
-									<td>
+									<td align="center" width="50px">
 										<form method="POST">
 											<input type='hidden' name='id' value='<?php echo $beer->get_id()?>'/>
 											<input class="inactivateBeer btn" name="inactivateBeer" type="submit" value="Delete" />
 										</form>
 									</td>
-									
 								</tr>
 					<?php 
 							} 
@@ -138,6 +161,8 @@ include 'header.php';
 			</table>
 		</div>
     </div>
+</div>
+</div>
 	
 	<!-- End On Tap Section -->
 
