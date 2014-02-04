@@ -119,10 +119,7 @@ INSERT INTO `config` VALUES(6, 'useHighResolution', '0', '4k Monitor Support', '
 INSERT INTO `config` VALUES(7, 'logoUrl', 'img/logo.png', 'Logo Url', '2014-02-02 11:08:45', '2014-02-02 03:17:36');
 INSERT INTO `config` VALUES(8, 'headerText', 'Currently On Tap', 'Header Text', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
 INSERT INTO `config` VALUES(9, 'numberOfTaps', '0', 'Number of Taps', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(10, 'versionMajor', '1', 'Major Version', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(11, 'versionMinor', '0', 'Minor Version', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(12, 'versionRelease', '0', 'Release Number', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
-INSERT INTO `config` VALUES(13, 'versionBuild', '265', 'Build Number', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
+INSERT INTO `config` VALUES(10, 'version', '1.0.0.265', 'Major Version', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
 INSERT INTO `config` VALUES(14, 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '2014-02-02 11:08:32', '2014-02-02 11:08:29');
 
 -- --------------------------------------------------------
