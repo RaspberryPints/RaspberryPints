@@ -124,6 +124,7 @@ INSERT INTO `config` VALUES(11, 'versionMinor', '0', 'Minor Version', '2014-02-0
 INSERT INTO `config` VALUES(12, 'versionRelease', '0', 'Release Number', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
 INSERT INTO `config` VALUES(13, 'versionBuild', '265', 'Build Number', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
 INSERT INTO `config` VALUES(14, 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '2014-02-02 11:08:32', '2014-02-02 11:08:29');
+INSERT INTO `config` VALUES(15, 'showAbvImage', '1', 'ABV Image', '2014-02-02 03:17:36', '2014-02-02 03:17:36');
 
 -- --------------------------------------------------------
 
