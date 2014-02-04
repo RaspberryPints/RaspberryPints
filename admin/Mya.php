@@ -73,9 +73,7 @@ echo mysql_result($result, 0, 'email');
 ?>
 <br />
 <br />
-<b>
-<a href="#">Update Info</a>
-</b>
+
      </div>
 
     <!-- Start Footer -->   

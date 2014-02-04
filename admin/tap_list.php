@@ -167,16 +167,16 @@ include 'header.php';
 											</td>
 											
 											<td>
-												<input name="editTap" type="submit" class="btn" value="Update tap info" />
+												<input name="editTap" type="submit" class="btn" value="Update Tap Info" />
 												
 											</td>
 											
 											<td>
-												<input name="newTap" type="submit" class="btn" value="New keg" />
+												<input name="newTap" type="submit" class="btn" value="New Keg" />
 											</td>
 											
 											<td>
-												<input name="closeTap" type="submit" class="btn" value="Kick keg" />
+												<input name="closeTap" type="submit" class="btn" value="Kick Keg" />
 											</td>
 											
 										</tr>
@@ -188,7 +188,7 @@ include 'header.php';
 											</td>
 											
 											<td colspan="99">
-												<input name="newTap" type="submit" class="btn" value="Tap a keg" />
+												<input name="newTap" type="submit" class="btn" value="Tap a Keg" />
 											</td>
 										</tr>								
 								<?php } ?>	

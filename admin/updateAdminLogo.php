@@ -1,5 +1,5 @@
 <?php 
- $target = "../img/"; 
+ $target = "img/"; 
  $target = $target . 'logo.png' ; 
  $ok=1; 
  

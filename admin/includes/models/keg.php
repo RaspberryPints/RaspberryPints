@@ -9,6 +9,7 @@ class Keg
 	private $_serial; 
 	private $_stampedOwner; 
 	private $_stampedLoc; 
+	private $_weight; 
 	private $_notes; 
 	private $_kegStatusCode;
 	private $_active;
@@ -40,6 +41,9 @@ class Keg
 
 	public function get_stampedLoc(){ return $this->_stampedLoc; }
 	public function set_stampedLoc($_stampedLoc){ $this->_stampedLoc = $_stampedLoc; }
+
+	public function get_weight(){ return $this->_weight; }
+	public function set_weight($_stampedLoc){ $this->_weight = $_weight; }
 
 	public function get_notes(){ return $this->_notes; }
 	public function set_notes($_notes){ $this->_notes = $_notes; }
@@ -98,6 +102,11 @@ class Keg
 		else
 			$this->set_stampedLoc(null);
 			
+		if( isset($postArr['weight']) )
+			$this->set_weight($postArr['weight']);
+		else
+			$this->set_weight(null);
+			
 		if( isset($postArr['notes']) )
 			$this->set_notes($postArr['notes']);
 		else
@@ -134,6 +143,7 @@ class Keg
 			"serial: " . $this->get_serial() . ", " .
 			"stampedOwner: " . $this->get_stampedOwner() . ", " .
 			"stampedLoc: " . $this->get_stampedLoc() . ", " .
+			"weight: " . $this->get_weight() . ", " .
 			"notes: " . $this->get_notes() . ", " .
 			"kegStatusCode: " . $this->get_kegStatusCode() . ", " .
 			"active: '" . $this->get_active() . "', " .

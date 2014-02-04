@@ -61,35 +61,31 @@ include 'header.php';
      
     <!-- Right Side/Main Content Start -->
     <div id="rightside">
-		 <div class="contentcontainer med left">		
+		<div class="contentcontainer lg left">
+			<div class="headings alt">
+				<h2>Keg List</h2>
+			</div>
+			<br><br>
+			<h3>Currently Serving:</h3>
+			<br>
 			<!-- Start On Tap Section -->
 			
-			<?php $htmlHelper->ShowMessage(); ?>
-			
-			<input type="submit" class="btn" value="Add Keg" onclick="window.location='keg_form.php'" />
-			<br/><br/>
-			
-			<table width="950" border="0" cellspacing="0" cellpadding="0">
-				<thead>
+			<table width="800px" border="0" cellspacing="0" cellpadding="0" class="keglist outerborder">
+				<thead class="intborder thick">
 					<tr>
-						<th>Name</th>
-						<th>Keg Type</th>
-						<th>Make</th>
-						<th>Model</th>
-						<th>Serial</th>
-						<th>Stamped Owner</th>
-						<th>Stamped Loc</th>
-						<th>Notes</th>
-						<th>Status</th>
-						<th></th>
-						<th></th>
+						<th width="5%"><center>Label</center></th>
+						<th width="10%" colspan="2"><center>Status / Update</center></th>
+						<th width="28%"><center>Keg Type</center></th>
+						<th width="28%"><center>Make</center></th>
+						<th width="29%"><center>Model</center></th>
 					</tr>
 				</thead>
+
 				<tbody>
 					<?php 
 						if( count($kegs) == 0 ){  
 					?>
-							<tr><td class="no-results" colspan="99">No kegs</td></tr>
+					<tr><td class="no-results" colspan="99">No kegs :(<br>Perhaps you should add one?</td></tr>
 					<?php 
 						}else{  
 							foreach ($kegs as $keg){
@@ -106,63 +102,58 @@ include 'header.php';
 									$kegType = new KegType();
 								}
 					?>
-								<tr>
-									<td>
-										<?php echo $keg->get_label() ?>
-									</td>
-									
-									<td>							
-										<?php echo $kegType->get_name() ?>
-									</td>
-									
-									<td>
-										<?php echo $keg->get_make() ?>
-									</td>
-									
-									<td>							
-										<?php echo $keg->get_model() ?>
-									</td>
-									
-									<td>							
-										<?php echo $keg->get_serial() ?>
-									</td>
-									
-									<td>
-										<?php echo $keg->get_stampedOwner() ?>
-									</td>
-																
-									<td>
-										<?php echo $keg->get_stampedLoc() ?>
-									</td>
-									
-									<td>
-										<?php echo $keg->get_notes() ?>
-									</td>
-									
-									<td>
-										<?php echo $kegStatus->get_name() ?>
-									</td>
-									
-									<td>
-										<input name="editTap" type="button" class="btn" value="Edit" onclick="window.location='keg_form.php?id=<?php echo $keg->get_id()?>'" />
-									</td>
-									
-									<td>
-										<form method="POST">
-											<input type='hidden' name='id' value='<?php echo $keg->get_id()?>'/>
-											<input class="inactivateKeg btn" name="inactivateKeg" type="submit" value="Delete" />
-										</form>
-									</td>
-									
-								</tr>
-					<?php 
-							} 
-						}
-					?>
+					<tr>
+						<td rowspan="2" class="intborder">
+							<center><span class="kegsquare"><?php echo $keg->get_label() ?></span></center>
+						</td>
+						
+						<td colspan="2" class="leftborder rightborder" style="vertical-align:middle; font-size:1.2em;">
+							<center><b><?php echo $kegStatus->get_name() ?></b></center>
+						</td>
+						
+						<td style="vertical-align:middle; font-size:1.2em;">
+							<center><b><?php echo $kegType->get_name() ?></b></center>
+						</td>
+						
+						<td style="vertical-align:middle; font-size:1.2em;">
+							<center><b><?php echo $keg->get_make() ?></b></center>
+						</td>
+						
+						<td class="rightborder thick"style="vertical-align:middle; font-size:1.2em;">
+							<center><b><?php echo $keg->get_model() ?></b></center>
+						</td>
+					</tr>
+					<tr class="intborder">
+						<td class="leftborder">
+							<center><input name="editTap" type="button" class="btn" value="Edit" onclick="window.location='keg_form.php?id=<?php echo $keg->get_id()?>'" /></center>
+						</td>
+						
+						<td class="rightborder">
+							<center>
+							<form method="POST">
+								<input type='hidden' name='id' value='<?php echo $keg->get_id()?>'/>
+								<input class="inactivateKeg btn" name="inactivateKeg" type="submit" value="Delete" />
+							</form>
+							</center>
+						</td>
+						<td colspan="3">
+							<b>Stamped Owner / Location:</b> &nbsp; <?php echo $keg->get_stampedOwner() ?> / <?php echo $keg->get_stampedLoc() ?><br>
+							<b>Serial Number:</b> &nbsp; <?php echo $keg->get_serial() ?> &nbsp; &nbsp; &nbsp; <b>Empty weight:</b> <?php echo $keg->get_weight() ?><br>
+							<b>Notes:</b> &nbsp; <?php echo $keg->get_notes() ?>
+						</td>
+					</tr>
+		<?php 
+				}
+			}
+		?>
 				</tbody>
 			</table>
+			
+			<?php $htmlHelper->ShowMessage(); ?>
+			<br/><br/>
+			<input type="submit" class="btn" value="Add a Keg" onclick="window.location='keg_form.php'" />
 		</div>
-    </div>
+	</div>
 	
 	<!-- End On Tap Section -->
 
