@@ -113,6 +113,8 @@ table td.name{
 }
 table .abv{
 	width: 125px;
+	vertical-align: middle;
+	text-align: center;
 }
 table .keg{
 	width: 150px;
