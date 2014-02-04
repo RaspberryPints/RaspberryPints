@@ -68,67 +68,67 @@ require __DIR__.'/header.php';
     <div id="rightside">
 		 <div class="contentcontainer med left">
 	<p>
-		fields marked with an * are required
+		Fields marked with <b><font color="red">*</font></b> are required.<br><br>
 
 	<form id="beer-form" method="POST">
 		<input type="hidden" name="id" value="<?php echo $beer->get_id() ?>" />
 		<input type="hidden" name="active" value="<?php echo $beer->get_active() ?>" />
 
-		<table width="950" border="0" cellspacing="0" cellpadding="0">
+		<table width="800" border="0" cellspacing="0" cellpadding="0">
 			<tr>
-				<td>
-					Name*
+				<td width="100">
+					<b>Name:<font color="red">*</font></b>
 				</td>
 				<td>
-					<input type="text" id="name" class="mediumbox" name="name" value="<?php echo $beer->get_name() ?>" />
+					<input type="text" id="name" class="largebox" name="name" value="<?php echo $beer->get_name() ?>" />
 				</td>
 			</tr>
 			<tr>
 				<td>
-					Style*
+					<b>Style:<font color="red">*</font></b>
 				</td>
 				<td>
 					<?php echo $htmlHelper->ToSelectList("beerStyleId", $beerStyleList, "name", "id", $beer->get_beerStyleId(), "Select One"); ?>
 				</td>
-			</tr>	
+			</tr>
 			<tr>
 				<td>
-					Notes
+					<b>SRM:<font color="red">*</font></b>
 				</td>
 				<td>
-					<textarea type="text" id="notes" class="text-input textarea" style="width:165px;height:80px" name="notes"><?php echo $beer->get_notes() ?></textarea>
+					<input type="text" id="srm" class="xsmallbox" name="srm" value="<?php echo $beer->get_srm() ?>" />
 				</td>
 			</tr>
 			<tr>
 				<td>
-					OG*
+					<b>IBU:<font color="red">*</font></b>
 				</td>
 				<td>
-					<input type="text" id="og" class="mediumbox" name="og" value="<?php echo $beer->get_og() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					FG*
-				</td>
-				<td>
-					<input type="text" id="fg" class="mediumbox" name="fg" value="<?php echo $beer->get_fg() ?>" />
+					<input type="text" id="ibu" class="xsmallbox" name="ibu" value="<?php echo $beer->get_ibu() ?>" />
 				</td>
 			</tr>
 			<tr>
 				<td>
-					SRM*
+					<b>OG:<font color="red">*</font></b>
 				</td>
 				<td>
-					<input type="text" id="srm" class="mediumbox" name="srm" value="<?php echo $beer->get_srm() ?>" />
+					<input type="text" id="og" class="smallbox" name="og" value="<?php echo $beer->get_og() ?>" />
 				</td>
 			</tr>
 			<tr>
 				<td>
-					IBU*
+					<b>FG:<font color="red">*</font></b>
 				</td>
 				<td>
-					<input type="text" id="ibu" class="mediumbox" name="ibu" value="<?php echo $beer->get_ibu() ?>" />
+					<input type="text" id="fg" class="smallbox" name="fg" value="<?php echo $beer->get_fg() ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>Tasting<br>Notes:</b>
+				</td>
+				<td>
+					<textarea type="text" id="notes" class="text-input textarea" style="width:320px;height:80px" name="notes"><?php echo $beer->get_notes() ?></textarea>
 				</td>
 			</tr>
 			<tr>

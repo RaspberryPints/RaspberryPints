@@ -64,22 +64,22 @@ $kegList = $kegManager->GetAllAvailable();
 include 'header.php';
 ?>
 	<!-- End Header -->
-        
-    <!-- Top Breadcrumb Start -->
-    <div id="breadcrumb">
-    	<ul>	
-        	<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
-        	<li><strong>Location:</strong></li>
-            <li><a href="tap_list.php">Tap List</a></li>
-            <li>/</li>
-            <li class="current">Tap Form</li>
-        </ul>
-    </div>
-    <!-- Top Breadcrumb End --> 
-     
-    <!-- Right Side/Main Content Start -->
-    <div id="rightside">
-		 <div class="contentcontainer med left">
+		
+	<!-- Top Breadcrumb Start -->
+	<div id="breadcrumb">
+		<ul>	
+			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
+			<li><strong>Location:</strong></li>
+			<li><a href="tap_list.php">Tap List</a></li>
+			<li>/</li>
+			<li class="current">Tap Form</li>
+		</ul>
+	</div>
+	<!-- Top Breadcrumb End --> 
+	
+	<!-- Right Side/Main Content Start -->
+	<div id="rightside">
+		<div class="contentcontainer med left">
 	<p>
 		fields marked with an * are required
 
@@ -156,22 +156,22 @@ include 'header.php';
 		</table>
 		<br />
 		<div align="right">			
-			 &nbsp &nbsp 
+			&nbsp &nbsp 
 		</div>
 	
 	</form>
-    </div>
+	</div>
 	<!-- End On Tap Section -->
 
-    <!-- Start Footer -->   
+	<!-- Start Footer -->   
 <?php 
 include 'footer.php';
 ?>
 
 	<!-- End Footer -->
-          
-    </div>
-    <!-- Right Side/Main Content End -->
+		
+	</div>
+	<!-- Right Side/Main Content End -->
 	<!-- Start Left Bar Menu -->   
 <?php 
 include 'left_bar.php';
@@ -184,12 +184,12 @@ include 'scripts.php';
 
 
 	<!-- End Js -->
-    <!--[if IE 6]>
-    <script type='text/javascript' src='scripts/png_fix.js'></script>
-    <script type='text/javascript'>
-      DD_belatedPNG.fix('img, .notifycount, .selected');
-    </script>
-    <![endif]--> 
+	<!--[if IE 6]>
+	<script type='text/javascript' src='scripts/png_fix.js'></script>
+	<script type='text/javascript'>
+	DD_belatedPNG.fix('img, .notifycount, .selected');
+	</script>
+	<![endif]--> 
 	
 <script>
 	$(function() {
@@ -235,7 +235,7 @@ include 'scripts.php';
 			});
 		
 		$('#tap-form').validate({
-		  rules: {
+		rules: {
 			beerId: { required: true },
 			srm: { required: true, number: true },
 			ibu: { required: true, number: true },
@@ -243,7 +243,7 @@ include 'scripts.php';
 			fg: { required: true, number: true },
 			kegId: { required: true },
 			startAmount: { required: true, number: true }
-		  }
+		}
 		});
 		
 	});

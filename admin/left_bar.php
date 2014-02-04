@@ -27,8 +27,8 @@
 		<a class="expanded heading">Basic Setup</a>
 		<ul class="navigation">
 			<li><a href="beer_list.php" title="beer-list">My Beers</a></li>
-			<li><a href="keg_list.php" title="keg-list">Keg List</a></li>
-			<li><a href="tap_list.php" title="tap-list">Tap List</a></li>
+			<li><a href="keg_list.php" title="keg-list">My Kegs</a></li>
+			<li><a href="tap_list.php" title="tap-list">My Taps</a></li>
 		</ul>
 	</li>
 		<li>

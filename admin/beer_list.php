@@ -65,18 +65,16 @@ include 'header.php';
 			<input type="submit" class="btn" value="Add Beer" onclick="window.location='beer_form.php'" />
 			<br/><br/>
 			
-			<table width="950" border="0" cellspacing="0" cellpadding="0">
+			<table width="800" border="0" cellspacing="0" cellpadding="0">
 				<thead>
 					<tr>
 						<th>Name</th>
 						<th>Style</th>						
-						<th>OG</th>
-						<th>FG</th>
 						<th>SRM</th>
 						<th>IBU</th>
-						<th>Notes</th>
-						<th></th>					
-						<th></th>
+						<th>O.G.</th>
+						<th>F.G.</th>
+						<th colspan="3">Tasting Notes</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -101,19 +99,19 @@ include 'header.php';
 									</td>
 									
 									<td>
-										<?php echo $beer->get_og() ?>
-									</td>
-									
-									<td>							
-										<?php echo $beer->get_fg() ?>
-									</td>
-									
-									<td>							
 										<?php echo $beer->get_srm() ?>
 									</td>
 									
 									<td>
 										<?php echo $beer->get_ibu() ?>
+									</td>
+									
+									<td>
+										<?php echo $beer->get_og() ?>
+									</td>
+									
+									<td>							
+										<?php echo $beer->get_fg() ?>
 									</td>
 									
 									<td>

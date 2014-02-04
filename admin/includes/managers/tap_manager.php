@@ -43,7 +43,7 @@ class TapManager{
 		$sql="SELECT * FROM taps WHERE id = $id";
 		$qry = mysql_query($sql);
 		
-		if( $i = mysql_fetch_array($qry) ){		
+		if( $i = mysql_fetch_array($qry) ){
 			$tap = new Tap();
 			$tap->setFromArray($i);
 			return $tap;
