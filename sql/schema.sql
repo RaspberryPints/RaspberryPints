@@ -123,6 +123,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('numberOfTaps', '0', 'Number of Taps', '0', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('version', '1.0.0.279', 'Version', '1', NOW(), NOW() );
 
+
 -- --------------------------------------------------------
 
 --
