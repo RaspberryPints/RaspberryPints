@@ -21,10 +21,7 @@ $adminuser = $_POST["adminuser"];
 $adminpass1 = $_POST["adminpass1"];
 $adminpass2 = $_POST["adminpass2"];
 $action = $_POST["selectaction"];
-//$sampledata = $_POST["sampledata"];
-if(!empty($_POST['sampledata'])) {
-    $sampledata = 'yes';
-}
+
 
 //Create the MD5 hash value for the admin password
 $adminhash = md5($adminpass1);
@@ -45,7 +42,7 @@ if ($adminpass1 != $adminpass2) {
 		$validerror .= "<br><strong>Your Administrator account passwords do not match.</strong>";
 	}
 
-echo "Done<br>";
+echo "Success!<br>";
 flush();
 
 //Validate DB connectivity
@@ -60,7 +57,7 @@ if (mysqli_connect_errno())
 
   //##TODO## Check if administrator account already exists
 
-echo "Done<br>";
+echo "Success!<br>";
 flush();
 
 //Display errors and die
@@ -88,7 +85,7 @@ if ($action == 'remove')
 	$sql = "DROP database raspberrypints;";
 	$result = mysqli_query($con,$sql);
 	mysqli_close($con);
-	echo "Done<br>";
+	echo "Success!<br>";
 	flush();
 	
 	echo "Removing configuration files...";
@@ -96,7 +93,7 @@ if ($action == 'remove')
 	unlink('../../includes/config.php');
 	unlink('../../admin/includes/conn.php');
 	unlink('../../admin/includes/configp.php');
-	echo "Done<br>";
+	echo "Success!<br>";
 	flush();
 }
 	
@@ -111,7 +108,7 @@ require_once __DIR__.'/config_files.php';
 	
 	file_put_contents('../../includes/config.php', $mainconfigstring);
 
-	echo "Done<br>";
+	echo "Success!<br>";
 	flush();
 	// -----------------Create the admin files----------------------
 	echo "Update admin config files...";
@@ -134,7 +131,7 @@ require_once __DIR__.'/config_files.php';
 	$sql = "GRANT ALL ON *.* TO '" . $dbuser . "'@'" . $servername . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
 	$result = mysqli_query($con,$sql);
 	mysqli_close($con);
-	echo "Done<br>";
+	echo "Success!<br>";
 	flush();
 
 	//-----------------Run The Schema File-------------------------
@@ -154,12 +151,13 @@ require_once __DIR__.'/config_files.php';
 
 	$i=1;
 	foreach($sql_query as $sql){
-	echo $i++;
-	echo "	";
+	//echo $i++;
+	//echo "	";
+	//echo $sql;
 	mysql_query($sql) or die('error in query');
 	}
 
-	echo "Done<br>";
+	echo "Success!<br>";
 	flush();
 
 	//-----------------Add the admin user to the Users DB----------
@@ -176,11 +174,11 @@ require_once __DIR__.'/config_files.php';
 	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','name','email','" . $currentdate . "','" . $currentdate . "');";
 	$result = mysqli_query($con,$sql);
 	mysqli_close($con);
-	echo "Done<br>";
+	echo "Success!<br>";
 	flush();
 	//-----------------Load the sample data if requested-----------
 
-		if ($sampledata = 'Yes') 
+		if(!empty($_POST['sampledata'])) 
 		{
 			echo "Adding sample data...";
 			flush();
@@ -199,13 +197,13 @@ require_once __DIR__.'/config_files.php';
 
 			$i=1;
 			foreach($sql_query as $sql){
-			echo $i++;
-			echo "	";
+			//echo $i++;
+			//echo "	";
 			mysql_query($sql) or die('error in query');
 			}
 
 			
-			echo "Done<br>";
+			echo "Success!<br>";
 			flush();
 		}
 }

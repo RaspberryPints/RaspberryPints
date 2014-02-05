@@ -1,12 +1,3 @@
-	<?php
-	$installed=0;
-	if (!file_exists("../includes/config22.php")) {
-		$installed=1;
-	} else {
-		$installed=0;
-	}
-	?> 
-
 <html>
 	<script>
 		//http://jsfiddle.net/rpP4K/
@@ -61,7 +52,7 @@
 			//Check versions
 			require '../includes/config.php';
 			db();
-			$sql = 'SELECT * FROM config where configname = "version"';
+			$sql = 'SELECT id,configName,configValue FROM config where configname = "version"';
 			$qry = mysql_query($sql);	
 			$dbversion = mysql_result($qry,0,2);
 		

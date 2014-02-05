@@ -110,12 +110,11 @@ CREATE TABLE `config` (
 --
 
 -- NOTE: Please add new config values to the BOTTOM of the list. Adding to the top or middle of the list may break things!
-
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showTapNumCol', '1', 'Tap Column', '1', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showSrmCol', '1', 'SRM Column', '1', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showIbuCol', '1', 'IBU Column', '1', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showAbvCol', '1', 'ABV Column', '1', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showAbvImg', '1', 'ABV Column', '1', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showAbvImg', '1', 'ABV Image', '1', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showKegCol', '1', 'Keg Column', '1', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('useHighResolution', '0', '4k Monitor Support', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('logoUrl', 'img/logo.png', 'Logo Url', NOW(), NOW() );
