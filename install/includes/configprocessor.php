@@ -154,6 +154,7 @@ require_once __DIR__.'/config_files.php';
 	//echo $i++;
 	//echo "	";
 	//echo $sql;
+	//echo "<br>";
 	mysql_query($sql) or die('error in query');
 	}
 
