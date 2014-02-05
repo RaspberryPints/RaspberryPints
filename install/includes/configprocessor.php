@@ -22,7 +22,6 @@ $adminpass1 = $_POST["adminpass1"];
 $adminpass2 = $_POST["adminpass2"];
 $action = $_POST["selectaction"];
 
-
 //Create the MD5 hash value for the admin password
 $adminhash = md5($adminpass1);
 
