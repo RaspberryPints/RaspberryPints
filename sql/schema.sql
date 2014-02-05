@@ -116,12 +116,13 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showAbvCol', '1', 'ABV Column', '1', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showAbvImg', '1', 'ABV Image', '1', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showKegCol', '1', 'Keg Column', '1', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('useHighResolution', '0', '4k Monitor Support', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('logoUrl', 'img/logo.png', 'Logo Url', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('headerText', 'Currently On Tap', 'Header Text', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('numberOfTaps', '0', 'Number of Taps', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('version', '1.0.0.279', 'Version', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('useHighResolution', '0', '4k Monitor Support', '1', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('logoUrl', 'img/logo.png', 'Logo Url', '0', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '0', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('numberOfTaps', '0', 'Number of Taps', '0', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('version', '1.0.0.279', 'Version', '1', NOW(), NOW() );
+
 
 -- --------------------------------------------------------
 
