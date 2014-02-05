@@ -43,7 +43,7 @@ class Keg
 	public function set_stampedLoc($_stampedLoc){ $this->_stampedLoc = $_stampedLoc; }
 
 	public function get_weight(){ return $this->_weight; }
-	public function set_weight($_stampedLoc){ $this->_weight = $_weight; }
+	public function set_weight($_weight){ $this->_weight = $_weight; }
 
 	public function get_notes(){ return $this->_notes; }
 	public function set_notes($_notes){ $this->_notes = $_notes; }
