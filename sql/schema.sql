@@ -166,17 +166,12 @@ CREATE TABLE IF NOT EXISTS `beers` (
 	`fgEst` decimal(4,3) NOT NULL,
 	`srmEst` decimal(3,1) NOT NULL,
 	`ibuEst` int(4) NOT NULL,
-	`styleName` tinytext NOT NULL,
-	`styleCatNum` tinytext NOT NULL,
-	`styleCategory` tinytext NOT NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 
-	PRIMARY KEY (`id`),
-	FOREIGN KEY (`styleName`) REFERENCES beerStyles(`name`) ON DELETE CASCADE,
-	FOREIGN KEY (`styleCatNum`) REFERENCES beerStyles(`catNum`) ON DELETE CASCADE,
-	FOREIGN KEY (`styleCategory`) REFERENCES beerStyles(`category`) ON DELETE CASCADE
+PRIMARY KEY (`id`),
+FOREIGN KEY (`beerStyleId`) REFERENCES beerStyles(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
