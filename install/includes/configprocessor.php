@@ -53,11 +53,27 @@ if (mysqli_connect_errno())
   {
   $validerror .= "<br><strong>Cannot connect the the database using the supplied information.</strong>";
   }
+echo "Success!<br>";
+flush();
+
+//Validate that the config directories are writable
+echo "Checking config folder permissions...";
+flush();
+if (!is_writable(dirname('../../includes/functions.php')))
+{
+   $validerror .= "<br><strong>Cannot write the configuration files. Please check the /includes/ folder permissions. See the RPints Installation page on www.raspberrypints.com.</strong>";
+}
+
+if (!is_writable(dirname('../../admin/includes/checklogin.php')))
+{
+$validerror .= "<br><strong>Cannot write the configuration files. Please check the /admin/includes/ folder permissions. See the RPints Installation page on www.raspberrypints.com.</strong>";
+}
+echo "Success!<br>";
+flush();
 
   //##TODO## Check if administrator account already exists
 
-echo "Success!<br>";
-flush();
+
 
 //Display errors and die
 if ($validerror !='') 
@@ -115,7 +131,9 @@ require_once __DIR__.'/config_files.php';
 
 	file_put_contents('../../admin/includes/conn.php', $adminconfig1);
 	file_put_contents('../../admin/includes/configp.php', $adminconfig2);
-
+	
+	echo "Success!<br>";
+	flush();
 	//-----------------Create RPints User--------------------------
 	echo "Creating RPints database user...";
 	flush();
