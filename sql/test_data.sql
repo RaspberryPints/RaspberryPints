@@ -27,17 +27,17 @@ USE `raspberrypints`;
 -- Dumping data for table `beers`
 --
 
-INSERT INTO `beers` (`name`, `beerStyleId`, `notes`, `ogEst`, `fgEst`, `srmEst`, `ibuEst`, `createdDate`, `modifiedDate`) VALUES
-('Darth Vader', 1, 'Rich, toasty malt flavor. Generous amounts of pine, citrus and roasted coffee. Herbal aroma with a punch of IPA hops at the finish.', '1.066', '1.016', 38.0, 66.0, NOW(), NOW()),
-('Strong Scotch', 1, 'Slightly sweet. Hints of malt and toffee. Finishes with roasted nuts and coffee. Complex and roasty.', '1.074', '1.018', 17.8, 27.0, NOW(), NOW()),
-('Cream of Three Crops', 1, 'Neutral, muted start. Highly carbonated with a soapy head. Unremarkably mild finish of noble hops. Dry and crisp with no distinguishable graininess.', '1.040', '1.009', 2.9, 14.3, NOW(), NOW()),
-('Darth Vader', 1, 'Rich, toasty malt flavor. Generous amounts of pine, citrus and roasted coffee. Herbal aroma with a punch of IPA hops at the finish.', '1.066', '1.016', 38.0, 66.0, NOW(), NOW()),
-('Haus Pale Ale', 1, 'Pale straw-gold color with two fingers of fluffy white head. Bread dough and cracker aromas up front, followed immediately by pine and grapefruit. Clean, crisp and dangerously sessionable.', '1.051', '1.011', 5.0, 39.0, NOW(), NOW()),
-('Two Hearted', 1, 'American malts and enormous hop additions give this beer a crisp finish and an incredibly floral aroma.', '1.055', '1.014', 5.6, 52.6, NOW(), NOW()),
-('Reaper''s Mild', 1, 'A full flavored session beer that is both inexpensive to brew and quick to go from grain to glass. Ready to drink in a couple weeks, if you push it.', '1.035', '1.012', 19.1, 20.4, NOW(), NOW()),
-('Skeeter Pee', 1, 'The original, easy to drink, naturally fermented lemon drink. Bitter, sweet, and a kick in the teeth. This hot-weather thirst quencher puts commercialized lemon-flavored malt beverages to shame.', '1.070', '1.009', 0, 0, NOW(), NOW()),
-('Black Peach', 1, 'Black tea infused with the unmistakable summertime flavor of juicy, orchard-fresh peaches and just the right amount of natural milled cane sugar.', '1.000', '1.000', 0, 0, NOW(), NOW()),
-('Aloha Morning', 1, 'Children''s strawberry and citrus punch, thinned to suit an adult pallet using only the highest quality dihydrogen monoxide available.', '1.000', '1.000', 0, 0, NOW(), NOW());
+INSERT INTO `beers` (`name`, `styleCatNum`, `ogEst`, `fgEst`, `srmEst`, `ibuEst`, `notes`, `createdDate`, `modifiedDate`) VALUES
+('Darth Vader', '1A', '1.066', '1.016', '38.0', '66.0', 'Rich, toasty malt flavor. Generous amounts of pine, citrus and roasted coffee. Herbal aroma with a punch of IPA hops at the finish.', NOW(), NOW() ),
+('Strong Scotch', '5A', '1.074', '1.018', '17.8', '27.0', 'Slightly sweet. Hints of malt and toffee. Finishes with roasted nuts and coffee. Complex and roasty.', NOW(), NOW() ),
+('Cream of Three Crops', '8A', '1.040', '1.009', '2.9', '14.3', 'Neutral, muted start. Highly carbonated with a soapy head. Unremarkably mild finish of noble hops. Dry and crisp with no distinguishable graininess.', NOW(), NOW() ),
+('Darth Vader', '12A', '1.066', '1.016', '38.0', '66.0', 'Rich, toasty malt flavor. Generous amounts of pine, citrus and roasted coffee. Herbal aroma with a punch of IPA hops at the finish.', NOW(), NOW() ),
+('Haus Pale Ale', '15A', '1.051', '1.011', '5.0', '39.0', 'Pale straw-gold color with two fingers of fluffy white head. Bread dough and cracker aromas up front, followed immediately by pine and grapefruit. Clean, crisp and dangerously sessionable.', NOW(), NOW() ),
+('Two Hearted', '18A', '1.055', '1.014', '5.6', '52.6', 'American malts and enormous hop additions give this beer a crisp finish and an incredibly floral aroma.', NOW(), NOW() ),
+('Reaper''s Mild', '22A', '1.035', '1.012', '19.1', '20.4', 'A full flavored session beer that is both inexpensive to brew and quick to go from grain to glass. Ready to drink in a couple weeks, if you push it.', NOW(), NOW() ),
+('Skeeter Pee', '28A', '1.070', '1.009', '0', '0', 'The original, easy to drink, naturally fermented lemon drink. Bitter, sweet, and a kick in the teeth. This hot-weather thirst quencher puts commercialized lemon-flavored malt beverages to shame.', NOW(), NOW() ),
+('Black Peach', '35A', '1.000', '1.000', '0', '0', 'Black tea infused with the unmistakable summertime flavor of juicy, orchard-fresh peaches and just the right amount of natural milled cane sugar.', NOW(), NOW() ),
+('Aloha Morning', '38A', '1.000', '1.000', '0', '0', 'Children''s strawberry and citrus punch, thinned to suit an adult pallet using only the highest quality dihydrogen monoxide available.', NOW(), NOW() );
 
 -- --------------------------------------------------------
 

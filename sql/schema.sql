@@ -29,9 +29,9 @@ USE `raspberrypints`;
 
 CREATE TABLE IF NOT EXISTS `beerStyles` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`name` text NOT NULL,
-	`catNum` text NOT NULL,
-	`category` text NOT NULL,
+	`name` tinytext NOT NULL,
+	`catNum` tinytext NOT NULL,
+	`category` tinytext NOT NULL,
 	`ogMin` decimal(4,3) NOT NULL,
 	`ogMax` decimal(4,3) NOT NULL,
 	`fgMin` decimal(4,3) NOT NULL,
@@ -126,7 +126,7 @@ INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, ab
 INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'English Barleywine', '19B', 'Strong Ale', '1.08', '1.12', '1.018', '1.03', '8', '12', '35', '70', '8', '22', NOW(), NOW() );
 INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'American Barleywine', '19C', 'Strong Ale', '1.08', '1.12', '1.016', '1.03', '8', '12', '50', '120', '10', '19', NOW(), NOW() );
 INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Fruit Beer', '20A', 'Fruit Beer', '1.03', '1.11', '1.004', '1.024', '2.5', '12', '5', '70', '3', '50', NOW(), NOW() );
-INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( '"Spice', 'Herb', 'or Vegetable Beer"', '21A', 'Spice/Herb/Vegetable Beer', '1.03', '1.11', '1.005', '1.025', '2.5', '12', '0', '70', '5', '50', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Spice, Herb or Vegetable Beer', '21A', 'Spice/Herb/Vegetable Beer', '1.03', '1.11', '1.005', '1.025', '2.5', '12', '0', '70', '5', '50', NOW(), NOW() );
 INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Christmas/Winter Specialty Spice Beer', '21B', 'Spice/Herb/Vegetable Beer', '1.03', '1.11', '1.005', '1.025', '2.5', '12', '0', '70', '5', '50', NOW(), NOW() );
 INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Classic Rauchbier', '22A', 'Smoke-Flavored and Wood-Aged Beer', '1.05', '1.057', '1.012', '1.016', '4.8', '6', '20', '30', '12', '22', NOW(), NOW() );
 INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Other Smoked Beer', '22B', 'Smoke-Flavored and Wood-Aged Beer', '1.03', '1.11', '1.006', '1.024', '2.5', '12', '5', '70', '5', '50', NOW(), NOW() );
@@ -166,12 +166,17 @@ CREATE TABLE IF NOT EXISTS `beers` (
 	`fgEst` decimal(4,3) NOT NULL,
 	`srmEst` decimal(3,1) NOT NULL,
 	`ibuEst` int(4) NOT NULL,
+	`styleName` tinytext NOT NULL,
+	`styleCatNum` tinytext NOT NULL,
+	`styleCategory` tinytext NOT NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 
 	PRIMARY KEY (`id`),
-	FOREIGN KEY (`beerStyleId`) REFERENCES beerStyles(`id`) ON DELETE CASCADE
+	FOREIGN KEY (`styleName`) REFERENCES beerStyles(`name`) ON DELETE CASCADE,
+	FOREIGN KEY (`styleCatNum`) REFERENCES beerStyles(`catNum`) ON DELETE CASCADE,
+	FOREIGN KEY (`styleCategory`) REFERENCES beerStyles(`category`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -197,18 +202,18 @@ CREATE TABLE `config` (
 -- Dumping data for table `config`
 --
 
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showTapNumCol', '1', 'Tap Column', '1', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showSrmCol', '1', 'SRM Column', '1', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showIbuCol', '1', 'IBU Column', '1', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showAbvCol', '1', 'ABV Column', '1', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showAbvImg', '1', 'ABV Image', '1', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showKegCol', '1', 'Keg Column', '1', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('useHighResolution', '0', '4k Monitor Support', '1', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('logoUrl', 'img/logo.png', 'Logo Url', '0', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '0', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('numberOfTaps', '0', 'Number of Taps', '0', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('version', '1.0.0.279', 'Version', '1', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'showTapNumCol', '1', 'Tap Column', '1', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'showSrmCol', '1', 'SRM Column', '1', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'showIbuCol', '1', 'IBU Column', '1', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'showAbvCol', '1', 'ABV Column', '1', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'showAbvImg', '1', 'ABV Image', '1', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'showKegCol', '1', 'Keg Column', '1', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'useHighResolution', '0', '4k Monitor Support', '1', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'logoUrl', 'img/logo.png', 'Logo Url', '0', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '0', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'numberOfTaps', '0', 'Number of Taps', '0', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'version', '1.0.0.279', 'Version', '1', NOW(), NOW() );
 
 
 -- --------------------------------------------------------
