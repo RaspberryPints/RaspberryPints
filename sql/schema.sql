@@ -23,47 +23,135 @@ USE `raspberrypints`;
 
 -- --------------------------------------------------------
 
+--
+-- Table structure for table `beerStyles`
+--
 
 CREATE TABLE IF NOT EXISTS `beerStyles` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` text NOT NULL,
+	`catNum` text NOT NULL,
+	`category` text NOT NULL,
+	`ogMin` decimal(4,3) NOT NULL,
+	`ogMax` decimal(4,3) NOT NULL,
+	`fgMin` decimal(4,3) NOT NULL,
+	`fgMax` decimal(4,3) NOT NULL,
+	`abvMin` decimal(3,1) NOT NULL,
+	`abvMax` decimal(3,1) NOT NULL,
+	`ibuMin` decimal(3) NOT NULL,
+	`ibuMax` decimal(3) NOT NULL,
+	`srmMin` decimal(2) NOT NULL,
+	`srmMax` decimal(2) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Light Lager', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Pilsner', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('European Amber Lager', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Dark Lager', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Bock', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Light Hybrid Beer', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Amber Hybrid Beer', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('English Pale Ale', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Scottish And Irish Ale', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('American Ale', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('English Brown Ale', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Porter', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Stout', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('India Pale Ale (ipa)', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('German Wheat And Rye Beer', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Belgian And French Ale', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Sour Ale', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Belgian Strong Ale', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Strong Ale', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Fruit Beer', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Spice / Herb / Vegetable Beer', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Smoke-flavored And Wood-aged Beer', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Specialty Beer', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Traditional Mead', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Melomel (fruit Mead)', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Other Mead', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Standard Cider And Perry', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Specialty Cider And Perry', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Other', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Soda', NOW(), NOW());
-INSERT INTO `beerStyles`(name, createdDate, modifiedDate) VALUES('Seltzer', NOW(), NOW());
+--
+-- Dumping data for table `beerStyles`
+--
+
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Lite American Lager', '1A', 'Light Lager', '1.028', '1.04', '0.998', '1.008', '2.8', '4.2', '8', '12', '2', '3', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Standard American Lager', '1B', 'Light Lager', '1.04', '1.05', '1.004', '1.01', '4.2', '5.1', '8', '15', '2', '4', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Premium American Lager', '1C', 'Light Lager', '1.046', '1.056', '1.008', '1.012', '4.6', '6', '15', '25', '2', '6', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Munich Helles', '1D', 'Light Lager', '1.045', '1.051', '1.008', '1.012', '4.7', '5.4', '16', '22', '3', '5', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Dortmunder Export', '1E', 'Light Lager', '1.048', '1.056', '1.01', '1.015', '4.8', '6', '23', '30', '4', '6', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'German Pilsner (Pils)', '2A', 'Pilsner', '1.044', '1.05', '1.008', '1.013', '4.4', '5.2', '25', '45', '2', '5', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Bohemian Pilsner', '2B', 'Pilsner', '1.044', '1.056', '1.013', '1.017', '4.2', '5.4', '35', '45', '3.5', '6', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Classic American Pilsner', '2C', 'Pilsner', '1.044', '1.06', '1.01', '1.015', '4.5', '6', '25', '40', '3', '6', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Vienna Lager', '3A', 'European Amber Lager', '1.046', '1.052', '1.01', '1.014', '4.5', '5.5', '18', '30', '10', '16', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Oktoberfest/Märzen', '3B', 'European Amber Lager', '1.05', '1.057', '1.012', '1.016', '4.8', '5.7', '20', '28', '7', '14', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Dark American Lager', '4A', 'Dark Lager', '1.044', '1.056', '1.008', '1.012', '4.2', '6', '8', '20', '14', '22', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Munich Dunkel', '4B', 'Dark Lager', '1.048', '1.056', '1.01', '1.016', '4.5', '5.6', '18', '28', '14', '28', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Schwarzbier (Black Beer)', '4C', 'Dark Lager', '1.046', '1.052', '1.01', '1.016', '4.4', '5.4', '22', '32', '17', '30', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Mailbock/Helles Bock', '5A', 'Bock', '1.064', '1.072', '1.011', '1.018', '6.3', '7.4', '23', '35', '6', '11', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Traditional Bock', '5B', 'Bock', '1.064', '1.072', '1.013', '1.019', '6.3', '7.2', '20', '27', '14', '22', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Doppelbock', '5C', 'Bock', '1.072', '1.112', '1.016', '1.024', '7', '10', '16', '26', '6', '25', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Eisbock', '5D', 'Bock', '1.078', '1.12', '1.02', '1.035', '9', '14', '25', '35', '18', '30', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Cream Ale', '6A', 'Light Hybrid Beer', '1.042', '1.055', '1.006', '1.012', '4.2', '5.6', '15', '20', '2.5', '5', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Blonde Ale', '6B', 'Light Hybrid Beer', '1.038', '1.054', '1.008', '1.013', '3.8', '5.5', '15', '28', '3', '6', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Kölsch', '6C', 'Light Hybrid Beer', '1.044', '1.05', '1.007', '1.011', '4.4', '5.2', '20', '30', '3.5', '5', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'American Wheat or Rye Beer', '6D', 'Light Hybrid Beer', '1.04', '1.055', '1.008', '1.013', '4', '5.5', '15', '30', '3', '6', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Northern German Altbier', '7A', 'Amber Hybrid Beer', '1.046', '1.054', '1.01', '1.015', '4.5', '5.2', '25', '40', '13', '19', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'California Common Beer', '7B', 'Amber Hybrid Beer', '1.048', '1.054', '1.011', '1.014', '4.5', '5.5', '30', '45', '10', '14', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Düsseldorf Altbier', '7C', 'Amber Hybrid Beer', '1.046', '1.054', '1.01', '1.015', '4.5', '5.2', '35', '50', '11', '17', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Standard/Ordinary Bitter', '8A', 'English Pale Ale', '1.032', '1.04', '1.007', '1.011', '3.2', '3.8', '25', '35', '4', '14', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Special/Best/Premium Bitter', '8B', 'English Pale Ale', '1.04', '1.048', '1.008', '1.012', '3.8', '4.6', '25', '40', '5', '16', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Extra Special/Strong Bitter', '8C', 'English Pale Ale', '1.048', '1.06', '1.01', '1.016', '4.6', '6.2', '30', '50', '6', '18', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Scottish Light 60/-', '9A', 'Scottish and Irish Ale', '1.03', '1.035', '1.01', '1.013', '2.5', '3.2', '10', '20', '9', '17', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Scottish Heavy 70/-', '9B', 'Scottish and Irish Ale', '1.035', '1.04', '1.01', '1.015', '3.2', '3.9', '10', '25', '9', '17', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Scottish Export 80/-', '9C', 'Scottish and Irish Ale', '1.04', '1.054', '1.01', '1.016', '3.9', '5', '15', '30', '9', '17', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Irish Red Ale', '9D', 'Scottish and Irish Ale', '1.044', '1.06', '1.01', '1.014', '4', '6', '17', '28', '9', '18', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Strong Scotch Ale', '9E', 'Scottish and Irish Ale', '1.07', '1.13', '1.018', '1.03', '6.5', '10', '17', '35', '14', '25', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'American Pale Ale', '10A', 'American Ale', '1.045', '1.06', '1.01', '1.015', '4.5', '6.2', '30', '45', '5', '14', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'American Amber Ale', '10B', 'American Ale', '1.045', '1.06', '1.01', '1.015', '4.5', '6.2', '25', '40', '10', '17', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'American Brown Ale', '10C', 'American Ale', '1.045', '1.06', '1.01', '1.016', '4.3', '6.2', '20', '40', '18', '35', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Mild', '11A', 'English Brown Ale', '1.03', '1.038', '1.008', '1.013', '2.8', '4.5', '10', '25', '12', '25', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Southern English Brown Ale', '11B', 'English Brown Ale', '1.033', '1.042', '1.011', '1.014', '2.8', '4.1', '12', '20', '19', '35', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Northern English Brown Ale', '11C', 'English Brown Ale', '1.04', '1.052', '1.008', '1.013', '4.2', '5.4', '20', '30', '12', '22', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Brown Porter', '12A', 'Porter', '1.04', '1.052', '1.008', '1.014', '4', '5.4', '18', '35', '20', '30', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Robust Porter', '12B', 'Porter', '1.048', '1.065', '1.012', '1.016', '4.8', '6.5', '25', '50', '22', '35', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Baltic Porter', '12C', 'Porter', '1.06', '1.09', '1.016', '1.024', '5.5', '9.5', '20', '40', '17', '30', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Dry Stout', '13A', 'Stout', '1.036', '1.05', '1.007', '1.011', '4', '5', '30', '45', '25', '40', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Sweet Stout', '13B', 'Stout', '1.044', '1.06', '1.012', '1.024', '4', '6', '20', '40', '30', '40', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Oatmeal Stout', '13C', 'Stout', '1.048', '1.065', '1.01', '1.018', '4.2', '5.9', '25', '40', '22', '40', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Foreign Extra Stout', '13D', 'Stout', '1.056', '1.075', '1.01', '1.018', '5.5', '8', '30', '70', '30', '40', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'American Stout', '13E', 'Stout', '1.05', '1.075', '1.01', '1.022', '5', '7', '35', '75', '30', '40', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Imperial Stout', '13F', 'Stout', '1.075', '1.115', '1.018', '1.03', '8', '12', '50', '90', '30', '40', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'English IPA', '14A', 'India Pale Ale (IPA)', '1.05', '1.075', '1.01', '1.018', '5', '7.5', '40', '60', '8', '14', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'American IPA', '14B', 'India Pale Ale (IPA)', '1.056', '1.075', '1.01', '1.018', '5.5', '7.5', '40', '70', '6', '15', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Imperial IPA', '14C', 'India Pale Ale (IPA)', '1.07', '1.09', '1.01', '1.02', '7.5', '10', '60', '120', '8', '15', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Weizen/Weissbier', '15A', 'German Wheat and Rye Beer', '1.044', '1.052', '1.01', '1.014', '4.3', '5.6', '8', '15', '2', '8', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Dunkelweizen', '15B', 'German Wheat and Rye Beer', '1.044', '1.056', '1.01', '1.014', '4.3', '5.6', '10', '18', '14', '23', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Weizenbock', '15C', 'German Wheat and Rye Beer', '1.064', '1.09', '1.015', '1.022', '6.5', '8', '15', '30', '12', '25', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Roggenbier (German Rye Beer)', '15D', 'German Wheat and Rye Beer', '1.046', '1.056', '1.01', '1.014', '4.5', '6', '10', '20', '14', '19', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Witbier', '16A', 'Belgian and French Ale', '1.044', '1.052', '1.008', '1.012', '4.5', '5.5', '10', '20', '2', '4', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Belgian Pale Ale', '16B', 'Belgian and French Ale', '1.048', '1.054', '1.01', '1.014', '4.8', '5.5', '20', '30', '8', '14', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Saison', '16C', 'Belgian and French Ale', '1.048', '1.065', '1.002', '1.012', '5', '7', '20', '35', '5', '14', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Biere de Garde', '16D', 'Belgian and French Ale', '1.06', '1.08', '1.008', '1.016', '6', '8.5', '18', '28', '6', '19', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Belgian Specialty Ale', '16E', 'Belgian and French Ale', '1.03', '1.08', '1.006', '1.019', '3', '9', '15', '40', '3', '50', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Berliner Weiss', '17A', 'Sour Ale', '1.028', '1.032', '1.003', '1.006', '2.8', '3.8', '3', '8', '2', '3', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Flanders Red Ale', '17B', 'Sour Ale', '1.048', '1.057', '1.002', '1.012', '4.6', '6.5', '10', '25', '10', '16', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Flanders Brown Ale/Oud Bruin', '17C', 'Sour Ale', '1.04', '1.074', '1.008', '1.012', '4', '8', '20', '25', '15', '22', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Straight (Unblended) Lambic', '17D', 'Sour Ale', '1.04', '1.054', '1.001', '1.01', '5', '6.5', '0', '10', '3', '7', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Gueuze', '17E', 'Sour Ale', '1.04', '1.06', '1', '1.006', '5', '8', '0', '10', '3', '7', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Fruit Lambic', '17F', 'Sour Ale', '1.04', '1.06', '1', '1.01', '5', '7', '0', '10', '3', '7', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Belgian Blond Ale', '18A', 'Belgian Strong Ale', '1.062', '1.075', '1.008', '1.018', '6', '7.5', '15', '30', '4', '7', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Belgian Dubbel', '18B', 'Belgian Strong Ale', '1.062', '1.075', '1.008', '1.018', '6', '7.6', '15', '25', '10', '17', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Belgian Tripel', '18C', 'Belgian Strong Ale', '1.075', '1.085', '1.008', '1.014', '7.5', '9.5', '20', '40', '4.5', '7', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Belgian Golden Strong Ale', '18D', 'Belgian Strong Ale', '1.07', '1.095', '1.005', '1.016', '7.5', '10.5', '22', '35', '3', '6', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Belgian Dark Strong Ale', '18E', 'Belgian Strong Ale', '1.075', '1.11', '1.01', '1.024', '8', '11', '20', '35', '12', '22', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Old Ale', '19A', 'Strong Ale', '1.06', '1.09', '1.015', '1.022', '6', '9', '30', '60', '10', '22', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'English Barleywine', '19B', 'Strong Ale', '1.08', '1.12', '1.018', '1.03', '8', '12', '35', '70', '8', '22', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'American Barleywine', '19C', 'Strong Ale', '1.08', '1.12', '1.016', '1.03', '8', '12', '50', '120', '10', '19', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Fruit Beer', '20A', 'Fruit Beer', '1.03', '1.11', '1.004', '1.024', '2.5', '12', '5', '70', '3', '50', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( '"Spice', 'Herb', 'or Vegetable Beer"', '21A', 'Spice/Herb/Vegetable Beer', '1.03', '1.11', '1.005', '1.025', '2.5', '12', '0', '70', '5', '50', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Christmas/Winter Specialty Spice Beer', '21B', 'Spice/Herb/Vegetable Beer', '1.03', '1.11', '1.005', '1.025', '2.5', '12', '0', '70', '5', '50', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Classic Rauchbier', '22A', 'Smoke-Flavored and Wood-Aged Beer', '1.05', '1.057', '1.012', '1.016', '4.8', '6', '20', '30', '12', '22', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Other Smoked Beer', '22B', 'Smoke-Flavored and Wood-Aged Beer', '1.03', '1.11', '1.006', '1.024', '2.5', '12', '5', '70', '5', '50', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Wood Aged Beer', '22C', 'Smoke-Flavored and Wood-Aged Beer', '1.03', '1.11', '1.006', '1.024', '2.5', '12', '5', '70', '5', '50', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Specialty Beer', '23A', 'Specialty Beer', '1.03', '1.11', '1.006', '1.024', '2.5', '12', '5', '70', '5', '50', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Dry Mead', '24A', 'Traditional Mead', '1.035', '1.17', '0.99', '1.05', '3.5', '18', '0', '0', '1', '16', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Semi-Sweet Mead', '24B', 'Traditional Mead', '1.035', '1.17', '0.99', '1.05', '3.5', '18', '0', '0', '1', '16', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Sweet Mead', '24C', 'Traditional Mead', '1.035', '1.17', '0.99', '1.05', '7.5', '15', '0', '0', '1', '16', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Cyser (Apple Melomel)', '25A', 'Melomel (Fruit Mead)', '1.035', '1.17', '0.99', '1.05', '3.5', '18', '0', '0', '1', '16', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Pyment (Grape Melomel)', '25B', 'Melomel (Fruit Mead)', '1.035', '1.17', '0.99', '1.05', '3.5', '18', '0', '0', '1', '16', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Other Fruit Melomel', '25C', 'Melomel (Fruit Mead)', '1.035', '1.17', '0.99', '1.05', '3.5', '18', '0', '0', '1', '16', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Metheglin', '26A', 'Other Mead', '1.035', '1.17', '0.99', '1.05', '3.5', '18', '0', '0', '1', '16', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Braggot', '26B', 'Other Mead', '1.035', '1.17', '1.009', '1.05', '3.5', '18', '0', '50', '3', '16', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Open Category Mead', '26C', 'Other Mead', '1.035', '1.17', '0.99', '1.05', '3.5', '18', '0', '50', '1', '16', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Common Cider', '27A', 'Standard Cider and Perry', '1.045', '1.065', '1', '1.02', '5', '8', '0', '0', '1', '10', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'English Cider', '27B', 'Standard Cider and Perry', '1.05', '1.075', '0.995', '1.01', '6', '9', '0', '0', '1', '10', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'French Cider', '27C', 'Standard Cider and Perry', '1.05', '1.065', '1.01', '1.02', '3', '6', '0', '0', '1', '10', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Common Perry', '27D', 'Standard Cider and Perry', '1.05', '1.06', '1', '1.02', '5', '7', '0', '0', '0', '6', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Traditional Perry', '27E', 'Standard Cider and Perry', '1.05', '1.07', '1', '1.02', '5', '9', '0', '0', '0', '6', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'New England Cider', '28A', 'Specialty Cider and Perry', '1.06', '1.1', '0.995', '1.01', '7', '13', '0', '0', '1', '10', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Fruit Cider', '28B', 'Specialty Cider and Perry', '1.045', '1.07', '0.995', '1.01', '5', '9', '0', '0', '1', '10', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Applewine', '28C', 'Specialty Cider and Perry', '1.07', '1.1', '0.995', '1.01', '9', '12', '0', '0', '1', '10', NOW(), NOW() );
+INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES ( 'Other Specialty Cider/Perry', '28D', 'Specialty Cider and Perry', '1.045', '1.1', '0.995', '1.02', '5', '12', '0', '0', '1', '10', NOW(), NOW() );
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `beers`
@@ -109,7 +197,6 @@ CREATE TABLE `config` (
 -- Dumping data for table `config`
 --
 
--- NOTE: Please add new config values to the BOTTOM of the list. Adding to the top or middle of the list may break things!
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showTapNumCol', '1', 'Tap Column', '1', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showSrmCol', '1', 'SRM Column', '1', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ('showIbuCol', '1', 'IBU Column', '1', NOW(), NOW() );
@@ -715,8 +802,8 @@ SELECT tapId, SUM(amountPoured) as amountPoured FROM pours GROUP BY tapId;
 CREATE VIEW vwGetActiveTaps
 AS
 
-SELECT 
-	t.id, 
+SELECT
+	t.id,
 	b.name,
 	bs.name as 'style',
 	b.notes,
@@ -729,12 +816,12 @@ SELECT
 	t.startAmount - IFNULL(p.amountPoured, 0) as remainAmount,
 	t.tapNumber,
 	s.rgb as srmRgb
-FROM taps t 
+FROM taps t
 	LEFT JOIN beers b ON b.id = t.beerId
 	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
 	LEFT JOIN srmRgb s ON s.srm = t.srmAct
 	LEFT JOIN vwGetTapsAmountPoured as p ON p.tapId = t.Id
-WHERE t.active = true 
+WHERE t.active = true
 ORDER BY t.tapNumber;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
