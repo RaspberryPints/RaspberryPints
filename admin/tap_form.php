@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
-$beerList = $beerManager->GetAll();
+$beerList = $beerManager->GetAllActive();
 $kegList = $kegManager->GetAllAvailable();
 
 $tapNumber = $_GET['tapNumber'];
