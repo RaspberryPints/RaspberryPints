@@ -34,17 +34,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	redirect('tap_list.php');
 }
 
+
+$beerList = $beerManager->GetAll();
+$kegList = $kegManager->GetAllAvailable();
+
 $tapNumber = $_GET['tapNumber'];
 if( isset($_GET['id'])){
 	$tap = $tapManager->GetById($_GET['id']);
+	
+	if( !array_key_exists($tap->get_kegId(), $kegList) ){
+		$kegList[$tap->get_kegId()] = $kegManager->GetById($tap->get_kegId());
+	}
+	
 }else{
 	$tap = new Tap();
 	$tap->set_tapNumber($tapNumber);
 	$tap->set_active(true);
 }
 
-$beerList = $beerManager->GetAll();
-$kegList = $kegManager->GetAllAvailable();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

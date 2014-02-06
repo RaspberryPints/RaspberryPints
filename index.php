@@ -146,7 +146,7 @@
 										<h3><?php echo $beer['og']; ?> OG</h3>
 										
 										<div class="srm-container">
-											<div class="srm-indicator" style="background-color: rgb(<?php echo $beer['srmRgb'] ?>)"></div>
+											<div class="srm-indicator" style="background-color: rgb(<?php echo $beer['srmRgb'] != "" ? $beer['srmRgb'] : "0,0,0" ?>)"></div>
 											<div class="srm-stroke"></div> 
 										</div>
 										

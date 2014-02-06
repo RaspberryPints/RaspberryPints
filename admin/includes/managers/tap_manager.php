@@ -6,6 +6,13 @@ class TapManager{
 	
 	function Save($tap){
 		$sql = "";
+		
+		$sql="UPDATE kegs k SET k.kegStatusCode = 'SERVING' WHERE id = " . $tap->get_kegId();
+		mysql_query($sql);
+	
+		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE active = 1 AND tapNumber = " . $tap->get_tapNumber();
+		mysql_query($sql);		
+		
 		if($tap->get_id()){
 			$sql = 	"UPDATE taps " .
 					"SET " .
@@ -22,15 +29,9 @@ class TapManager{
 					"WHERE id = " . $tap->get_id();
 					
 		}else{
-			$sql="UPDATE kegs k, taps t SET k.kegStatusCode = 'SERVING' WHERE t.kegId = k.id AND t.Id = " . $tap->get_kegId();
-			mysql_query($sql);
-		
-			$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE active = 1 AND tapNumber = " . $tap->get_tapNumber();
-			mysql_query($sql);		
-		
 			$sql = 	"INSERT INTO taps(beerId, kegId, tapNumber, ogAct, fgAct, srmAct, ibuAct, startAmount, currentAmount, active, createdDate, modifiedDate ) " .
 					"VALUES(" . $tap->get_beerId() . ", " . $tap->get_kegId() . ", " . $tap->get_tapNumber() . ", " . $tap->get_og() . ", " . $tap->get_fg() . ", " . $tap->get_srm() . ", " . $tap->get_ibu() . ", " . $tap->get_startAmount() . ", " . $tap->get_startAmount() . ", " . $tap->get_active	() . ", NOW(), NOW())";
-		}
+		}		
 		
 		//echo $sql; exit();
 		
