@@ -69,7 +69,7 @@ include 'header.php';
 		<h2>Header Text</h2>
 		<p>This text appears at the very top of the taplist.</p>
 			<form method="post" action="update_header_text.php">
-				<input type="text" class="mediumbox" value="<? echo $headerText['configValue']; ?>" name="header_text"> &nbsp 
+				<input type="text" class="mediumbox" value="<?php echo $headerText['configValue']; ?>" name="header_text"> &nbsp 
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
 
