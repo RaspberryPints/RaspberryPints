@@ -11,5 +11,6 @@ abstract class ConfigNames
 	const UseHighResolution = 'useHighResolution';
 	const LogoUrl = 'logoUrl';
 	const HeaderText = 'headerText';
+	const HeaderTextTruncLen = 'headerTextTruncLen';
 	const NumberOfTaps = 'numberOfTaps';
 }

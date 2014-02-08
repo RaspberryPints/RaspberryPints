@@ -12,19 +12,19 @@
 </head>
 <body>
 	<div id="logincontainer">
-    	<div id="loginbox">
-        	<div id="loginheader">
-            	<a href="../" style="text-decoration:none;"><h1><font color="#d6264f">KegerFace Login</h1></font></a>
-            </div>
-            <div id="innerlogin">
-            	<form name="??" action="" method="POST">
+		<div id="loginbox">
+			<div id="loginheader">
+				<a href="../" style="text-decoration:none;"><h1><font color="#d6264f">KegerFace Login</h1></font></a>
+			</div>
+			<div id="innerlogin">
+				<form name="??" action="" method="POST">
 
-                    <p><input type="button" value="Forgot Password?" title="Forgot password?" class="btnalt" onClick="location. href='includes/email_to.php'" /><br /><br />
+					<p><input type="button" value="Forgot Password?" title="Forgot password?" class="btnalt" onClick="location. href='includes/email_to.php'" /><br /><br />
 					<input type="button" value="Forgot Login Name?" title="Forgot Login Name?" class="btnalt" onClick="location. href='includes/email_tou.php'" />
-                </form><br />
+				</form><br />
 <a href="index.php" style="text-decoration:none;"><font color="#3f7f00">Go Back To Login</font></a> 
-            </div>
-        </div>
-    </div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

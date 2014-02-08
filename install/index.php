@@ -21,30 +21,30 @@
 		}
 
 		$(document).ready(function () {
-		   $("#txtConfirmPassword").keyup(checkPasswordMatch);
-		   $("#txtConfirmAdminPassword").keyup(checkAdminPasswordMatch);
+		$("#txtConfirmPassword").keyup(checkPasswordMatch);
+		$("#txtConfirmAdminPassword").keyup(checkAdminPasswordMatch);
 		});
 	</script>
 
 
 
 	<head>
-    <title>RaspberryPints Installation</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <!-- Set location of Cascading Style Sheets and script files -->
-    <link rel="stylesheet" type="text/css" href="styles.css" />
+	<title>RaspberryPints Installation</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<!-- Set location of Cascading Style Sheets and script files -->
+	<link rel="stylesheet" type="text/css" href="styles.css" />
 	<link rel="shortcut icon" href="../img/pint.ico" />
 
 	<script type="text/javascript" src="includes/jquery-2.1.0.min.js"></script>	
 	<script src="includes/jquery.validate.js"></script>
-    
-  </head>
-  <body>
+	
+</head>
+<body>
 
-   
-  <h1>Welcome to Raspberry Pints!</h1>
-  
-     <form action="includes/configprocessor.php" method="post">
+
+<h1>Welcome to Raspberry Pints!</h1>
+
+	<form action="includes/configprocessor.php" method="post">
 
 	<?php
 		if (file_exists("../includes/config.php")) {
@@ -183,5 +183,5 @@ you are certain you need to change it.
 		<input class="btn" type="submit" value="Setup!">
 
 	</form>
-  </body>
+</body>
 </html>

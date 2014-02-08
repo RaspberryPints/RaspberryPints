@@ -48,19 +48,19 @@ $kegs = $kegManager->GetAllActive();
 include 'header.php';
 ?>
 	<!-- End Header -->
-        
-    <!-- Top Breadcrumb Start -->
-    <div id="breadcrumb">
-    	<ul>	
-        	<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
-        	<li><strong>Location:</strong></li>
-            <li class="current">Keg List</li>            
-        </ul>
-    </div>
-    <!-- Top Breadcrumb End --> 
-     
-    <!-- Right Side/Main Content Start -->
-    <div id="rightside">
+		
+	<!-- Top Breadcrumb Start -->
+	<div id="breadcrumb">
+		<ul>	
+			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
+			<li><strong>Location:</strong></li>
+			<li class="current">Keg List</li>            
+		</ul>
+	</div>
+	<!-- Top Breadcrumb End --> 
+	
+	<!-- Right Side/Main Content Start -->
+	<div id="rightside">
 		<div class="contentcontainer lg left">
 			<div class="headings alt">
 				<h2>Keg List</h2>
@@ -157,15 +157,15 @@ include 'header.php';
 	
 	<!-- End On Tap Section -->
 
-    <!-- Start Footer -->   
+	<!-- Start Footer -->   
 <?php
 include 'footer.php';
 ?>
 
 	<!-- End Footer -->
-          
-    </div>
-    <!-- Right Side/Main Content End -->
+		
+	</div>
+	<!-- Right Side/Main Content End -->
 	<!-- Start Left Bar Menu -->   
 <?php
 include 'left_bar.php';
@@ -186,11 +186,11 @@ include 'scripts.php';
 </script>
 
 	<!-- End Js -->
-    <!--[if IE 6]>
-    <script type='text/javascript' src='scripts/png_fix.js'></script>
-    <script type='text/javascript'>
-      DD_belatedPNG.fix('img, .notifycount, .selected');
-    </script>
-    <![endif]--> 
+	<!--[if IE 6]>
+	<script type='text/javascript' src='scripts/png_fix.js'></script>
+	<script type='text/javascript'>
+	DD_belatedPNG.fix('img, .notifycount, .selected');
+	</script>
+	<![endif]--> 
 </body>
 </html>

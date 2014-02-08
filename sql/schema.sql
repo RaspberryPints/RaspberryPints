@@ -218,7 +218,8 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '0', NOW(), NOW() ),
 ( 'headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() ),
 ( 'numberOfTaps', '0', 'Number of Taps', '0', NOW(), NOW() ),
-( 'version', '1.0.0.279', 'Version', '0', NOW(), NOW() );
+( 'version', '1.0.0.279', 'Version', '0', NOW(), NOW() ),
+( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() );
 
 
 -- --------------------------------------------------------
