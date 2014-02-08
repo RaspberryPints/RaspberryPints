@@ -188,10 +188,10 @@
 									<p><?php echo $beer['notes']; ?></p>
 								</td>
 							
-								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::ShowAbvImage])){ ?>
+								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3><?php
-											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);									
+											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
 											$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
 											if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
 												$calfromalc = 0;
@@ -205,13 +205,13 @@
 												$abv = ($beer['og'] - $beer['fg']) * 131;
 												$numCups = 0;
 												$remaining = $abv * 20;
-												do{                                                                
+												do{
 														if( $remaining < 100 ){
 																$level = $remaining;
 														}else{
 																$level = 100;
 														}
-														?><div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div><?php                                                                
+														?><div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div><?php
 														
 														$remaining = $remaining - $level;
 														$numCups++;
@@ -226,10 +226,10 @@
 									</td>
 								<?php } ?>
 								
-								<?php if(($config[ConfigNames::ShowAbvCol]) && ! ($config[ConfigNames::ShowAbvImage])){ ?>
+								<?php if(($config[ConfigNames::ShowAbvCol]) && ! ($config[ConfigNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3><?php
-											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);									
+											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
 											$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
 											if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
 												$calfromalc = 0;
