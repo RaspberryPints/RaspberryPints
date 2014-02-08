@@ -126,7 +126,7 @@ body {height: 100%; font-family: Arial, Helvetica, sans-serif; font-size: 13px; 
 	table {border-collapse: collapse;}
 		thead th{ white-space: nowrap; }
 		th,td {text-align: left; padding: 8px; vertical-align: top;}
-		th {background: #E0E0E0 url(../img/bg_th.png) repeat-x top; text-shadow: 1px 1px 1px #fff; font-size: 14px; text-decoration: underline;}
+		th {background-color: #E0E0E0; text-shadow: 1px 1px 1px #fff; font-size: 14px;}
 		tr.alt td{background: #F2F2F2 url(../img/bg_td_alt.png) repeat-x top; text-shadow: 1px 1px 1px #fff;}
 	
 	.extrabottom {padding: 15px; height: 40px; background: url(../img/bg_fade_sml.png) repeat-x top; border-radius: 10px; -moz-border-radius: 10px; margin-top: 10px;}
