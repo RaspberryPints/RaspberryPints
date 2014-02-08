@@ -52,9 +52,9 @@ flush();
 $con=mysqli_connect($servername,"root",$rootpass);
 
 if (mysqli_connect_errno())
-  {
-  $validerror .= "<br><strong>Cannot connect the the database using the supplied information.</strong>";
-  }
+{
+$validerror .= "<br><strong>Cannot connect the the database using the supplied information.</strong>";
+}
 echo "Success!<br>";
 flush();
 
@@ -63,7 +63,7 @@ echo "Checking config folder permissions...";
 flush();
 if (!is_writable(dirname('../../includes/functions.php')))
 {
-   $validerror .= "<br><strong>Cannot write the configuration files. Please check the /includes/ folder permissions. See the RPints Installation page on www.raspberrypints.com.</strong>";
+$validerror .= "<br><strong>Cannot write the configuration files. Please check the /includes/ folder permissions. See the RPints Installation page on www.raspberrypints.com.</strong>";
 }
 
 if (!is_writable(dirname('../../admin/includes/checklogin.php')))
@@ -73,7 +73,7 @@ $validerror .= "<br><strong>Cannot write the configuration files. Please check t
 echo "Success!<br>";
 flush();
 
-  //##TODO## Check if administrator account already exists
+//##TODO## Check if administrator account already exists
 
 
 
@@ -95,9 +95,9 @@ if ($action == 'remove')
 	// Check connection
 
 	if (mysqli_connect_errno())
-	  {
-	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
-	  }
+	{
+	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	}
 
 	$sql = "DROP database raspberrypints;";
 	$result = mysqli_query($con,$sql);
@@ -143,9 +143,9 @@ require_once __DIR__.'/config_files.php';
 	// Check connection
 
 	if (mysqli_connect_errno())
-	  {
-	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
-	  }
+	{
+	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	}
 
 	$sql = "GRANT ALL ON *.* TO '" . $dbuser . "'@'" . $servername . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
 	$result = mysqli_query($con,$sql);
@@ -187,9 +187,9 @@ require_once __DIR__.'/config_files.php';
 	// Check connection
 
 	if (mysqli_connect_errno())
-	  {
-	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
-	  }
+	{
+	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	}
 	$currentdate = Date('Y-m-d H:i:s');
 	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','" . $adminname . "','" . $adminemail . "','" . $currentdate . "','" . $currentdate . "');";
 	$result = mysqli_query($con,$sql);

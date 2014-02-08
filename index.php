@@ -42,7 +42,7 @@
 				"tapNumber" => $b['tapNumber'],
 				"srmRgb" => $b['srmRgb']
 			);
-			$beers[$b['tapNumber']] = $beeritem;	
+			$beers[$b['tapNumber']] = $beeritem;
 		}
 		
 		$tapManager = new TapManager();
@@ -50,7 +50,7 @@
 	}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
+"http://www.w3.org/TR/html4/strict.dtd">
 
 <html>
 	<head>
@@ -68,28 +68,36 @@
 	</head> 
 
 	<body>
-    	<div class="bodywrapper">
-        	<!-- Header with Brewery Logo and Project Name -->
-            <div class="header clearfix">
-                <div class="HeaderLeft">
+		<div class="bodywrapper">
+			<!-- Header with Brewery Logo and Project Name -->
+			<div class="header clearfix">
+				<div class="HeaderLeft">
 					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
 						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl]; ?>" height="200" alt=""></a>
 					<?php } else { ?>
 						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl]; ?>" height="100" alt=""></a>
 					<?php } ?>
-                </div>
-                <div class="HeaderCenter">
-                    <h1 id="HeaderTitle"><? echo $config[ConfigNames::HeaderText]; ?></h1>
-                </div>
-                <div class="HeaderRight">
+				</div>
+				<div class="HeaderCenter">
+					<h1 id="HeaderTitle">
+						<?php
+							if (mb_strlen($config[ConfigNames::HeaderText], 'UTF-8') > ($config[ConfigNames::HeaderTextTruncLen])) {
+								$headerTextTrunced = substr($config[ConfigNames::HeaderText],0,$config[ConfigNames::HeaderTextTruncLen]) . "...";
+								echo $headerTextTrunced ; }
+							else
+								echo $config[ConfigNames::HeaderText];
+						?>
+					</h1>
+				</div>
+				<div class="HeaderRight">
 					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
 						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints-4k.png" height="200" alt=""></a>
 					<?php } else { ?>
 						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints.png" height="100" alt=""></a>
 					<?php } ?>
-                </div>
-            </div>
-            <!-- End Header Bar -->
+				</div>
+			</div>
+			<!-- End Header Bar -->
 			
 			<table>
 				<thead>
@@ -117,7 +125,7 @@
 						</th>
 						
 						<?php if($config[ConfigNames::ShowAbvCol]){ ?>
-							<th class="abv">				
+							<th class="abv">
 								CALORIES<hr>ALCOHOL
 							</th>
 						<?php } ?>
@@ -128,7 +136,7 @@
 							</th>
 						<?php } ?>
 					</tr>
-                </thead>
+				</thead>
 				<tbody>
 					<?php for($i = 1; $i <= $numberOfTaps; $i++) {
 						if( isset($beers[$i]) ) {

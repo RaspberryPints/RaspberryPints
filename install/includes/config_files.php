@@ -32,7 +32,7 @@
 	$adminconfig2 .= '  $dbuser="' . "{$dbuser}" . '";' . "\n";
 	$adminconfig2 .= '  $dbpass="' . "${dbpass1}" . '";' . "\n";
 	$adminconfig2 .= '	$conn = new PDO("mysql:host=$dbhost;dbname=$dbname",$dbuser,$dbpass);' . "\n";
-	$adminconfig2 .= '	$stmt = $conn->prepare(' . "'SELECT * FROM config WHERE id <= 6')" . ";\n";
+	$adminconfig2 .= '	$stmt = $conn->prepare(' . "'SELECT * FROM config WHERE showOnPanel = 1')" . ";\n";
 	$adminconfig2 .= '	$stmt->execute();' . "\n";
 	$adminconfig2 .= '	$result = $stmt->fetchAll();' . "\n";
 	$adminconfig2 .= '?>';

@@ -56,22 +56,22 @@ $kegTypeList = $kegTypeManager->GetAll();
 include 'header.php';
 ?>
 	<!-- End Header -->
-        
-    <!-- Top Breadcrumb Start -->
-    <div id="breadcrumb">
-    	<ul>	
-        	<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
-        	<li><strong>Location:</strong></li>
-            <li><a href="keg_list.php">Keg List</a></li>
-            <li>/</li>
-            <li class="current">Keg Form</li>
-        </ul>
-    </div>
-    <!-- Top Breadcrumb End --> 
-     
-    <!-- Right Side/Main Content Start -->
-    <div id="rightside">
-		 <div class="contentcontainer med left">
+		
+	<!-- Top Breadcrumb Start -->
+	<div id="breadcrumb">
+		<ul>	
+			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
+			<li><strong>Location:</strong></li>
+			<li><a href="keg_list.php">Keg List</a></li>
+			<li>/</li>
+			<li class="current">Keg Form</li>
+		</ul>
+	</div>
+	<!-- Top Breadcrumb End --> 
+	
+	<!-- Right Side/Main Content Start -->
+	<div id="rightside">
+		<div class="contentcontainer med left">
 	<p>
 		fields marked with an * are required
 
@@ -168,22 +168,22 @@ include 'header.php';
 		</table>
 		<br />
 		<div align="right">			
-			 &nbsp &nbsp 
+			&nbsp &nbsp 
 		</div>
 
 	</form>
-    </div>
+	</div>
 	<!-- End On Tap Section -->
 
-    <!-- Start Footer -->   
+	<!-- Start Footer -->   
 <?php 
 include 'footer.php';
 ?>
 
 	<!-- End Footer -->
-          
-    </div>
-    <!-- Right Side/Main Content End -->
+		
+	</div>
+	<!-- Right Side/Main Content End -->
 	<!-- Start Left Bar Menu -->   
 <?php 
 include 'left_bar.php';
@@ -198,23 +198,23 @@ include 'scripts.php';
 	$(function() {		
 		
 		$('#keg-form').validate({
-		  rules: {
+		rules: {
 			label: { required: true, number: true },
 			kegTypeId: { required: true },
 			kegStatusCode: { required: true }
-		  }
+		}
 		});
 		
 	});
 </script>
 
 	<!-- End Js -->
-    <!--[if IE 6]>
-    <script type='text/javascript' src='scripts/png_fix.js'></script>
-    <script type='text/javascript'>
-      DD_belatedPNG.fix('img, .notifycount, .selected');
-    </script>
-    <![endif]--> 
+	<!--[if IE 6]>
+	<script type='text/javascript' src='scripts/png_fix.js'></script>
+	<script type='text/javascript'>
+	DD_belatedPNG.fix('img, .notifycount, .selected');
+	</script>
+	<![endif]--> 
 	
 </body>
 </html>
