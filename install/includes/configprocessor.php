@@ -21,6 +21,8 @@ $adminuser = $_POST["adminuser"];
 $adminpass1 = $_POST["adminpass1"];
 $adminpass2 = $_POST["adminpass2"];
 $action = $_POST["selectaction"];
+$adminname = $_POST["adminname"];
+$adminemail = $_POST["adminemail"];
 
 //Create the MD5 hash value for the admin password
 $adminhash = md5($adminpass1);
@@ -189,7 +191,7 @@ require_once __DIR__.'/config_files.php';
 	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
 	  }
 	$currentdate = Date('Y-m-d H:i:s');
-	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','name','email','" . $currentdate . "','" . $currentdate . "');";
+	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','" . $adminname . "','" . $adminemail . "','" . $currentdate . "','" . $currentdate . "');";
 	$result = mysqli_query($con,$sql);
 	mysqli_close($con);
 	echo "Success!<br>";
