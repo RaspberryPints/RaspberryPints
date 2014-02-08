@@ -38,7 +38,8 @@
 
 	<script type="text/javascript" src="includes/jquery-2.1.0.min.js"></script>	
 	<script src="includes/jquery.validate.js"></script>
-    
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+	<META HTTP-EQUIV="Expires" CONTENT="-1">
   </head>
   <body>
 
