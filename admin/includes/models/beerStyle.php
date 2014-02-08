@@ -1,27 +1,30 @@
 <?php
 class BeerStyle
 {  
-    private $_id;  
-    private $_name;
+	private $_id;  
+	private $_name;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
 	public function __construct(){}
-  
+
 	public function get_id(){ return $this->_id; }
 	public function set_id($_id){ $this->_id = $_id; }
 
 	public function get_name(){ return $this->_name; }
 	public function set_name($_name){ $this->_name = $_name; }
 
+	public function get_style(){ return $this->_style; }
+	public function set_style($_style){ $this->_style = $_style; }
+
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
-	
+
 	public function get_modifiedDate(){ return $this->_modifiedDate; }
 	public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
-	
-    public function setFromArray($postArr)  
-    {  	
+
+	public function setFromArray($postArr)  
+	{
 		if( isset($postArr['id']) )
 			$this->set_id($postArr['id']);
 		else
@@ -34,6 +37,12 @@ class BeerStyle
 		else
 			$this->set_name(null);
 			
+		if( isset($postArr['style']) )
+			$this->set_createdDate($postArr['style']);
+		else
+			$this->set_createdDate(null);
+			
+			
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);
 		else
@@ -43,12 +52,13 @@ class BeerStyle
 			$this->set_modifiedDate($postArr['modifiedDate']);
 		else
 			$this->set_modifiedDate(null);
-    }  
+	}
 	
 	function toJson(){
 		return "{" . 
 			"id: " . $this->get_id() . ", " .
 			"name: '" . $this->get_name() . "', " .
+			"style: " . $this->get_style() . ", " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  
 		"}";
