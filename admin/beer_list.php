@@ -73,10 +73,9 @@ include 'header.php';
 			<table width="770px" border="0" cellspacing="0" cellpadding="0">
 				<thead>
 					<tr>
-						<th width="28%">Name</th>
-						<th width="10%">Vitals</th>
+						<th width="38%">Name</th>
 						<th width="22%">Yeast/Water/etc</th>
-						<th width="40%" colspan="3">Hop Additions</th>
+						<th width="40%" colspan="3">Ingredients</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -96,9 +95,6 @@ include 'header.php';
 											echo $beerStyle->get_name();
 										?></b><br>
 										(BJCP 1A - Light Lager)</b><br><br>
-									</td>
-									
-									<td>
 										<?php
 											if ( $beer->get_srm() != 0 )
 												echo "<b>SRM:</b> " , $beer->get_srm() , "<br>" ;
@@ -140,7 +136,7 @@ include 'header.php';
 									</td>
 								</tr>
 								<tr class="intborder">
-									<td colspan="3">
+									<td colspan="2">
 										<?php if ($beer->get_notes()) echo '"' ?><?php echo $beer->get_notes() ?><?php if ($beer->get_notes()) echo '"' ?>
 									</td>
 									<td align="center" width="50px">

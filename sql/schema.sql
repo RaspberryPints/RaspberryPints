@@ -150,7 +150,15 @@ INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, ab
 ( 'New England Cider', '28A', 'Specialty Cider and Perry', '1.06', '1.1', '0.995', '1.01', '7', '13', '0', '0', '1', '10', NOW(), NOW() ),
 ( 'Fruit Cider', '28B', 'Specialty Cider and Perry', '1.045', '1.07', '0.995', '1.01', '5', '9', '0', '0', '1', '10', NOW(), NOW() ),
 ( 'Applewine', '28C', 'Specialty Cider and Perry', '1.07', '1.1', '0.995', '1.01', '9', '12', '0', '0', '1', '10', NOW(), NOW() ),
-( 'Other Specialty Cider/Perry', '28D', 'Specialty Cider and Perry', '1.045', '1.1', '0.995', '1.02', '5', '12', '0', '0', '1', '10', NOW(), NOW() );
+( 'Other Specialty Cider/Perry', '28D', 'Specialty Cider and Perry', '1.045', '1.1', '0.995', '1.02', '5', '12', '0', '0', '1', '10', NOW(), NOW() ),
+( '_Non-alcoholic Beer', 'N/A', 'Non-alcoholic Beer', '1', '1', '1', '1', '0', '0', '0', '0', '0', '40', NOW(), NOW() ),
+( '_Non-beer: Wine', 'N/A', 'Wine', '1', '1', '1', '1', '0', '20', '0', '0', '0', '40', NOW(), NOW() ),
+( '_Non-beer: Kombucha', 'N/A', 'Kombucha', '1', '1', '1', '1', '0', '0', '0', '0', '0', '40', NOW(), NOW() ),
+( '_Non-beer: Tea', 'N/A', 'Tea', '1', '1', '1', '1', '0', '0', '0', '0', '0', '40', NOW(), NOW() ),
+( '_Non-beer: Coffee', 'N/A', 'Coffee', '1', '1', '1', '1', '0', '0', '0', '0', '0', '40', NOW(), NOW() ),
+( '_Non-beer: Fruit Juice', 'N/A', 'Fruit Juice', '1', '1', '1', '1', '0', '0', '0', '0', '0', '40', NOW(), NOW() ),
+( '_Non-beer: Fruit Drink', 'N/A', 'Fruit Drink', '1', '1', '1', '1', '0', '0', '0', '0', '0', '40', NOW(), NOW() ),
+( '_Non-beer: Seltzer Water', 'N/A', 'Seltzer Water', '1', '1', '1', '1', '0', '0', '0', '0', '0', '40', NOW(), NOW() );
 
 -- --------------------------------------------------------
 
