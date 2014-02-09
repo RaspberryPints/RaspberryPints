@@ -22,7 +22,7 @@ class HtmlHelper{
 				}
 				
 				$str .= ">";
-				$str .= encode($name);
+				$str .= $name;
 				$str .= "</option>";
 			}
 		
