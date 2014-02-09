@@ -95,7 +95,7 @@ include 'header.php';
 											$beerStyle = $beerStyleManager->GetById($beer->get_beerStyleId());
 											echo $beerStyle->get_name();
 										?></b><br>
-										(BJCP 1A - Light Lager)</b><br><br>
+										(BJCP <?php echo $beerStyle->get_catNum() ?> - <?php echo $beerStyle->get_category() ?>)</b><br><br>
 									</td>
 									
 									<td>

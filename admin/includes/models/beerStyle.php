@@ -3,6 +3,8 @@ class BeerStyle
 {  
     private $_id;  
     private $_name;
+	private $_catNum;
+	private $_category;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
@@ -13,6 +15,12 @@ class BeerStyle
 
 	public function get_name(){ return $this->_name; }
 	public function set_name($_name){ $this->_name = $_name; }
+
+	public function get_catNum(){ return $this->_catNum; }
+	public function set_catNum($_catNum){ $this->_catNum = $_catNum; }
+
+	public function get_category(){ return $this->_category; }
+	public function set_category($_category){ $this->_category = $_category; }
 
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -34,6 +42,16 @@ class BeerStyle
 		else
 			$this->set_name(null);
 			
+		if( isset($postArr['catNum']) )
+			$this->set_catNum($postArr['catNum']);
+		else
+			$this->set_catNum(null);
+			
+		if( isset($postArr['category']) )
+			$this->set_category($postArr['category']);
+		else
+			$this->set_category(null);
+			
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);
 		else
@@ -49,6 +67,8 @@ class BeerStyle
 		return "{" . 
 			"id: " . $this->get_id() . ", " .
 			"name: '" . $this->get_name() . "', " .
+			"catNum: '" . $this->get_catNum() . "', " .
+			"category: '" . $this->get_category() . "', " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  
 		"}";
