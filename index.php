@@ -16,6 +16,7 @@
 		db();
 		
 		
+		
 		$config = array();
 		$sql = "SELECT * FROM config";
 		$qry = mysql_query($sql);
