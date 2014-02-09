@@ -317,8 +317,8 @@
 									<h2 class="subhead"></h2>
 									<p></p>
 								</td>
-							
-								<?php if($config[ConfigNames::ShowAbvCol]){ ?>
+								
+								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3></h3>
 										<div class="abv-container">
@@ -327,7 +327,15 @@
 										<h2></h2>
 									</td>
 								<?php } ?>
-							
+
+								<?php if(($config[ConfigNames::ShowAbvCol]) && ! ($config[ConfigNames::ShowAbvImg])){ ?>
+									<td class="abv">
+										<h3></h3>
+
+										<h2></h2>
+									</td>
+								<?php } ?>								
+								
 								<?php if($config[ConfigNames::ShowKegCol]){ ?>
 									<td class="keg">
 										<h3></h3>
