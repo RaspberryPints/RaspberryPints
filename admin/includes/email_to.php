@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>KegerFace-PWreset</title>
+<title>RaspberryPints</title>
 <link href="styles/layout.css" rel="stylesheet" type="text/css" />
 <link href="styles/login.css" rel="stylesheet" type="text/css" />
 <!-- Theme Start -->
@@ -14,7 +14,7 @@
 	<div id="logincontainer">
 		<div id="loginbox">
 			<div id="loginheader">
-		<a href="../" style="text-decoration:none;"><h1><font color="#00CCFF">KegerFace Login</h1></font></a>
+		<a href="../" style="text-decoration:none;"><h1><font color="#00CCFF">RaspberryPints Login</h1></font></a>
 			</div>
 			<div id="innerlogin">
 				<form name="email_to" action="send_password_ac.php" method="post">
