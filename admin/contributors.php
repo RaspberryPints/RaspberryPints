@@ -74,6 +74,12 @@ include 'header.php';
 							<td><a href="http://www.homebrewtalk.com/members/skemp45" target="_blank">Skemp45</a></td>
 							<td><a href="https://untappd.com/user/Shawnkemp" target="_blank">Shawn Kemp</a></td>
 						</tr>
+						<tr>
+							<td><b>Seven Johnson</b></td>
+							<td>Application Developer</td>
+							<td><a href="http://www.homebrewtalk.com/members/Seven" target="_blank">Seven</a></td>
+							<td><a href="https://untappd.com/user/SevenXXX" target="_blank">SevenXXX</a></td>
+						</tr>						
 					</tbody>
 				</table>
 			</div>
