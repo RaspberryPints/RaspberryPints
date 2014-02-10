@@ -3,10 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>RaspberryPints</title>
-<link href="styles/layout.css" rel="stylesheet" type="text/css" />
-<link href="styles/login.css" rel="stylesheet" type="text/css" />
+<link href="../styles/layout.css" rel="stylesheet" type="text/css" />
+<link href="../styles/login.css" rel="stylesheet" type="text/css" />
 <!-- Theme Start -->
-<link href="themes/blue/styles.css" rel="stylesheet" type="text/css" />
+<link href="../style.css" rel="stylesheet" type="text/css" />
 <!-- Theme End -->
 
 </head>
