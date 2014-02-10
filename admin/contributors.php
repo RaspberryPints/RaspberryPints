@@ -114,6 +114,12 @@ include 'header.php';
 								· Spruced up official website front page
 							</td>
 						</tr>
+						<tr>
+							<td><b><a href="https://github.com/emdubeu" target="_blank">emdubeu</a></b></td>
+							<td><a href="http://www.homebrewtalk.com/members/EmDubeu" target="_blank">EmDubeu</a></td>
+							<td>
+								· QA - installation instructions, SQL, UI, etc.</td>
+							</tr>
 					</tbody>
 				</table>
 			</div>
