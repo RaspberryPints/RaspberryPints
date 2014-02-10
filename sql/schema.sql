@@ -208,7 +208,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '0', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() );
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'numberOfTaps', '0', 'Number of Taps', '0', NOW(), NOW() );
-INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'version', '1.0.0.279', 'Version', '1', NOW(), NOW() );
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES ( 'version', '1.0.0.279', 'Version', '0', NOW(), NOW() );
 
 
 -- --------------------------------------------------------
