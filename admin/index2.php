@@ -25,7 +25,7 @@
 									<span class="bigtxt red">(Wrong Username Or Password)</span>
 					<input type="submit" class="loginbtn" value="Log In" /><br />
 <img src="img/lock.png" height="50" width="50">
-					<p><a href="reset_account.php" title="Forgoteen Password?">Forgotten Password?</a></p>
+					<p><a href="reset_account.php" title="Forgotten Password?">Forgotten Password?</a></p>
 				</form>
 			</div>
 		</div>
