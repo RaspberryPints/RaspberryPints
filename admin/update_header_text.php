@@ -5,10 +5,10 @@ header("location:index.php");
 }
 require 'includes/conn.php';
 require '../includes/config_names.php';
-
+require_once 'includes/functions.php';
 
 // Get values from form 
-$header_text=$_POST['header_text'];
+$header_text=encode($_POST['header_text']);
 
 
 
