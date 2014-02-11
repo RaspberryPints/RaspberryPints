@@ -68,8 +68,8 @@
 	<li>
 		<a class="expanded heading">Help!</a>
 		<ul class="navigation">
-			<li><a href="report_bug.php">Report a Bug</a></li>
-			<li><a href="feedback.php">Request a Feature</a></li>
+			<li><a href="http://raspberrypints.com/site/report-bug-make-a-suggestion/">Report a Bug</a></li>
+			<li><a href="http://raspberrypints.com/site/report-bug-make-a-suggestion/">Request a Feature</a></li>
 		</ul>	
 	</li>
 	<li>
