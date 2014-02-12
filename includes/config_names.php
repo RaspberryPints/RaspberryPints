@@ -12,4 +12,5 @@ abstract class ConfigNames
 	const LogoUrl = 'logoUrl';
 	const HeaderText = 'headerText';
 	const NumberOfTaps = 'numberOfTaps';
+	const KegStatusTracking = 'kegStatus';
 }

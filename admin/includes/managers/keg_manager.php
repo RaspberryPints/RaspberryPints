@@ -30,16 +30,26 @@ class KegManager{
 		
 		return $kegs;
 	}
-	
 	function GetAllAvailable(){
-		$sql="SELECT * FROM kegs WHERE active = 1
-			AND kegStatusCode != 'SERVING'
+		$sql = "SELECT configValue FROM config where configName='kegStatus'";
+		$qry = mysql_query($sql);
+		while ($row = mysql_fetch_assoc($qry)) {
+		$kegStatusTracking = $row['configValue'];
+		}
+	
+		$sql="SELECT * FROM kegs WHERE active = 1";
+		
+		if ($kegStatusTracking == "1") {
+			$sql .= " AND kegStatusCode != 'SERVING'
 			AND kegStatusCode != 'SANITIZED'
 			AND kegStatusCode != 'NEEDS_CLEANING'
 			AND kegStatusCode != 'NEEDS_PARTS'
 			AND kegStatusCode != 'NEEDS_REPAIRS'
-			AND kegStatusCode != 'FLOODED'
-		ORDER BY label";
+			AND kegStatusCode != 'FLOODED'";
+			}
+		$sql .= " ORDER BY label";
+
+			
 		$qry = mysql_query($sql);
 		
 		$kegs = array();
