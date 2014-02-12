@@ -1,3 +1,7 @@
+<?php
+session_start();
+require 'conn.php';
+?> 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -17,9 +21,11 @@
 		<a href="../" style="text-decoration:none;"><h1><font color="#00CCFF">RaspberryPints Login</h1></font></a>
 			</div>
 			<div id="innerlogin">
-				<form name="email_to" action="send_password_ac.php" method="post">
+				<form name="email_to" action="sendpassword.php" method="post">
 				<p>Enter your Email:</p>
-					<input type="text" class="logininput" autofocus="autofocus" name="email_to" id="email_to" />
+					<input type="text" class="logininput" autofocus="autofocus" name="email" id="email" required />
+				<p>Enter NEW Password:</p>
+					<input type="password" class="logininput" name="password" id="password" required /><br />
 					<input type="submit" class="loginbtn" value="Submit" name="submit" /><br />
 				</form>
 <a href="../index.php" style="text-decoration:none;"><font color="grey">Go Back To Login</font></a> 
