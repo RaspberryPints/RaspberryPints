@@ -22,7 +22,7 @@
 					<p><input type="button" value="Forgot Password?" title="Forgot password?" class="btnalt" onClick="location. href='includes/email_to.php'" /><br /><br />
 					<input type="button" value="Forgot Login Name?" title="Forgot Login Name?" class="btnalt" onClick="location. href='includes/email_tou.php'" />
 				</form><br />
-<a href="index.php" style="text-decoration:none;"><font color="#3f7f00">Go Back To Login</font></a> 
+<a href="index.php" style="text-decoration:none;"><font color="grey">Go Back To Login</font></a> 
 			</div>
 		</div>
 	</div>
