@@ -79,7 +79,6 @@
 			<li><a href="http://www.raspberrypints.com/faq" target="_blank">F.A.Q. <small>(coming soon)</small></a></li>
 			<li><a href="http://www.homebrewtalk.com/f51/initial-release-raspberrypints-digital-taplist-solution-456809" target="_blank">Visit Us on HBT</a></li>
 			<li><a href="http://www.raspberrypints.com/contributors" target="_blank">Contributors</a></li>
-			<li><a href="http://www.raspberrypints.com/about" target="_blank">About <small>(coming soon)</small></a></li>
 		</ul>
 	</li>
 	<li>
