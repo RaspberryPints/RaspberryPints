@@ -283,9 +283,8 @@ INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES
 ( 'PRIMARY', 'Primary', NOW(), NOW() ),
 ( 'SECONDARY', 'Secondary', NOW(), NOW() ),
 ( 'DRY_HOPPING', 'Dry Hopping', NOW(), NOW() ),
-( 'BULK_AGING', 'Bulk Aging', NOW(), NOW() ),
-( 'FLOODED', 'Flooded', NOW(), NOW() ),
-( 'SANITIZED', 'Sanitized', NOW(), NOW() ),
+( 'CONDITIONING', 'Conditioning', NOW(), NOW() ),
+( 'CLEAN', 'Clean', NOW(), NOW() ),
 ( 'NEEDS_CLEANING', 'Needs Cleaning', NOW(), NOW() ),
 ( 'NEEDS_PARTS', 'Needs Parts', NOW(), NOW() ),
 ( 'NEEDS_REPAIRS', 'Needs Repairs', NOW(), NOW() );
