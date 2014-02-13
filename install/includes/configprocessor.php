@@ -233,8 +233,8 @@ if ($action != 'remove')
 {
 	##TODO## Add better error handling before showing the Success message
 	echo '<br /><br /><br /><h3> Congratulations! Your Raspberry Pints has been setup successfully.<br />';
-	echo 'Tap List - <a href="http://' . $_SERVER['HTTP_HOST'] . '/index.php">http://' . $_SERVER['HTTP_HOST'] . '/index.php</a><br />';
-	echo 'Administration - <a href="http://' . $_SERVER['HTTP_HOST'] . '/admin/index.php">http://' . $_SERVER['HTTP_HOST'] . '/admin/index.php</a><br />';
+	echo 'Click for - <a href="../../index.php">Tap List</a><br />';
+	echo 'Click for - <a href="../../admin/index.php">Administration </a><br />';
 }
 
 ?>
