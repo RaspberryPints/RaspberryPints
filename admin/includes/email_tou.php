@@ -1,3 +1,55 @@
+<?php
+session_start();
+require 'conn.php';
+if (isset($_POST['email'])) {
+
+
+// Get values from form 
+$email=($_POST['email']);
+	
+// update data in mysql database
+$sql="SELECT username FROM users WHERE email='$email'";
+$result=mysql_query($sql);
+$username=mysql_fetch_row($result);
+?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>RaspberryPints</title>
+<link href="../styles/layout.css" rel="stylesheet" type="text/css" />
+<link href="../styles/login.css" rel="stylesheet" type="text/css" />
+<!-- Theme Start -->
+<link href="../styles.css" rel="stylesheet" type="text/css" />
+<!-- Theme End -->
+
+</head>
+<body>
+<div id="logincontainer">
+		<div id="loginbox">
+			<div id="loginheader">
+		<a href="../" style="text-decoration:none;"><h1><font color="#00CCFF">Your Username Is</h1></font></a>
+			</div>
+			<div id="innerlogin">
+					<?php
+					// if successfully updated.
+					if($result){
+					echo '<font color="#00CCFF"><h2>'.$username[0].'</h2></font>' ;
+					}
+					else {
+					echo "ERROR";
+					}
+					?>
+					<br /><a href="../index.php" style="text-decoration:none;"><font color="grey">Go Back To Login</font></a> 
+					</div>
+					</div>
+					</div>
+					</body>
+	               <?php
+				   }
+					else {
+					?>
+
+</html>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -14,17 +66,20 @@
 	<div id="logincontainer">
 		<div id="loginbox">
 			<div id="loginheader">
-		<a href="../" style="text-decoration:none;"><h1><font color="#00CCFF">RaspberryPints Login</h1></font></a>
+		<a href="../" style="text-decoration:none;"><h1><font color="#00CCFF">Forgot Username</h1></font></a>
 			</div>
 			<div id="innerlogin">
-				<form name="email_tou" action="send_username_ac.php" method="post">
+				<form name="user" action="" method="post">
 				<p>Enter your Email:</p>
-					<input type="text" class="logininput" autofocus="autofocus" name="email_tou" id="email_tou" />
+					<input type="text" class="logininput" autofocus="autofocus" name="email" id="email" />
 					<input type="submit" class="loginbtn" value="Submit" name="submit" /><br />
 				</form>
 <a href="../index.php" style="text-decoration:none;"><font color="grey">Go Back To Login</font></a> 
 			</div>
 		</div>
 	</div>
+	<?php
+	}
+	?>
 </body>
 </html>
