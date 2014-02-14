@@ -3,7 +3,7 @@ body {
 	background-color: #000000;
 	background-size: cover;
 	background-repeat:no-repeat;
-	/*overflow: hidden;*/
+	overflow: hidden;
 	font: 1.5em Gerorgia, arial, verdana, sans-serif;
 	margin:5px;
 }
