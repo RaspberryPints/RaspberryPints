@@ -1,0 +1,123 @@
+#!/bin/bash -e
+#
+# Simple script to install RaspberryPints
+# should work on any Raspbian based system
+#
+# The script will ask you where you want to install the RaspberryPints application to.
+# The default is '/var/www' which is the default location for apache2 websites on Raspbian.
+# If you already have a website being served from /var/www, make sure and select a different lcoation.
+#
+# INSTRUCTIONS
+# - Install Raspbian onto your Raspberry Pi and configure the network
+# - login as user 'pi' (default password is 'raspberry')
+# - Download a raw copy of this script
+#     i.e. "wget https://raw.github.com/tssgery/RaspberryPints/install/util/installRaspberryPints"
+# - make the script executable
+#     i.e. "chmod +x installRaspberryPints"
+# - Run the script with root permissions
+#     i.e. "sudo ./installRaspberryPints"
+# - The script will ask for a default MySQL administrators password. Remember this value as it will be 
+#   needed later on in two places (when installing phpMyAdmin and when configuring RaspberryPints)
+# - make sure and select that you would like phpmyadmin integrated with apache2
+# - You will also be asked for a password for the 'phpmyadmin' user. You should remember this as it
+#   is used to log into the phpmyadmin application at http://<ipaddress>/phpmyadmin
+# - After the script completes, you should be able to open a web browser pointing to th ip/hostname
+#   of the Pi, to configure RaspberryPints
+#
+# From then on, to update RaspberryPi when changes are committed to the BRANCH used, simply
+# - login to the Pi as user 'pi'
+# - Change to the directory where you installed RaspberryPints
+#     i.e. "cd /var/www"
+# - run a git pull as user www-data
+#     i.e. "sudo -u www-data git pull"
+#
+
+# packages needed to install. This is a default set
+PACKAGES="apache2 php5 mysql-client mysql-server  
+         php5-mysql phpmyadmin chromium-browser git 
+         ttf-mscorefonts-installer x11-xserver-utils unclutter"
+
+# default directory to install to
+DIRECTORY=/var/www
+
+# the base github repo name
+REPO=https://github.com/RaspberryPints/RaspberryPints.git  
+
+# the branch to pull
+BRANCH=rc-1.0.0.x
+
+########################################################################
+# No need to change below this line
+
+# make sure I am running as root!
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
+# make sure I am running on a raspbian os!
+if [ ! -f /etc/os-release ]; then
+   echo "You do not appear to be running Raspbian"
+   exit 2
+fi
+
+. /etc/os-release
+
+if [ "$ID" != "raspbian" ]; then
+   echo "You do not appear to be running Raspbian"
+   exit 2
+fi
+
+
+# ask the user where they want to install to (default is WEBROOT)
+read -e -p "Where do you want to install RaspberryPints? (default is: ${DIRECTORY}): " -i "${DIRECTORY}" ANSWER
+if [ "$ANSWER" = "" ]; then
+   ANSWER="${DIRECTORY}"
+fi
+DIRECTORY="${ANSWER}"
+echo "We will install to: ${DIRECTORY}"
+
+# update the repository information
+apt-get update
+
+# install necessary packages
+apt-get install --assume-yes ${PACKAGES}
+
+# find out who the apache server runs as (APACHE_RUN_USER and APACHE_RUN_GROUP)
+if [ -f /etc/apache2/envvars ]; then
+   . /etc/apache2/envvars
+else
+   echo "Unable to determine who the apache server runs as."
+   echo "Exiting"
+   exit 3 
+fi
+
+# copy the old DIRECTORY if it exists
+if [ -d "${DIRECTORY}" ]; then
+   echo "renaming current \"${DIRECTORY}\" to \"${DIRECTORY}-$(date +"%Y%m%d-%H%M%S")\""
+
+   # remove the current contents of the install location
+   mv "${DIRECTORY}" "${DIRECTORY}"-$(date +"%Y%m%d")
+fi
+
+# git clone the RaspberryPints installation
+git clone -b ${BRANCH} ${REPO} "${DIRECTORY}"
+
+# ensure the files are owned by the apache user  
+chown -R ${APACHE_RUN_USER}:${APACHE_RUN_GROUP} "${DIRECTORY}"
+
+# ensure the files are executable by the owner  
+find "${DIRECTORY}" -type f -exec chmod o+x {} \;
+
+# now, enable phpmyadmin if necessary
+if [ -f /etc/phpmyadmin/apache.conf ]; then
+   ln -s /etc/phpmyadmin/apache.conf /etc/apache2/sites-available/phpmyadmin
+   a2ensite phpmyadmin
+   service apache2 reload
+fi
+
+# we are done
+echo "You should now be able to launch a webbrowser and setup RaspberryPints!"
+
+
+
