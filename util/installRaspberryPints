@@ -21,10 +21,10 @@
 # - make sure and select that you would like phpmyadmin integrated with apache2
 # - You will also be asked for a password for the 'phpmyadmin' user. You should remember this as it
 #   is used to log into the phpmyadmin application at http://<ipaddress>/phpmyadmin
-# - After the script completes, you should be able to open a web browser pointing to th ip/hostname
+# - After the script completes, you should be able to open a web browser pointing to the ip/hostname
 #   of the Pi, to configure RaspberryPints
 #
-# From then on, to update RaspberryPi when changes are committed to the BRANCH used, simply
+# From then on, to update RaspberryPints when changes are committed to the BRANCH used, simply
 # - login to the Pi as user 'pi'
 # - Change to the directory where you installed RaspberryPints
 #     i.e. "cd /var/www"
