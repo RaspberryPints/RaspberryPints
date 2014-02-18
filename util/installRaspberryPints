@@ -11,7 +11,7 @@
 # - Install Raspbian onto your Raspberry Pi and configure the network
 # - login as user 'pi' (default password is 'raspberry')
 # - Download a raw copy of this script
-#     i.e. "wget https://raw.github.com/tssgery/RaspberryPints/install/util/installRaspberryPints"
+#     i.e. "wget https://raw.github.com/tssgery/RaspberryPints/master/util/installRaspberryPints"
 # - make the script executable
 #     i.e. "chmod +x installRaspberryPints"
 # - Run the script with root permissions
