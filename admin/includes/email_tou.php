@@ -2,10 +2,10 @@
 session_start();
 require 'conn.php';
 if (isset($_POST['email'])) {
-
+require_once 'functions.php';
 
 // Get values from form 
-$email=($_POST['email']);
+$email=encode($_POST['email']);
 	
 // update data in mysql database
 $sql="SELECT username FROM users WHERE email='$email'";
@@ -44,12 +44,13 @@ $username=mysql_fetch_row($result);
 					</div>
 					</div>
 					</body>
+					</html>
 	               <?php
 				   }
 					else {
 					?>
 
-</html>
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

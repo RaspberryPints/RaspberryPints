@@ -38,48 +38,23 @@
 			<li><a href="personalize.php#header">Headers</a></li>
 			<li><a href="personalize.php#logo">Brewery Logo</a></li>
 			<li><a href="personalize.php#background">Background Image</a></li>
-			<li><a href="#">Themes <small>(coming soon)</small></a></li>
-			<li><a href="#">Drinker Accounts <small>(coming soon)</small></a></li>
-			<li><a href="#">Units of Measure <small>(coming soon)</small></a></li>
-		</ul>
-	</li>
-	<li>
-		<a class="collapsed heading">Advanced Hardware</a>
-		<ul class="navigation">
-			<li><a href="#">GPIO Setup <small>(coming soon)</small></a></li>
-			<li><a href="#">Flow Meters <small>(coming soon)</small></a></li>
-			<li><a href="#">RFID Readers <small>(coming soon)</small></a></li>
-			<li><a href="#">Temperature Probes <small>(coming soon)</small></a></li>
-			<li><a href="#">Solenoids <small>(coming soon)</small></a></li>
-			<li><a href="#">Motion Sensors <small>(coming soon)</small></a></li>
-		</ul>
-	</li>
-	<li>
-		<a class="collapsed heading">Analytics</a>
-		<ul class="navigation">
-			<li><a href="#">Temperature vs Time <small>(coming soon)</small></a></li>
-			<li><a href="#">Pour history <small>(coming soon)</small></a></li>
-			<li><a href="#">Tap history <small>(coming soon)</small></a></li>
-			<li><a href="#">Beer statistics <small>(coming soon)</small></a></li>
-			<li><a href="#">Drinker statistics <small>(coming soon)</small></a></li>
-			<li><a href="#">Tap statistics <small>(coming soon)</small></a></li>
 		</ul>
 	</li>
 	<li>
 		<a class="expanded heading">Help!</a>
 		<ul class="navigation">
-			<li><a href="http://raspberrypints.com/site/report-bug-make-a-suggestion/">Report a Bug</a></li>
-			<li><a href="http://raspberrypints.com/site/report-bug-make-a-suggestion/">Request a Feature</a></li>
+			<li><a href="http://raspberrypints.com/report-bug-make-a-suggestion/" target="_blank">Report a Bug</a></li>
+			<li><a href="http://raspberrypints.com/report-bug-make-a-suggestion/" target="_blank">Request a Feature</a></li>
 		</ul>	
 	</li>
 	<li>
 		<a class="expanded heading">External Links</a>
 		<ul class="navigation">
 			<li><a href="http://www.raspberrypints.com/" target="_blank">Official Website</a></li>
-			<li><a href="http://www.raspberrypints.com/faq" target="_blank">F.A.Q. <small>(coming soon)</small></a></li>
+			<li><a href="http://www.raspberrypints.com/faq" target="_blank">F.A.Q.</a></li>
 			<li><a href="http://www.homebrewtalk.com/f51/initial-release-raspberrypints-digital-taplist-solution-456809" target="_blank">Visit Us on HBT</a></li>
 			<li><a href="http://www.raspberrypints.com/contributors" target="_blank">Contributors</a></li>
-			<li><a href="http://www.raspberrypints.com/licensing.php">Licensing</a></li>
+			<li><a href="http://www.raspberrypints.com/licensing" target="_blank">Licensing</a></li>
 		</ul>
 	</li>
 </ul>
