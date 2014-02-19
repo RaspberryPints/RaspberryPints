@@ -11,6 +11,9 @@
 
 	require_once __DIR__.'/admin/includes/managers/tap_manager.php';
 	
+	//This calls the Untappd Library
+	require_once __DIR__.'/includes/Untappd.php';
+	
 	//This can be used to choose between CSV or MYSQL DB
 	$db = true;
 	
@@ -194,11 +197,70 @@
 										</div>								
 										<h2><?php echo $beer['ibu']; ?> IBU</h2>
 									</td>
-								<?php } ?>
+								<?php } 
+								//Only Display rating if $beer[id] is set
+
+
+                                                                                         // This section calls for the rating from Untappd
+                                                                        $untid = mysql_fetch_array(mysql_query("select `untID` from beers where id=".$beer[id].";"),0) ;
+                                                                                $utid = $untid[0];
+
+
+
+
+$utconfig = array(
+    'clientId'     => $config[ClientID],
+    'clientSecret' => $config[ClientSecret],
+    'redirectUri'  => '',
+    'accessToken'  => '',
+);
+
+$untappd = new Pintlabs_Service_Untappd($utconfig);
+try {
+    $feed = $untappd->beerInfo($utid);
+}  catch (Exception $e) {
+    die($e->getMessage());
+}
+
+
+$rs = $feed->response->beer->rating_score;
+
+if ($rs >= '0' && $rs<'.5') {
+ $img = "<span class=\"rating small r00\"></span><span class=\"num\">(".round($rs,2).")</span>";
+} else if ($rs=='.5') {
+$img = "<span class=\"rating small r05\"></span><span class=\"num\">(".round($rs,2).")</span>";
+} else if ($rs >'.5' && $rs<'1.5') {
+$img = "<span class=\"rating small r10\"></span><span class=\"num\">(".round($rs,2).")</span>";
+} else if ($rs=='1.5') {
+$img = "<span class=\"rating small r15\"></span><span class=\"num\">(".round($rs,2).")</span>";
+} else if ($rs >'1.5' && $rs <'2.5') {
+$img = "<span class=\"rating small r20\"></span><span class=\"num\">(".round($rs,2).")</span>";
+} else if ($rs =='2.5' ) {
+$img = "<span class=\"rating small r25\"></span><span class=\"num\">(".round($rs,2).")</span>";
+} else if ($rs >'2.5' && $rs < '3.5') {
+$img = "<span class=\"rating small r30\"></span><span class=\"num\">(".round($rs,2).")</span>";
+} else if ($rs=='3.5') {
+ $img = "<span class=\"rating small r35\"></span><span class=\"num\">(".round($rs,2).")</span>";
+}  else if ($rs > '3.5' && $rs< '4.5') {
+ $img = "<span class=\"rating small r40\"></span><span class=\"num\">(".round($rs,2).")</span>";
+} else if ($rs =='4.5') {
+$img = "<span class=\"rating small r45\"></span><span class=\"num\">(".round($rs,2).")</span>";
+} else if ($rs>'4.5') {
+$img = "<span class=\"rating small r50\"></span><span class=\"num\">(".round($rs,2).")</span>";
+} 
+
+// Done with Rating
+								?>
 							
 								<td class="name">
 									<h1><?php echo $beer['beername']; ?></h1>
 									<h2 class="subhead"><?php echo $beer['style']; ?></h2>
+									<p class="rating">
+									<?php 
+										//Place the Rating
+										echo $img;
+									 ?>
+									</p>
 									<p><?php echo $beer['notes']; ?></p>
 								</td>
 							
@@ -356,6 +418,44 @@
 					<?php } ?>
 				</tbody>
 			</table>
+		<?php
+
+
+$utconfig = array(
+    'clientId'     => $config[ClientID],
+    'clientSecret' => $config[ClientSecret],
+    'redirectUri'  => '',
+    'accessToken'  => '',
+);
+
+
+$buntappd = new Pintlabs_Service_Untappd($utconfig);
+try {
+    $bfeed = $buntappd->breweryFeed($config[BreweryID], '','', '5');
+} catch (Exception $e) {
+    die($e->getMessage());
+}
+
+echo "<table width=95%><tr>";
+
+foreach ($bfeed->response->checkins->items as $i) {
+    
+
+        echo "<td width=20%><table width=95%><tr><td><div class='beerfeed'>";
+        echo "<center><div class=circular style='width: 50px;height: 50px;background-image: url(". $i->user->user_avatar .");background-size: cover;display: block;border-radius: 100px;-webkit-border-radius:  100px;-moz-border-radius: 100px;'></div>";
+      echo "".$i->user->user_name."<br />";
+
+      echo "Is drinking a <br />". $i->beer->beer_name ."<br />";
+
+      echo "</td></tr></table>";
+      echo "</div></td>";
+
+}
+
+echo "</tr></table>";
+
+?>
 		</div>
+<div class="copyright">Data provided by <a href="http://untappd.com">Untappd</a>.</div>
 	</body>
 </html>

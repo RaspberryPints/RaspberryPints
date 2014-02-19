@@ -169,6 +169,7 @@ INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, ab
 CREATE TABLE IF NOT EXISTS `beers` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` text NOT NULL,
+	`untID` int(10) NOT NULL,
 	`beerStyleId` int(11) NOT NULL,
 	`notes` text NOT NULL,
 	`ogEst` decimal(4,3) NOT NULL,
@@ -219,7 +220,10 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() ),
 ( 'numberOfTaps', '0', 'Number of Taps', '0', NOW(), NOW() ),
 ( 'version', '1.0.0.279', 'Version', '0', NOW(), NOW() ),
-( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() );
+( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() ),
+( 'ClientID', '', 'UnTappd Client ID', '0', NOW(), NOW() ),
+( 'ClientSecret', '', 'UnTappd Client Secret', '0', NOW(), NOW() ),
+( 'BreweryID', '', 'Brewery ID', '0', NOW(), NOW() );
 
 
 -- --------------------------------------------------------
