@@ -44,7 +44,7 @@ DIRECTORY=/var/www
 REPO=https://github.com/RaspberryPints/RaspberryPints.git  
 
 # the branch to pull
-BRANCH=rc-1.0.0.x
+BRANCH=master
 
 ########################################################################
 # No need to change below this line
