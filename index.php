@@ -198,6 +198,8 @@
 										<h2><?php echo $beer['ibu']; ?> IBU</h2>
 									</td>
 								<?php } 
+								
+								if($config[ConfigNames::ClientID]){ 
 								//Only Display rating if $beer[id] is set
 
 
@@ -248,6 +250,10 @@ $img = "<span class=\"rating small r45\"></span><span class=\"num\">(".round($rs
 } else if ($rs>'4.5') {
 $img = "<span class=\"rating small r50\"></span><span class=\"num\">(".round($rs,2).")</span>";
 } 
+} else {
+$img = '';
+}
+
 
 // Done with Rating
 								?>
@@ -420,6 +426,7 @@ $img = "<span class=\"rating small r50\"></span><span class=\"num\">(".round($rs
 			</table>
 		<?php
 
+		if($config[ConfigNames::BreweryID]){ 
 
 $utconfig = array(
     'clientId'     => $config[ClientID],
@@ -453,7 +460,7 @@ foreach ($bfeed->response->checkins->items as $i) {
 }
 
 echo "</tr></table>";
-
+}
 ?>
 		</div>
 <div class="copyright">Data provided by <a href="http://untappd.com">Untappd</a>.</div>
