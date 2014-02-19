@@ -104,7 +104,7 @@ include 'header.php';
 			<form method="POST">
 				<input type="hidden" name="numberOfTaps" value="<?php echo $numberOfTaps ?>" />
 				
-				<table width="950" border="0" cellspacing="0" cellpadding="0">
+				<table width="800" border="0" cellspacing="0" cellpadding="0">
 					<thead>
 						<tr>
 							<th>Tap #</th>
@@ -114,8 +114,8 @@ include 'header.php';
 							<th>OG</th>
 							<th>FG</th>
 							<th>Keg</th>
-							<th>Start Amount</th>
-							<th>Current Amount</th>
+							<!-- <th>Start Amount</th> -->
+							<!-- <th>Current Amount</th> -->
 							<th colspan="3"></th>
 						</tr>
 					</thead>
@@ -158,13 +158,17 @@ include 'header.php';
 												<?php echo $keg->get_label() ?>
 											</td>
 											
+											<!--
 											<td>
 												<?php echo $tap->get_startAmount() ?>
 											</td>
+											-->
 											
+											<!--
 											<td>
 												<?php echo $tap->get_currentAmount() ?>
 											</td>
+											-->
 											
 											<td>
 												<input name="editTap" type="submit" class="btn" value="Update Tap Info" />
