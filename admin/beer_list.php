@@ -190,18 +190,14 @@ include 'header.php';
 			<input type="submit" class="btn" value="Add Beer" onclick="window.location='beer_form.php'" />
 		</div>
 	</div>
-</div>
-</div>
-	
-	<!-- End On Tap Section -->
-
 	<!-- Start Footer -->   
-<?php
-include 'footer.php';
-?>
-
+	<?php
+	include 'footer.php';
+	?>
 	<!-- End Footer -->
-		
+</div>
+</div>
+	<!-- End On Tap Section -->
 	</div>
 	<!-- Right Side/Main Content End -->
 	<!-- Start Left Bar Menu -->   
