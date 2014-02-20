@@ -82,6 +82,39 @@ include 'header.php';
 				<input type="text" class="smallbox" value="<?php echo $headerTextTruncLen['configValue']; ?>" name="header_text_trunclen"> &nbsp 
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
+			<hr />
+		<a name="untappd"></a>
+			<h2>Untappd Settings</h2>
+		<?php
+			$sql="SELECT configValue FROM config WHERE configName ='".ConfigNames::ClientID."'";
+			$result=mysql_query($sql);
+			$Client_ID=mysql_fetch_array($result);
+		?>
+		<p><b>Untappd ClientID:</b> </p>
+			<form method="post" action="update_clientid.php">
+				<input type="text" class="largebox" value="<?php echo $Client_ID['configValue']; ?>" name="ClientID"> &nbsp 
+				<input type="submit" class="btn" name="Submit" value="Submit">
+			</form>
+			<?php
+			$sql="SELECT configValue FROM config WHERE configName ='".ConfigNames::ClientSecret."'";
+			$result=mysql_query($sql);
+			$Client_Secret=mysql_fetch_array($result);
+		?>
+		<p><b>Untappd Client Secret:</b> </p>
+			<form method="post" action="update_clientsecret.php">
+				<input type="text" class="largebox" value="<?php echo $Client_Secret['configValue']; ?>" name="ClientSecret"> &nbsp 
+				<input type="submit" class="btn" name="Submit" value="Submit">
+			</form>
+			<?php
+			$sql="SELECT configValue FROM config WHERE configName ='".ConfigNames::BreweryID."'";
+			$result=mysql_query($sql);
+			$BreweryID=mysql_fetch_array($result);
+		?>
+		<p><b>Untappd Brewery ID:</b> </p>
+			<form method="post" action="update_breweryid.php">
+				<input type="text" class="largebox" value="<?php echo $BreweryID['configValue']; ?>" name="BreweryID"> &nbsp 
+				<input type="submit" class="btn" name="Submit" value="Submit">
+			</form>
 		<hr />
 	<a name="logo"></a> 
 		<h2>Taplist Logo</h2>
