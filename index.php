@@ -198,9 +198,9 @@
 										<h2><?php echo $beer['ibu']; ?> IBU</h2>
 									</td>
 								<?php } 
-								
+								//Only Display rating if $Client[id] is set
 								if($config[ConfigNames::ClientID]){ 
-								//Only Display rating if $beer[id] is set
+								
 
 
                                                                                          // This section calls for the rating from Untappd
@@ -425,7 +425,7 @@ $img = '';
 				</tbody>
 			</table>
 		<?php
-
+//Only checkins if $Brewery[id] is set
 		if($config[ConfigNames::BreweryID]){ 
 
 $utconfig = array(

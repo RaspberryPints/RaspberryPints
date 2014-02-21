@@ -152,17 +152,17 @@ include 'header.php';
 			<?php $htmlHelper->ShowMessage(); ?>
 			<br/><br/>
 			<input type="submit" class="btn" value="Add a Keg" onclick="window.location='keg_form.php'" />
+				<!-- Start Footer -->   
+<?php
+include 'footer.php';
+?>
+	<!-- End Footer -->
 		</div>
 	</div>
 	
 	<!-- End On Tap Section -->
 
-	<!-- Start Footer -->   
-<?php
-include 'footer.php';
-?>
 
-	<!-- End Footer -->
 		
 	</div>
 	<!-- Right Side/Main Content End -->
