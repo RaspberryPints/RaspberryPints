@@ -3,7 +3,7 @@ body {
 	background-color: #000000;
 	background-size: cover;
 	background-repeat:no-repeat;
-	/*overflow: hidden;*/
+	overflow: hidden;
 	font: 1.5em Gerorgia, arial, verdana, sans-serif;
 	margin:5px;
 }
@@ -103,9 +103,13 @@ table .tap-num{
 }
 table .srm{
 	width: 125px;
+	text-align: center;
+	vertical-align: middle;
 }
 table .ibu{
 	width: 125px;
+	text-align: center;
+	vertical-align: middle;	
 }
 table td.name{
 	text-align: left;
@@ -118,6 +122,8 @@ table .abv{
 }
 table .keg{
 	width: 150px;
+	text-align: center;
+	vertical-align: middle;	
 }
 
 table td.tap-num{

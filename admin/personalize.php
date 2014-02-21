@@ -60,22 +60,31 @@ include 'header.php';
 
 		<hr />
 
+	<a name="header"></a> 
+		<h2>Taplist Header</h2><br><br>
 		<?php
 			$sql="SELECT configValue FROM config WHERE configName ='".ConfigNames::HeaderText."'";
 			$result=mysql_query($sql);
 			$headerText=mysql_fetch_array($result);
 		?>
-      <a name="header"></a> 
-		<h2>Header Text</h2>
-		<p>This text appears at the very top of the taplist.</p>
+		<p><b>Text to Display:</b></p>
 			<form method="post" action="update_header_text.php">
-				<input type="text" class="mediumbox" value="<?php echo $headerText['configValue']; ?>" name="header_text"> &nbsp 
+				<input type="text" class="largebox" value="<?php echo $headerText['configValue']; ?>" name="header_text"> &nbsp 
+				<input type="submit" class="btn" name="Submit" value="Submit">
+			</form><br><br>
+		<?php
+			$sql="SELECT configValue FROM config WHERE configName ='".ConfigNames::HeaderTextTruncLen."'";
+			$result=mysql_query($sql);
+			$headerTextTruncLen=mysql_fetch_array($result);
+		?>
+		<p><b>Truncate To:</b> (# characters)</p>
+			<form method="post" action="update_header_text_trunclen.php">
+				<input type="text" class="smallbox" value="<?php echo $headerTextTruncLen['configValue']; ?>" name="header_text_trunclen"> &nbsp 
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
-
 		<hr />
-       <a name="logo"></a> 
-		<h2>TapList Logo</h2>
+	<a name="logo"></a> 
+		<h2>Taplist Logo</h2>
 		<p>This logo appears on the taplist.</p>
 			<b>Current image:</b><br /><br />
 				<img src="../img/logo.png" height="100" alt="Brewery Logo" style="border-style: solid; border-width: 2px; border-color: #d6264f;" />
@@ -84,7 +93,7 @@ include 'header.php';
 				<input type="submit" class="btn" value="Upload" />
 			</form> 
 			<hr />
-       <a name="logo"></a> 
+	<a name="logo"></a> 
 		<h2>Admin Logo</h2>
 		<p>This logo appears on the admin panel.</p>
 			<b>Current image:</b><br /><br />
@@ -95,7 +104,7 @@ include 'header.php';
 			</form> 
 
 		<hr />
-      <a name="background"></a> 
+	<a name="background"></a> 
 		<h2>Background Image</h2>
 		<p>This background appears on the taplist.</p>
 			<b>Current image:</b><br /><br />

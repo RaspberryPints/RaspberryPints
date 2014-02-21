@@ -6,10 +6,11 @@ abstract class ConfigNames
 	const ShowIbuCol = 'showIbuCol';
 	const ShowCalCol = 'showCalCol';
 	const ShowAbvCol = 'showAbvCol';
-	const ShowAbvImage = 'showAbvImg';
+	const ShowAbvImg = 'showAbvImg';
 	const ShowKegCol = 'showKegCol';
 	const UseHighResolution = 'useHighResolution';
 	const LogoUrl = 'logoUrl';
 	const HeaderText = 'headerText';
+	const HeaderTextTruncLen = 'headerTextTruncLen';
 	const NumberOfTaps = 'numberOfTaps';
 }
