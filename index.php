@@ -79,9 +79,9 @@
 			<div class="header clearfix">
 				<div class="HeaderLeft">
 					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
-						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl]; ?>" height="200" alt=""></a>
+						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="200" alt=""></a>
 					<?php } else { ?>
-						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl]; ?>" height="100" alt=""></a>
+						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="100" alt=""></a>
 					<?php } ?>
 				</div>
 				<div class="HeaderCenter">
