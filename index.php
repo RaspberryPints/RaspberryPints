@@ -1,6 +1,6 @@
 <?php
         if (!file_exists(__DIR__.'/includes/config.php')) {
-           header('Location: /install', true, 303);
+           header('Location: install', true, 303);
            die();
         }
 ?>
