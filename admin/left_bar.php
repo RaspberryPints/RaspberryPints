@@ -2,7 +2,7 @@
 <div id="leftside">
 
 <!-- Start User Echo -->
-<div id="welcome"> &nbsp; Welcome, <br />
+<div id="welcome"> &nbsp; Logged in as: <br />
 	&nbsp;
 	<?php
 		$sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
