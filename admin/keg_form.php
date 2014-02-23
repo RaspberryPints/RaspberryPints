@@ -200,6 +200,7 @@ include 'scripts.php';
 		$('#keg-form').validate({
 		rules: {
 			label: { required: true, number: true },
+			weight: {required:true, number:true),
 			kegTypeId: { required: true },
 			kegStatusCode: { required: true }
 		}

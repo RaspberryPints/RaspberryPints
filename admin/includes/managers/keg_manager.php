@@ -100,7 +100,10 @@ class KegManager{
 		
 		//echo $sql; exit();
 		
-		mysql_query($sql);
+		$result = mysql_query($sql);
+		if (!$result){
+			die('Invalid query: ' . mysql_error());
+		}
 	}
 	
 	function Inactivate($id){

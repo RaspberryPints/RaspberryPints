@@ -83,6 +83,19 @@ include 'header.php';
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
 		<hr />
+	<a name="header"></a> 
+		<h2>Bottle Header</h2><br><br>
+		<?php
+			$sql="SELECT configValue FROM config WHERE configName ='".ConfigNames::BottleHeaderText."'";
+			$result=mysql_query($sql);
+			$bottleheaderText=mysql_fetch_array($result);
+		?>
+		<p><b>Text to Display:</b></p>
+			<form method="post" action="update_bottle_header_text.php">
+				<input type="text" class="largebox" value="<?php echo $bottleheaderText['configValue']; ?>" name="bottle_header_text"> &nbsp 
+				<input type="submit" class="btn" name="Submit" value="Submit">
+			</form><br><br>
+		<hr />
 	<a name="logo"></a> 
 		<h2>Taplist Logo</h2>
 		<p>This logo appears on the taplist.</p>

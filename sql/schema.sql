@@ -218,6 +218,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '0', NOW(), NOW() ),
 ( 'headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() ),
 ( 'numberOfTaps', '0', 'Number of Taps', '0', NOW(), NOW() ),
+( 'numberOfShelves', '0', 'Number of Taps', '0', NOW(), NOW() ),
 ( 'version', '1.0.0.369', 'Version', '0', NOW(), NOW() ),
 ( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() );
 
@@ -317,6 +318,80 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 
+--
+-- Table structure for table `kegTypes`
+--
+
+CREATE TABLE IF NOT EXISTS `bottleTypes` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`displayName` text NOT NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Dumping data for table `kegTypes`
+--
+
+INSERT INTO `bottleTypes` ( displayName, createdDate, modifiedDate ) VALUES
+( 'Bottles (12oz)', NOW(), NOW() ),
+( 'Bottles (24oz)', NOW(), NOW() );
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bottles`
+--
+
+CREATE TABLE IF NOT EXISTS `bottles` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`label` int(11) NOT NULL,
+	`bottleTypeId` int(11) NOT NULL,
+	`stampedOwner` text NOT NULL,
+	`stampedLoc` text NOT NULL,
+	`notes` text NOT NULL,
+	`kegStatusCode` varchar(20) NOT NULL,
+	`active` tinyint(1) NOT NULL DEFAULT 1,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`kegStatusCode`) REFERENCES kegStatuses(`Code`) ON DELETE CASCADE,
+	FOREIGN KEY (`bottleTypeId`) REFERENCES bottleTypes(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `taps`
+--
+
+CREATE TABLE IF NOT EXISTS `shelves` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`beerId` int(11) NOT NULL,
+	`bottleId` int(11) NOT NULL,
+	`shelfNumber` int(11) NOT NULL,
+	`active` tinyint(1) NOT NULL,
+	`ogAct` decimal(4,3) NOT NULL,
+	`fgAct` decimal(4,3) NOT NULL,
+	`srmAct` decimal(3,1) NOT NULL,
+	`ibuAct` int(4) NOT NULL,
+	`startAmount` decimal(6,1) NOT NULL,
+	`currentAmount` decimal(6,1) NOT NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
+	FOREIGN KEY (`bottleId`) REFERENCES bottles(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 -- --------------------------------------------------------
 
 --
@@ -836,6 +911,36 @@ FROM taps t
 	LEFT JOIN vwGetTapsAmountPoured as p ON p.tapId = t.Id
 WHERE t.active = true
 ORDER BY t.tapNumber;
+
+-- --------------------------------------------------------
+
+--
+-- Create View `vwGetActiveTaps`
+--
+
+CREATE VIEW vwGetActiveShelves
+AS
+
+SELECT
+	t.id,
+	b.name,
+	bs.name as 'style',
+	b.notes,
+	t.ogAct,
+	t.fgAct,
+	t.srmAct,
+	t.ibuAct,
+	t.startAmount,
+	0 as amountPoured,
+	t.startAmount as remainAmount,
+	t.shelfNumber,
+	s.rgb as srmRgb
+FROM shelves t
+	LEFT JOIN beers b ON b.id = t.beerId
+	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
+	LEFT JOIN srmRgb s ON s.srm = t.srmAct
+WHERE t.active = true
+ORDER BY t.shelfNumber;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

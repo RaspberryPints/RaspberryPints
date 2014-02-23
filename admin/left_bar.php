@@ -29,6 +29,8 @@
 			<li><a href="beer_list.php">My Beers</a></li>
 			<li><a href="keg_list.php">My Kegs</a></li>
 			<li><a href="tap_list.php">My Taps</a></li>
+			<li><a href="bottle_list.php">My Bottles</a></li>
+			<li><a href="shelf_list.php">My Shelves</a></li>
 		</ul>
 	</li>
 		<li>
