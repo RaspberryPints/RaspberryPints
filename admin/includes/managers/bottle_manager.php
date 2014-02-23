@@ -102,7 +102,7 @@ class BottleManager{
 		$qry = mysql_query($sql);
 		
 		if( mysql_fetch_array($qry) ){		
-			$_SESSION['errorMessage'] = "Bottle is associated with an active tap and could not be deleted.";
+			$_SESSION['errorMessage'] = "Bottle is associated with an active shelf and could not be deleted.";
 			return;
 		}
 	
@@ -111,6 +111,6 @@ class BottleManager{
 		
 		$qry = mysql_query($sql);
 		
-		$_SESSION['successMessage'] = "Keg successfully deleted.";
+		$_SESSION['successMessage'] = "Bottle successfully deleted.";
 	}
 }
