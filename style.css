@@ -17,10 +17,14 @@ hr {
 	background-image:     -ms-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
 	background-image:      -o-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
 }
-h1{
-	margin: 0;
+h1 {
 	color: #FFFFFF;
-}
+	display: block;
+	font-size: 1.5em;
+	font-weight: bold;
+	margin: 0;
+	opacity:1;
+	}
 h2, h3, p {
 	margin: 0;
 	color: #A0A0A0;
@@ -151,13 +155,6 @@ table h2{
 	-webkit-margin-before: 0px;
 	-webkit-margin-after: 0px;
 	text-align:center;
-}
-table h1{
-	color: white;
-	opacity:1;
-	display:block;
-	font-size: 1.5em;
-	font-weight: bold;
 }
 table .subhead{
 	width:100%;
