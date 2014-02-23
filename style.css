@@ -4,6 +4,7 @@ body {
 	background-size: cover;
 	background-repeat:no-repeat;
 	overflow: hidden;
+	color: #FFFFFF;
 	font: 1.5em Georgia, arial, verdana, sans-serif;
 	margin:5px;
 }
@@ -18,16 +19,34 @@ hr {
 	background-image:      -o-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
 }
 h1 {
-	color: #FFFFFF;
-	display: block;
-	font-size: 1.5em;
-	font-weight: bold;
+	display:block;
 	margin: 0;
+	font-weight: bold;
+	font-size: 1.5em;
 	opacity:1;
-	}
-h2, h3, p {
+}
+
+h2 {
 	margin: 0;
 	color: #A0A0A0;
+	font-weight: normal;
+	font-size: 1em;
+	-webkit-margin-before: 0px;
+	-webkit-margin-after: 0px;
+}
+
+h3 {
+	margin: 0;
+	color: #A0A0A0;
+	font-weight: normal;
+	font-size: .8em;
+	-webkit-margin-before: 5px;
+	-webkit-margin-after: 5px;
+}
+
+p {
+	color: #A0A0A0;
+	font-weight: normal;
 }
 img {
 	margin-left: auto;
@@ -49,7 +68,6 @@ img {
 	height: 100px;
 	float: left;
 	font-size: .85em;
-	color: white;
 	font-weight: bold;
 	text-align: left;
 }
@@ -59,7 +77,6 @@ img {
 	text-align: center;
 	float: left;
 	font-size: 1em;
-	color: white;
 	vertical-align: middle;
 	padding-top:25px;
 }
@@ -67,7 +84,6 @@ img {
 	width: 25%;
 	float: right;
 	font-size: .85em;
-	color: white;
 	font-weight: bold;
 	text-align: right;
 }
@@ -81,7 +97,6 @@ table td{
 	padding: 1px 5px;
 	text-align: center;
 	vertical-align: top;
-	color: white;
 }
 table th:first-child,
 table td:first-child{
@@ -94,8 +109,7 @@ table thead{
 }
 table thead th{
 	min-height:35px;
-	font: .65em Georgia;
-	color: white;
+	font-size: .65em;
 	font-weight: bold;
 	vertical-align: top;
 }
@@ -136,7 +150,6 @@ span.tapcircle {
   border-radius: 1em;
   -moz-border-radius: 1em;
   -webkit-border-radius: 1em;
-  color: #ffffff;
   display: inline-block;
   font-weight: bold;
   line-height: 2em;
@@ -144,17 +157,12 @@ span.tapcircle {
   text-align: center;
   width: 2em; 
 }
-table h3{
-	font: .8em Georgia;
-	-webkit-margin-before: 5px;
-	-webkit-margin-after: 5px;
-	text-align:center;
+table h3 {
+	text-align: center;
 }
-table h2{
-	font: 1em Georgia;
-	-webkit-margin-before: 0px;
-	-webkit-margin-after: 0px;
-	text-align:center;
+
+table h2 {
+	text-align: center;
 }
 table .subhead{
 	width:100%;
