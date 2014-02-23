@@ -130,7 +130,7 @@ include 'header.php';
 			<tr>
 				<td colspan="2">
 					<input name="save" type="submit" class="btn" value="Save" />
-					<input type="button" class="btn" value="Cancel" onclick="window.location='keg_list.php'" />
+					<input type="button" class="btn" value="Cancel" onclick="window.location='bottle_list.php'" />
 				</td>
 			</tr>								
 		</table>
