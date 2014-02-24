@@ -28,10 +28,10 @@ if( isset($_POST['updateNumberOfShelves'])) {
 	$shelfNumber=$_POST['shelfNumber'];
 	redirect("shelf_form.php?shelfNumber=$shelfNumber");
 	
-}else if( isset($_POST['editTap'])){
+}else if( isset($_POST['editShelf'])){
 	$shelfNumber=$_POST['shelfNumber'];
 	$id=$_POST['id'];
-	redirect("shelf_form.php?shelfNumber=$shefNumber&id=$id");
+	redirect("shelf_form.php?shelfNumber=$shelfNumber&id=$id");
 
 }else if( isset($_POST['closeShelf'])){
 	$shelfManager->closeShelf($_POST['id']);	
@@ -88,11 +88,11 @@ include 'header.php';
 		$bottles = $bottleManager->GetAll();
 		
 		if( count($beers) == 0 ){
-			$tapsErrorMsg .= "At least 1 beer needs to be created, before you can assign a tap. <a href='beer_form.php'>Click here to create a beer</a><br/>";
+			$tapsErrorMsg .= "At least 1 beer needs to be created, before you can assign a shelf. <a href='beer_form.php'>Click here to create a beer</a><br/>";
 		}
 		
 		if( count($bottles) == 0 ){
-			$tapsErrorMsg .= "At least 1 keg needs to be created, before you can assign a tap. <a href='keg_form.php'>Click here to create a keg</a><br/>";
+			$tapsErrorMsg .= "At least 1 bottle needs to be created, before you can assign a shelf. <a href='keg_form.php'>Click here to create a keg</a><br/>";
 		}					
 		
 		if( strlen($tapsErrorMsg) > 0 ){ 
@@ -128,7 +128,7 @@ include 'header.php';
 										$bottle = $bottleManager->GetById($shelf->get_bottleId());
 								?>
 										<input type="hidden" name="id" value="<?php echo $shelf->get_id()?>" />
-										<input type="hidden" name="tapNumber" value="<?php echo $c?>" />
+										<input type="hidden" name="shelfNumber" value="<?php echo $c?>" />
 										<tr>
 											<td>
 												<?php echo $c ?>
@@ -171,16 +171,16 @@ include 'header.php';
 											-->
 											
 											<td>
-												<input name="editTap" type="submit" class="btn" value="Update Tap Info" />
+												<input name="editShelf" type="submit" class="btn" value="Update Shelf Info" />
 												
 											</td>
 											
 											<td>
-												<input name="newTap" type="submit" class="btn" value="New Keg" />
+												<input name="newShelf" type="submit" class="btn" value="New Bottle" />
 											</td>
 											
 											<td>
-												<input name="closeTap" type="submit" class="btn" value="Kick Keg" />
+												<input name="closeShelf" type="submit" class="btn" value="Kick Bottle" />
 											</td>
 											
 										</tr>

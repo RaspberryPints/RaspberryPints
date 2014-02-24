@@ -39,13 +39,13 @@ class ShelfManager{
 	function GetById($id){
 		$id = (int) preg_replace('/\D/', '', $id);
 	
-		$sql="SELECT * FROM shelfs WHERE id = $id";
+		$sql="SELECT * FROM shelves WHERE id = $id";
 		$qry = mysql_query($sql);
 		
 		if( $i = mysql_fetch_array($qry) ){
-			$tap = new Tap();
-			$tap->setFromArray($i);
-			return $tap;
+			$shelf = new Shelf();
+			$shelf->setFromArray($i);
+			return $shelf;
 		}
 		
 		return null;
@@ -88,10 +88,11 @@ class ShelfManager{
 	}
 	
 	function closeShelf($id){
-		$sql="UPDATE shelfs SET active = 0, modifiedDate = NOW() WHERE id = $id";
+		$sql="UPDATE shelves SET active = 0, modifiedDate = NOW() WHERE id = $id";
 		mysql_query($sql);
+		echo "$sql";
 		
-		$sql="UPDATE bottles k, shelfs t SET k.kegStatusCode = 'NEEDS_CLEANING' WHERE t.kegId = k.id AND t.Id = $id";
+		$sql="UPDATE bottles k, shelves t SET k.kegStatusCode = 'NEEDS_CLEANING' WHERE t.bottleId = k.id AND t.Id = $id";
 		mysql_query($sql);
 	}
 }

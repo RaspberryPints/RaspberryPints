@@ -41,9 +41,8 @@ $bottleList = $bottleManager->GetAllAvailable();
 $shelfNumber = $_GET['shelfNumber'];
 if( isset($_GET['id'])){
 	$shelf = $shelfManager->GetById($_GET['id']);
-	
-	if( !array_key_exists($shelf->get_bottleId(), $shelfList) ){
-		$shelfList[$shelf->get_bottleId()] = $bottleManager->GetById($shelf->get_bottleId());
+	if( !array_key_exists($shelf->get_bottleId(), $bottleList) ){
+		$bottleList[$shelf->get_bottleId()] = $bottleManager->GetById($shelf->get_bottleId());
 	}
 	
 }else{
@@ -155,7 +154,7 @@ include 'header.php';
 			<tr>
 				<td colspan="2">
 					<input name="saveTap" type="submit" class="btn" value="Save" />
-					<input name="cancel" type="button" class="btn" value="Cancel" onclick="window.location='tap_list.php'"/>
+					<input name="cancel" type="button" class="btn" value="Cancel" onclick="window.location='shelf_list.php'"/>
 				</td>
 			</tr>
 											
