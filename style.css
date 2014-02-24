@@ -45,8 +45,10 @@ h3 {
 }
 
 p {
+	margin-top: 20px;
 	color: #A0A0A0;
 	font-weight: normal;
+	font-size: .8em;
 }
 img {
 	margin-left: auto;
@@ -169,11 +171,7 @@ table .subhead{
 	font-size: .9em;
 	text-align:left;
 }
-table p{
-	font-size: .8em;
-	color: #A0A0A0;
-	margin-top:20px;
-}
+
 .altrow{
 	background-color: rgba(153,153,153,.23);
 }
