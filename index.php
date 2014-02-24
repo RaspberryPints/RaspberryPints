@@ -199,13 +199,14 @@
 									</td>
 								<?php } 
 								//Only Display rating if $Client[id] is set
-								if($config[ConfigNames::ClientID]){ 
+								                                                                                         // This section calls for the rating from Untappd
+                                                                        $untid = mysql_fetch_array(mysql_query("select `untID` from beers where id=".$beer[id].";"),0) ;
+                                                                                $utid = $untid[0];
+								if($config[ConfigNames::ClientID] && $utid!='0'){ 
 								
 
 
-                                                                                         // This section calls for the rating from Untappd
-                                                                        $untid = mysql_fetch_array(mysql_query("select `untID` from beers where id=".$beer[id].";"),0) ;
-                                                                                $utid = $untid[0];
+
 
 
 
@@ -251,7 +252,7 @@ $img = "<span class=\"rating small r45\"></span><span class=\"num\">(".round($rs
 $img = "<span class=\"rating small r50\"></span><span class=\"num\">(".round($rs,2).")</span>";
 } 
 } else {
-$img = '';
+$img = "<span class=\"rating small r00\"></span><span class=\"num\">(0)</span>";
 }
 
 
