@@ -123,7 +123,14 @@ include 'header.php';
 								<tr class="intborder thick">
 									<td>
 										<p><b><u>Vitals</u></b></p>
-										<p><?php
+										<p>
+										<?php
+											if ( $beer->get_untID() != 0 )
+												echo "<b>Untappd:</b> " , $beer->get_untID() , "<br>" ;
+											else
+												echo "<b>Untappd:</b> N/A<br>"
+										?>
+										<?php
 											if ( $beer->get_srm() != 0 )
 												echo "<b>SRM:</b> " , $beer->get_srm() , "<br>" ;
 											else
