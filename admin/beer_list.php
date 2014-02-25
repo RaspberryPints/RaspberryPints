@@ -67,7 +67,7 @@ include 'header.php';
 			
 			<?php $htmlHelper->ShowMessage(); ?>
 			
-			<input type="submit" class="btn" value="Add Beer" onclick="window.location='beer_form.php'" />
+			<input type="submit" class="btn" value="Add a Beer" onclick="window.location='beer_form.php'" />
 			<br/><br/>
 			
 			<table width="770px" cellspacing="0" cellpadding="0" class="outerborder">
@@ -88,15 +88,17 @@ include 'header.php';
 									<th width="35%" style="vertical-align: middle;">
 										<b><?php 
 											$beerStyle = $beerStyleManager->GetById($beer->get_beerStyleId());
-											echo $beerStyle->get_name();
-										?></b><br>
+											if (strpos($beerStyle->get_name(),'Non-beer') !== false)
+												echo str_replace("_Non-beer: ","",$beerStyle->get_name());
+											else
+												echo "Style: " , $beerStyle->get_name();
+										?></b>
 										<?php
-											/* Can't seem to get this to work! >:\
-											$beerStyle = $beerStyleManager->GetByStyle($beer->get_beerStyle());
-											echo $beerStyle->get_style();
-											*/
+											if (strpos($beerStyle->get_catNum(),'N/A') !== false)
+												echo "&nbsp;";
+											else
+												echo "<br>BJCP Category: " , $beerStyle->get_catNum() , " - " , $beerStyle->get_category();
 										?>
-										BJCP <?php echo $beerStyle->get_catNum() ?> - <?php echo $beerStyle->get_category() ?>
 									</th>
 									<th align="center" width="5%" style="text-align: center; vertical-align: middle; margin: 0; padding: 0;">
 										<input name="editBeer" type="button" class="btn" value="Edit" style="text-align: center; margin: 0;" onclick="window.location='beer_form.php?id=<?php echo $beer->get_id()?>'" />
@@ -187,7 +189,7 @@ include 'header.php';
 					?>
 				</tbody>
 			</table><br>
-			<input type="submit" class="btn" value="Add Beer" onclick="window.location='beer_form.php'" />
+			<input type="submit" class="btn" value="Add a Beer" onclick="window.location='beer_form.php'" />
 		</div>
 	</div>
 	<!-- Start Footer -->   
