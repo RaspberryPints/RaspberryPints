@@ -9,12 +9,15 @@ require_once __DIR__.'/includes/html_helper.php';
 require_once __DIR__.'/includes/functions.php';
 
 require_once __DIR__.'/includes/models/beer.php';
+require_once __DIR__.'/includes/models/beerFermentable.php';
 
 require_once __DIR__.'/includes/managers/beer_manager.php';
+require_once __DIR__.'/includes/managers/beerFermentable_manager.php';
 require_once __DIR__.'/includes/managers/beerStyle_manager.php';
 
 $htmlHelper = new HtmlHelper();
 $beerManager = new BeerManager();
+$beerFermentableManager = new BeerFermentableManager();
 $beerStyleManager = new BeerStyleManager();
 
 
@@ -27,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 if( isset($_GET['id'])){
 	$beer = $beerManager->GetById($_GET['id']);
+	$beerFermentables = $beerFermentableManager->GetById($_GET['id']);
 }else{
 	$beer = new Beer();
 }
@@ -51,22 +55,22 @@ $beerStyleList = $beerStyleManager->GetAll();
 require __DIR__.'/header.php';
 ?>
 	<!-- End Header -->
-		
-	<!-- Top Breadcrumb Start -->
-	<div id="breadcrumb">
-		<ul>	
-			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
-			<li><strong>Location:</strong></li>
-			<li><a href="beer_list.php">My Beers</a></li>
-			<li>/</li>
-			<li class="current">Beer Form</li>
-		</ul>
-	</div>
-	<!-- Top Breadcrumb End --> 
-	
-	<!-- Right Side/Main Content Start -->
-	<div id="rightside">
-		<div class="contentcontainer med left">
+        
+    <!-- Top Breadcrumb Start -->
+    <div id="breadcrumb">
+    	<ul>	
+        	<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
+        	<li><strong>Location:</strong></li>
+            <li><a href="beer_list.php">My Beers</a></li>
+            <li>/</li>
+            <li class="current">Beer Form</li>
+        </ul>
+    </div>
+    <!-- Top Breadcrumb End --> 
+     
+    <!-- Right Side/Main Content Start -->
+    <div id="rightside">
+		 <div class="contentcontainer med left">
 	<p>
 		Fields marked with <b><font color="red">*</font></b> are required.<br><br>
 
@@ -74,16 +78,21 @@ require __DIR__.'/header.php';
 		<input type="hidden" name="id" value="<?php echo $beer->get_id() ?>" />
 		<input type="hidden" name="active" value="<?php echo $beer->get_active() ?>" />
 
-		<table width="800" border="0" cellspacing="0" cellpadding="0">
+		<table width="800" border="1" cellspacing="0" cellpadding="0">
 			<tr>
-				<td width="100">
+				<td colspan="4">
+					<h3><center>General Recipe Information</center></h3>
+				</td>
+			</tr>
+			<tr>
+				<td width="50">
 					<b>Name:<font color="red">*</font></b>
 				</td>
 				<td>
 					<input type="text" id="name" class="largebox" name="name" value="<?php echo $beer->get_name() ?>" />
 				</td>
-			</tr>
-			<tr>
+
+
 				<td>
 					<b>Style:<font color="red">*</font></b>
 				</td>
@@ -98,24 +107,28 @@ require __DIR__.'/header.php';
 				<td>
 					<input type="text" id="srm" class="xsmallbox" name="srm" value="<?php echo $beer->get_srm() ?>" />
 				</td>
-			</tr>
-			<tr>
+
+
 				<td>
-					<b>IBU:<font color="red">*</font></b>
+
+				<b>OG:<font color="red">*</font></b>
 				</td>
 				<td>
-					<input type="text" id="ibu" class="xsmallbox" name="ibu" value="<?php echo $beer->get_ibu() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<b>OG:<font color="red">*</font></b>
-				</td>
-				<td>
+
 					<input type="text" id="og" class="smallbox" name="og" value="<?php echo $beer->get_og() ?>" />
 				</td>
 			</tr>
 			<tr>
+				<td>
+
+					<b>IBU:<font color="red">*</font></b>
+				</td>
+				<td>
+
+					<input type="text" id="ibu" class="xsmallbox" name="ibu" value="<?php echo $beer->get_ibu() ?>" />
+				</td>
+
+
 				<td>
 					<b>FG:<font color="red">*</font></b>
 				</td>
@@ -125,6 +138,12 @@ require __DIR__.'/header.php';
 			</tr>
 			<tr>
 				<td>
+					<b>Rating:<font color="red">*</font></b>
+				</td>
+				<td>
+					<input type="text" id="fg" class="smallbox" name="rating" value="<?php echo $beer->get_rating() ?>" />
+				</td>
+				<td>
 					<b>Tasting<br>Notes:</b>
 				</td>
 				<td>
@@ -132,30 +151,116 @@ require __DIR__.'/header.php';
 				</td>
 			</tr>
 			<tr>
+				<td colspan="4">
+					<h3><center>Fermentables</center></h3>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<table>
+						<tr width="100%">
+							<td>Name</td>
+							<td>Type</td>
+							<td>Amount</td>
+							<td>SRM</td>
+						</tr>
+					<?php 
+						if( count($beerFermentables) == 0 ){  
+					?>
+							<tr><td class="no-results" colspan="99">No beers :( Add some?</td></tr>
+					<?php 
+						}else{
+							foreach ($beerFermentables as $beerFermentable){
+							?>
+							<tr width="100%">
+							<td><?php echo $beerFermentable->get_name() ?></td>
+							<td><?php echo $beerFermentable->get_type() ?></td>
+							<td><?php echo $beerFermentable->get_amount() ?></td>
+							<td><?php echo $beerFermentable->get_srm() ?></td>
+						</tr>
+						<?php
+							}
+						}
+					?>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<h3><center>Hops</center></h3>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<table>
+						<tr width="100%">
+							<td>Name</td>
+							<td>Alpha</td>
+							<td>Amount</td>
+							<td>Time</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<h3><center>Misc</center></h3>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<table>
+						<tr width="100%">
+							<td>Name</td>
+							<td>Type</td>
+							<td>Use</td>
+							<td>Time</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<h3><center>Yeast</center></h3>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<table>
+						<tr width="100%">
+							<td>Name</td>
+							<td>Type</td>
+							<td>Form</td>
+							<td>Code</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
 				<td colspan="2">
 					<input name="save" type="submit" class="btn" value="Save" />
 					<input type="button" class="btn" value="Cancel" onclick="window.location='beer_list.php'" />
 				</td>
-			</tr>								
+			</tr>											
 		</table>
 		<br />
 		<div align="right">			
-			&nbsp &nbsp 
+			 &nbsp &nbsp 
 		</div>
 
 	</form>
-	</div>
+    </div>
 	<!-- End On Tap Section -->
 
-	<!-- Start Footer -->   
+    <!-- Start Footer -->   
 <?php 
 require __DIR__.'/footer.php';
 ?>
 
 	<!-- End Footer -->
-		
-	</div>
-	<!-- Right Side/Main Content End -->
+          
+    </div>
+    <!-- Right Side/Main Content End -->
 	<!-- Start Left Bar Menu -->   
 <?php 
 require __DIR__.'/left_bar.php';
@@ -170,26 +275,26 @@ require __DIR__.'/scripts.php';
 	$(function() {		
 		
 		$('#beer-form').validate({
-		rules: {
+		  rules: {
 			name: { required: true },
 			style: { required: true },			
 			srm: { required: true, number: true },
 			ibu: { required: true, number: true },
 			og: { required: true, number: true },
 			fg: { required: true, number: true }
-		}
+		  }
 		});
 		
 	});
 </script>
 
 	<!-- End Js -->
-	<!--[if IE 6]>
-	<script type='text/javascript' src='scripts/png_fix.js'></script>
-	<script type='text/javascript'>
-	DD_belatedPNG.fix('img, .notifycount, .selected');
-	</script>
-	<![endif]--> 
+    <!--[if IE 6]>
+    <script type='text/javascript' src='scripts/png_fix.js'></script>
+    <script type='text/javascript'>
+      DD_belatedPNG.fix('img, .notifycount, .selected');
+    </script>
+    <![endif]--> 
 
 </body>
 </html>

@@ -15,11 +15,12 @@ class BeerManager{
 						"fgEst = '" . $beer->get_fg() . "', " .
 						"srmEst = '" . $beer->get_srm() . "', " .
 						"ibuEst = '" . $beer->get_ibu() . "', " .
+						"rating = '" . $beer->get_rating() . "', " .
 						"modifiedDate = NOW() ".
 					"WHERE id = " . $beer->get_id();
 					
 		}else{		
-			$sql = 	"INSERT INTO beers(name, beerStyleId, notes, ogEst, fgEst, srmEst, ibuEst, createdDate, modifiedDate ) " .
+			$sql = 	"INSERT INTO beers(name, beerStyleId, notes, ogEst, fgEst, srmEst, ibuEst, rating, createdDate, modifiedDate ) " .
 					"VALUES(" . 
 					"'" . encode($beer->get_name()) . "', " .
 					$beer->get_beerStyleId() . ", " .
@@ -27,11 +28,12 @@ class BeerManager{
 					"'" . $beer->get_og() . "', " . 
 					"'" . $beer->get_fg() . "', " . 
 					"'" . $beer->get_srm() . "', " . 
-					"'" . $beer->get_ibu() . "' " .
+					"'" . $beer->get_ibu() . "', " .
+					"'" . $beer->get_rating() . "' " .
 					", NOW(), NOW())";
 		}
 		
-		//echo $sql; exit();
+		echo $sql; exit();
 		
 		mysql_query($sql);
 	}

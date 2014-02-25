@@ -1,0 +1,5 @@
+Add rating to beers table
+
+
+SQL
+ALTER TABLE `beers` ADD `rating`  INT( 3 )  NULL ;
