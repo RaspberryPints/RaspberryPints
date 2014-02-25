@@ -628,7 +628,7 @@
 								<?php } ?>
 							
 								<td class="name">
-									<h1>Nothing on tap</h1>
+									<h1>Nothing on shelf</h1>
 									<h2 class="subhead"></h2>
 									<p></p>
 								</td>
