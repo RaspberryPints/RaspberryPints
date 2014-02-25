@@ -97,7 +97,7 @@ include 'header.php';
 			</tr>	
 			<tr>
 				<td>
-					Make:
+					Make: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<input type="text" id="make" class="mediumbox" name="make" value="<?php echo $keg->get_make() ?>" />
@@ -105,7 +105,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Model:
+					Model: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<input type="text" id="model" class="mediumbox" name="model" value="<?php echo $keg->get_model() ?>" />
@@ -113,7 +113,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Serial:
+					Serial: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<input type="text" id="serial" class="mediumbox" name="serial" value="<?php echo $keg->get_serial() ?>" />
@@ -121,7 +121,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Stamped Owner:
+					Stamped Owner: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<input type="text" id="stampedOwner" class="mediumbox" name="stampedOwner" value="<?php echo $keg->get_stampedOwner() ?>" />
@@ -129,7 +129,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Stamped Location:
+					Stamped Location: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<input type="text" id="stampedLoc" class="mediumbox" name="stampedLoc" value="<?php echo $keg->get_stampedLoc() ?>" />
@@ -137,7 +137,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Empty Weight:
+					Empty Weight: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<input type="text" id="weight" class="mediumbox" name="weight" value="<?php echo $keg->get_weight() ?>" />
@@ -145,7 +145,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Notes:
+					Notes: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<textarea id="notes" class="text-input textarea" name="notes" style="width:500px;height:100px"><?php echo $keg->get_stampedOwner() ?></textarea>
@@ -198,11 +198,18 @@ include 'scripts.php';
 	$(function() {		
 		
 		$('#keg-form').validate({
-		rules: {
-			label: { required: true, number: true },
-			kegTypeId: { required: true },
-			kegStatusCode: { required: true }
-		}
+			rules: {
+				label: { required: true, number: true },
+				kegTypeId: { required: true },
+				kegStatusCode: { required: true },
+				make: { required: true },
+				model: { required: true },
+				serial: { required: true },
+				stampedOwner: { required: true },
+				stampedLoc: { required: true },
+				weight: { required: true },
+				notes: { required: true }
+			}
 		});
 		
 	});

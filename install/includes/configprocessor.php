@@ -86,7 +86,7 @@ if ($validerror !='')
 		echo "</body></html>";
 		die();
 	}
-
+// CLEAR INSTALLATION DATA ROUTINES
 if ($action == 'remove')
 {
 	echo "Deleting raspberrypints database...";
@@ -107,9 +107,18 @@ if ($action == 'remove')
 	
 	echo "Removing configuration files...";
 	flush();
+	try {
 	unlink('../../includes/config.php');
 	unlink('../../admin/includes/conn.php');
 	unlink('../../admin/includes/configp.php');
+	} catch (Exception $e) {
+		echo 'Caught exception: ',  $e->getMessage(), "\n";
+	}
+	
+	//unlink('../../includes/config.php');
+	//unlink('../../admin/includes/conn.php');
+	//unlink('../../admin/includes/configp.php');
+
 	echo "Success!<br>";
 	flush();
 }
@@ -196,6 +205,20 @@ require_once __DIR__.'/config_files.php';
 	mysqli_close($con);
 	echo "Success!<br>";
 	flush();
+	
+	//-----------------Delete the index.html page-----------------
+	echo "Deleting default index.html page...";
+	flush();
+	if (!unlink("../../index.html"))
+	  {
+	  echo ("File already deleted");
+	  }
+	else
+	  {
+	  echo ("Success!");
+	  }
+	flush();
+	
 	//-----------------Load the sample data if requested-----------
 
 		if(!empty($_POST['sampledata'])) 

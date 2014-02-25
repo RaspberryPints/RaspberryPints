@@ -2,7 +2,7 @@
 <div id="leftside">
 
 <!-- Start User Echo -->
-<div id="welcome"> &nbsp; Welcome, <br />
+<div id="welcome"> &nbsp; Logged in as: <br />
 	&nbsp;
 	<?php
 		$sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
@@ -13,7 +13,7 @@
 
 <!-- End User Echo -->
 <div class="user">
-	<a href="../index.php"><img src="img/logo.png" width="120" height="120" class="hoverimg" alt="Avatar" /></a>
+	<a href="../index.php"><img src="img/logo.png<?php echo "?" . time(); ?>" width="120" height="120" class="hoverimg" alt="Brewery Logo" /></a>
 </div>
 
 <!-- Start Navagation -->
