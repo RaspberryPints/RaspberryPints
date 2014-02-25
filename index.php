@@ -82,9 +82,9 @@
 			<div class="header clearfix">
 				<div class="HeaderLeft">
 					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
-						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl]; ?>" height="200" alt=""></a>
+						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="200" alt=""></a>
 					<?php } else { ?>
-						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl]; ?>" height="100" alt=""></a>
+						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="100" alt=""></a>
 					<?php } ?>
 				</div>
 				<div class="HeaderCenter">
@@ -194,7 +194,7 @@
 												}
 												*/
 											?>
-										</div>								
+										</div>
 										<h2><?php echo $beer['ibu']; ?> IBU</h2>
 									</td>
 								<?php } 
@@ -263,7 +263,7 @@ $img = '';
 							
 								<td class="name">
 									<h1><?php echo $beer['beername']; ?></h1>
-									<h2 class="subhead"><?php echo $beer['style']; ?></h2>
+									<h2 class="subhead"><?php echo str_replace("_","",$beer['style']); ?></h2>
 									<p class="rating">
 									<?php 
 										//Place the Rating
