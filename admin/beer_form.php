@@ -10,14 +10,17 @@ require_once __DIR__.'/includes/functions.php';
 
 require_once __DIR__.'/includes/models/beer.php';
 require_once __DIR__.'/includes/models/beerFermentable.php';
+require_once __DIR__.'/includes/models/beerHop.php';
 
 require_once __DIR__.'/includes/managers/beer_manager.php';
 require_once __DIR__.'/includes/managers/beerFermentable_manager.php';
+require_once __DIR__.'/includes/managers/beerHop_manager.php';
 require_once __DIR__.'/includes/managers/beerStyle_manager.php';
 
 $htmlHelper = new HtmlHelper();
 $beerManager = new BeerManager();
 $beerFermentableManager = new BeerFermentableManager();
+$beerHopManager = new BeerHopManager();
 $beerStyleManager = new BeerStyleManager();
 
 
@@ -31,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if( isset($_GET['id'])){
 	$beer = $beerManager->GetById($_GET['id']);
 	$beerFermentables = $beerFermentableManager->GetById($_GET['id']);
+	$beerHops = $beerHopManager->GetById($_GET['id']);
 }else{
 	$beer = new Beer();
 }
@@ -157,12 +161,12 @@ require __DIR__.'/header.php';
 			</tr>
 			<tr>
 				<td colspan="4">
-					<table>
+					<table width = "100%">
 						<tr width="100%">
-							<td>Name</td>
-							<td>Type</td>
-							<td>Amount</td>
-							<td>SRM</td>
+							<td><strong>Name</strong></td>
+							<td><strong>Type</strong></td>
+							<td><strong>Amount</strong></td>
+							<td><strong>SRM</strong></td>
 						</tr>
 					<?php 
 						if( count($beerFermentables) == 0 ){  
@@ -192,13 +196,31 @@ require __DIR__.'/header.php';
 			</tr>
 			<tr>
 				<td colspan="4">
-					<table>
+					<table width="100%">
 						<tr width="100%">
-							<td>Name</td>
-							<td>Alpha</td>
-							<td>Amount</td>
-							<td>Time</td>
+							<td><strong>Name</strong></td>
+							<td><strong>Alpha</strong></td>
+							<td><strong>Amount</strong></td>
+							<td><strong>Time</strong></td>
 						</tr>
+					<?php 
+						if( count($beerHops) == 0 ){  
+					?>
+							<tr><td class="no-results" colspan="99">No beers :( Add some?</td></tr>
+					<?php 
+						}else{
+							foreach ($beerHops as $beerHop){
+							?>
+							<tr width="100%">
+							<td><?php echo $beerHop->get_name() ?></td>
+							<td><?php echo $beerHop->get_alpha() ?></td>
+							<td><?php echo $beerHop->get_amount() ?></td>
+							<td><?php echo $beerHop->get_time() ?></td>
+						</tr>
+						<?php
+							}
+						}
+					?>
 					</table>
 				</td>
 			</tr>

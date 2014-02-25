@@ -1,5 +1,17 @@
 Add rating to beers table
+Add new table beers_fermentables
 
 
 SQL
 ALTER TABLE `beers` ADD `rating`  INT( 3 )  NULL ;
+CREATE TABLE `beers_fermentables` (
+ `id` int(11) NOT NULL,
+ `beer_id` int(11) NOT NULL,
+ `name` varchar(50) NOT NULL,
+ `type` varchar(50) NOT NULL,
+ `amount` int(11) NOT NULL,
+ `srm` int(11) NOT NULL,
+ `createdDate` datetime NOT NULL,
+ `modifiedDate` datetime NOT NULL,
+ UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
