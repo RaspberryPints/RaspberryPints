@@ -20,7 +20,7 @@ class BeerManager{
 					"WHERE id = " . $beer->get_id();
 					
 		}else{		
-			$sql = 	"INSERT INTO beers(name, beerStyleId, notes, ogEst, fgEst, srmEst, ibuEst, createdDate, modifiedDate ) " .
+			$sql = 	"INSERT INTO beers(name, untID,beerStyleId, notes, ogEst, fgEst, srmEst, ibuEst, createdDate, modifiedDate ) " .
 					"VALUES(" . 
 					"'" . encode($beer->get_name()) . "', " .
 					"'" . $beer->get_untID() . "', " .
