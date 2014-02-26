@@ -5,6 +5,7 @@ class Beer
 {  
 	private $_id;  
 	private $_name;
+	private $_untID;
 	private $_beerStyleId;
 	private $_notes;
 	private $_og; 
@@ -23,6 +24,9 @@ class Beer
 	public function get_name(){ return $this->_name; }
 	public function set_name($_name){ $this->_name = $_name; }
 
+	public function get_untID(){return $this->_untID;}
+	public function set_untID($_untID){ $this->_untID = $_untID; }
+	
 	public function get_beerStyleId(){ return $this->_beerStyleId; }
 	public function set_beerStyleId($_beerStyleId){ $this->_beerStyleId = $_beerStyleId; }
 	
@@ -61,6 +65,11 @@ class Beer
 			$this->set_name($postArr['name']);
 		else
 			$this->set_name(null);
+			
+		if( isset($postArr['untID']) )
+			$this->set_untID($postArr['untID']);
+		else
+			$this->set_untID(null);
 			
 		if( isset($postArr['beerStyleId']) ){
 			$this->set_beerStyleId($postArr['beerStyleId']);
@@ -139,6 +148,7 @@ class Beer
 		return "{" . 
 			"id: " . $this->get_id() . ", " .
 			"name: '" . encode($this->get_name()) . "', " .
+			"untID: " . $this->get_untID() . ", " .
 			"beerStyleId: " . $this->get_beerStyleId() . ", " .
 			"notes: '" . encode($this->get_notes()) . "', " .
 			"srm: '" . $this->get_srm() . "', " .

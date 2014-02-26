@@ -198,15 +198,18 @@
 										<h2><?php echo $beer['ibu']; ?> IBU</h2>
 									</td>
 								<?php } 
-								//Only Display rating if $Client[id] is set
-								if($config[ConfigNames::ClientID]){ 
 								
-
-
-                                                                                         // This section calls for the rating from Untappd
+								// This section calls for the rating from Untappd
                                                                         $untid = mysql_fetch_array(mysql_query("select `untID` from beers where id=".$beer[id].";"),0) ;
                                                                                 $utid = $untid[0];
 
+																				
+								//Only Display rating if $Client[id] is set
+								if($config[ConfigNames::ClientID] && $utid!='0'){ 
+								
+
+
+                                                                                         
 
 
 

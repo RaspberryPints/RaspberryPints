@@ -85,6 +85,14 @@ require __DIR__.'/header.php';
 			</tr>
 			<tr>
 				<td>
+					<b>UnTappd Beer ID:</b>
+				</td>
+				<td>
+					<input type="text" id="untID" class="smallbox" name="untID" value="<?php echo $beer->get_untID() ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
 					<b>Style:<font color="red">*</font></b>
 				</td>
 				<td>
@@ -131,6 +139,7 @@ require __DIR__.'/header.php';
 					<textarea type="text" id="notes" class="text-input textarea" style="width:320px;height:80px" name="notes"><?php echo $beer->get_notes() ?></textarea>
 				</td>
 			</tr>
+			
 			<tr>
 				<td colspan="2">
 					<input name="save" type="submit" class="btn" value="Save" />

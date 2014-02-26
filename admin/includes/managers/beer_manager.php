@@ -9,6 +9,7 @@ class BeerManager{
 			$sql = 	"UPDATE beers " .
 					"SET " .
 						"name = '" . encode($beer->get_name()) . "', " .
+						"untID = '" . $beer->get_untID() . "', " .
 						"beerStyleId = '" . encode($beer->get_beerStyleId()) . "', " .
 						"notes = '" . encode($beer->get_notes()) . "', " .
 						"ogEst = '" . $beer->get_og() . "', " .
@@ -19,9 +20,10 @@ class BeerManager{
 					"WHERE id = " . $beer->get_id();
 					
 		}else{		
-			$sql = 	"INSERT INTO beers(name, beerStyleId, notes, ogEst, fgEst, srmEst, ibuEst, createdDate, modifiedDate ) " .
+			$sql = 	"INSERT INTO beers(name, untID,beerStyleId, notes, ogEst, fgEst, srmEst, ibuEst, createdDate, modifiedDate ) " .
 					"VALUES(" . 
 					"'" . encode($beer->get_name()) . "', " .
+					"'" . $beer->get_untID() . "', " .
 					$beer->get_beerStyleId() . ", " .
 					"'" . encode($beer->get_notes()) . "', " .
 					"'" . $beer->get_og() . "', " . 
