@@ -85,6 +85,14 @@ require __DIR__.'/header.php';
 			</tr>
 			<tr>
 				<td>
+					<b>UnTappd Beer ID:</b>
+				</td>
+				<td>
+					<input type="text" id="untID" class="smallbox" name="untID" value="<?php echo $beer->get_untID() ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
 					<b>Style:<font color="red">*</font></b>
 				</td>
 				<td>
