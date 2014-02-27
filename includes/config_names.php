@@ -8,6 +8,7 @@ abstract class ConfigNames
 	const ShowAbvCol = 'showAbvCol';
 	const ShowAbvImg = 'showAbvImg';
 	const ShowKegCol = 'showKegCol';
+	const AdminThemeColor = 'adminThemeColor';
 	const UseHighResolution = 'useHighResolution';
 	const LogoUrl = 'logoUrl';
 	const HeaderText = 'headerText';

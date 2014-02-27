@@ -38,6 +38,7 @@
 			<li><a href="personalize.php#header">Headers</a></li>
 			<li><a href="personalize.php#logo">Brewery Logo</a></li>
 			<li><a href="personalize.php#background">Background Image</a></li>
+			<li><a href="themes.php">Theme Options</a></li>
 		</ul>
 	</li>
 	<li>
