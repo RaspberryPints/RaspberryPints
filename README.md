@@ -1,7 +1,7 @@
 RaspberryPints (RPints) is a digital upgrade to the conventional chalkboard taplist, created just for the home brewer. Display your current beers on tap with a sleek, digital presentation. Manage your beers, recipes, kegs, and taps with our built-in tracking system.
 
 
-Licensing:
+__Licensing:__
 
 	GNU GENERAL PUBLIC LICENSE
 	Version 3, 29 June 2007
@@ -27,3 +27,28 @@ http://www.homebrewtalk.com/f51/initial-release-raspberrypints-digital-taplist-s
 
 Inspired by Kegerface:
 http://github.com/kegerface/kegerface
+
+
+__Known Bugs:__
+
+	All versions:
+	- Firefox has difficulty rendering our SRM image masks correctly.
+		Due to a deficiency in the way Firefox handles z-values with images and is a known
+		issue within the MDN.
+
+
+__Version History:__
+
+	v1.0.2 (hotfix):
+		- Addresses excess vertical spacing introduced in v1.0.1 CSS cleanup.
+		- Fixed redirect to the install directory that prevented use on virtual hosts.
+	
+	v1.0.1 (hotfix):
+		- Removed leading underscores ( _ ) for non-beer styles on taplist front-end.
+		- Removed leading underscores ( _ ) for non-beer styles on admin page "My Beers".
+		- Clarified presentation of beer styles/categories on admin page "My Beers".
+		- Prevented browser from caching old brewery logos, even after a new one was uploaded.
+		- Cleaned up styles.css.
+	
+	v1.0.0 (major release):
+		- First major release.
