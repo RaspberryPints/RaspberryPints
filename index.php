@@ -1,8 +1,8 @@
 <?php
-        if (!file_exists(__DIR__.'/includes/config.php')) {
-           header('Location: /install', true, 303);
-           die();
-        }
+	if (!file_exists(__DIR__.'/includes/config.php')) {
+		header('Location: install/index.php', true, 303);
+		die();
+	}
 ?>
 <?php
 	require_once __DIR__.'/includes/config_names.php';
