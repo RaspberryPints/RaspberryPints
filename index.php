@@ -39,6 +39,7 @@
 			$beeritem = array(
 				"id" => $b['id'],
 				"beername" => $b['name'],
+				"untID" => $b['untID'],
 				"style" => $b['style'],
 				"notes" => $b['notes'],
 				"og" => $b['ogAct'],
@@ -198,14 +199,15 @@
 										<h2><?php echo $beer['ibu']; ?> IBU</h2>
 									</td>
 								<?php } 
+								
+								$beerImg = '';
 								//Only Display rating if $Client[id] is set
 								if($config[ConfigNames::ClientID]){ 
 								
 
 
                                                                                          // This section calls for the rating from Untappd
-                                                                        $untid = mysql_fetch_array(mysql_query("select `untID` from beers where id=".$beer[id].";"),0) ;
-                                                                                $utid = $untid[0];
+                                                                       
 
 
 
@@ -219,7 +221,7 @@ $utconfig = array(
 
 $untappd = new Pintlabs_Service_Untappd($utconfig);
 try {
-    $feed = $untappd->beerInfo($utid);
+    $feed = $untappd->beerInfo($beer[untID]);
 }  catch (Exception $e) {
     die($e->getMessage());
 }
@@ -250,8 +252,12 @@ $img = "<span class=\"rating small r45\"></span><span class=\"num\">(".round($rs
 } else if ($rs>'4.5') {
 $img = "<span class=\"rating small r50\"></span><span class=\"num\">(".round($rs,2).")</span>";
 } 
+
+$beerImg = "<img src=".$feed->response->beer->beer_label." border=0 width=100 height=100>";
+
 } else {
 $img = '';
+$beerImg = '';
 }
 
 
@@ -259,6 +265,10 @@ $img = '';
 								?>
 							
 								<td class="name">
+								<div class="beerimg">
+									<?php 
+echo $beerImg; ?>
+									</div>
 									<h1><?php echo $beer['beername']; ?></h1>
 									<h2 class="subhead"><?php echo str_replace("_","",$beer['style']); ?></h2>
 									<p class="rating">
