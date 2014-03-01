@@ -169,7 +169,7 @@ INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, ab
 CREATE TABLE IF NOT EXISTS `beers` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` text NOT NULL,
-	`untID` int(10) NOT NULL,
+	`untID` int(10) NULL,
 	`beerStyleId` int(11) NOT NULL,
 	`notes` text NOT NULL,
 	`ogEst` decimal(4,3) NOT NULL,
@@ -212,8 +212,22 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'showSrmCol', '1', 'SRM Column', '1', NOW(), NOW() ),
 ( 'showIbuCol', '1', 'IBU Column', '1', NOW(), NOW() ),
 ( 'showAbvCol', '1', 'ABV Column', '1', NOW(), NOW() ),
-( 'showAbvImg', '1', 'ABV Images', '1', NOW(), NOW() ),
 ( 'showKegCol', '0', 'Keg Column (beta!)', '1', NOW(), NOW() ),
+( 'showSrmImg', '1', 'SRM Image', '1', NOW(), NOW() ),
+( 'showIbuImg', '1', 'IBU Image', '1', NOW(), NOW() ),
+( 'showAbvImg', '1', 'ABV Image', '1', NOW(), NOW() ),
+( 'showKegImg', '1', 'Keg Image', '1', NOW(), NOW() ),
+( 'showOgValue', '1', 'OG Value', '1', NOW(), NOW() ),
+( 'showSrmValue', '1', 'SRM Value', '1', NOW(), NOW() ),
+( 'showBuguValue', '1', 'BU:GU Value', '1', NOW(), NOW() ),
+( 'showIbuValue', '1', 'IBU Value', '1', NOW(), NOW() ),
+( 'showBeerName', '1', 'Beer Name', '1', NOW(), NOW() ),
+( 'showBeerStyle', '1', 'Beer Style', '1', NOW(), NOW() ),
+( 'showTastingNotes', '1', 'Tasting Notes', '1', NOW(), NOW() ),
+( 'showKcalValue', '1', 'kCal Value', '1', NOW(), NOW() ),
+( 'showAbvValue', '1', 'ABV Value', '1', NOW(), NOW() ),
+( 'showPouredValue', '1', 'Poured Value', '1', NOW(), NOW() ),
+( 'showRemainValue', '1', 'Remaining Value', '1', NOW(), NOW() ),
 ( 'useHighResolution', '0', '4k Monitor Support', '1', NOW(), NOW() ),
 ( 'logoUrl', 'img/logo.png', 'Logo Url', '0', NOW(), NOW() ),
 ( 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '0', NOW(), NOW() ),
@@ -224,6 +238,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'ClientID', '','Client ID', '0', NOW(), NOW() ),
 ( 'ClientSecret','','Client Secret','0',NOW(),NOW() ),
 ( 'BreweryID', '','Brewery ID','0',NOW(),NOW() );
+
 
 
 -- --------------------------------------------------------

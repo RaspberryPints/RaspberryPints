@@ -271,16 +271,18 @@ echo $beerImg; ?>
 									</div>
 									<h1><?php echo $beer['beername']; ?></h1>
 									<h2 class="subhead"><?php echo str_replace("_","",$beer['style']); ?></h2>
-									<p class="rating">
-									<?php 
-										//Place the Rating
-										echo $img;
-									 ?>
-									</p>
+									<?php if(($beer['untID'])) { ?>
+										<p class="rating">
+											<?php 
+												//Place the Rating
+												echo $img;
+											?>
+										</p>
+									<?php } ?>
 									<p><?php echo $beer['notes']; ?></p>
 								</td>
 							
-								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::ShowAbvImg])){ ?>
+								<?php if(($config[ConfigNames::ShowAbvCol])){ ?>
 									<td class="abv">
 										<h3><?php
 											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
@@ -292,49 +294,38 @@ echo $beerImg; ?>
 											echo number_format($calfromalc + $calfromcarbs), " kCal";
 											?>
 										</h3>
-										<div class="abv-container">
-											<?php
-												$abv = ($beer['og'] - $beer['fg']) * 131;
-												$numCups = 0;
-												$remaining = $abv * 20;
-												do{
-														if( $remaining < 100 ){
-																$level = $remaining;
-														}else{
-																$level = 100;
-														}
-														?><div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div><?php
-														
-														$remaining = $remaining - $level;
-														$numCups++;
-												}while($remaining > 0 && $numCups < 2);
-												
-												if( $remaining > 0 ){
-													?><div class="abv-offthechart"></div><?php
-												}
-											?>
-										</div>
-										<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?> ABV</h2>
-									</td>
-								<?php } ?>
-								
-								<?php if(($config[ConfigNames::ShowAbvCol]) && ! ($config[ConfigNames::ShowAbvImg])){ ?>
-									<td class="abv">
-										<h3><?php
-											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
-											$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
-											if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
-												$calfromalc = 0;
-												$calfromcarbs = 0;
-												}
-											echo number_format($calfromalc + $calfromcarbs), " kCal";
-											?>
-										</h3>
-										<div class="abv">
-											<?php
-												$abv = ($beer['og'] - $beer['fg']) * 131;
-											?>
-										</div>
+										
+										<?php if(($config[ConfigNames::ShowAbvImg])) { ?>
+											<div class="abv-container">
+												<?php
+													$abv = ($beer['og'] - $beer['fg']) * 131;
+													$numCups = 0;
+													$remaining = $abv * 20;
+													do{
+															if( $remaining < 100 ){
+																	$level = $remaining;
+															}else{
+																	$level = 100;
+															}
+															?><div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div><?php
+															
+															$remaining = $remaining - $level;
+															$numCups++;
+													}while($remaining > 0 && $numCups < 2);
+													
+													if( $remaining > 0 ){
+														?><div class="abv-offthechart"></div><?php
+													}
+												?>
+											</div>
+										<?php } else { ?>
+											<div class="abv">
+												<?php
+													$abv = ($beer['og'] - $beer['fg']) * 131;
+												?>
+											</div>
+										<?php } ?>
+										
 										<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?> ABV</h2>
 									</td>
 								<?php } ?>
@@ -376,7 +367,7 @@ echo $beerImg; ?>
 							
 								<?php if($config[ConfigNames::ShowSrmCol]){ ?>
 									<td class="srm">
-										<h3></h3>										
+										<h3></h3>
 										<div class="srm-container">
 											<div class="srm-indicator"></div>
 											<div class="srm-stroke"></div> 
@@ -388,10 +379,10 @@ echo $beerImg; ?>
 							
 								<?php if($config[ConfigNames::ShowIbuCol]){ ?>
 									<td class="ibu">
-										<h3></h3>										
+										<h3></h3>
 										<div class="ibu-container">
 											<div class="ibu-indicator"><div class="ibu-full" style="height:0%"></div></div>
-										</div>								
+										</div>
 										<h2></h2>
 									</td>
 								<?php } ?>
@@ -418,7 +409,7 @@ echo $beerImg; ?>
 
 										<h2></h2>
 									</td>
-								<?php } ?>								
+								<?php } ?>
 								
 								<?php if($config[ConfigNames::ShowKegCol]){ ?>
 									<td class="keg">
