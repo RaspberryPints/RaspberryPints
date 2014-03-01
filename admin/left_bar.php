@@ -59,5 +59,13 @@
 	</li>
 </ul>
 
+<div>
+	<?php
+		$sql="SELECT `configValue` FROM `config` WHERE configName='version'";
+		$result=mysql_query($sql);
+		echo "&nbsp;&nbsp;" , mysql_result($result, 0, 'configValue');
+	?>
+</div>
+
 <!-- End Navagation -->
 <!-- Left Dark Bar End --> 
