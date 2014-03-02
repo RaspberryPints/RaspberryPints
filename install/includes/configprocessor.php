@@ -3,6 +3,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Installation Processor</title>
+
+<script>
+window.onpageshow = function(evt) {
+    // If persisted then it is in the page cache, force a reload of the page.
+    if (evt.persisted) {
+        document.body.style.display = "none";
+        location.reload();
+    }
+};
+</script>
+
 </head>
 <body>
 <?php
@@ -206,17 +217,16 @@ require_once __DIR__.'/config_files.php';
 	echo "Success!<br>";
 	flush();
 	
-	//-----------------Delete the index.html page-----------------
-	echo "Deleting default index.html page...";
-	flush();
-	if (!unlink("../../index.html"))
-	  {
-	  echo ("File already deleted");
-	  }
+	//-----------------Delete the index.html page, if it exists -----------------
+	$index = '../../index.html';
+		echo "Deleting default Apache index...";
+		flush();
+	if (file_exists($index)) {
+		unlink($index);
+		echo "Success! <br>";
+		}
 	else
-	  {
-	  echo ("Success!");
-	  }
+		echo "File already deleted <br>";
 	flush();
 	
 	//-----------------Load the sample data if requested-----------
