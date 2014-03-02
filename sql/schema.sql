@@ -169,7 +169,7 @@ INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, ab
 CREATE TABLE IF NOT EXISTS `beers` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` text NOT NULL,
-	`untID` int(10) NOT NULL,
+	`untID` int(10) NOT NULL DEFAULT '0',
 	`beerStyleId` int(11) NOT NULL,
 	`notes` text NOT NULL,
 	`ogEst` decimal(4,3) NOT NULL,
