@@ -223,7 +223,8 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() ),
 ( 'ClientID', '','Client ID', '0', NOW(), NOW() ),
 ( 'ClientSecret','','Client Secret','0',NOW(),NOW() ),
-( 'BreweryID', '','Brewery ID','0',NOW(),NOW() );
+( 'BreweryID', '','Brewery ID','0',NOW(),NOW() ),
+( 'adminThemeColor', 'styles.css', 'Admin Color', '0', NOW(), NOW() );
 
 
 -- --------------------------------------------------------
