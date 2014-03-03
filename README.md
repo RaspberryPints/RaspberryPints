@@ -39,6 +39,9 @@ __Known Bugs:__
 
 __Version History:__
 
+	v1.0.3 (hotfix):
+		- Fixed broken links to (external) official website.
+
 	v1.0.2 (hotfix):
 		- Addresses excess vertical spacing introduced in v1.0.1 CSS cleanup.
 		- Fixed redirect to the install directory that prevented use on virtual hosts.

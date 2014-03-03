@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
-* Config files for V1.0.0.369
+* Config files for V1.0.3.395
 ****************************************************************************/
 	
 	//Main config files - /includes/config.php
@@ -10,7 +10,7 @@
 	$mainconfigstring .= "mysql_connect('" . $servername . "', '" . $dbuser . "', '" . $dbpass1 . "');\n";
 	$mainconfigstring .= "        mysql_select_db('raspberrypints');\n";
 	$mainconfigstring .= "	}\n";
-	$mainconfigstring .= '    $rpintsversion="1.0.2.390";' . "\n";
+	$mainconfigstring .= '    $rpintsversion="1.0.3.395";' . "\n";
 	$mainconfigstring .= "?>";
 	
 	//Admin config file - /admin/conn.php
