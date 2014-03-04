@@ -8,6 +8,7 @@ abstract class ConfigNames
 	const ShowAbvCol = 'showAbvCol';
 	const ShowAbvImg = 'showAbvImg';
 	const ShowKegCol = 'showKegCol';
+	const AdminThemeColor = 'adminThemeColor';
 	const UseHighResolution = 'useHighResolution';
 	const LogoUrl = 'logoUrl';
 	const HeaderText = 'headerText';
@@ -16,4 +17,6 @@ abstract class ConfigNames
 	const ClientID = 'ClientID';
 	const ClientSecret = 'ClientSecret';
 	const BreweryID = 'BreweryID';
+	const BottleHeaderText = 'bottleHeaderText';
+	const NumberOfShelves = 'numberOfShelves';
 }
