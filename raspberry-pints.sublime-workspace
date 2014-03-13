@@ -1,0 +1,479 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"inline",
+				"inline-block"
+			],
+			[
+				"backg",
+				"background-color"
+			],
+			[
+				"padding",
+				"padding-right"
+			],
+			[
+				"b",
+				"blockquote"
+			],
+			[
+				"arra",
+				"array"
+			],
+			[
+				"Vi",
+				"View-make	View-make"
+			],
+			[
+				"Rou",
+				"Route-put	Route-put"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "app/controllers/BeerController.php",
+			"settings":
+			{
+				"buffer_size": 501,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/views/beer/index.blade.php",
+			"settings":
+			{
+				"buffer_size": 2835,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/views/beer/index_php.blade.php",
+			"settings":
+			{
+				"buffer_size": 2926,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/models/Beer.php",
+			"settings":
+			{
+				"buffer_size": 145,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/models/BeerStyle.php",
+			"settings":
+			{
+				"buffer_size": 153,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public/styles/styles.css",
+			"settings":
+			{
+				"buffer_size": 4753,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/views/layouts/admin.blade.php",
+			"settings":
+			{
+				"buffer_size": 1111,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/views/shared/admin-left_bar.blade.php",
+			"settings":
+			{
+				"buffer_size": 2219,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 81.0,
+		"selected_items":
+		[
+			[
+				"install a",
+				"Package Control: Install Package"
+			],
+			[
+				"install package",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Preferences: Browse Packages"
+			],
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/views/beer/form.blade.php",
+		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/config/database.php",
+		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/models/User.php",
+		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/views/shared/admin-scripts.blade.php",
+		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/public/styles/admin.css",
+		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/views/shared/admin-header.blade.php",
+		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/views/layouts/admin.blade.php",
+		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/views/shared/admin-left_bar.blade.php",
+		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/routes.php",
+		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/vendor/symfony/translation/Symfony/Component/Translation/Tests/fixtures/resourcebundle/dat/packagelist.txt",
+		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/views/hello.php",
+		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/lang/en/reminders.php",
+		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/controllers/BeerController.php"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"url(../img/",
+			"url(img"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"url(/img/admin/",
+			"url(/img",
+			"url(img/admin",
+			"url(../img"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 6,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "app/controllers/BeerController.php",
+					"settings":
+					{
+						"buffer_size": 501,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								198,
+								198
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app/views/beer/index.blade.php",
+					"settings":
+					{
+						"buffer_size": 2835,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								566,
+								566
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "app/views/beer/index_php.blade.php",
+					"settings":
+					{
+						"buffer_size": 2926,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								61,
+								61
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "app/models/Beer.php",
+					"settings":
+					{
+						"buffer_size": 145,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								109,
+								108
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "app/models/BeerStyle.php",
+					"settings":
+					{
+						"buffer_size": 153,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								153,
+								153
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "public/styles/styles.css",
+					"settings":
+					{
+						"buffer_size": 4753,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1531,
+								1531
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 881.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "app/views/layouts/admin.blade.php",
+					"settings":
+					{
+						"buffer_size": 1111,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1010,
+								1016
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 9.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "app/views/shared/admin-left_bar.blade.php",
+					"settings":
+					{
+						"buffer_size": 2219,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								483,
+								483
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"installpacka",
+				"vendor/symfony/translation/Symfony/Component/Translation/Tests/fixtures/resourcebundle/dat/packagelist.txt"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 212.0,
+	"status_bar_visible": true
+}
