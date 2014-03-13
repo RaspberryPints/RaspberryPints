@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"validt",
+				"validation"
+			],
+			[
+				"with_",
+				"with_errors"
+			],
+			[
 				"inline",
 				"inline-block"
 			],
@@ -39,7 +47,7 @@
 			"file": "app/controllers/BeerController.php",
 			"settings":
 			{
-				"buffer_size": 501,
+				"buffer_size": 1129,
 				"line_ending": "Unix"
 			}
 		},
@@ -52,51 +60,43 @@
 			}
 		},
 		{
-			"file": "app/views/beer/index_php.blade.php",
-			"settings":
-			{
-				"buffer_size": 2926,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "app/models/Beer.php",
 			"settings":
 			{
-				"buffer_size": 145,
+				"buffer_size": 256,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "app/models/BeerStyle.php",
+			"file": "/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/views/beer/index.blade.php",
 			"settings":
 			{
-				"buffer_size": 153,
+				"buffer_size": 2834,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/views/beer/form.blade.php",
+			"settings":
+			{
+				"buffer_size": 1819,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/lang/en/common.php",
+			"settings":
+			{
+				"buffer_size": 295,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/routes.php",
+			"settings":
+			{
+				"buffer_size": 836,
 				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "public/styles/styles.css",
-			"settings":
-			{
-				"buffer_size": 4753,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/views/layouts/admin.blade.php",
-			"settings":
-			{
-				"buffer_size": 1111,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/views/shared/admin-left_bar.blade.php",
-			"settings":
-			{
-				"buffer_size": 2219,
-				"line_ending": "Windows"
 			}
 		}
 	],
@@ -140,7 +140,14 @@
 	},
 	"file_history":
 	[
+		"/C/Projects/GitHub/RaspberryPints/app/lang/en/pagination.php",
 		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/views/beer/form.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/shared/admin-left_bar.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/layouts/admin.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/public/styles/styles.css",
+		"/C/Projects/GitHub/RaspberryPints/app/models/BeerStyle.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/beer/index_php.blade.php",
+		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/views/beer/add.blade.php",
 		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/config/database.php",
 		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/models/User.php",
 		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/views/shared/admin-scripts.blade.php",
@@ -160,7 +167,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 90.0,
+		"height": 0.0,
 		"where_history":
 		[
 		]
@@ -193,7 +200,7 @@
 	"groups":
 	[
 		{
-			"selected": 6,
+			"selected": 4,
 			"sheets":
 			[
 				{
@@ -201,15 +208,15 @@
 					"file": "app/controllers/BeerController.php",
 					"settings":
 					{
-						"buffer_size": 501,
+						"buffer_size": 1129,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								198,
-								198
+								522,
+								522
 							]
 						],
 						"settings":
@@ -217,8 +224,8 @@
 							"syntax": "Packages/PHP/PHP.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.x": 10.0,
+						"translation.y": 135.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -252,18 +259,18 @@
 				},
 				{
 					"buffer": 2,
-					"file": "app/views/beer/index_php.blade.php",
+					"file": "app/models/Beer.php",
 					"settings":
 					{
-						"buffer_size": 2926,
+						"buffer_size": 256,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								61,
-								61
+								39,
+								39
 							]
 						],
 						"settings":
@@ -271,7 +278,7 @@
 							"syntax": "Packages/PHP/PHP.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 0.0,
+						"translation.x": 28.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
@@ -279,18 +286,18 @@
 				},
 				{
 					"buffer": 3,
-					"file": "app/models/Beer.php",
+					"file": "/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/views/beer/index.blade.php",
 					"settings":
 					{
-						"buffer_size": 145,
+						"buffer_size": 2834,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								109,
-								108
+								783,
+								783
 							]
 						],
 						"settings":
@@ -306,52 +313,55 @@
 				},
 				{
 					"buffer": 4,
-					"file": "app/models/BeerStyle.php",
+					"file": "app/views/beer/form.blade.php",
 					"settings":
 					{
-						"buffer_size": 153,
+						"buffer_size": 1819,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								153,
-								153
+								1748,
+								1748
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/PHP/PHP.tmLanguage"
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 30.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "public/styles/styles.css",
+					"file": "app/lang/en/common.php",
 					"settings":
 					{
-						"buffer_size": 4753,
+						"buffer_size": 295,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1531,
-								1531
+								151,
+								151
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"auto_name": "",
+							"syntax": "Packages/HTML/HTML.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 881.0,
+						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
@@ -359,51 +369,23 @@
 				},
 				{
 					"buffer": 6,
-					"file": "app/views/layouts/admin.blade.php",
+					"file": "app/routes.php",
 					"settings":
 					{
-						"buffer_size": 1111,
+						"buffer_size": 836,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1010,
-								1016
+								681,
+								681
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 9.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "app/views/shared/admin-left_bar.blade.php",
-					"settings":
-					{
-						"buffer_size": 2219,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								483,
-								483
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
