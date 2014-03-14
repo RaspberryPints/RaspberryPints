@@ -6,7 +6,7 @@
 
 @section('content')
 	
-	<p>{{ link_to_action('BeerController@form', 'Add Beer', null, array( 'class' => 'btn')); }}</p>
+	<p>{{ link_to_action('BeerController@create', 'Add Beer', null, array( 'class' => 'btn')); }}</p>
 
     <table class="outerborder">
 	
@@ -26,7 +26,7 @@
 						</th>
 					
 						<th class="actions">
-							{{ link_to_action('BeerController@form', 'Edit', array( 'id' =>  $beer->id ), array( 'class' => 'btn')); }}
+							{{ link_to_action('BeerController@edit', 'Edit', array( 'id' =>  $beer->id ), array( 'class' => 'btn')); }}
 						
 							{{ link_to_action('BeerController@inactivate', 'Delete', array( 'id' =>  $beer->id ), array( 'class' => 'btn')); }}							
 						</th>					

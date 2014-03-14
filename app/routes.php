@@ -18,10 +18,11 @@ Route::get('/', function()
 
 Route::get('admin', 'AdminController@index');
 
-Route::get('admin/beer', 'BeerController@index');
-Route::get('admin/beer/form/{id?}', 'BeerController@form');
-Route::post('admin/beer/form_post/{id?}', 'BeerController@form_post');
+
+Route::resource('admin/beers', 'BeerController');
+
 Route::get('admin/beer/inactivate/{id}', 'BeerController@inactivate');
+
 	
 Route::get('admin/user', function()
 {

@@ -13,5 +13,6 @@ return array(
 	'estimatedFG' => 'Estimated FG',
 	'estimatedSRM' => 'Estimated SRM',
 	'estimatedIBU' => 'Estimated IBU',
+	'beerSuccessfullyCreated' => 'Beer was successfully created'
 
 );
