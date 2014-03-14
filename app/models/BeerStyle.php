@@ -3,11 +3,21 @@
 class BeerStyle extends Eloquent 
 {
 
-	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
+	protected $fillable = array(
+		'name', 
+		'catNum',
+		'category',
+		'ogMin',
+		'ogMax',
+		'fgMin',
+		'fgMax',
+		'srmMin',
+		'srmMax',
+		'ibuMin',
+		'ibuMax'
+	);
+    protected $guarded = array('id');
+
 	protected $table = 'beerStyles';
 	
 }

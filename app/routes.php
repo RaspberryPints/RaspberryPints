@@ -11,20 +11,24 @@
 |
 */
 
-Route::get('/', function()
+Route::get('/', 'HomeController@index');
+
+
+Route::get('login', 'AdminController@showLogin')->before('guest');
+Route::post('login', 'AdminController@doLogin');
+Route::get('logout', 'AdminController@doLogout');
+
+
+Route::group(array('before' => 'auth'), function() 
 {
-	return View::make('hello');
-});
+	Route::get('admin', 'AdminController@index');
 
-Route::get('admin', 'AdminController@index');
-
-
-Route::resource('admin/beers', 'BeerController');
-
-Route::get('admin/beer/inactivate/{id}', 'BeerController@inactivate');
+	Route::resource('admin/beers', 'BeerController');
+	Route::get('admin/beer/inactivate/{id}', 'BeerController@inactivate');
 
 	
-Route::get('admin/user', function()
-{
-    return View::make('user.index');
+	Route::get('admin/user', function()
+	{
+	    return View::make('user.index');
+	});
 });

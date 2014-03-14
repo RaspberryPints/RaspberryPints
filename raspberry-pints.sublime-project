@@ -4,5 +4,10 @@
 		{
 			"path": "/C/Projects/GitHub/RaspberryPints"
 		}
-	]
+	],
+    "settings": {
+        "xdebug": {
+             "url": "http://raspberrypints.local:99/"
+        }
+    }
 }
