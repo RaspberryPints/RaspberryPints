@@ -211,20 +211,20 @@ ALTER TABLE users CHANGE modifiedDate updated_at timestamp;
 ALTER TABLE taps CHANGE createdDate created_at timestamp;
 ALTER TABLE taps CHANGE modifiedDate updated_at timestamp;
 
-ALTER TABLE srmrgb CHANGE createdDate created_at timestamp;
-ALTER TABLE srmrgb CHANGE modifiedDate updated_at timestamp;
+ALTER TABLE srmRgb CHANGE createdDate created_at timestamp;
+ALTER TABLE srmRgb CHANGE modifiedDate updated_at timestamp;
 
 ALTER TABLE pours CHANGE createdDate created_at timestamp;
 ALTER TABLE pours CHANGE modifiedDate updated_at timestamp;
 
-ALTER TABLE kegtypes CHANGE createdDate created_at timestamp;
-ALTER TABLE kegtypes CHANGE modifiedDate updated_at timestamp;
+ALTER TABLE kegTypes CHANGE createdDate created_at timestamp;
+ALTER TABLE kegTypes CHANGE modifiedDate updated_at timestamp;
 
-ALTER TABLE kegstatuses CHANGE createdDate created_at timestamp;
-ALTER TABLE kegstatuses CHANGE modifiedDate updated_at timestamp;
+ALTER TABLE kegStatuses CHANGE createdDate created_at timestamp;
+ALTER TABLE kegStatuses CHANGE modifiedDate updated_at timestamp;
 
 ALTER TABLE config CHANGE createdDate created_at timestamp;
 ALTER TABLE config CHANGE modifiedDate updated_at timestamp;
 
-ALTER TABLE beerstyles CHANGE createdDate created_at timestamp;
-ALTER TABLE beerstyles CHANGE modifiedDate updated_at timestamp;
+ALTER TABLE beerStyles CHANGE createdDate created_at timestamp;
+ALTER TABLE beerStyles CHANGE modifiedDate updated_at timestamp;
