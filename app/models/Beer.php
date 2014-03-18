@@ -20,4 +20,8 @@ class Beer extends Eloquent
     {
         return $this->hasOne("BeerStyle", "id", "beerStyleId");
     }
+
+    public static function GetAllActive(){
+    	return Beer::where('active', 1)->orderBy('name')->get();
+    }
 }

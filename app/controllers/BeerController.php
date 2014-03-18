@@ -4,7 +4,7 @@ class BeerController extends BaseController {
 
 	public function index()
 	{
-		$data['beers'] = Beer::orderBy('name')->get();
+		$data['beers'] = Beer::GetAllActive();
 
 		// load the view and pass the nerds
 		return View::make('beers.index', $data);

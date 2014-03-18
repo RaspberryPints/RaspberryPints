@@ -24,11 +24,16 @@
 	
 	/* Button Styling */
 	
-	.btn, .btnalt {background: url(/img/admin/bg_buttons.png) repeat-x top; border: 1px solid #0D87AE!important; color: #fff; font-size: 11px; padding: 7px 10px; boirder-radius: 7px; -moz-border-radius: 7px; font-weight: 700; border: none; display:inline-block;}
+	.btn, .btnalt {background: url(/img/admin/bg_buttons.png) repeat-x top; border: 1px solid #0D87AE!important; color: #fff; font-size: 11px; padding: 7px 10px; boirder-radius: 7px; -moz-border-radius: 7px; font-weight: 700; border: none; display:inline-block; 
+		text-decoration:none;
+		text-shadow: none;
+	}
 		.btn:hover {background: url(/img/admin/bg_buttons.png) 0 -50px; border: 1px solid #005977; cursor: pointer;}
 		
 	.btnalt {background: url(/img/admin/bg_buttons_alternative.png) repeat-x top !important; border: 1px solid #333 !important; color: #fff; padding: 7px 10px; border: none;}
 		.btnalt:hover {background: url(/img/admin/bg_buttons_alternative.png) 0 -50px !important; border: 1px solid #111 !important; cursor: pointer;}		
+
+
 	
 	/* Login Page */
 	

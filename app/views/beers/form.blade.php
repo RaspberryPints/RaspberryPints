@@ -69,8 +69,8 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <a href="{{ URL::action('BeerController@index'); }}">{{{ Lang::get('common.cancel') }}}</a>
-                    {{ Form::submit('Save') }}
+                    {{ link_to_action('BeerController@index', Lang::get('common.cancel'), null, array( 'class' => 'btnalt')); }}
+                    {{ Form::submit('Save', array( 'class' => 'btn')) }}
                 </td>
             </tr>
         </table>

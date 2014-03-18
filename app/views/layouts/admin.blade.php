@@ -32,8 +32,6 @@
 			
 			@yield('content')
 			
-			<br/><br/><br/><br/>
-
 			@include('admin.footer')			
 		</div>
 		
