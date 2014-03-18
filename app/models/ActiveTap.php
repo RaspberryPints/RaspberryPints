@@ -19,6 +19,6 @@ class ActiveTap extends Eloquent
         'srmRgb'
     );
     
-	protected $table = 'vwgetactivetaps';
+	protected $table = 'vwGetActiveTaps';
 
 }
