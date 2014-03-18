@@ -3,7 +3,7 @@
 
 <html>
 	<head>
-		<title>RaspberryPints</title>
+		<title>{{{ Lang::get('common.raspberryPints') }}}</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 		{{ HTML::style('styles/home.css'); }}
@@ -20,11 +20,13 @@
 			<!-- Header with Brewery Logo and Project Name -->
 			<div class="header clearfix">
 				<div class="HeaderLeft">
-					<?php if($options[OptionNames::UseHighResolution]) { ?>			
-						<a href="admin/admin.php"><img src="<?php echo $options[OptionNames::LogoUrl]; ?>" height="200" alt=""></a>
-					<?php } else { ?>
-						<a href="admin/admin.php"><img src="<?php echo $options[OptionNames::LogoUrl]; ?>" height="100" alt=""></a>
-					<?php } ?>					
+					<a href="{{URL::to('/admin')}}">
+						<?php if($options[OptionNames::UseHighResolution]) { ?>		
+							<img src={{asset($options[OptionNames::LogoUrl])}} height="200" alt="">
+						<?php } else { ?>
+							<img src={{asset($options[OptionNames::LogoUrl])}} height="100" alt="">
+						<?php } ?>
+					</a>
 				</div>
 				<div class="HeaderCenter">
 					<h1 id="HeaderTitle">
@@ -38,11 +40,13 @@
 					</h1>
 				</div>
 				<div class="HeaderRight">
-					<?php if($options[OptionNames::UseHighResolution]) { ?>			
-						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints-4k.png" height="200" alt=""></a>
-					<?php } else { ?>
-						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints.png" height="100" alt=""></a>
-					<?php } ?>
+					<a href="http://www.raspberrypints.com">
+						<?php if($options[OptionNames::UseHighResolution]) { ?>
+							<img src={{asset('img/RaspberryPints-4k.png')}} height="200" alt="">
+						<?php } else { ?>
+							<img src={{asset('img/RaspberryPints.png')}} height="100" alt="">
+						<?php } ?>
+					</a>
 				</div>
 			</div>
 			<!-- End Header Bar -->
@@ -97,209 +101,20 @@
 				</thead>
 	
 				<tbody>
-					<?php for($i = 1; $i <= $options[OptionNames::NumberOfTaps]; $i++) {
+					<?php 
+					for($i = 1; $i <= $options[OptionNames::NumberOfTaps]; $i++) 
+					{
 						$beer = ActiveTap::PickByTapNumber($taps, $i);
 						if( $beer != null ) {
 					?>
-							<tr class="<?php if($i%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beer['id']; ?>">
-								<?php if($options[OptionNames::ShowTapNumCol]){ ?>
-									<td class="tap-num">
-										<span class="tapcircle"><?php echo $i; ?></span>
-									</td>
-								<?php } ?>
+							@include('home.tap')
 							
-								<?php if($options[OptionNames::ShowSrmCol]){ ?>
-									<td class="srm">
-										<h3><?php echo $beer['og']; ?> OG</h3>
-										
-										<div class="srm-container">
-											<div class="srm-indicator" style="background-color: rgb(<?php echo $beer['srmRgb'] != "" ? $beer['srmRgb'] : "0,0,0" ?>)"></div>
-											<div class="srm-stroke"></div> 
-										</div>
-										
-										<h2><?php echo $beer['srm']; ?> SRM</h2>
-									</td>
-								<?php } ?>
-							
-								<?php if($options[OptionNames::ShowIbuCol]){ ?>
-									<td class="ibu">
-										<h3>
-											<?php 
-												if( $beer['og'] > 1 ){
-													echo number_format((($beer['ibu'])/(($beer['og']-1)*1000)), 2, '.', '');
-												}else{
-													echo '0.00';
-												}
-											?> 
-											BU:GU
-										</h3>
-										
-										<div class="ibu-container">
-											<div class="ibu-indicator"><div class="ibu-full" style="height:<?php echo $beer['ibu'] > 100 ? 100 : $beer['ibu']; ?>%"></div></div>
-												
-										</div>								
-										<h2><?php echo $beer['ibu']; ?> IBU</h2>
-									</td>
-								<?php } ?>
-							
-								<td class="name">
-									<h1><?php echo $beer['beername']; ?></h1>
-									<h2 class="subhead"><?php echo $beer['style']; ?></h2>
-									<p><?php echo $beer['notes']; ?></p>
-								</td>
-							
-								<?php if(($options[OptionNames::ShowAbvCol]) && ($options[OptionNames::ShowAbvImg])){ ?>
-									<td class="abv">
-										<h3><?php
-											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
-											$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
-											if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
-												$calfromalc = 0;
-												$calfromcarbs = 0;
-												}
-											echo number_format($calfromalc + $calfromcarbs), " kCal";
-											?>
-										</h3>
-										<div class="abv-container">
-											<?php
-												$abv = ($beer['og'] - $beer['fg']) * 131;
-												$numCups = 0;
-												$remaining = $abv * 20;
-												do{
-														if( $remaining < 100 ){
-																$level = $remaining;
-														}else{
-																$level = 100;
-														}
-														?><div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div><?php
-														
-														$remaining = $remaining - $level;
-														$numCups++;
-												}while($remaining > 0 && $numCups < 2);
-												
-												if( $remaining > 0 ){
-													?><div class="abv-offthechart"></div><?php
-												}
-											?>
-										</div>
-										<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?> ABV</h2>
-									</td>
-								<?php } ?>
-								
-								<?php if(($options[OptionNames::ShowAbvCol]) && ! ($options[OptionNames::ShowAbvImg])){ ?>
-									<td class="abv">
-										<h3><?php
-											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
-											$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
-											if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
-												$calfromalc = 0;
-												$calfromcarbs = 0;
-												}
-											echo number_format($calfromalc + $calfromcarbs), " kCal";
-											?>
-										</h3>
-										<div class="abv">
-											<?php
-												$abv = ($beer['og'] - $beer['fg']) * 131;
-											?>
-										</div>
-										<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?> ABV</h2>
-									</td>
-								<?php } ?>
-								
-								<?php if($options[OptionNames::ShowKegCol]){ ?>
-									<td class="keg">
-										<h3><?php echo number_format((($beer['startAmount'] - $beer['remainAmount']) * 128)); ?> fl oz poured</h3>
-										<?php 
-											$kegImgClass = "";
-											$percentRemaining = $beer['remainAmount'] / $beer['startAmount'] * 100;
-											if( $beer['remainAmount'] <= 0 ) {
-												$kegImgClass = "keg-empty";
-												$percentRemaining = 100; }
-											else if( $percentRemaining < 15 )
-												$kegImgClass = "keg-red";
-											else if( $percentRemaining < 25 )
-												$kegImgClass = "keg-orange";
-											else if( $percentRemaining < 45 )
-												$kegImgClass = "keg-yellow";
-											else if ( $percentRemaining < 100 )
-												$kegImgClass = "keg-green";
-											else if( $percentRemaining >= 100 )
-												$kegImgClass = "keg-full";
-										?>
-										<div class="keg-container">
-											<div class="keg-indicator"><div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%"></div></div>
-										</div>
-										<h2><?php echo number_format(($beer['remainAmount'] * 128)); ?> fl oz left</h2>
-									</td>
-								<?php } ?>
-							</tr>
-						<?php }else{ ?>
-							<tr class="<?php if($i%2 > 0){ echo 'altrow'; }?>">
-								<?php if($options[OptionNames::ShowTapNumCol]){ ?>
-									<td class="tap-num">
-										<span class="tapcircle"><?php echo $i; ?></span>
-									</td>
-								<?php } ?>
-							
-								<?php if($options[OptionNames::ShowSrmCol]){ ?>
-									<td class="srm">
-										<h3></h3>										
-										<div class="srm-container">
-											<div class="srm-indicator"></div>
-											<div class="srm-stroke"></div> 
-										</div>
-										
-										<h2></h2>
-									</td>
-								<?php } ?>
-							
-								<?php if($options[OptionNames::ShowIbuCol]){ ?>
-									<td class="ibu">
-										<h3></h3>										
-										<div class="ibu-container">
-											<div class="ibu-indicator"><div class="ibu-full" style="height:0%"></div></div>
-										</div>								
-										<h2></h2>
-									</td>
-								<?php } ?>
-							
-								<td class="name">
-									<h1>Nothing on tap</h1>
-									<h2 class="subhead"></h2>
-									<p></p>
-								</td>
-								
-								<?php if(($options[OptionNames::ShowAbvCol]) && ($options[OptionNames::ShowAbvImg])){ ?>
-									<td class="abv">
-										<h3></h3>
-										<div class="abv-container">
-											<div class="abv-indicator"><div class="abv-full" style="height:0%"></div></div>
-										</div>
-										<h2></h2>
-									</td>
-								<?php } ?>
-
-								<?php if(($options[OptionNames::ShowAbvCol]) && ! ($options[OptionNames::ShowAbvImg])){ ?>
-									<td class="abv">
-										<h3></h3>
-
-										<h2></h2>
-									</td>
-								<?php } ?>								
-								
-								<?php if($options[OptionNames::ShowKegCol]){ ?>
-									<td class="keg">
-										<h3></h3>
-										<div class="keg-container">
-											<div class="keg-indicator"><div class="keg-full keg-empty" style="height:0%"></div></div>
-										</div>
-										<h2>0 fl oz left</h2>
-									</td>
-								<?php } ?>
-							</tr>
-						<?php } ?>
-					<?php } ?>
+						<?php }else{ ?>							
+							@include('home.empty-tap')
+					<?php 
+						}
+					} 
+					?>
 				</tbody>
 			</table>
 		</div>

@@ -20,8 +20,17 @@ return array(
 	'name' => 'Name',
 	'notes'=> 'Notes',
 	'poured' => 'Poured',
+	'raspberryPints' => 'RaspberryPints',
 	'remaining' => 'Remaining',
 	'tapNum' => 'Tap #',
 	'tastingNotes' => 'Tasting Notes',
+	'nothingOnTap' => 'Nothing on tap',
+	'flOzLeft' => 'fl oz left',
+	'flOzPoured' => 'fl oz poured',
+	'abv' => 'ABV',
+	'kCal' => 'kCal',
+	'ibu' => 'IBU',
+	'srm' => 'SRM',
+	'og' => 'OG',
 
 );

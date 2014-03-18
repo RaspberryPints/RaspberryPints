@@ -1,5 +1,5 @@
 body {
-	background-image: url(img/background.jpg);
+	background-image: url(../img/background.jpg);
 	background-color: #000000;
 	background-size: cover;
 	background-repeat:no-repeat;
@@ -191,10 +191,10 @@ table p{
 	left: 0;
 	z-index: 1;
 	
-	-webkit-mask-image: url(img/srm/pint-mask.png);
-	-o-mask-image: url(img/srm/pint-mask.png);
-	-moz-mask-image: url(img/srm/pint-mask.png);
-	mask-image: url(img/srm/pint-mask.png);
+	-webkit-mask-image: url(../img/srm/pint-mask.png);
+	-o-mask-image: url(../img/srm/pint-mask.png);
+	-moz-mask-image: url(../img/srm/pint-mask.png);
+	mask-image: url(../img/srm/pint-mask.png);
 }
 
 .srm-stroke{
@@ -205,7 +205,7 @@ table p{
 	left: 0;
 	z-index: 2;
 	
-	background: url(img/srm/pint-stroke.png)
+	background: url(../img/srm/pint-stroke.png)
 }
 
 
@@ -221,14 +221,14 @@ table p{
 	left: 0;
 	height: 100%;
 	width: 100%;
-	background: url(img/ibu/stroke.png) no-repeat bottom left;
+	background: url(../img/ibu/stroke.png) no-repeat bottom left;
 }
 .ibu-indicator .ibu-full{
 	position: absolute;
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background: url(img/ibu/full.png) no-repeat bottom left;
+	background: url(../img/ibu/full.png) no-repeat bottom left;
 }
 	
 .ibu-max{
@@ -247,14 +247,14 @@ table p{
 	position: relative;
 	height:100%;
 	width:50%;
-	background: url(img/abv/stroke.png) no-repeat bottom left;
+	background: url(../img/abv/stroke.png) no-repeat bottom left;
 }
 .abv-indicator .abv-full{
 	position: absolute;
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background: url(img/abv/full.png) no-repeat bottom left;
+	background: url(../img/abv/full.png) no-repeat bottom left;
 }
 .abv-offthechart{
 	position: absolute;
@@ -262,7 +262,7 @@ table p{
 	left: 8px;
 	height: 55px;
 	width: 114px;
-	background: url(img/abv/offthechart.png) no-repeat bottom left;	
+	background: url(../img/abv/offthechart.png) no-repeat bottom left;	
 }
 
 .keg-container{
@@ -278,27 +278,27 @@ table p{
 	left: 0;
 	height: 100%;
 	width: 100%;
-	background: url(img/keg/stroke.png) no-repeat bottom left;	
+	background: url(../img/keg/stroke.png) no-repeat bottom left;	
 }
 .keg-indicator .keg-full{
 	position: absolute;
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background: url(img/keg/full.png) no-repeat bottom left;
+	background: url(../img/keg/full.png) no-repeat bottom left;
 }
 .keg-indicator .keg-empty{
-	background-image: url(img/keg/empty.png);
+	background-image: url(../img/keg/empty.png);
 }
 .keg-indicator .keg-red{
-	background-image: url(img/keg/red.png);
+	background-image: url(../img/keg/red.png);
 }
 .keg-indicator .keg-orange{
-	background-image: url(img/keg/orange.png);
+	background-image: url(../img/keg/orange.png);
 }
 .keg-indicator .keg-yellow{
-	background-image: url(img/keg/yellow.png);
+	background-image: url(../img/keg/yellow.png);
 }
 .keg-indicator .keg-green{
-	background-image: url(img/keg/green.png);
+	background-image: url(../img/keg/green.png);
 }
