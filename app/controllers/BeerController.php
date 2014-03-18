@@ -87,9 +87,10 @@ class BeerController extends BaseController {
 
 		// process the login
 		if ($validator->fails()) {
-			return Redirect::action('BeerController@create')
+			return Redirect::action('BeerController@edit', $id)
 				->withErrors($validator)
 				->withInput();
+				
 		} else {
 			// store
 			$beer = Beer::find($id);
@@ -113,7 +114,7 @@ class BeerController extends BaseController {
 		//
 	}
 
-	private function loadFormViewData($data){		
+	private function loadFormViewData(&$data){
 		$data['beerStyleList'] = BeerStyle::orderBy('name')->lists('name','id');
 	}
 

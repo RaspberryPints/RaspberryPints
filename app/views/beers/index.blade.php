@@ -1,17 +1,17 @@
 @extends('layouts.admin')
 
 @section('title')
-	My Beers
+	{{{ Lang::get('common.myBeers') }}}
 @stop
 
 @section('content')
 	
-	<p>{{ link_to_action('BeerController@create', 'Add Beer', null, array( 'class' => 'btn')); }}</p>
+	<p>{{ link_to_action('BeerController@create', Lang::get('common.addBeer'), null, array( 'class' => 'btn')); }}</p>
 
     <table class="outerborder">
 	
 		@if (count($beers) === 0)
-			<tr><td class="no-results" colspan="99">No beers :( Add some?</td></tr>
+			<tr><td class="no-results" colspan="99">{{{ Lang::get('common.noBeersAddSome') }}}</td></tr>
 		@else
 			@foreach ($beers as $beer)
 				<thead>
@@ -26,9 +26,9 @@
 						</th>
 					
 						<th class="actions">
-							{{ link_to_action('BeerController@edit', 'Edit', array( 'id' =>  $beer->id ), array( 'class' => 'btn')); }}
+							{{ link_to_action('BeerController@edit', Lang::get('common.edit'), array( 'id' =>  $beer->id ), array( 'class' => 'btn')); }}
 						
-							{{ link_to_action('BeerController@inactivate', 'Delete', array( 'id' =>  $beer->id ), array( 'class' => 'btn')); }}							
+							{{ link_to_action('BeerController@inactivate', Lang::get('common.delete'), array( 'id' =>  $beer->id ), array( 'class' => 'btn')); }}							
 						</th>					
 					</tr>
 				</thead>
@@ -44,22 +44,24 @@
 						<td>
 							<p><b><u>Vitals</u></b></p>
 							<p>
-								<b>SRM:</b> {{{ isset($beer->srmEst) ? $beer->srmEst : 'N/A' }}}
+								<b>{{{ Lang::get('common.srm') }}}:</b> {{{ isset($beer->srmEst) ? $beer->srmEst : Lang::get('common.na') }}}
 								<br/>
-								<b>IBU:</b> {{{ isset($beer->ibuEst) ? $beer->ibuEst : 'N/A' }}}
+								<b>{{{ Lang::get('common.ibu') }}}:</b> {{{ isset($beer->ibuEst) ? $beer->ibuEst : Lang::get('common.na') }}}
 								<br/>
-								<b>IBU:</b> {{{ isset($beer->ogEst) ? $beer->ogEst : 'N/A' }}}
+								<b>{{{ Lang::get('common.og') }}}:</b> {{{ isset($beer->ogEst) ? $beer->ogEst : Lang::get('common.na') }}}
 								<br/>
-								<b>IBU:</b> {{{ isset($beer->fgEst) ? $beer->fgEst : 'N/A' }}}
+								<b>{{{ Lang::get('common.fg') }}}:</b> {{{ isset($beer->fgEst) ? $beer->fgEst : Lang::get('common.na') }}}
 							</p>
 							
-							<p><b>Water:</b> <!-- Sacramento, CA --> <br>
-							<b>Salts:</b> <!-- Camden, pH 5.2 Stabilizer --> <br>
-							<b>Finings:</b> <!-- Whirfloc --> <br>
-							<b>Yeast</b>: <!-- Fermentis S-04 --><br></p>
+							<p>
+								<b>{{{ Lang::get('common.water') }}}:</b> <!-- Sacramento, CA --> <br>
+								<b>{{{ Lang::get('common.salts') }}}:</b> <!-- Camden, pH 5.2 Stabilizer --> <br>
+								<b>{{{ Lang::get('common.finings') }}}:</b> <!-- Whirfloc --> <br>
+								<b>{{{ Lang::get('common.yeast') }}}</b>: <!-- Fermentis S-04 --><br>
+							</p>
 						</td>
 						<td colspan="3">
-							<p><b><u>Fermentables:</u></b></p><p>
+							<p><b><u>{{{ Lang::get('common.fermentables') }}}:</u></b></p><p>
 							<!--
 							60.5% Pilsner (2 Row) Ger (2.0 SRM)<br>
 							32.4% Pale Ale Malt, Northwestern (Great Western) (3.0 SRM)<br>
@@ -67,7 +69,7 @@
 							-->
 							</p>
 							
-							<p><b><u>Mash Profile:</u></b></p><p>
+							<p><b><u>{{{ Lang::get('common.mashProfile') }}}:</u></b></p><p>
 							<!--
 							Step 1: Dough-in @ 70&deg;F (2 min)<br>
 							Step 2: Conversion @ 154&deg;F (60 min)<br>
@@ -76,7 +78,7 @@
 							-->
 							</p>
 							
-							<p><b><u>Hop Schedule:</u></b></p><p>
+							<p><b><u>{{{ Lang::get('common.hopSchedule') }}}:</u></b></p><p>
 							<!--
 							0.90 oz Simcoe (13.00% AA) @ 90 min<br>
 							0.90 oz Simcoe (13.00% AA) @ 30 min<br>

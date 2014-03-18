@@ -10,13 +10,13 @@
 	</head>
 	<body id="homepage">
 	
-		@include('shared.admin-header')
+		@include('admin.header')
 
 		<div id="breadcrumb">
 			<ul>	
-				<li><img src="{{ URL::to('/'); }}/img/admin/icons/icon_breadcrumb.png" alt="Location" /></li>
-				<li><strong>Location:</strong></li>
-				<li class="current">Control Panel</li>
+				<li><img src="{{ URL::asset('img/admin/icons/icon_breadcrumb.png'); }}" alt="Location" /></li>
+				<li><strong>{{{ Lang::get('common.location') }}}:</strong></li>
+				<li class="current">{{{ Lang::get('common.controlPanel') }}}</li>
 			</ul>
 		</div>
 	
@@ -34,10 +34,10 @@
 			
 			<br/><br/><br/><br/>
 
-			@include('shared.admin-footer')			
+			@include('admin.footer')			
 		</div>
 		
-		@include('shared.admin-left_bar')		
-		@include('shared.admin-scripts')		
+		@include('admin.left_bar')
+		@include('admin.scripts')		
 	</body>
 </html>

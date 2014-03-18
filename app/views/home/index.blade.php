@@ -40,7 +40,7 @@
 					</h1>
 				</div>
 				<div class="HeaderRight">
-					<a href="http://www.raspberrypints.com">
+					<a target="_blank" href="http://www.raspberrypints.com">
 						<?php if($options[OptionNames::UseHighResolution]) { ?>
 							<img src={{asset('img/RaspberryPints-4k.png')}} height="200" alt="">
 						<?php } else { ?>

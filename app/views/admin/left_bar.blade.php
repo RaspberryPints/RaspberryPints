@@ -2,7 +2,7 @@
 <div id="leftside">
 
 <!-- Start User Echo -->
-<div id="welcome"> &nbsp; Welcome, <br />
+<div id="welcome"> &nbsp; {{{ Lang::get('common.welcome') }}}, <br />
 	&nbsp;
 	<?php
 	/*
@@ -22,13 +22,13 @@
 <ul id="nav">
 	<li>
 		<ul class="navigation">
-			<li class="heading selected">Welcome</li>
+			<li class="heading selected">{{{ Lang::get('common.welcome') }}}</li>
 		</ul>
 	<li>
 	<li>
-		<a class="expanded heading">Basic Setup</a>
+		<a class="expanded heading">{{{ Lang::get('common.basicSetup') }}}</a>
 		<ul class="navigation">
-			<li><a href="{{ URL::action('BeerController@index'); }}">My Beers</a></li>
+			<li><a href="{{ URL::action('BeerController@index'); }}">{{{ Lang::get('common.myBeers') }}}</a></li>
 			<li><a href="keg_list.php">My Kegs</a></li>
 			<li><a href="tap_list.php">My Taps</a></li>
 		</ul>
