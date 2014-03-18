@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>RaspberryPints</title>
+		<title>{{{ Lang::get('common.raspberryPints') }}}</title>
 		{{ HTML::style('styles/admin.css'); }}
 		{{ HTML::style('styles/wysiwyg.css'); }}
 		{{ HTML::style('styles/styles.css'); }}

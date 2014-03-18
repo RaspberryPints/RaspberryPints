@@ -278,7 +278,18 @@ body {height: 100%; font-family: Arial, Helvetica, sans-serif; font-size: 13px; 
 	
 	/* Footer */
 	
-	#footer {font-size: 11px; padding: 15px 10px; clear: both; background: url(/img/admin/bg_footer.png) repeat-x bottom; margin-bottom: 20px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; -moz-border-radius-bottomright: 10px; -moz-border-radius-bottomleft: 10px; text-shadow: 1px 1px 1px #fff;}
+	#footer {
+		font-size: 11px; 
+		padding: 35px 10px 15px; 
+		clear: both; 
+		background: url(/img/admin/bg_footer.png) repeat-x bottom; 
+		margin-bottom: 20px; 
+		border-bottom-left-radius: 10px; 
+		border-bottom-right-radius: 10px; 
+		-moz-border-radius-bottomright: 10px; 
+		-moz-border-radius-bottomleft: 10px; 
+		text-shadow: 1px 1px 1px #fff;
+	}
 
 
 

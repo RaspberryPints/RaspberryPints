@@ -53,8 +53,13 @@
 	.largebox {border: 1px solid #999; padding: 10px; width: 300px; -moz-border-radius: 3px; border-radius: 3px; margin-bottom: 5px; color: #666; background: url(/img/admin/bg_fade_sml.png) repeat-x top;}
 	.xlargebox {border: 1px solid #999; padding: 10px; width: 450px; -moz-border-radius: 3px; border-radius: 3px; margin-bottom: 5px; color: #666; background: url(/img/admin/bg_fade_sml.png) repeat-x top;}
 		
-	#welcome
-{ font-family: 'Fredoka One', cursive; font-weight: 400; color: white; font-size:140% }		
+	#welcome{ 
+		font-family: 'Fredoka One', cursive; 
+		font-weight: 400;
+		color: white; 
+		font-size:140%;
+		padding-left: 10px;
+	}		
 	
 
 blockquote { 

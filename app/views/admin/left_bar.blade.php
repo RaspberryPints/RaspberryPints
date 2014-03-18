@@ -2,20 +2,15 @@
 <div id="leftside">
 
 <!-- Start User Echo -->
-<div id="welcome"> &nbsp; {{{ Lang::get('common.welcome') }}}, <br />
-	&nbsp;
-	<?php
-	/*
-		$sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
-		$result=mysql_query($sql);
-		echo mysql_result($result, 0, 'name');
-	*/
-	?>
+<div id="welcome"> 
+	{{{ Lang::get('common.welcome') }}}, 
+	<br />	
+	{{{ Auth::user()->name }}}
 </div>
 
 <!-- End User Echo -->
 <div class="user">
-	<a href="../index.php"><img src="{{ URL::to('/'); }}/img/admin/logo.png" width="120" height="120" class="hoverimg" alt="Avatar" /></a>
+	<a href="../index.php"><img src="{{ URL::asset('img/admin/logo.png'); }}" width="120" height="120" class="hoverimg" alt="Avatar" /></a>
 </div>
 
 <!-- Start Navagation -->

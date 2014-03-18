@@ -43,7 +43,7 @@ class BeerController extends BaseController {
 			$beer->save();
 
 			// redirect
-			Session::flash('message', Lang::get('common.beerSuccessfullyCreated'));
+			Session::flash('message', sprintf(Lang::get('common.itemSuccessfullyCreated'), Lang::get('beer')));
 			return Redirect::action('BeerController@index');
 		}
 	}
@@ -90,7 +90,7 @@ class BeerController extends BaseController {
 			return Redirect::action('BeerController@edit', $id)
 				->withErrors($validator)
 				->withInput();
-				
+
 		} else {
 			// store
 			$beer = Beer::find($id);
@@ -98,7 +98,7 @@ class BeerController extends BaseController {
 			$beer->save();
 
 			// redirect
-			Session::flash('message', Lang::get('common.beerSuccessfullyUpdated	'));
+			Session::flash('message', sprintf(Lang::get('common.itemSuccessfullyUpdated'), Lang::get('beer')));
 			return Redirect::action('BeerController@index');
 		}
 	}

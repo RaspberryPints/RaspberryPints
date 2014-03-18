@@ -7,9 +7,11 @@ return array(
 	'alcohol' => 'Alcohol',
 	'balance' => 'Balance',
 	'basicSetup' => 'Basic Setup',
+	'beer' => 'Beer',
 	'beerNameAndStyle' => 'Beer Name & Style',
 	'beerStyle' => 'Beer Style',
-	'beerSuccessfullyCreated' => 'Beer was successfully created',
+	'itemSuccessfullyCreated' => '%s was successfully created',
+	'itemSuccessfullyUpdated' => '%s was successfully updated',
 	'bitterness' => 'Bitterness',
 	'calories' => 'Calories',
 	'cancel' => 'Cancel',
@@ -53,5 +55,8 @@ return array(
 	'yeast ' => 'Yeast',
 	'location' => 'Location',
 	'controlPanel' => 'Control Panel',
+
+	'welcomeTitle' => 'Welcome To The RaspberryPints Management Portal',
+	'welcomeMessage' => 'Feel free to explore around and see what all we provide through your admin. Here in the admin you will be able to do a list of useful things, which include adding and the removal of beer along with checking the stats on the activity of your tap.',
 
 );
