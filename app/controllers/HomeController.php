@@ -5,9 +5,9 @@ class HomeController extends BaseController {
 
 	public function index()
 	{
-		$data['options'] = Option::select('configName', 'configValue')->get();
+		$data['options'] = Option::AllAsFlatten();
 		
-		$data['taps'] = ActiveTap::all();
+		$data['taps'] = ActiveTap::orderBy('tapNumber')->get();
 
 		return View::make('home.index', $data);
 	}

@@ -11,5 +11,21 @@ class Option extends Eloquent
     protected $guarded = array('id');
 
 	protected $table = 'config';
+
+	public static function GetByName($configName)
+    {
+ 		return Option::where('configName', $configName)->pluck('configValue'); 		
+    }
 	
+	public static function AllAsFlatten(){
+		$options = Option::all();
+		return Option::FlattenArray($options);
+	}
+
+	public static function FlattenArray($options){
+		foreach ($options as $option) {
+			$result[$option->configName] = $option->configValue;
+		}
+		return $result;
+	}
 }

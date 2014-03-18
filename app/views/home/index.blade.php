@@ -6,14 +6,12 @@
 		<title>RaspberryPints</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-		<!-- Set location of Cascading Style Sheet -->
-		<link rel="stylesheet" type="text/css" href="style.css">
+		{{ HTML::style('styles/home.css'); }}
 		
-		<?php /*
-		<?php if($options[ConfigNames::UseHighResolution]) { ?>
-			<link rel="stylesheet" type="text/css" href="high-res.css">
+		<?php if($options[OptionNames::UseHighResolution]) { ?>
+			{{ HTML::style('styles/high-res.css'); }}			
 		<?php } ?>
-		*/ ?>
+		
 		<link rel="shortcut icon" href="img/pint.ico">
 	</head> 
 
@@ -22,91 +20,95 @@
 			<!-- Header with Brewery Logo and Project Name -->
 			<div class="header clearfix">
 				<div class="HeaderLeft">
-					<?php /*
-					<?php if($options[ConfigNames::UseHighResolution]) { ?>			
-						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl]; ?>" height="200" alt=""></a>
+					<?php if($options[OptionNames::UseHighResolution]) { ?>			
+						<a href="admin/admin.php"><img src="<?php echo $options[OptionNames::LogoUrl]; ?>" height="200" alt=""></a>
 					<?php } else { ?>
-						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl]; ?>" height="100" alt=""></a>
-					<?php } ?>
-					*/ ?>
+						<a href="admin/admin.php"><img src="<?php echo $options[OptionNames::LogoUrl]; ?>" height="100" alt=""></a>
+					<?php } ?>					
 				</div>
 				<div class="HeaderCenter">
 					<h1 id="HeaderTitle">
-					<?php /*
 						<?php
-							if (mb_strlen($config[ConfigNames::HeaderText], 'UTF-8') > ($config[ConfigNames::HeaderTextTruncLen])) {
-								$headerTextTrunced = substr($config[ConfigNames::HeaderText],0,$config[ConfigNames::HeaderTextTruncLen]) . "...";
-								echo $headerTextTrunced ; }
-							else
-								echo $config[ConfigNames::HeaderText];
+							if (mb_strlen($options[OptionNames::HeaderText], 'UTF-8') > ($options[OptionNames::HeaderTextTruncLen])) {
+								echo substr($options[OptionNames::HeaderText],0,$options[OptionNames::HeaderTextTruncLen]) . "...";								
+							}else{
+								echo $options[OptionNames::HeaderText];
+							}
 						?>
-					*/ ?>
 					</h1>
 				</div>
 				<div class="HeaderRight">
-					<?php /*
-					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
+					<?php if($options[OptionNames::UseHighResolution]) { ?>			
 						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints-4k.png" height="200" alt=""></a>
 					<?php } else { ?>
 						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints.png" height="100" alt=""></a>
 					<?php } ?>
-					*/ ?>
 				</div>
 			</div>
 			<!-- End Header Bar -->
-			
-<?php /*
+	
 			<table>
 				<thead>
 					<tr>
-						<?php if($config[ConfigNames::ShowTapNumCol]){ ?>
+						<?php if($options[OptionNames::ShowTapNumCol]){ ?>
 							<th class="tap-num">
-								TAP<br>#
+								{{{ Lang::get('common.tapNum') }}}
 							</th>
 						<?php } ?>
 						
-						<?php if($config[ConfigNames::ShowSrmCol]){ ?>
+						<?php if($options[OptionNames::ShowSrmCol]){ ?>
 							<th class="srm">
-								GRAVITY<hr>COLOR
+								{{{ Lang::get('common.gravity') }}}
+								<hr/>
+								{{{ Lang::get('common.color') }}}
 							</th>
 						<?php } ?>
 						
-						<?php if($config[ConfigNames::ShowIbuCol]){ ?>
+						<?php if($options[OptionNames::ShowIbuCol]){ ?>
 							<th class="ibu">
-								BALANCE<hr>BITTERNESS
+								{{{ Lang::get('common.balance') }}}
+								<hr/>
+								{{{ Lang::get('common.bitterness') }}}
 							</th>
 						<?php } ?>
 						
 						<th class="name">
-							BEER NAME &nbsp; & &nbsp; STYLE<hr>TASTING NOTES
+							{{{ Lang::get('common.beerNameAndStyle') }}}
+							<hr/>
+							{{{ Lang::get('common.tastingNotes') }}}							
 						</th>
 						
-						<?php if($config[ConfigNames::ShowAbvCol]){ ?>
+						<?php if($options[OptionNames::ShowAbvCol]){ ?>
 							<th class="abv">
-								CALORIES<hr>ALCOHOL
+								{{{ Lang::get('common.calories') }}}
+								<hr/>
+								{{{ Lang::get('common.alcohol') }}}
 							</th>
 						<?php } ?>
 						
-						<?php if($config[ConfigNames::ShowKegCol]){ ?>
+						<?php if($options[OptionNames::ShowKegCol]){ ?>
 							<th class="keg">
-								POURED<hr>REMAINING
+								{{{ Lang::get('common.poured') }}}
+								<hr/>
+								{{{ Lang::get('common.remaining') }}}
 							</th>
 						<?php } ?>
 					</tr>
 				</thead>
+	
 				<tbody>
-					<?php for($i = 1; $i <= $numberOfTaps; $i++) {
-						if( isset($beers[$i]) ) {
-							$beer = $beers[$i];
+					<?php for($i = 1; $i <= $options[OptionNames::NumberOfTaps]; $i++) {
+						$beer = ActiveTap::PickByTapNumber($taps, $i);
+						if( $beer != null ) {
 					?>
 							<tr class="<?php if($i%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beer['id']; ?>">
-								<?php if($config[ConfigNames::ShowTapNumCol]){ ?>
+								<?php if($options[OptionNames::ShowTapNumCol]){ ?>
 									<td class="tap-num">
 										<span class="tapcircle"><?php echo $i; ?></span>
 									</td>
 								<?php } ?>
 							
-								<?php if($config[ConfigNames::ShowSrmCol]){ ?>
+								<?php if($options[OptionNames::ShowSrmCol]){ ?>
 									<td class="srm">
 										<h3><?php echo $beer['og']; ?> OG</h3>
 										
@@ -119,7 +121,7 @@
 									</td>
 								<?php } ?>
 							
-								<?php if($config[ConfigNames::ShowIbuCol]){ ?>
+								<?php if($options[OptionNames::ShowIbuCol]){ ?>
 									<td class="ibu">
 										<h3>
 											<?php 
@@ -146,7 +148,7 @@
 									<p><?php echo $beer['notes']; ?></p>
 								</td>
 							
-								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::ShowAbvImg])){ ?>
+								<?php if(($options[OptionNames::ShowAbvCol]) && ($options[OptionNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3><?php
 											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
@@ -184,7 +186,7 @@
 									</td>
 								<?php } ?>
 								
-								<?php if(($config[ConfigNames::ShowAbvCol]) && ! ($config[ConfigNames::ShowAbvImg])){ ?>
+								<?php if(($options[OptionNames::ShowAbvCol]) && ! ($options[OptionNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3><?php
 											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
@@ -205,7 +207,7 @@
 									</td>
 								<?php } ?>
 								
-								<?php if($config[ConfigNames::ShowKegCol]){ ?>
+								<?php if($options[OptionNames::ShowKegCol]){ ?>
 									<td class="keg">
 										<h3><?php echo number_format((($beer['startAmount'] - $beer['remainAmount']) * 128)); ?> fl oz poured</h3>
 										<?php 
@@ -234,13 +236,13 @@
 							</tr>
 						<?php }else{ ?>
 							<tr class="<?php if($i%2 > 0){ echo 'altrow'; }?>">
-								<?php if($config[ConfigNames::ShowTapNumCol]){ ?>
+								<?php if($options[OptionNames::ShowTapNumCol]){ ?>
 									<td class="tap-num">
 										<span class="tapcircle"><?php echo $i; ?></span>
 									</td>
 								<?php } ?>
 							
-								<?php if($config[ConfigNames::ShowSrmCol]){ ?>
+								<?php if($options[OptionNames::ShowSrmCol]){ ?>
 									<td class="srm">
 										<h3></h3>										
 										<div class="srm-container">
@@ -252,7 +254,7 @@
 									</td>
 								<?php } ?>
 							
-								<?php if($config[ConfigNames::ShowIbuCol]){ ?>
+								<?php if($options[OptionNames::ShowIbuCol]){ ?>
 									<td class="ibu">
 										<h3></h3>										
 										<div class="ibu-container">
@@ -268,7 +270,7 @@
 									<p></p>
 								</td>
 								
-								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::ShowAbvImg])){ ?>
+								<?php if(($options[OptionNames::ShowAbvCol]) && ($options[OptionNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3></h3>
 										<div class="abv-container">
@@ -278,7 +280,7 @@
 									</td>
 								<?php } ?>
 
-								<?php if(($config[ConfigNames::ShowAbvCol]) && ! ($config[ConfigNames::ShowAbvImg])){ ?>
+								<?php if(($options[OptionNames::ShowAbvCol]) && ! ($options[OptionNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3></h3>
 
@@ -286,7 +288,7 @@
 									</td>
 								<?php } ?>								
 								
-								<?php if($config[ConfigNames::ShowKegCol]){ ?>
+								<?php if($options[OptionNames::ShowKegCol]){ ?>
 									<td class="keg">
 										<h3></h3>
 										<div class="keg-container">
@@ -300,8 +302,6 @@
 					<?php } ?>
 				</tbody>
 			</table>
-
-		*/ ?>
 		</div>
 	</body>
 </html>
