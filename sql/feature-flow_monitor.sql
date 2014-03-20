@@ -191,7 +191,13 @@ ORDER BY t.tapNumber;
 
 
 
+-- --------------------------------------------------------
 
+--
+-- Make table columns more consistant
+--
+
+ALTER TABLE kegTypes CHANGE displayName `name` text;
 
 -- --------------------------------------------------------
 
@@ -216,6 +222,9 @@ ALTER TABLE srmRgb CHANGE modifiedDate updated_at timestamp;
 
 ALTER TABLE pours CHANGE createdDate created_at timestamp;
 ALTER TABLE pours CHANGE modifiedDate updated_at timestamp;
+
+ALTER TABLE kegs CHANGE createdDate created_at timestamp;
+ALTER TABLE kegs CHANGE modifiedDate updated_at timestamp;
 
 ALTER TABLE kegTypes CHANGE createdDate created_at timestamp;
 ALTER TABLE kegTypes CHANGE modifiedDate updated_at timestamp;

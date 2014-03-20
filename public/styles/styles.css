@@ -37,13 +37,6 @@
 	
 	/* Login Page */
 	
-	.logininput {background: #00CCFF}
-	.logininput:focus {border: 1px solid #000000; color: #000000;}
-				
-		#logincontainer .loginbtn {background: #3197CA url(/img/admin/bg_login_btn.png) repeat-x top; border-radius: 8px; -moz-border-radius: 8px; border: none; font-size: 25px; font-weight: 700; text-shadow: 1px 1px 1px #9cced6; color: #1C5571; width: 260px; padding: 11px 0; margin: 5px 0 0 0; display: block; cursor: pointer; border-top: 1px solid #000000; letter-spacing: -1px;}
-		
-		#logincontainer .loginbtn:hover {background: #3197CA url(/img/admin/bg_login_btn.png) -0 -60px; cursor: pointer; color: #103141;}
-		
 		
 		
 	.inputbox {border: 1px solid #999; padding: 10px; width: 300px; -moz-border-radius: 3px; border-radius: 3px; margin-bottom: 5px; color: #666; background: url(/img/admin/bg_fade_sml.png) repeat-x top;}

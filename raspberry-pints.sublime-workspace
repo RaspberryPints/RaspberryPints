@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"we",
+				"weight"
+			],
+			[
 				"beer",
 				"beer"
 			],
@@ -64,87 +68,67 @@
 	"buffers":
 	[
 		{
-			"file": "app/controllers/BeerController.php",
+			"file": "app/lang/en/common.php",
 			"settings":
 			{
-				"buffer_size": 3057,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/views/beers/form.blade.php",
-			"settings":
-			{
-				"buffer_size": 3065,
+				"buffer_size": 2362,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "public/styles/styles.css",
+			"file": "app/models/Keg.php",
 			"settings":
 			{
-				"buffer_size": 4837,
+				"buffer_size": 603,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/controllers/KegController.php",
+			"settings":
+			{
+				"buffer_size": 3074,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/views/kegs/index.blade.php",
+			"settings":
+			{
+				"buffer_size": 2665,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "app/models/Beer.php",
+			"file": "app/routes.php",
 			"settings":
 			{
-				"buffer_size": 435,
+				"buffer_size": 1041,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "app/models/ActiveTap.php",
+			"file": "app/views/kegs/form.blade.php",
 			"settings":
 			{
-				"buffer_size": 593,
+				"buffer_size": 3952,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/models/KegType.php",
+			"settings":
+			{
+				"buffer_size": 177,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "",
+			"file": "app/models/KegStatus.php",
 			"settings":
 			{
-				"buffer_size": 0,
-				"line_ending": "Windows",
-				"name": "Xdebug Context",
-				"read_only": true,
-				"scratch": true
-			}
-		},
-		{
-			"contents": "",
-			"settings":
-			{
-				"buffer_size": 0,
-				"line_ending": "Windows",
-				"name": "Xdebug Watch",
-				"read_only": true,
-				"scratch": true
-			}
-		},
-		{
-			"contents": "",
-			"settings":
-			{
-				"buffer_size": 0,
-				"line_ending": "Windows",
-				"name": "Xdebug Stack",
-				"read_only": true,
-				"scratch": true
-			}
-		},
-		{
-			"contents": "",
-			"settings":
-			{
-				"buffer_size": 0,
-				"line_ending": "Windows",
-				"name": "Xdebug Breakpoint",
-				"read_only": true,
-				"scratch": true
+				"buffer_size": 129,
+				"line_ending": "Unix"
 			}
 		}
 	],
@@ -232,33 +216,39 @@
 	},
 	"file_history":
 	[
-		"/C/Projects/GitHub/RaspberryPints/app/views/admin/index.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/kegs/create.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/kegs/edit.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/beers/index.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/routes.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/admin/left_bar.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/models/Beer.php",
+		"/C/Projects/GitHub/RaspberryPints/app/controllers/BeerController.php",
+		"/C/Projects/GitHub/RaspberryPints/sql/feature-flow_monitor.sql",
+		"/C/Projects/GitHub/RaspberryPints/app/lang/en/common.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/beers/form.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/admin/login.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/public/styles/styles.css",
+		"/C/Projects/GitHub/RaspberryPints/public/styles/login.css",
+		"/C/Projects/GitHub/RaspberryPints/app/views/layouts/login.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/models/ActiveTap.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/admin/index.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/public/styles/admin.css",
 		"/C/Projects/GitHub/RaspberryPints/app/views/layouts/admin.blade.php",
-		"/C/Projects/GitHub/RaspberryPints/app/views/admin/left_bar.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/beers/edit.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/lang/en/html.php",
-		"/C/Projects/GitHub/RaspberryPints/app/lang/en/common.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/admin/header.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/controllers/HomeController.php",
 		"/C/Projects/GitHub/RaspberryPints/app/models/OptionNames.php",
 		"/C/Projects/GitHub/RaspberryPints/app/models/Option.php",
-		"/C/Projects/GitHub/RaspberryPints/app/views/beers/index.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/home/tap.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/public/styles/home.css",
 		"/C/Projects/GitHub/RaspberryPints/app/views/home/index.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/home/empty-tap.blade.php",
-		"/C/Projects/GitHub/RaspberryPints/app/models/ActiveTap.php",
 		"/C/Projects/GitHub/RaspberryPints/app/models/BeerStyle.php",
-		"/C/Projects/GitHub/RaspberryPints/app/models/Beer.php",
-		"/C/Projects/GitHub/RaspberryPints/app/routes.php",
 		"/C/Projects/GitHub/RaspberryPints/app/controllers/AdminController.php",
 		"/C/Projects/GitHub/RaspberryPints/app/models/User.php",
 		"/C/Projects/GitHub/RaspberryPints/app/config/database.php",
-		"/C/Projects/GitHub/RaspberryPints/app/views/admin/login.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/beers/create.blade.php",
-		"/C/Projects/GitHub/RaspberryPints/app/controllers/BeerController.php",
 		"/C/Projects/GitHub/RaspberryPints/app/config/auth.php",
 		"/C/Projects/GitHub/RaspberryPints/app/filters.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/shared/admin-header.blade.php",
@@ -267,7 +257,6 @@
 		"/C/Projects/GitHub/RaspberryPints/raspberry-pints.sublime-project",
 		"/C/php/php.ini",
 		"/C/Projects/GitHub/RaspberryPints/app/views/beer/index.blade.php",
-		"/C/Projects/GitHub/RaspberryPints/app/views/beers/form.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/phpunit.xml",
 		"/C/Projects/GitHub/RaspberryPints/app/views/beer/form.blade.php",
 		"/C/Projects/GitHub/RaspberryPints-Laravel/raspberry-pints/app/views/beer/index.blade.php",
@@ -353,23 +342,23 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 5,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "app/controllers/BeerController.php",
+					"file": "app/lang/en/common.php",
 					"settings":
 					{
-						"buffer_size": 3057,
+						"buffer_size": 2362,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								119,
-								119
+								1778,
+								1784
 							]
 						],
 						"settings":
@@ -419,149 +408,6 @@
 								"bh_single_quote_close"
 							],
 							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 35.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "app/views/beers/form.blade.php",
-					"settings":
-					{
-						"buffer_size": 3065,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3000,
-								3000
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 585.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "public/styles/styles.css",
-					"settings":
-					{
-						"buffer_size": 4837,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1577,
-								1577
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"syntax": "Packages/CSS/CSS.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
@@ -571,19 +417,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "app/models/Beer.php",
+					"buffer": 1,
+					"file": "app/models/Keg.php",
 					"settings":
 					{
-						"buffer_size": 435,
+						"buffer_size": 603,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								350,
-								362
+								331,
+								331
 							]
 						],
 						"settings":
@@ -641,19 +487,231 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "app/models/ActiveTap.php",
+					"buffer": 2,
+					"file": "app/controllers/KegController.php",
 					"settings":
 					{
-						"buffer_size": 593,
+						"buffer_size": 3074,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								2216,
+								2229
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1440.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "app/views/kegs/index.blade.php",
+					"settings":
+					{
+						"buffer_size": 2665,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1359,
+								1359
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 187.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "app/routes.php",
+					"settings":
+					{
+						"buffer_size": 1041,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								831,
+								831
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "app/views/kegs/form.blade.php",
+					"settings":
+					{
+						"buffer_size": 3952,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3373,
+								3373
 							]
 						],
 						"settings":
@@ -707,100 +765,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 0,
-			"sheets":
-			[
-				{
-					"buffer": 5,
-					"settings":
-					{
-						"buffer_size": 0,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"syntax": "Packages/Xdebug Client/Xdebug.tmLanguage",
-							"word_wrap": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 675.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 6,
+					"file": "app/models/KegType.php",
 					"settings":
 					{
-						"buffer_size": 0,
+						"buffer_size": 177,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								177,
+								177
 							]
 						],
 						"settings":
@@ -849,40 +832,8 @@
 								"bh_single_quote_open",
 								"bh_single_quote_close"
 							],
-							"syntax": "Packages/Xdebug Client/Xdebug.tmLanguage",
-							"word_wrap": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 1,
-			"sheets":
-			[
-				{
-					"buffer": 7,
-					"settings":
-					{
-						"buffer_size": 0,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Xdebug Client/Xdebug.tmLanguage",
-							"word_wrap": false
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -891,18 +842,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 7,
+					"file": "app/models/KegStatus.php",
 					"settings":
 					{
-						"buffer_size": 0,
+						"buffer_size": 129,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								13,
+								22
 							]
 						],
 						"settings":
@@ -951,8 +903,7 @@
 								"bh_single_quote_open",
 								"bh_single_quote_close"
 							],
-							"syntax": "Packages/Xdebug Client/Xdebug.tmLanguage",
-							"word_wrap": false
+							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -978,32 +929,18 @@
 			[
 				0,
 				0,
-				2,
+				1,
 				1
-			],
-			[
-				0,
-				1,
-				1,
-				2
-			],
-			[
-				1,
-				1,
-				2,
-				2
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.5,
 			1.0
 		],
 		"rows":
 		[
 			0.0,
-			0.7,
 			1.0
 		]
 	},

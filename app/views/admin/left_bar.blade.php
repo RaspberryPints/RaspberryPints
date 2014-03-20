@@ -24,7 +24,7 @@
 		<a class="expanded heading">{{{ Lang::get('common.basicSetup') }}}</a>
 		<ul class="navigation">
 			<li><a href="{{ URL::action('BeerController@index'); }}">{{{ Lang::get('common.myBeers') }}}</a></li>
-			<li><a href="keg_list.php">My Kegs</a></li>
+			<li><a href="{{ URL::action('KegController@index'); }}">{{{ Lang::get('common.myKegs') }}}</a></li>
 			<li><a href="tap_list.php">My Taps</a></li>
 		</ul>
 	</li>

@@ -25,6 +25,9 @@ Route::group(array('before' => 'auth'), function()
 
 	Route::resource('admin/beers', 'BeerController');
 	Route::get('admin/beer/inactivate/{id}', 'BeerController@inactivate');
+	
+	Route::resource('admin/kegs', 'KegController');
+	Route::get('admin/kegs/inactivate/{id}', 'KegController@inactivate');
 
 	
 	Route::get('admin/user', function()
