@@ -70,7 +70,7 @@
             <tr>
                 <td colspan="2">
                     {{ link_to_action('BeerController@index', Lang::get('common.cancel'), null, array( 'class' => 'btnalt')); }}
-                    {{ Form::submit('Save', array( 'class' => 'btn')) }}
+                    {{ Form::submit(Lang::get('common.save'), array( 'class' => 'btn')) }}
                 </td>
             </tr>
         </table>
