@@ -82,6 +82,15 @@ ALTER TABLE taps DROP COLUMN `currentAmount`;
 -- --------------------------------------------------------
 
 --
+-- Batches cleanup
+--
+
+ALTER TABLE batches DROP COLUMN tapNumber;
+
+
+-- --------------------------------------------------------
+
+--
 -- Update pours columns
 --
 
@@ -123,7 +132,9 @@ UPDATE kegTypes SET maxLiters = maxLiters * 3.7854;
 
 -- --------------------------------------------------------
 
+--
 -- delete all tap information and rebuild it using the info in batches
+--
 
 DELETE FROM taps;
 
@@ -139,6 +150,11 @@ FROM config c
 	RIGHT JOIN batches b ON @rowNum < c.configValue
 	LEFT JOIN batches b2 ON b2.active = 1 AND b2.tapNumber = (@rowNum + 1)
 WHERE c.configName = 'numberOfTaps';
+
+
+
+
+
 
 
 
@@ -188,6 +204,21 @@ FROM taps t
 	LEFT JOIN vwGetTapsAmountPoured as p ON p.batchId = ba.Id
 WHERE t.active = true
 ORDER BY t.tapNumber;
+
+
+
+-- --------------------------------------------------------
+
+--
+-- Make columns not null
+--
+
+ALTER TABLE kegs MODIFY make text;
+ALTER TABLE kegs MODIFY model text;
+ALTER TABLE kegs MODIFY serial text;
+ALTER TABLE kegs MODIFY stampedOwner text;
+ALTER TABLE kegs MODIFY stampedLoc text;
+ALTER TABLE kegs MODIFY notes text;
 
 
 
