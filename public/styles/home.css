@@ -315,7 +315,7 @@ margin: 0px;
   height: 24px;
   width: 137px;
   display: block;
-  background: transparent url(img/ratings_small_v3.png) center center no-repeat; }
+  background: transparent url(../img/ratings_small_v3.png) center center no-repeat; }
 
 .rating.small.r00 {
   background-position: 0 0; }

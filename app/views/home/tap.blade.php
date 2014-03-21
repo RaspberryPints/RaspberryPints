@@ -41,8 +41,14 @@
 								<?php } ?>
 							
 								<td class="name">
+								<div class="beerimg">
+									{{{ Untappd::beerIMG($options,$beer->untID) }}}
+									</div>
 									<h1><?php echo $beer->name; ?></h1>
 									<h2 class="subhead"><?php echo $beer->style; ?></h2>
+									<p class="rating">
+									{{{ Untappd::BeerRating($options,$beer->untID) }}}
+									</p>
 									<p><?php echo $beer->notes; ?></p>
 								</td>
 							
