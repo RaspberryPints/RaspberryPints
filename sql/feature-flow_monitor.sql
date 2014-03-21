@@ -78,16 +78,6 @@ ALTER TABLE taps DROP COLUMN `startAmount`;
 
 ALTER TABLE taps DROP COLUMN `currentAmount`;
 
-
--- --------------------------------------------------------
-
---
--- Batches cleanup
---
-
-ALTER TABLE batches DROP COLUMN tapNumber;
-
-
 -- --------------------------------------------------------
 
 --
@@ -152,6 +142,16 @@ FROM config c
 WHERE c.configName = 'numberOfTaps';
 
 
+
+
+
+-- --------------------------------------------------------
+
+--
+-- Batches cleanup
+--
+
+ALTER TABLE batches DROP COLUMN tapNumber;
 
 
 
