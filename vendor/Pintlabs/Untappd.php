@@ -78,12 +78,12 @@ class Pintlabs_Service_Untappd
     public function __construct(array $connectArgs = array())
     {
         if (!isset($connectArgs['clientId']) || empty($connectArgs['clientId'])) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('clientId not set and is required');
         }
 
         if (!isset($connectArgs['clientSecret']) || empty($connectArgs['clientSecret'])) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('clientSecret not set and is required');
         }
 
@@ -162,7 +162,7 @@ class Pintlabs_Service_Untappd
     public function addToMyWishlist($beerId)
     {
         if (empty($beerId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('beerId parameter must be set and not empty');
         }
 
@@ -183,7 +183,7 @@ class Pintlabs_Service_Untappd
     public function removeFromMyWishlist($beerId)
     {
         if (empty($beerId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('beerId parameter must be set and not empty');
         }
 
@@ -215,7 +215,7 @@ class Pintlabs_Service_Untappd
     public function acceptMyFriendRequest($requestingUserId)
     {
         if (empty($requestingUserId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('requestingUserId parameter must be set and not empty');
         }
 
@@ -234,7 +234,7 @@ class Pintlabs_Service_Untappd
     public function rejectMyFriendRequest($requestingUserId)
     {
         if (empty($requestingUserId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('requestingUserId parameter must be set and not empty');
         }
 
@@ -253,7 +253,7 @@ class Pintlabs_Service_Untappd
     public function removeMyFriend($friendUserId)
     {
         if (empty($friendUserId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('friendUserId parameter must be set and not empty');
         }
 
@@ -270,7 +270,7 @@ class Pintlabs_Service_Untappd
     public function makeMyFriendRequest($userId)
     {
         if (empty($userId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('userId parameter must be set and not empty');
         }
 
@@ -289,7 +289,7 @@ class Pintlabs_Service_Untappd
     public function userInfo($username = '')
     {
         if ($username == '' && empty($this->_accessToken)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('username parameter or Untappd authentication parameters must be set.');
         }
 
@@ -310,7 +310,7 @@ class Pintlabs_Service_Untappd
     public function userFeed($username = '', $limit = '', $offset = '')
     {
         if ($username == '' && empty($this->_accessToken)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('username parameter or Untappd authentication parameters must be set.');
         }
 
@@ -333,7 +333,7 @@ class Pintlabs_Service_Untappd
     public function userDistinctBeers($username = '', $offset = '', $sort = '')
     {
         if ($username == '' && empty($this->_accessToken)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('username parameter or Untappd authentication parameters must be set.');
         }
 
@@ -356,7 +356,7 @@ class Pintlabs_Service_Untappd
     public function userFriends($username = '', $offset = '', $limit = '')
     {
         if ($username == '' && empty($this->_accessToken)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('username parameter or Untappd authentication parameters must be set.');
         }
 
@@ -379,7 +379,7 @@ class Pintlabs_Service_Untappd
     public function userWishlist($username = '', $offset = '')
     {
         if ($username == '' && empty($this->_accessToken)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('username parameter or Untappd authentication parameters must be set.');
         }
 
@@ -402,7 +402,7 @@ class Pintlabs_Service_Untappd
     public function userBadge($username = '', $offset = '')
     {
         if ($username == '' && empty($this->_accessToken)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('username parameter or Untappd authentication parameters must be set.');
         }
 
@@ -423,7 +423,7 @@ class Pintlabs_Service_Untappd
     public function beerInfo($beerId)
     {
         if (empty($beerId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('beerId parameter must be set and not empty');
         }
 
@@ -443,12 +443,12 @@ class Pintlabs_Service_Untappd
     public function beerSearch($searchString, $sort = '')
     {
         if (empty($searchString)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('searchString parameter must be set and not empty');
         }
 
         if (!empty($sort) && ($sort != 'count' && $sort != 'name')) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('If set, sort can only be "count" or "name"');
         }
 
@@ -472,7 +472,7 @@ class Pintlabs_Service_Untappd
     public function beerFeed($beerId, $since = '', $offset = '')
     {
         if (empty($beerId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('beerId parameter must be set and not empty');
         }
 
@@ -494,7 +494,7 @@ class Pintlabs_Service_Untappd
     public function venueInfo($venueId)
     {
         if (empty($venueId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('venueId parameter must be set and not empty');
         }
 
@@ -515,7 +515,7 @@ class Pintlabs_Service_Untappd
     public function venueFeed($venueId, $since = '', $offset = '', $limit = '')
     {
         if (empty($venueId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('venueId parameter must be set and not empty');
         }
 
@@ -541,7 +541,7 @@ class Pintlabs_Service_Untappd
     public function breweryFeed($breweryId, $maxId = '', $minId = '', $limit = '')
     {
         if (empty($breweryId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('breweryId parameter must be set and not empty');
         }
 
@@ -564,7 +564,7 @@ class Pintlabs_Service_Untappd
     public function breweryInfo($breweryId)
     {
         if (empty($breweryId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('breweryId parameter must be set and not empty');
         }
 
@@ -583,7 +583,7 @@ class Pintlabs_Service_Untappd
     public function brewerySearch($searchString)
     {
         if (empty($searchString)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('searchString parameter must be set and not empty');
         }
 
@@ -639,7 +639,7 @@ class Pintlabs_Service_Untappd
     {
         $validTypes = array('all', 'macro', 'micro', 'local');
         if (!in_array($type, $validTypes)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('Type parameter must be one of the following: ' . implode(', ', $validTypes));
         }
 
@@ -663,7 +663,7 @@ class Pintlabs_Service_Untappd
     public function checkinInfo($checkinId)
     {
         if (empty($checkinId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('checkinId parameter must be set and not empty');
         }
 
@@ -691,28 +691,28 @@ class Pintlabs_Service_Untappd
     public function checkin($gmtOffset, $timezone, $beerId, $foursquareId = '', $userLat = '', $userLong = '', $shout = '', $facebook = false, $twitter = false, $foursquare = false, $rating = '')
     {
         if (empty($gmtOffset)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('gmtOffset parameter must be set and not empty');
         }
 
         if (empty($timezone)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('timezone parameter must be set and not empty');
         }
 
         if (empty($beerId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('beerId parameter must be set and not empty');
         }
 
         // If $foursquareId is set, must past Lat and Long to the API
         if (!empty($foursquareId) && (empty($userLat) || empty($userLong))) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('userLat and userLong parameters required since foursquareId is set');
         }
 
         if (!empty($rating) && (!is_int($rating) || $rating < 1 || $rating > 5)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('If set, rating must be an integer between 1 and 5');
         }
 
@@ -744,12 +744,12 @@ class Pintlabs_Service_Untappd
     public function checkinComment($checkinId, $comment)
     {
         if (empty($checkinId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('checkinId parameter must be set and not empty');
         }
 
         if (empty($comment)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('comment parameter must be set and not empty');
         }
 
@@ -770,7 +770,7 @@ class Pintlabs_Service_Untappd
     public function checkinRemoveComment($commentId)
     {
         if (empty($commentId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('commentId parameter must be set and not empty');
         }
 
@@ -789,7 +789,7 @@ class Pintlabs_Service_Untappd
     public function checkinToast($checkinId)
     {
         if (empty($checkinId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('checkinId parameter must be set and not empty');
         }
 
@@ -808,7 +808,7 @@ class Pintlabs_Service_Untappd
     public function checkinRemoveToast($checkinId)
     {
         if (empty($checkinId)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('checkinId parameter must be set and not empty');
         }
 
@@ -835,7 +835,7 @@ class Pintlabs_Service_Untappd
 
         if ($requireAuth) {
             if (empty($this->_accessToken)) {
-                require_once 'Pintlabs/Service/Untappd/Exception.php';
+                require_once __DIR__.'/Service/Untappd/Exception.php';
                 throw new Pintlabs_Service_Untappd_Exception('This method requires an access token');
             }
         }
@@ -874,7 +874,7 @@ class Pintlabs_Service_Untappd
         if ($this->_lastRawResponse === false) {
 
             $this->_lastRawResponse = curl_error($ch);
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('CURL Error: ' . curl_error($ch));
         }
 
@@ -886,7 +886,7 @@ class Pintlabs_Service_Untappd
             
         // If the http_code var is not found, the response from the server was unparsable
         if (!isset($this->_lastParsedResponse->meta->code) && !isset($this->_lastParsedResponse->meta->http_code)) {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
             throw new Pintlabs_Service_Untappd_Exception('Error parsing response from server.');
         }
 
@@ -894,7 +894,7 @@ class Pintlabs_Service_Untappd
                             
         // Server provides error messages in http_code and error vars.  If not 200, we have an error.
         if ($code != '200') {
-            require_once 'Pintlabs/Service/Untappd/Exception.php';
+            require_once __DIR__.'/Service/Untappd/Exception.php';
                         
             $errorMessage = (isset($this->_lastParsedResponse->meta->error_detail)) ? $this->_lastParsedResponse->meta->error_detail : $this->_lastParsedResponse->meta->error;            
         

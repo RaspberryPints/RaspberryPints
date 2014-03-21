@@ -1,5 +1,5 @@
 <?php
-include __DIR__."/../includes/Untappd.php";
+include __DIR__."/../../vendor/Pintlabs/Untappd.php";
 
 class Untappd extends Eloquent 
 {
