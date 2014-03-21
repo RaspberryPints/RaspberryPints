@@ -41,7 +41,7 @@
 								<?php } ?>
 							
 								<td class="name">
-									<h1><?php echo $beer->beername; ?></h1>
+									<h1><?php echo $beer->name; ?></h1>
 									<h2 class="subhead"><?php echo $beer->style; ?></h2>
 									<p><?php echo $beer->notes; ?></p>
 								</td>
@@ -109,7 +109,7 @@
 								
 								<?php if($options[OptionNames::ShowKegCol]){ ?>
 									<td class="keg">
-										<h3><?php echo number_format((($beer->startLiter - $beer->remainAmount) * 128)); ?> {{{ Lang::get('common.flOzPoured') }}}</h3>
+										<h3><?php echo number_format((($beer->startLiter - $beer->remainAmount)/0.0296)); ?> {{{ Lang::get('common.flOzPoured') }}}</h3>
 										<?php 
 											$kegImgClass = "";
 											$percentRemaining = $beer->remainAmount / $beer->startLiter * 100;
@@ -130,7 +130,7 @@
 										<div class="keg-container">
 											<div class="keg-indicator"><div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%"></div></div>
 										</div>
-										<h2><?php echo number_format(($beer->remainAmount * 128)); ?> {{{ Lang::get('common.flOzLeft') }}}</h2>
+										<h2><?php echo number_format(($beer->remainAmount)/0.0296); ?> {{{ Lang::get('common.flOzLeft') }}}</h2>
 									</td>
 								<?php } ?>
 							</tr>

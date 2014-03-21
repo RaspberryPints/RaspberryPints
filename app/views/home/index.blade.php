@@ -119,7 +119,7 @@
 			</table>
 		 <?php 
 		 
-		return Untappd::utBreweryFeed($options);
+		Untappd::utBreweryFeed($options);
 		 
 		 ?>
 		</div>

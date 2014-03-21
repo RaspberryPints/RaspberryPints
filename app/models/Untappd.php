@@ -15,9 +15,6 @@ $utconfig = array(
     'redirectUri'  => '',
     'accessToken'  => '',
 );
-
-
-
 $cachefile = __DIR__."/../../cache/bfeed";
 $filetimemod = filemtime($cachefile)+1800;
 if (time()<$filetimemod) {
@@ -34,7 +31,7 @@ try {
 } 
 
   
-$bfeeds ="<table width=95%><tr>";
+ $bfeeds ="<table width=95%><tr>";
 
 foreach ($bfeed->response->checkins->items as $i) {
     
@@ -51,7 +48,8 @@ foreach ($bfeed->response->checkins->items as $i) {
 }
 
 $bfeeds .="</tr></table>";
-    $fp = fopen($cachefile, 'w');
+   
+   $fp = fopen($cachefile, 'w');
     fwrite($fp, $bfeeds);
     fclose($fp);
 
