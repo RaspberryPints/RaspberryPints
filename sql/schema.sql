@@ -18,8 +18,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `raspberrypints`
 --
-CREATE DATABASE IF NOT EXISTS `raspberrypints` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `raspberrypints`;
+
 
 -- --------------------------------------------------------
 

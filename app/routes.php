@@ -29,7 +29,6 @@ Route::group(array('before' => 'auth'), function()
 	Route::resource('admin/kegs', 'KegController');
 	Route::get('admin/kegs/inactivate/{id}', 'KegController@inactivate');
 
-	
 	Route::get('admin/user', function()
 	{
 	    return View::make('user.index');

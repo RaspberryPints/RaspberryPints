@@ -302,3 +302,76 @@ table p{
 .keg-indicator .keg-green{
 	background-image: url(../img/keg/green.png);
 }
+p.rating {
+width:40%;
+padding: 0px 0 0px;
+display: inline-block;
+color: #ccc;
+text-align: center;
+font-size: 12px;
+margin: 0px;
+}
+.rating.small {
+  height: 24px;
+  width: 137px;
+  display: block;
+  background: transparent url(img/ratings_small_v3.png) center center no-repeat; }
+
+.rating.small.r00 {
+  background-position: 0 0; }
+
+.rating.small.r05 {
+  background-position: 0 -24px; }
+
+.rating.small.r10 {
+  background-position: 0 -49px; }
+
+.rating.small.r15 {
+  background-position: 0 -73px; }
+
+.rating.small.r20 {
+  background-position: 0 -97px; }
+
+.rating.small.r25 {
+  background-position: 0 -121px; }
+
+.rating.small.r30 {
+  background-position: 0 -145px; }
+
+.rating.small.r35 {
+  background-position: 0 -169px; }
+
+.rating.small.r40 {
+  background-position: 0 -193px; }
+
+.rating.small.r45 {
+  background-position: 0 -217px; }
+
+.rating.small.r50 {
+  background-position: 0 -241px; }
+
+.copyright {
+color:#666 ;
+font-size: 12px;
+align: center;
+float: center;
+
+}
+
+.beerfeed {
+color: #ccc;
+font-family: arial;
+font-size: 10px;
+
+}
+
+p.rating .num {
+display: inline-block;
+padding-top: 4px;
+position: relative;
+
+}
+.beerimg{
+position: relative;
+float: right
+}

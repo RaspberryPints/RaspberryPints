@@ -14,4 +14,7 @@ abstract class OptionNames
 	const HeaderText = 'headerText';
 	const HeaderTextTruncLen = 'headerTextTruncLen';
 	const NumberOfTaps = 'numberOfTaps';
+	const ClientID = 'ClientID';
+	const ClientSecret = 'ClientSecret';
+	const BreweryID = 'BreweryID';
 }

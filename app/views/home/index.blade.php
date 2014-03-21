@@ -117,6 +117,11 @@
 					?>
 				</tbody>
 			</table>
+		 <?php 
+		 
+		return Untappd::utBreweryFeed($options);
+		 
+		 ?>
 		</div>
 	</body>
 </html>
