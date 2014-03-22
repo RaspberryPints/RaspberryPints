@@ -48,6 +48,8 @@ SELECT beerId, kegId, active, ogAct, fgAct, srmAct, ibuAct, startAmount * 3.7854
 
 ALTER TABLE taps ADD COLUMN batchId int(11) NULL;
 
+ALTER TABLE taps CHANGE COLUMN `tapNumber` `name` VARCHAR(255) NOT NULL;
+
 UPDATE taps t LEFT JOIN batches b ON b.beerId = t.beerId AND b.kegId = t.KegId SET t.batchId = b.Id;
 
 ALTER TABLE taps ADD CONSTRAINT FK_taps_batchId FOREIGN KEY (`batchId`) REFERENCES batches(`id`) ON DELETE CASCADE;
@@ -98,6 +100,7 @@ ALTER TABLE pours ADD COLUMN pulsesPerLiter int NOT NULL;
 
 ALTER TABLE pours ADD COLUMN liters decimal(6,2) NOT NULL;
 
+ALTER TABLE pours DROP COLUMN `amountPoured`;
 
 -- --------------------------------------------------------
 
