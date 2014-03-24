@@ -55,4 +55,8 @@ class ActiveTap extends Eloquent
     public function ABV(){
         return ($this->ogAct - $this->fgAct) * 131;
     }
+
+    public function PercentRemaining(){
+        return $this->remainAmount / $this->startLiter * 100;
+    } 
 }

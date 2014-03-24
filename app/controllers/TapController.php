@@ -16,24 +16,24 @@ class TapController extends BaseController {
 	/**
 	 * Assign a batch to the tap
 	 *
-	 * @param  int  $tapId
-	 * @param  int  $batchId
 	 * @return Response
 	 */
-	public function updateBatch($tapId, $batchId = null)
+	public function updateBatch()
 	{
-		$tap = Tap::find($tabId);
-		$tap->batchId = $batchId;
+		$tap = Tap::find( Input::get('id') );
+
+		$tap->batchId = null;
+		if( Input::get('batchId') != "" )
+			$tap->batchId = Input::get('batchId');
+
 		$tap->save();
 
-		// redirect
-		Session::flash('message', sprintf(Lang::get('common.itemSuccessfullyUpdated'), Lang::get('tap')));
-		return Redirect::action('TapController@index');		
+		return Response::json(array('success' => true));
 	}
 
 	private function loadFormViewData(&$data){
 
-		$batchList = array();
+		$batchList = array( '' => Lang::get('common.NoBeerOnTap') );
 		$batches = Batch::GetAllActive();
 		foreach($batches as $batch){
 			$batchList = array_add($batchList, $batch->id, $batch->Beer->name);

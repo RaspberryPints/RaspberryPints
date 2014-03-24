@@ -78,7 +78,7 @@
 								<?php if(($options[OptionNames::ShowAbvCol]) && ! ($options[OptionNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3><?php echo $beer->Calories() ?> {{{ Lang::get('common.kCal') }}} </h3>									
-										<h2><?php echo number_format($beer->abv(), 1, '.', ',')."%"; ?>  {{{ Lang::get('common.abv') }}}</h2>
+										<h2><?php echo number_format($beer->ABV(), 1, '.', ',')."%"; ?>  {{{ Lang::get('common.abv') }}}</h2>
 									</td>
 								<?php } ?>
 								
@@ -87,7 +87,7 @@
 										<h3><?php echo number_format((($beer->startLiter - $beer->remainAmount) * 128)); ?> {{{ Lang::get('common.flOzPoured') }}}</h3>
 										<?php 
 											$kegImgClass = "";
-											$percentRemaining = $beer->remainAmount / $beer->startLiter * 100;
+											$percentRemaining = $beer->PercentRemaining();
 											if( $beer->remainAmount <= 0 ) {
 												$kegImgClass = "keg-empty";
 												$percentRemaining = 100; }

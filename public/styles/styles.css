@@ -90,3 +90,14 @@ label.required:after{
 	content:" *";
 	color: red;
 }
+
+.icon-loading{
+	position: relative;
+	top: 6px;
+	display: inline-block;
+	height: 25px;
+	width: 25px;
+}
+.icon-loading.active{
+	background: url(/img/loading_25.gif) no-repeat;
+}
