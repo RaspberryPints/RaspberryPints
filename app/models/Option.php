@@ -14,7 +14,7 @@ class Option extends Eloquent
 
 	public static function GetByName($configName)
     {
- 		return Option::where('configName', $configName)->pluck('configValue'); 		
+ 		return Option::where('configName', $configName)->first(); 		
     }
 	
 	public static function AllAsFlatten(){

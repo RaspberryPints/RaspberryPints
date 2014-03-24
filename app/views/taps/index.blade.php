@@ -5,9 +5,13 @@
 @stop
 
 @section('content')
-	
+		
+	{{ Form::model($numTaps, array('action' => array('TapController@updateNumTaps', $numTaps->id), 'method' => 'PUT')) }}
+		{{ Form::text('configValue', Input::old('configValue')) }}
+        {{ Form::submit(Lang::get('common.save'), array( 'class' => 'btn')) }}
+    {{ Form::close() }}
+
 	<table id="tap-list" class="outerborder">
-	
 		@if (count($taps) === 0)
 			<tr><td class="no-results" colspan="99">{{{ Lang::get('common.noTaps') }}}</td></tr>
 		@else

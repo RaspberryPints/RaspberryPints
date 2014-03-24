@@ -31,6 +31,37 @@ class TapController extends BaseController {
 		return Response::json(array('success' => true));
 	}
 
+	/**
+	 * Assign a batch to the tap
+	 *
+	 * @return Response
+	 */
+	public function updateNumTaps()
+	{
+		$option = Option::GetByName( OptionNames::NumberOfTaps );
+		$prevNumTaps = $option->configValue;
+		$option->configValue = Input::get('configValue');
+		$option->save();
+
+		DB::statement('UPDATE taps SET active = (?)', array('0'));
+
+		for( $t = 1; $t <= $option->configValue; $t++ ){
+			$tap = Tap::firstOrNew(array('tapNumber' => $t));
+			
+			$tap->tapNumber = $t;
+			$tap->active = 1;			
+
+			if( $t > $prevNumTaps){
+				$tap->batchId = null;
+			}
+
+			$tap->save();
+		}
+
+
+		return Redirect::action('TapController@index');
+	}
+
 	private function loadFormViewData(&$data){
 
 		$batchList = array( '' => Lang::get('common.NoBeerOnTap') );
