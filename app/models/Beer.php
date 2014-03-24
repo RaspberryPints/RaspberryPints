@@ -21,7 +21,7 @@ class Beer extends Eloquent
         return $this->hasOne("BeerStyle", "id", "beerStyleId");
     }
 
-    public static function GetAllActive(){
+    public static function GetAllActive($includeId = null){
     	return Beer::where('active', 1)->orderBy('name')->get();
     }
 }

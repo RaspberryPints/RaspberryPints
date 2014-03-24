@@ -28,7 +28,13 @@ Route::group(array('before' => 'auth'), function()
 	
 	Route::resource('admin/kegs', 'KegController');
 	Route::get('admin/kegs/inactivate/{id}', 'KegController@inactivate');
+	
+	Route::resource('admin/batches', 'BatchController');
+	Route::get('admin/batches/inactivate/{id}', 'BatchController@inactivate');
 
+	Route::get('admin/taps/', 'TapController@index');
+	Route::get('admin/taps/updateBatch/', 'TapController@updateBatch');
+	//Route::get('admin/taps/numTaps/{numTaps}', 'TapController@updateNumTaps');
 	
 	Route::get('admin/user', function()
 	{

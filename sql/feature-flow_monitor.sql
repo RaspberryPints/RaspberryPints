@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `batches` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`beerId` int(11) NOT NULL,
 	`kegId` int(11) NOT NULL,
-	`active` tinyint(1) NOT NULL,
+	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`ogAct` decimal(4,3) NULL,
 	`fgAct` decimal(4,3) NULL,
 	`srmAct` decimal(3,1) NULL,

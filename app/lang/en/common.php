@@ -3,6 +3,7 @@
 return array(
 
 	'abv' => 'ABV',
+	'addBatch' => 'Add Batch',
 	'addBeer' => 'Add Beer',
 	'addKeg' => 'Add Keg',
 	'alcohol' => 'Alcohol',
@@ -44,12 +45,16 @@ return array(
 	'mashProfile' => 'Mash Profile',
 	'model' => 'Model',
 	'myAccount' => 'My Account',
+	'myBatches' => 'My Batches',
 	'myBeers' => 'My Beers',
 	'myBeers' => 'My Beers',
 	'myKegs' => 'My Kegs',
 	'na' => 'N/A',
 	'name' => 'Name',
 	'noBeersAddSome' => 'No beers :( Add some?',
+	'noBatchesAddSome' => 'No batches :( Add some?',
+	'noKegsAddSome' => 'No kegs :( Add some?',
+	'noTaps' => 'No kegs :( Add some?',
 	'notes'=> 'Notes',
 	'nothingOnTap' => 'Nothing on tap',
 	'og' => 'OG',
@@ -67,6 +72,7 @@ return array(
 	'submit' => 'Submit',
 	'tapNum' => 'Tap #',
 	'tastingNotes' => 'Tasting Notes',
+	'type' => 'Type',
 	'update' => 'Update',
 	'username' => 'Username',
 	'water' => 'Water',
@@ -75,7 +81,13 @@ return array(
 	'welcomeTitle' => 'Welcome To The RaspberryPints Management Portal',
 	'yeast ' => 'Yeast',
 
-	'type' => 'Type',
-
+	'editBatch' => 'Edit Batch',
+	'addBatch' => 'Add Batch',
+	'keg' => 'Keg',
+	'actualOG' => 'Actual OG',
+	'actualFG' => 'Actual FG',
+	'actualSRM' => 'Actual SRM',
+	'actualIBU' => 'Actual IBU',
+	'myTaps' => 'My Taps',
 
 );

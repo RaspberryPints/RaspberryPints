@@ -113,6 +113,15 @@ class KegController extends BaseController {
 		//
 	}
 
+	public function inactivate($id)
+	{
+		$beer = Keg::find($id);
+		$beer->active = false;
+		$beer->save();
+
+    	return Redirect::action('KegController@index');
+	}
+
 	private function loadFormViewData(&$data){
 		$data['kegTypeList'] = KegType::orderBy('name')->lists('name','id');
 		$data['kegStatusList'] = KegStatus::orderBy('name')->lists('name','code');
@@ -120,7 +129,8 @@ class KegController extends BaseController {
 
 	private function validate(){
 		$rules = array(
-			'label'      => 'required|numeric'
+			'label'     => 'required|numeric',
+			'weight'	=> 'required|numeric',
 		);
 		
 		return Validator::make(Input::all(), $rules);
@@ -138,13 +148,4 @@ class KegController extends BaseController {
 		$keg->kegStatusCode = Input::get('kegStatusCode');
 		$keg->weight 		= Input::get('weight');
 	}	
-
-	public function inactivate($id)
-	{
-		$beer = Keg::find($id);
-		$beer->active = false;
-		$beer->save();
-
-    	return Redirect::action('KegController@index');
-	}
 }

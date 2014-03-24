@@ -31,7 +31,7 @@
 						</td>
 						
 						<td colspan="2" class="leftborder rightborder" style="vertical-align:middle; font-size:1.2em;">
-							<center><b>{{{ $keg->kegStatusCode }}}</b></center>
+							<center><b>{{{ $keg->KegStatus->name }}}</b></center>
 						</td>
 						
 						<td style="vertical-align:middle; font-size:1.2em;">

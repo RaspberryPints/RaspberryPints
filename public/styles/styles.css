@@ -84,3 +84,9 @@ blockquote:after {
 	margin-right: -8%;
 	height: 25px; 
 }
+
+
+label.required:after{
+	content:" *";
+	color: red;
+}
