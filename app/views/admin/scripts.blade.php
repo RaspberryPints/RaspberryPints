@@ -6,5 +6,6 @@
 	{{ HTML::script('scripts/jquery.wysiwyg.js'); }}
 	{{ HTML::script('scripts/visualize.jQuery.js'); }}
 	{{ HTML::script('scripts/functions.js'); }}
+	{{ HTML::script('scripts/geomicons/geomicons.js'); }}
 
 	@yield('scripts')

@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"O",
+				"OptionNames"
+			],
+			[
 				"ord",
 				"orderBy"
 			],
@@ -75,88 +79,8 @@
 			"file": "app/lang/en/common.php",
 			"settings":
 			{
-				"buffer_size": 2418,
+				"buffer_size": 2800,
 				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/models/Keg.php",
-			"settings":
-			{
-				"buffer_size": 595,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/controllers/KegController.php",
-			"settings":
-			{
-				"buffer_size": 3109,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/views/kegs/index.blade.php",
-			"settings":
-			{
-				"buffer_size": 2667,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/views/kegs/form.blade.php",
-			"settings":
-			{
-				"buffer_size": 3982,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/models/KegType.php",
-			"settings":
-			{
-				"buffer_size": 177,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/models/KegStatus.php",
-			"settings":
-			{
-				"buffer_size": 129,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "public/styles/styles.css",
-			"settings":
-			{
-				"buffer_size": 4272,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/views/admin/left_bar.blade.php",
-			"settings":
-			{
-				"buffer_size": 2347,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/controllers/BatchController.php",
-			"settings":
-			{
-				"buffer_size": 3130,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/models/Batch.php",
-			"settings":
-			{
-				"buffer_size": 923,
-				"line_ending": "Unix"
 			}
 		},
 		{
@@ -165,6 +89,149 @@
 			{
 				"buffer_size": 1857,
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/models/Batch.php",
+			"settings":
+			{
+				"buffer_size": 805,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/views/batches/create.blade.php",
+			"settings":
+			{
+				"buffer_size": 230,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/views/batches/form.blade.php",
+			"settings":
+			{
+				"buffer_size": 2624,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/controllers/BatchController.php",
+			"settings":
+			{
+				"buffer_size": 3124,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/models/Beer.php",
+			"settings":
+			{
+				"buffer_size": 452,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/controllers/TapController.php",
+			"settings":
+			{
+				"buffer_size": 1503,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/models/Tap.php",
+			"settings":
+			{
+				"buffer_size": 372,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/views/taps/index.blade.php",
+			"settings":
+			{
+				"buffer_size": 1532,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/routes.php",
+			"settings":
+			{
+				"buffer_size": 1366,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public/styles/styles.css",
+			"settings":
+			{
+				"buffer_size": 4448,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "<?php\n\nclass Optionontroller extends BaseController {\n\n\n	/**\n	 * Update the specified resource in storage.\n	 *\n	 * @param  int  $id\n	 * @return Response\n	 */\n	public function update($id)\n	{\n		\n		$validator = $this->validate();\n\n		// process the login\n		if ($validator->fails()) {\n			return Redirect::action('BeerController@edit', $id)\n				->withErrors($validator)\n				->withInput();\n\n		} else {\n			// store\n			$option = Option::find($id);\n			$this->mapToDomain($beer);\n			$beer->save();\n\n			// redirect\n			\n			return Redirect::back();\n		}\n	}\n\n	private function validate(){\n		$rules = array(\n			'name'      => 'required',\n			'ogEst' 	=> 'required|numeric',\n			'fgEst' 	=> 'required|numeric',\n			'srmEst' 	=> 'required|numeric',\n			'ibuEst' 	=> 'required|numeric'\n		);\n		\n		return Validator::make(Input::all(), $rules);\n	}\n\n	private function mapToDomain($beer){\n		$beer->name       = Input::get('name');\n		$beer->beerStyleId = Input::get('beerStyleId');\n		$beer->notes      = Input::get('notes');\n		$beer->ogEst 	= Input::get('ogEst');\n		$beer->fgEst 	= Input::get('fgEst');\n		$beer->srmEst 	= Input::get('srmEst');\n		$beer->ibuEst 	= Input::get('ibuEst');\n	}\n}",
+			"file": "app/controllers/OptionController.php",
+			"file_size": 1160,
+			"file_write_time": 130401682978169402,
+			"settings":
+			{
+				"buffer_size": 1159,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/models/Option.php",
+			"settings":
+			{
+				"buffer_size": 612,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows",
+				"name": "Xdebug Context",
+				"read_only": true,
+				"scratch": true
+			}
+		},
+		{
+			"contents": "",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows",
+				"name": "Xdebug Watch",
+				"read_only": true,
+				"scratch": true
+			}
+		},
+		{
+			"contents": "",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows",
+				"name": "Xdebug Stack",
+				"read_only": true,
+				"scratch": true
+			}
+		},
+		{
+			"contents": "",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows",
+				"name": "Xdebug Breakpoint",
+				"read_only": true,
+				"scratch": true
 			}
 		}
 	],
@@ -252,22 +319,36 @@
 	},
 	"file_history":
 	[
-		"/C/Projects/GitHub/RaspberryPints/vendor/autoload.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/batches/edit.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/admin/scripts.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/storage/views/ac44e5ab5a4a90654d57bf9dfdc925b9",
 		"/C/Projects/GitHub/RaspberryPints/app/routes.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/admin/left_bar.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/models/Option.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/home/tap.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/models/ActiveTap.php",
+		"/C/Projects/GitHub/RaspberryPints/app/models/Keg.php",
+		"/C/Projects/GitHub/RaspberryPints/app/controllers/KegController.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/kegs/index.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/kegs/form.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/models/KegType.php",
+		"/C/Projects/GitHub/RaspberryPints/app/models/KegStatus.php",
+		"/C/Projects/GitHub/RaspberryPints/public/styles/styles.css",
+		"/C/Projects/GitHub/RaspberryPints/app/controllers/BatchController.php",
+		"/C/Projects/GitHub/RaspberryPints/app/models/Batch.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/batches/index.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/vendor/autoload.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/kegs/create.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/kegs/edit.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/beers/index.blade.php",
-		"/C/Projects/GitHub/RaspberryPints/app/views/admin/left_bar.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/models/Beer.php",
 		"/C/Projects/GitHub/RaspberryPints/app/controllers/BeerController.php",
 		"/C/Projects/GitHub/RaspberryPints/sql/feature-flow_monitor.sql",
 		"/C/Projects/GitHub/RaspberryPints/app/lang/en/common.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/beers/form.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/admin/login.blade.php",
-		"/C/Projects/GitHub/RaspberryPints/public/styles/styles.css",
 		"/C/Projects/GitHub/RaspberryPints/public/styles/login.css",
 		"/C/Projects/GitHub/RaspberryPints/app/views/layouts/login.blade.php",
-		"/C/Projects/GitHub/RaspberryPints/app/models/ActiveTap.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/admin/index.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/public/styles/admin.css",
 		"/C/Projects/GitHub/RaspberryPints/app/views/layouts/admin.blade.php",
@@ -276,8 +357,6 @@
 		"/C/Projects/GitHub/RaspberryPints/app/views/admin/header.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/controllers/HomeController.php",
 		"/C/Projects/GitHub/RaspberryPints/app/models/OptionNames.php",
-		"/C/Projects/GitHub/RaspberryPints/app/models/Option.php",
-		"/C/Projects/GitHub/RaspberryPints/app/views/home/tap.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/public/styles/home.css",
 		"/C/Projects/GitHub/RaspberryPints/app/views/home/index.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/home/empty-tap.blade.php",
@@ -334,6 +413,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"	\n",
+			"beername",
+			"beer",
+			"GetAllActive",
+			"estimated",
+			"Est'",
 			"Est",
 			"Beer",
 			"$beer",
@@ -362,6 +447,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"actual",
+			"Act'",
 			"Act",
 			"Batch",
 			"$batch",
@@ -386,7 +473,7 @@
 	"groups":
 	[
 		{
-			"selected": 10,
+			"selected": 7,
 			"sheets":
 			[
 				{
@@ -394,15 +481,86 @@
 					"file": "app/lang/en/common.php",
 					"settings":
 					{
-						"buffer_size": 2418,
+						"buffer_size": 2800,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								23,
-								2414
+								2796,
+								2796
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 630.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app/views/batches/index.blade.php",
+					"settings":
+					{
+						"buffer_size": 1857,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								554,
+								554
 							]
 						],
 						"settings":
@@ -461,19 +619,91 @@
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "app/models/Keg.php",
+					"buffer": 2,
+					"file": "app/models/Batch.php",
 					"settings":
 					{
-						"buffer_size": 595,
+						"buffer_size": 805,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								368,
-								269
+								381,
+								381
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "app/views/batches/create.blade.php",
+					"settings":
+					{
+						"buffer_size": 230,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								182,
+								182
 							]
 						],
 						"settings":
@@ -531,161 +761,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "app/controllers/KegController.php",
-					"settings":
-					{
-						"buffer_size": 3109,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2630,
-								2630
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1440.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "app/views/kegs/index.blade.php",
-					"settings":
-					{
-						"buffer_size": 2667,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								893,
-								893
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 187.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
 					"buffer": 4,
-					"file": "app/views/kegs/form.blade.php",
+					"file": "app/views/batches/form.blade.php",
 					"settings":
 					{
-						"buffer_size": 3982,
+						"buffer_size": 2624,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2705,
-								2705
+								1030,
+								963
 							]
 						],
 						"settings":
@@ -739,25 +827,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 180.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "app/models/KegType.php",
+					"file": "app/controllers/BatchController.php",
 					"settings":
 					{
-						"buffer_size": 177,
+						"buffer_size": 3124,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								177,
-								177
+								1985,
+								1936
 							]
 						],
 						"settings":
@@ -810,25 +898,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1485.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 6,
-					"file": "app/models/KegStatus.php",
+					"file": "app/models/Beer.php",
 					"settings":
 					{
-						"buffer_size": 129,
+						"buffer_size": 452,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								13,
-								22
+								323,
+								323
 							]
 						],
 						"settings":
@@ -887,18 +975,301 @@
 				},
 				{
 					"buffer": 7,
-					"file": "public/styles/styles.css",
+					"file": "app/controllers/TapController.php",
 					"settings":
 					{
-						"buffer_size": 4272,
+						"buffer_size": 1503,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4159,
-								4159
+								1088,
+								1088
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 410.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "app/models/Tap.php",
+					"settings":
+					{
+						"buffer_size": 372,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								372,
+								372
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 15.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "app/views/taps/index.blade.php",
+					"settings":
+					{
+						"buffer_size": 1532,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								438,
+								438
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "app/routes.php",
+					"settings":
+					{
+						"buffer_size": 1366,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1242,
+								1242
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "public/styles/styles.css",
+					"settings":
+					{
+						"buffer_size": 4448,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4373,
+								4373
 							]
 						],
 						"settings":
@@ -951,25 +1322,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1080.0,
+						"translation.y": 936.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "app/views/admin/left_bar.blade.php",
+					"buffer": 12,
+					"file": "app/controllers/OptionController.php",
 					"settings":
 					{
-						"buffer_size": 2347,
+						"buffer_size": 1159,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								870,
-								885
+								19,
+								19
 							]
 						],
 						"settings":
@@ -1028,160 +1399,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "app/controllers/BatchController.php",
+					"buffer": 13,
+					"file": "app/models/Option.php",
 					"settings":
 					{
-						"buffer_size": 3130,
+						"buffer_size": 612,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2223,
-								2227
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1198.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "app/models/Batch.php",
-					"settings":
-					{
-						"buffer_size": 923,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								564,
-								564
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"syntax": "Packages/PHP/PHP.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "app/views/batches/index.blade.php",
-					"settings":
-					{
-						"buffer_size": 1857,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								557,
-								557
+								234,
+								243
 							]
 						],
 						"settings":
@@ -1240,6 +1470,210 @@
 					"type": "text"
 				}
 			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 14,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/Xdebug Client/Xdebug.tmLanguage",
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Xdebug Client/Xdebug.tmLanguage",
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 16,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Xdebug Client/Xdebug.tmLanguage",
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"syntax": "Packages/Xdebug Client/Xdebug.tmLanguage",
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
 		}
 	],
 	"incremental_find":
@@ -1257,18 +1691,32 @@
 			[
 				0,
 				0,
-				1,
+				2,
 				1
+			],
+			[
+				0,
+				1,
+				1,
+				2
+			],
+			[
+				1,
+				1,
+				2,
+				2
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.5,
 			1.0
 		],
 		"rows":
 		[
 			0.0,
+			0.7,
 			1.0
 		]
 	},

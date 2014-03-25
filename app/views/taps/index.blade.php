@@ -24,7 +24,7 @@
 							{{ Form::model($tap, array('action' => 'TapController@updateBatch', 'method' => 'PUT')) }}
 								{{ Form::hidden('id') }}
                     			{{ Form::select('batchId', $batchList) }}
-                    			<div class='icon-loading'></div>
+                    			<span class="batch-loading geomicon raspberry" data-id="loading"></span>
     						{{ Form::close() }}
 						</td>
 					</tr>
@@ -39,18 +39,19 @@
 @section('scripts')
 	<script>
 		$(function () {
+
 			$('#tap-list').on('change', 'select[name=batchId]', function(){
 				var $form = $(this).closest('form'),
-					$loadingIcon = $form.find('.icon-loading');
+					$loadingIcon = $form.find('.batch-loading');
 
-				$loadingIcon.addClass('active');
+				$loadingIcon.css('visibility','visible');
 
 				$.ajax({
 				    url: $form.attr('action'),
 				    type: 'PUT',
 				    data:  $form.serialize(),
 				    success: function(result) {
-				        $loadingIcon.removeClass('active');
+						$loadingIcon.css('visibility','hidden');
 				    }
 				});
 			});
