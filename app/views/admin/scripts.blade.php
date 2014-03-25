@@ -6,3 +6,5 @@
 	{{ HTML::script('scripts/jquery.wysiwyg.js'); }}
 	{{ HTML::script('scripts/visualize.jQuery.js'); }}
 	{{ HTML::script('scripts/functions.js'); }}
+
+	@yield('scripts')

@@ -25,7 +25,8 @@
 		<ul class="navigation">
 			<li><a href="{{ URL::action('BeerController@index'); }}">{{{ Lang::get('common.myBeers') }}}</a></li>
 			<li><a href="{{ URL::action('KegController@index'); }}">{{{ Lang::get('common.myKegs') }}}</a></li>
-			<li><a href="tap_list.php">My Taps</a></li>
+			<li><a href="{{ URL::action('BatchController@index'); }}">{{{ Lang::get('common.myBatches') }}}</a></li>
+			<li><a href="{{ URL::action('TapController@index'); }}">{{{ Lang::get('common.myTaps') }}}</a></li>
 		</ul>
 	</li>
 		<li>

@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `batches` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`beerId` int(11) NOT NULL,
 	`kegId` int(11) NOT NULL,
-	`active` tinyint(1) NOT NULL,
+	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`ogAct` decimal(4,3) NULL,
 	`fgAct` decimal(4,3) NULL,
 	`srmAct` decimal(3,1) NULL,
@@ -48,6 +48,8 @@ SELECT beerId, kegId, active, ogAct, fgAct, srmAct, ibuAct, startAmount * 3.7854
 
 ALTER TABLE taps ADD COLUMN batchId int(11) NULL;
 
+ALTER TABLE taps CHANGE COLUMN `tapNumber` `name` VARCHAR(255) NOT NULL;
+
 UPDATE taps t LEFT JOIN batches b ON b.beerId = t.beerId AND b.kegId = t.KegId SET t.batchId = b.Id;
 
 ALTER TABLE taps ADD CONSTRAINT FK_taps_batchId FOREIGN KEY (`batchId`) REFERENCES batches(`id`) ON DELETE CASCADE;
@@ -78,7 +80,6 @@ ALTER TABLE taps DROP COLUMN `startAmount`;
 
 ALTER TABLE taps DROP COLUMN `currentAmount`;
 
-
 -- --------------------------------------------------------
 
 --
@@ -99,6 +100,7 @@ ALTER TABLE pours ADD COLUMN pulsesPerLiter int NOT NULL;
 
 ALTER TABLE pours ADD COLUMN liters decimal(6,2) NOT NULL;
 
+ALTER TABLE pours DROP COLUMN `amountPoured`;
 
 -- --------------------------------------------------------
 
@@ -123,7 +125,9 @@ UPDATE kegTypes SET maxLiters = maxLiters * 3.7854;
 
 -- --------------------------------------------------------
 
+--
 -- delete all tap information and rebuild it using the info in batches
+--
 
 DELETE FROM taps;
 
@@ -139,6 +143,21 @@ FROM config c
 	RIGHT JOIN batches b ON @rowNum < c.configValue
 	LEFT JOIN batches b2 ON b2.active = 1 AND b2.tapNumber = (@rowNum + 1)
 WHERE c.configName = 'numberOfTaps';
+
+
+
+
+
+-- --------------------------------------------------------
+
+--
+-- Batches cleanup
+--
+
+ALTER TABLE batches DROP COLUMN tapNumber;
+
+
+
 
 
 
@@ -188,6 +207,21 @@ FROM taps t
 	LEFT JOIN vwGetTapsAmountPoured as p ON p.batchId = ba.Id
 WHERE t.active = true
 ORDER BY t.tapNumber;
+
+
+
+-- --------------------------------------------------------
+
+--
+-- Make columns not null
+--
+
+ALTER TABLE kegs MODIFY make text;
+ALTER TABLE kegs MODIFY model text;
+ALTER TABLE kegs MODIFY serial text;
+ALTER TABLE kegs MODIFY stampedOwner text;
+ALTER TABLE kegs MODIFY stampedLoc text;
+ALTER TABLE kegs MODIFY notes text;
 
 
 

@@ -26,12 +26,12 @@ class Keg extends Eloquent
     {
         return $this->hasOne("KegType", "id", "kegTypeId");
     }
-/*    
+
     public function KegStatus()
     {
         return $this->hasOne("KegStatus", "code", "kegStatusCode");
     }
-*/
+
     public static function GetAllActive(){
     	return Keg::where('active', 1)->orderBy('label')->get();
     }

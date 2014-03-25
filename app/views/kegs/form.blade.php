@@ -67,7 +67,7 @@
             </tr>
             <tr>
                 <td>
-                    {{ Form::label('weight', Lang::get('common.emptyWeight')) }}
+                    {{ Form::label('weight', Lang::get('common.emptyWeight'), array('class' => 'required')) }}
                 </td>
                 <td>
                     {{ Form::text('weight', Input::old('weight')) }}

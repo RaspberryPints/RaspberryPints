@@ -688,7 +688,7 @@ class Pintlabs_Service_Untappd
      *
      * @throws Pintlabs_Service_Untappd_Exception
      */
-    public function checkin($gmtOffset, $timezone, $beerId, $foursquareId = '', $userLat = '', $userLong = '', $shout = '', $facebook = false, $twitter = false, $foursquare = false, $rating = '')
+    public function checkin($gmtOffset, $timezone, $beerId)
     {
         if (empty($gmtOffset)) {
             require_once __DIR__.'/Service/Untappd/Exception.php';

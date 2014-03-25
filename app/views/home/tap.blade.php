@@ -24,7 +24,7 @@
 										<h3>
 											<?php 
 												if( $beer->ogAct > 1 ){
-													echo number_format((($beer->ibuAct)/(($beer->ogAct-1)*1000)), 2, '.', '');
+													echo $beer->BUGU();
 												}else{
 													echo '0.00';
 												}
@@ -54,22 +54,12 @@
 							
 								<?php if(($options[OptionNames::ShowAbvCol]) && ($options[OptionNames::ShowAbvImg])){ ?>
 									<td class="abv">
-										<h3><?php
-											$calfromalc = (1881.22 * ($beer->fgAct * ($beer->ogAct - $beer->fgAct)))/(1.775 - $beer->ogAct);
-											$calfromcarbs = 3550.0 * $beer->fgAct * ((0.1808 * $beer->ogAct) + (0.8192 * $beer->fgAct) - 1.0004);
-											if ( ($beer->ogAct == 1) && ($beer->fgAct == 1 ) ) {
-												$calfromalc = 0;
-												$calfromcarbs = 0;
-											}
-											echo number_format($calfromalc + $calfromcarbs);
-											?>											
-											{{{ Lang::get('common.kCal') }}}
+										<h3><?php echo $beer->Calories(); ?> {{{ Lang::get('common.kCal') }}}
 										</h3>
 										<div class="abv-container">
 											<?php
-												$abv = ($beer->ogAct - $beer->fgAct) * 131;
 												$numCups = 0;
-												$remaining = $abv * 20;
+												$remaining = $beer->ABV() * 20;
 												do{
 														if( $remaining < 100 ){
 																$level = $remaining;
@@ -87,29 +77,14 @@
 												}
 											?>
 										</div>
-										<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?> {{{ Lang::get('common.abv') }}}</h2>
+										<h2><?php echo number_format($beer->ABV(), 1, '.', ',')."%"; ?> {{{ Lang::get('common.abv') }}}</h2>
 									</td>
 								<?php } ?>
 								
 								<?php if(($options[OptionNames::ShowAbvCol]) && ! ($options[OptionNames::ShowAbvImg])){ ?>
 									<td class="abv">
-										<h3><?php
-											$calfromalc = (1881.22 * ($beer->fgAct * ($beer->ogAct - $beer->fgAct)))/(1.775 - $beer->ogAct);
-											$calfromcarbs = 3550.0 * $beer->fgAct * ((0.1808 * $beer->ogAct) + (0.8192 * $beer->fgAct) - 1.0004);
-											if ( ($beer->ogAct == 1) && ($beer->fgAct == 1 ) ) {
-												$calfromalc = 0;
-												$calfromcarbs = 0;
-												}
-											echo number_format($calfromalc + $calfromcarbs);
-											?>
-											{{{ Lang::get('common.kCal') }}}
-										</h3>
-										<div class="abv">
-											<?php
-												$abv = ($beer->ogAct - $beer->fgAct) * 131;
-											?>
-										</div>
-										<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?>  {{{ Lang::get('common.abv') }}}</h2>
+										<h3><?php echo $beer->Calories() ?> {{{ Lang::get('common.kCal') }}} </h3>									
+										<h2><?php echo number_format($beer->ABV(), 1, '.', ',')."%"; ?>  {{{ Lang::get('common.abv') }}}</h2>
 									</td>
 								<?php } ?>
 								
@@ -118,7 +93,7 @@
 										<h3><?php echo number_format((($beer->startLiter - $beer->remainAmount)/0.0296)); ?> {{{ Lang::get('common.flOzPoured') }}}</h3>
 										<?php 
 											$kegImgClass = "";
-											$percentRemaining = $beer->remainAmount / $beer->startLiter * 100;
+											$percentRemaining = $beer->PercentRemaining();
 											if( $beer->remainAmount <= 0 ) {
 												$kegImgClass = "keg-empty";
 												$percentRemaining = 100; }
