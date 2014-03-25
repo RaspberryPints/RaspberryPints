@@ -31,9 +31,8 @@ ALTER TABLE  `beers` ADD  `untID` INT( 10 ) NOT NULL DEFAULT  '0' AFTER  `active
 --
 -- Update vwGetActiveTaps
 --
-CREATE OR REPLACE 
-ALGORITHM = UNDEFINED
-VIEW  `vwGetActiveTaps` AS 
+
+ALTER VIEW  `vwGetActiveTaps` AS 
 SELECT  `t`.`id` AS  `id` ,  `be`.`name` AS  `name` ,  `bs`.`name` AS  `style` ,  `be`.`notes` AS  `notes` ,  `ba`.`ogAct` AS  `ogAct` ,  `ba`.`fgAct` AS  `fgAct` ,  `ba`.`srmAct` AS  `srmAct` ,  `ba`.`ibuAct` AS  `ibuAct` ,  `ba`.`startLiter` AS `startLiter` , IFNULL(  `p`.`litersPoured` , 0 ) AS  `litersPoured` , (
 `ba`.`startLiter` - IFNULL(  `p`.`litersPoured` , 0 )
 ) AS  `remainAmount` ,  `t`.`tapNumber` AS  `tapNumber` ,  `s`.`rgb` AS  `srmRgb` ,  `be`.`untID` AS  `untID` 
