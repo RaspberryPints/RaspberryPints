@@ -42,12 +42,65 @@
 							
 								<td class="name">
 								<div class="beerimg">
-									{{{ Untappd::beerIMG($options,$beer->untID) }}}
+									<?php
+//Only grabs img if untid is set
+//Only Display rating if $Client[id] is set
+if($options[OptionNames::ClientID] && $beer->untID!='0'){ 
+if (Cache::has('beerImg')) {
+	$cachefile = Cache::get('beerImg');
+print $cachefile;
+	}  else {
+ $feed = Untappd::beerINFO($options,$beer->untID);
+ $beerImg = "<img src=".$feed->response->beer->beer_label." border=0 width=75 height=75>";
+cache::put('beerImg',$beerImg,1440);
+$cachefile = Cache::get('beerImg');
+print $cachefile;
+} }
+ ?>
 									</div>
 									<h1><?php echo $beer->name; ?></h1>
 									<h2 class="subhead"><?php echo $beer->style; ?></h2>
 									<p class="rating">
-									{{{ Untappd::BeerRating($options,$beer->untID) }}}
+									<?php
+//Only grabs img if untid is set
+//Only Display rating if $Client[id] is set
+if($options[OptionNames::ClientID] && $beer->untID!='0'){ 
+if (Cache::has('beerRating')) {
+	$cachefile = Cache::get('beerRating');
+print $cachefile;
+	}  else {
+ $feed = Untappd::beerINFO($options,$beer->untID);
+ $rs = $feed->response->beer->rating_score;
+
+if ($rs >= '0' && $rs<'.5') {
+ $img = "<span class=\"rating small r00\"></span>";
+} else if ($rs=='.5') {
+$img = "<span class=\"rating small r05\"></span>";
+} else if ($rs >'.5' && $rs<'1.5') {
+$img = "<span class=\"rating small r10\"></span>";
+} else if ($rs=='1.5') {
+$img = "<span class=\"rating small r15\"></span>";
+} else if ($rs >'1.5' && $rs <'2.5') {
+$img = "<span class=\"rating small r20\"></span>";
+} else if ($rs =='2.5' ) {
+$img = "<span class=\"rating small r25\"></span>";
+} else if ($rs >'2.5' && $rs < '3.5') {
+$img = "<span class=\"rating small r30\"></span>";
+} else if ($rs=='3.5') {
+ $img = "<span class=\"rating small r35\"></span>";
+}  else if ($rs > '3.5' && $rs< '4.5') {
+ $img = "<span class=\"rating small r40\"></span>";
+} else if ($rs =='4.5') {
+$img = "<span class=\"rating small r45\"></span>";
+} else if ($rs>'4.5') {
+$img = "<span class=\"rating small r50\"></span>";
+} 
+cache::put('beerRating',$img,1440);
+$cachefile = Cache::get('beerRating');
+print $cachefile;
+
+} }
+ ?>								
 									</p>
 									<p><?php echo $beer->notes; ?></p>
 								</td>

@@ -32,13 +32,11 @@ Route::group(array('before' => 'auth'), function()
 	Route::resource('admin/batches', 'BatchController');
 	Route::get('admin/batches/inactivate/{id}', 'BatchController@inactivate');
 
-<<<<<<< HEAD
-=======
 	Route::get('admin/taps/', 'TapController@index');
 	Route::put('admin/taps/updateBatch/', 'TapController@updateBatch');
 	//Route::get('admin/taps/numTaps/{numTaps}', 'TapController@updateNumTaps');
 	
->>>>>>> eca5b599df9756fccc29f69e0f6fcdbb1455171f
+
 	Route::get('admin/user', function()
 	{
 	    return View::make('user.index');

@@ -117,11 +117,9 @@
 					?>
 				</tbody>
 			</table>
-		 <?php 
 		 
-		Untappd::utBreweryFeed($options);
-		 
-		 ?>
+		@include('home.bfeed') 
+				
 		</div>
 	</body>
 </html>
