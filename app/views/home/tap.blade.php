@@ -46,14 +46,16 @@
 //Only grabs img if untid is set
 //Only Display rating if $Client[id] is set
 if($options[OptionNames::ClientID] && $beer->untID!='0'){ 
-if (Cache::has('beerImg')) {
-	$cachefile = Cache::get('beerImg');
-print $cachefile;
+$cachename = $beer->untID.".img1";
+if (Cache::has($cachename)) {
+	//Cache::forget('beerImg');
+	$cachefile = Cache::get($cachename);
+    print $cachefile;
 	}  else {
  $feed = Untappd::beerINFO($options,$beer->untID);
- $beerImg = "<img src=".$feed->response->beer->beer_label." border=0 width=75 height=75>";
-cache::put('beerImg',$beerImg,1440);
-$cachefile = Cache::get('beerImg');
+ $beerImg = "<img src=".$feed->beer_label." border=0 width=75 height=75>";
+cache::put($cachename,$beerImg,1440);
+$cachefile = Cache::get($cachename);
 print $cachefile;
 } }
  ?>
@@ -65,12 +67,13 @@ print $cachefile;
 //Only grabs img if untid is set
 //Only Display rating if $Client[id] is set
 if($options[OptionNames::ClientID] && $beer->untID!='0'){ 
-if (Cache::has('beerRating')) {
-	$cachefile = Cache::get('beerRating');
+$cachename = $beer->untID.".rating";
+if (Cache::has($cachename)) {
+	$cachefile = Cache::get($cachename);
 print $cachefile;
 	}  else {
  $feed = Untappd::beerINFO($options,$beer->untID);
- $rs = $feed->response->beer->rating_score;
+ $rs = $feed->rating_score;
 
 if ($rs >= '0' && $rs<'.5') {
  $img = "<span class=\"rating small r00\"></span>";
@@ -95,8 +98,8 @@ $img = "<span class=\"rating small r45\"></span>";
 } else if ($rs>'4.5') {
 $img = "<span class=\"rating small r50\"></span>";
 } 
-cache::put('beerRating',$img,1440);
-$cachefile = Cache::get('beerRating');
+cache::put($cachename,$img,1440);
+$cachefile = Cache::get($cachename);
 print $cachefile;
 
 } }

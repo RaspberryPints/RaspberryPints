@@ -26,6 +26,7 @@ Public static function beerINFO($options,$untID) {
     $redirect_uri  = '';
 	$ut = new UntappdPHP($client_id,$client_secret,$redirect_uri);
 	$feed = $ut->get("/beer/info/".$untID."");
+	$feed = $feed->response->beer;
     return $feed; 
 }
 
