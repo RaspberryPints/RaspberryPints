@@ -21,18 +21,6 @@ class ActiveTap extends Eloquent
     
 	protected $table = 'vwGetActiveTaps';
 
-
-    public static function PickByTapNumber($taps, $tapNumber){
-        foreach ($taps as $tap) {
-            if( $tap->tapNumber == $tapNumber ){
-                return $tap;
-            }
-        }
-
-        return null;
-    }
-
-
     public function BUGU(){
         $bugu = 0;
         if( $this->ogAct > 1 ){

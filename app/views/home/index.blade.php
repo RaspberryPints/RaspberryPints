@@ -104,8 +104,14 @@
 					<?php 
 					for($i = 1; $i <= $options[OptionNames::NumberOfTaps]; $i++) 
 					{
-						$beer = ActiveTap::PickByTapNumber($taps, $i);
-						if( $beer != null ) {
+						$beer = null;
+						foreach ($taps as $beer) {
+							if( $beer->tapNumber == $i ){
+                				break;
+            				}
+        				}
+						
+						if( $beer != null ) {							
 					?>
 							@include('home.tap')
 							
