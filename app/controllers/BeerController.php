@@ -138,6 +138,7 @@ class BeerController extends BaseController {
 		$beer->fgEst 	= Input::get('fgEst');
 		$beer->srmEst 	= Input::get('srmEst');
 		$beer->ibuEst 	= Input::get('ibuEst');
+		$beer->untID	= Input::get('untID');
 	}
 
 	public function inactivate($id)

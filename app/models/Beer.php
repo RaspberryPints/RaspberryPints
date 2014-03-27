@@ -10,7 +10,8 @@ class Beer extends Eloquent
 		'fgEst',
 		'srmEst',
 		'ibuEst',
-		'active'
+		'active',
+		'untID'
 	);
     protected $guarded = array(
     	'id'

@@ -41,8 +41,63 @@
 								<?php } ?>
 							
 								<td class="name">
-									<h1><?php echo $beer->beername; ?></h1>
+								<div class="beerimg">
+									<?php
+//Only grabs img if untid is set
+//Only Display rating if $Client[id] is set
+if($options[OptionNames::ClientID] && $beer->untID!='0'){ 
+$cachename = $beer->untID.".beerInfo2";
+$cachefile = Cache::get($cachename);
+$untID = $beer->untID;
+
+$beer_label = $cachefile['beer_label'];
+$rs = $cachefile['rating_score'];
+echo "<img src=".$beer_label." border=0 width=75 height=75>";
+}
+ ?>
+									</div>
+									<h1><?php echo $beer->name; ?></h1>
 									<h2 class="subhead"><?php echo $beer->style; ?></h2>
+									<p class="rating">
+									<?php
+
+									//Only grabs img if untid is set
+//Only Display rating if $Client[id] is set
+if($options[OptionNames::ClientID] && $beer->untID!='0'){ 
+
+
+
+if ($rs >= '0' && $rs<'.5') {
+ $img = "<span class=\"rating small r00\"></span>";
+} else if ($rs=='.5') {
+$img = "<span class=\"rating small r05\"></span>";
+} else if ($rs >'.5' && $rs<'1.5') {
+$img = "<span class=\"rating small r10\"></span>";
+} else if ($rs=='1.5') {
+$img = "<span class=\"rating small r15\"></span>";
+} else if ($rs >'1.5' && $rs <'2.5') {
+$img = "<span class=\"rating small r20\"></span>";
+} else if ($rs =='2.5' ) {
+$img = "<span class=\"rating small r25\"></span>";
+} else if ($rs >'2.5' && $rs < '3.5') {
+$img = "<span class=\"rating small r30\"></span>";
+} else if ($rs=='3.5') {
+ $img = "<span class=\"rating small r35\"></span>";
+}  else if ($rs > '3.5' && $rs< '4.5') {
+ $img = "<span class=\"rating small r40\"></span>";
+} else if ($rs =='4.5') {
+$img = "<span class=\"rating small r45\"></span>";
+} else if ($rs>'4.5') {
+$img = "<span class=\"rating small r50\"></span>";
+} 
+
+} else {
+ $img = "<span class=\"rating small r00\"></span>";
+ }
+echo $img; 
+ 
+ ?>								
+									</p>
 									<p><?php echo $beer->notes; ?></p>
 								</td>
 							
@@ -84,7 +139,7 @@
 								
 								<?php if($options[OptionNames::ShowKegCol]){ ?>
 									<td class="keg">
-										<h3><?php echo number_format((($beer->startLiter - $beer->remainAmount) * 128)); ?> {{{ Lang::get('common.flOzPoured') }}}</h3>
+										<h3><?php echo number_format((($beer->startLiter - $beer->remainAmount)/0.0296)); ?> {{{ Lang::get('common.flOzPoured') }}}</h3>
 										<?php 
 											$kegImgClass = "";
 											$percentRemaining = $beer->PercentRemaining();
@@ -105,7 +160,7 @@
 										<div class="keg-container">
 											<div class="keg-indicator"><div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%"></div></div>
 										</div>
-										<h2><?php echo number_format(($beer->remainAmount * 128)); ?> {{{ Lang::get('common.flOzLeft') }}}</h2>
+										<h2><?php echo number_format(($beer->remainAmount)/0.0296); ?> {{{ Lang::get('common.flOzLeft') }}}</h2>
 									</td>
 								<?php } ?>
 							</tr>

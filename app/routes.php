@@ -36,6 +36,7 @@ Route::group(array('before' => 'auth'), function()
 	Route::put('admin/taps/updateBatch/', 'TapController@updateBatch');
 	Route::put('admin/taps/updateNumTaps/', 'TapController@updateNumTaps');
 	
+
 	Route::get('admin/user', function()
 	{
 	    return View::make('user.index');

@@ -123,6 +123,9 @@
 					?>
 				</tbody>
 			</table>
+		 
+		@include('home.bfeed') 
+				
 		</div>
 	</body>
 </html>
