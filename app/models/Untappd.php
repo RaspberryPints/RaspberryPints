@@ -19,7 +19,7 @@ class Untappd extends UntappdPHP
 
 Public static function beerINFO($options,$untID) {
 // This section calls for the rating from Untappd
-                                                       
+	
    $beerImg = '';																				
   $client_id = $options[OptionNames::ClientID];
     $client_secret =$options[OptionNames::ClientSecret];
