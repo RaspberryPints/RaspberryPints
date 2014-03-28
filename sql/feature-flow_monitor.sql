@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `batches` (
 	`modifiedDate` TIMESTAMP NULL,
 
 	-- temp fields
-	`tapNumber` int(11) NULL,
+	`tapName` VARCHAR(255) NULL,
 	
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `batches` (
 -- We were putting 
 --
 
-INSERT INTO batches( beerId, kegId, active, ogAct, fgAct, srmAct, ibuAct, startLiter, createdDate, modifiedDate, tapNumber )
+INSERT INTO batches( beerId, kegId, active, ogAct, fgAct, srmAct, ibuAct, startLiter, createdDate, modifiedDate, tapName )
 SELECT beerId, kegId, active, ogAct, fgAct, srmAct, ibuAct, startAmount * 3.7854, createdDate, modifiedDate, tapNumber FROM taps;
 
 
@@ -44,11 +44,9 @@ SELECT beerId, kegId, active, ogAct, fgAct, srmAct, ibuAct, startAmount * 3.7854
 -- Update taps columns
 --
 
--- ALTER TABLE taps ADD CONSTRAINT `tapNumber_UNIQUE` UNIQUE KEY (`tapNumber`);
-
 ALTER TABLE taps ADD COLUMN batchId int(11) NULL;
 
-ALTER TABLE taps CHANGE COLUMN `tapNumber` `name` VARCHAR(255) NOT NULL;
+ALTER TABLE taps CHANGE COLUMN `tapNumber` `name` VARCHAR(255);
 
 UPDATE taps t LEFT JOIN batches b ON b.beerId = t.beerId AND b.kegId = t.KegId SET t.batchId = b.Id;
 
@@ -132,16 +130,16 @@ UPDATE kegTypes SET maxLiters = maxLiters * 3.7854;
 DELETE FROM taps;
 
 SET @rowNum=0;
-INSERT INTO taps(`tapNumber`, `active`, `createdDate`, `modifiedDate`, `batchId`)
+INSERT INTO taps(`name`, `active`, `createdDate`, `modifiedDate`, `batchId`)
 SELECT 
-	@rowNum:=@rowNum+1 AS `tapNumber`,
+	@rowNum:=@rowNum+1 AS `name`,
 	IFNULL(b2.active, 0) AS `active`,
 	b2.createdDate,
 	b2.modifiedDate,
 	b2.Id AS `batchId`
 FROM config c
 	RIGHT JOIN batches b ON @rowNum < c.configValue
-	LEFT JOIN batches b2 ON b2.active = 1 AND b2.tapNumber = (@rowNum + 1)
+	LEFT JOIN batches b2 ON b2.active = 1 AND b2.tapName = (@rowNum + 1)
 WHERE c.configName = 'numberOfTaps';
 
 
@@ -154,7 +152,7 @@ WHERE c.configName = 'numberOfTaps';
 -- Batches cleanup
 --
 
-ALTER TABLE batches DROP COLUMN tapNumber;
+ALTER TABLE batches DROP COLUMN tapName;
 
 
 
@@ -187,7 +185,7 @@ AS
 
 SELECT
 	t.id,
-	be.name,
+	be.name as 'beerName',
 	bs.name as 'style',
 	be.notes,
 	ba.ogAct,
@@ -197,7 +195,7 @@ SELECT
 	ba.startLiter,
 	IFNULL(p.litersPoured, 0) as litersPoured,
 	ba.startLiter - IFNULL(p.litersPoured, 0) as remainAmount,
-	t.tapNumber,
+	t.name,
 	s.rgb as srmRgb
 FROM taps t
 	LEFT JOIN batches ba ON ba.id = t.batchId
@@ -206,7 +204,7 @@ FROM taps t
 	LEFT JOIN srmRgb s ON s.srm = ba.srmAct
 	LEFT JOIN vwGetTapsAmountPoured as p ON p.batchId = ba.Id
 WHERE t.active = true
-ORDER BY t.tapNumber;
+ORDER BY t.id;
 
 
 
