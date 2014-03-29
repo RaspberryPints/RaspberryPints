@@ -16,8 +16,7 @@ class ActiveTap extends Eloquent
         'amountPoured',
         'remainAmount',
         'tapNumber',
-        'srmRgb',
-		'untID'
+        'srmRgb'
     );
     
 	protected $table = 'vwGetActiveTaps';

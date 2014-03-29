@@ -51,9 +51,6 @@
 								<b>{{{ Lang::get('common.og') }}}:</b> {{{ isset($beer->ogEst) ? $beer->ogEst : Lang::get('common.na') }}}
 								<br/>
 								<b>{{{ Lang::get('common.fg') }}}:</b> {{{ isset($beer->fgEst) ? $beer->fgEst : Lang::get('common.na') }}}
-								<br />
-								<b>{{{ Lang::get('common.untID') }}}:</b> {{{ isset($beer->untID) ? $beer->untID : Lang::get('common.na') }}}
-								
 							</p>
 							
 							<p>

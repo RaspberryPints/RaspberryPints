@@ -55,9 +55,9 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'devpints',
+			'database'  => 'raspberrypints',
 			'username'  => 'beers',
-			'password'  => '',
+			'password'  => 'Ch1p0tl3rp',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

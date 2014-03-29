@@ -65,15 +65,6 @@
                     {{ $errors->first('ibuEst', Lang::get('html.errorMessage')) }}
                 </td>
             </tr>
-			<tr>
-                <td>
-                    {{ Form::label('untID', Lang::get('common.untID')) }}
-                </td>
-                <td>
-                    {{ Form::text('untID', Input::old('untID')) }}
-                    
-                </td>
-            </tr>
                 </td>
             </tr>
             <tr>
