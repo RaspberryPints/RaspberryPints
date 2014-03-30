@@ -17,6 +17,7 @@ class Option extends Eloquent
  		return Option::where('configName', $configName)->first(); 		
     }
 	
+
 	public static function AllAsFlatten(){
 		$options = Option::all();
 		return Option::FlattenArray($options);

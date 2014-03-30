@@ -36,6 +36,9 @@ Route::group(array('before' => 'auth'), function()
 	Route::put('admin/taps/updateBatch/', 'TapController@updateBatch');
 	Route::put('admin/taps/updateNumTaps/', 'TapController@updateNumTaps');
 	
+	Route::get('admin/options/', 'OptionController@index');
+	Route::put('admin/options/update/{id}', 'OptionController@update');
+
 	Route::get('admin/user', function()
 	{
 	    return View::make('user.index');

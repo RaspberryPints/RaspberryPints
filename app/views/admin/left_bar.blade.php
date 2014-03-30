@@ -32,10 +32,10 @@
 		<li>
 		<a class="expanded heading">Personalization</a>
 		<ul class="navigation">
-			<li><a href="personalize.php#columns">Show/Hide Columns</a></li>
-			<li><a href="personalize.php#header">Headers</a></li>
-			<li><a href="personalize.php#logo">Brewery Logo</a></li>
-			<li><a href="personalize.php#background">Background Image</a></li>
+			<li><a href="{{ URL::action('OptionController@index'); }}#columns">{{{ Lang::get('common.showHideColumns') }}}</a></li>
+			<li><a href="{{ URL::action('OptionController@index'); }}#header">Headers</a></li>
+			<li><a href="{{ URL::action('OptionController@index'); }}#logo">Brewery Logo</a></li>
+			<li><a href="{{ URL::action('OptionController@index'); }}#background">Background Image</a></li>
 		</ul>
 	</li>
 	<li>

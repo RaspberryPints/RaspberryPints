@@ -102,7 +102,7 @@ label.required:after{
 	/*width: 50%;*/
 }
 
-#tap-list .batch-loading{
+.ajax-loading{
 	height: 24px;
 	width: 24px;
 	position: relative;

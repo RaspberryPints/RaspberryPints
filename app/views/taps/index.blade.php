@@ -24,7 +24,7 @@
 							{{ Form::model($tap, array('action' => 'TapController@updateBatch', 'method' => 'PUT')) }}
 								{{ Form::hidden('id') }}
                     			{{ Form::select('batchId', $batchList) }}
-                    			<span class="batch-loading geomicon raspberry" data-id="loading"></span>
+                    			<span class="ajax-loading geomicon raspberry" data-id="loading"></span>
     						{{ Form::close() }}
 						</td>
 					</tr>
