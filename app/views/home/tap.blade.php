@@ -41,7 +41,7 @@
 								<?php } ?>
 
 								<td class="name">
-									<h1><?php echo $beer->beername; ?></h1>
+									<h1><?php echo $beer->beerName; ?></h1>
 									<h2 class="subhead"><?php echo $beer->style; ?></h2>
 									<p><?php echo $beer->notes; ?></p>
 								</td>
