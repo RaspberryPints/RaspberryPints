@@ -4,7 +4,7 @@ class TapController extends BaseController {
 
 	public function index()
 	{
-		$data['taps'] = Tap::orderBy('index')->get();
+		$data['taps'] = Tap::orderBy('tapIndex')->get();
 
 		$this->loadFormViewData($data);
 

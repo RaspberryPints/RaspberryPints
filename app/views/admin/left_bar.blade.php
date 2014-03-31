@@ -10,7 +10,7 @@
 
 <!-- End User Echo -->
 <div class="user">
-	<a href="../index.php"><img src="{{ URL::asset('img/admin/logo.png'); }}" width="120" height="120" class="hoverimg" alt="Avatar" /></a>
+	<a href="/"><img src="{{ URL::asset('img/admin/logo.png'); }}" width="120" height="120" class="hoverimg" alt="Avatar" /></a>
 </div>
 
 <!-- Start Navagation -->
