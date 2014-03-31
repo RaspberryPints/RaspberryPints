@@ -1,51 +1,51 @@
 
-							<tr class="<?php if($i%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beer['id']; ?>">
-								<?php if($options[OptionNames::ShowTapNumCol]){ ?>
-									<td class="tap-num">
-										<span class="tapcircle"><?php echo $i; ?></span>
+							<tr class="<?php if($beer->tapIndex%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beer['id']; ?>">
+								<?php if($options[OptionNames::ShowTapNameCol]){ ?>
+									<td class="tap-name">
+										<span class="tapcircle"><?php echo $beer->tapName; ?></span>
 									</td>
 								<?php } ?>
-							
+
 								<?php if($options[OptionNames::ShowSrmCol]){ ?>
 									<td class="srm">
 										<h3><?php echo $beer->ogAct; ?> {{{ Lang::get('common.og') }}}</h3>
-										
+
 										<div class="srm-container">
 											<div class="srm-indicator" style="background-color: rgb(<?php echo $beer->srmRgb != "" ? $beer->srmRgb : "0,0,0" ?>)"></div>
-											<div class="srm-stroke"></div> 
+											<div class="srm-stroke"></div>
 										</div>
-										
+
 										<h2><?php echo $beer->srmAct; ?> {{{ Lang::get('common.srm') }}}</h2>
 									</td>
 								<?php } ?>
-							
+
 								<?php if($options[OptionNames::ShowIbuCol]){ ?>
 									<td class="ibu">
 										<h3>
-											<?php 
+											<?php
 												if( $beer->ogAct > 1 ){
 													echo $beer->BUGU();
 												}else{
 													echo '0.00';
 												}
-											?> 
+											?>
 											BU:GU
 										</h3>
-										
+
 										<div class="ibu-container">
 											<div class="ibu-indicator"><div class="ibu-full" style="height:<?php echo $beer->ibuAct > 100 ? 100 : $beer->ibuAct; ?>%"></div></div>
-												
-										</div>								
+
+										</div>
 										<h2><?php echo $beer->ibuAct; ?> {{{ Lang::get('common.ibu') }}}</h2>
 									</td>
 								<?php } ?>
-							
+
 								<td class="name">
 									<h1><?php echo $beer->beername; ?></h1>
 									<h2 class="subhead"><?php echo $beer->style; ?></h2>
 									<p><?php echo $beer->notes; ?></p>
 								</td>
-							
+
 								<?php if(($options[OptionNames::ShowAbvCol]) && ($options[OptionNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3><?php echo $beer->Calories(); ?> {{{ Lang::get('common.kCal') }}}
@@ -61,11 +61,11 @@
 																$level = 100;
 														}
 														?><div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div><?php
-														
+
 														$remaining = $remaining - $level;
 														$numCups++;
 												}while($remaining > 0 && $numCups < 2);
-												
+
 												if( $remaining > 0 ){
 													?><div class="abv-offthechart"></div><?php
 												}
@@ -74,18 +74,18 @@
 										<h2><?php echo number_format($beer->ABV(), 1, '.', ',')."%"; ?> {{{ Lang::get('common.abv') }}}</h2>
 									</td>
 								<?php } ?>
-								
+
 								<?php if(($options[OptionNames::ShowAbvCol]) && ! ($options[OptionNames::ShowAbvImg])){ ?>
 									<td class="abv">
-										<h3><?php echo $beer->Calories() ?> {{{ Lang::get('common.kCal') }}} </h3>									
+										<h3><?php echo $beer->Calories() ?> {{{ Lang::get('common.kCal') }}} </h3>
 										<h2><?php echo number_format($beer->ABV(), 1, '.', ',')."%"; ?>  {{{ Lang::get('common.abv') }}}</h2>
 									</td>
 								<?php } ?>
-								
+
 								<?php if($options[OptionNames::ShowKegCol]){ ?>
 									<td class="keg">
 										<h3><?php echo number_format((($beer->startLiter - $beer->remainAmount) * 128)); ?> {{{ Lang::get('common.flOzPoured') }}}</h3>
-										<?php 
+										<?php
 											$kegImgClass = "";
 											$percentRemaining = $beer->PercentRemaining();
 											if( $beer->remainAmount <= 0 ) {

@@ -5,11 +5,6 @@
 @stop
 
 @section('content')
-		
-	{{ Form::model($numTaps, array('action' => array('TapController@updateNumTaps', $numTaps->id), 'method' => 'PUT')) }}
-		{{ Form::text('configValue', Input::old('configValue')) }}
-        {{ Form::submit(Lang::get('common.save'), array( 'class' => 'btn')) }}
-    {{ Form::close() }}
 
 	<table id="tap-list" class="outerborder">
 		@if (count($taps) === 0)
@@ -19,7 +14,7 @@
 
 				<tbody>
 					<tr class="intborder thick">
-						<td>{{ $tap->tapNumber }}</td>
+						<td>{{ $tap->tapName }}</td>
 						<td>
 							{{ Form::model($tap, array('action' => 'TapController@updateBatch', 'method' => 'PUT')) }}
 								{{ Form::hidden('id') }}
@@ -28,10 +23,10 @@
     						{{ Form::close() }}
 						</td>
 					</tr>
-				</tbody>	
+				</tbody>
 
 			@endforeach
-		@endif								
+		@endif
 	</table>
 @stop
 

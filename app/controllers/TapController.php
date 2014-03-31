@@ -4,9 +4,7 @@ class TapController extends BaseController {
 
 	public function index()
 	{
-		$data['taps'] = Tap::GetAllActive();
-
-		$data['numTaps'] = Option::GetByName(OptionNames::NumberOfTaps);
+		$data['taps'] = Tap::orderBy('index')->get();
 
 		$this->loadFormViewData($data);
 
@@ -35,7 +33,7 @@ class TapController extends BaseController {
 	 * Assign a batch to the tap
 	 *
 	 * @return Response
-	 */
+	 //*/
 	public function updateNumTaps()
 	{
 		$option = Option::GetByName( OptionNames::NumberOfTaps );
@@ -47,9 +45,9 @@ class TapController extends BaseController {
 
 		for( $t = 1; $t <= $option->configValue; $t++ ){
 			$tap = Tap::firstOrNew(array('tapNumber' => $t));
-			
+
 			$tap->tapNumber = $t;
-			$tap->active = 1;			
+			$tap->active = 1;
 
 			if( $t > $prevNumTaps){
 				$tap->batchId = null;
@@ -60,7 +58,7 @@ class TapController extends BaseController {
 
 
 		return Redirect::action('TapController@index');
-	}
+	}*/
 
 	private function loadFormViewData(&$data){
 

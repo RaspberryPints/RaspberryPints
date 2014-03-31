@@ -1,10 +1,12 @@
 <?php
 
-class Tap extends Eloquent 
+class Tap extends Eloquent
 {
 
 	protected $fillable = array(
-		'batchId', 
+		'batchId',
+		'name',
+		'tapIndex',
 		'pinAddress',
 		'pulsesPerLiter'
 	);
@@ -13,10 +15,5 @@ class Tap extends Eloquent
 	public function Batch()
     {
         return $this->hasOne("Batch", "id", "batchId");
-    }
-	
-
-    public static function GetAllActive(){
-    	return Tap::where('active', 1)->orderBy('tapNumber')->get();
     }
 }

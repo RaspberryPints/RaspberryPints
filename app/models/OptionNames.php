@@ -2,7 +2,7 @@
 
 abstract class OptionNames
 {
-	const ShowTapNumCol = 'showTapNumCol';
+	const ShowTapNameCol = 'showTapNameCol';
 	const ShowSrmCol = 'showSrmCol';
 	const ShowIbuCol = 'showIbuCol';
 	const ShowCalCol = 'showCalCol';
@@ -13,5 +13,4 @@ abstract class OptionNames
 	const LogoUrl = 'logoUrl';
 	const HeaderText = 'headerText';
 	const HeaderTextTruncLen = 'headerTextTruncLen';
-	const NumberOfTaps = 'numberOfTaps';
 }

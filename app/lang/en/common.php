@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return array(
 
@@ -37,7 +37,7 @@ return array(
 	'flOzLeft' => 'fl oz left',
 	'flOzPoured' => 'fl oz poured',
 	'forgotPassword' => 'Forgot Password?',
-	'gravity' => 'Gravity',			
+	'gravity' => 'Gravity',
 	'hopSchedule' => 'Hop Schedule',
 	'ibu' => 'IBU',
 	'itemSuccessfullyCreated' => '%s was successfully created',
@@ -79,7 +79,7 @@ return array(
 	'stampedOwner' => 'Stamped Owner',
 	'status' => 'Status',
 	'submit' => 'Submit',
-	'tapNum' => 'Tap #',
+	'tapName' => 'Tap',
 	'tastingNotes' => 'Tasting Notes',
 	'type' => 'Type',
 	'update' => 'Update',
@@ -90,12 +90,12 @@ return array(
 	'welcomeTitle' => 'Welcome To The RaspberryPints Management Portal',
 	'yeast ' => 'Yeast',
 	'useHighResolution' => 'Use High Resolution',
-	'showAbvCol' => 'Show ABV', 
+	'showAbvCol' => 'Show ABV',
 	'showAbvImg' => 'Show ABV Image',
 	'showIbuCol' => 'Show IBU',
 	'showKegCol' => 'Show Keg',
 	'showSrmCol' => 'Show SRM',
-	'showTapNumCol' => 'Show Tap Num',
+	'showTapNameCol' => 'Show Tap Name',
 	'useMetric' => 'Use Metric',
 	'show' => 'Show',
 	'hide' => 'Hide',

@@ -1,11 +1,12 @@
 <?php
 
-class ActiveTap extends Eloquent 
+class ActiveTap extends Eloquent
 {
-	
+
     protected $guarded = array(
     	'id',
-    	'name',
+    	'batchId',
+    	'beerName',
     	'style',
         'notes',
         'ogAct',
@@ -15,18 +16,19 @@ class ActiveTap extends Eloquent
         'startAmount',
         'amountPoured',
         'remainAmount',
-        'tapNumber',
+        'tapName',
+        'tapIndex',
         'srmRgb'
     );
-    
-	protected $table = 'vwGetActiveTaps';
+
+	protected $table = 'vwGetTaps';
 
     public function BUGU(){
         $bugu = 0;
         if( $this->ogAct > 1 ){
             $bugu = number_format((($this->ibuAct)/(($this->ogAct-1)*1000)), 2, '.', '');
-        }        
-        return number_format($bugu, 2, '.', ''); 
+        }
+        return number_format($bugu, 2, '.', '');
     }
 
     public function Calories(){
@@ -46,5 +48,5 @@ class ActiveTap extends Eloquent
 
     public function PercentRemaining(){
         return $this->remainAmount / $this->startLiter * 100;
-    } 
+    }
 }
