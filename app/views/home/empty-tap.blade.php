@@ -1,4 +1,4 @@
-							<tr class="<?php if($beer->tapIndex%2 > 0){ echo 'altrow'; }?>">
+							<tr class="<?php if($i%2 > 0){ echo 'altrow'; }?>">
 								<?php if($options[OptionNames::ShowTapNameCol]){ ?>
 									<td class="tap-name">
 										<span class="tapcircle"><?php echo $beer->tapName; ?></span>

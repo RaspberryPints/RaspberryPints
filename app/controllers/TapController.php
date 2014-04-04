@@ -4,7 +4,7 @@ class TapController extends BaseController {
 
 	public function index()
 	{
-		$data['taps'] = Tap::orderBy('tapIndex')->get();
+		$data['taps'] = Tap::orderBy('id')->get();
 
 		$this->loadFormViewData($data);
 
@@ -12,53 +12,52 @@ class TapController extends BaseController {
 	}
 
 	/**
-	 * Assign a batch to the tap
+	 * Store a newly created resource in storage.
 	 *
 	 * @return Response
-	 */
-	public function updateBatch()
+	 *
+	public function store()
 	{
-		$tap = Tap::find( Input::get('id') );
+		$tap = new Tap;
+		$tap->save();
+		$validator = $this->validate();
 
-		$tap->batchId = null;
-		if( Input::get('batchId') != "" )
-			$tap->batchId = Input::get('batchId');
+		return Redirect::action('TapController@index');
+	}*/
 
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function update($id)
+	{
+		$tap = Tap::find($id);
+		$this->mapToDomain($tap);
 		$tap->save();
 
 		return Response::json(array('success' => true));
 	}
 
 	/**
-	 * Assign a batch to the tap
+	 * Remove the specified resource from storage.
 	 *
+	 * @param  int  $id
 	 * @return Response
-	 //*/
-	public function updateNumTaps()
+	 */
+	public function destroy($id)
 	{
-		$option = Option::GetByName( OptionNames::NumberOfTaps );
-		$prevNumTaps = $option->configValue;
-		$option->configValue = Input::get('configValue');
-		$option->save();
+		$tap = Tap::find($id);
+		$tap->delete();
+	}
 
-		DB::statement('UPDATE taps SET active = (?)', array('0'));
-
-		for( $t = 1; $t <= $option->configValue; $t++ ){
-			$tap = Tap::firstOrNew(array('tapNumber' => $t));
-
-			$tap->tapNumber = $t;
-			$tap->active = 1;
-
-			if( $t > $prevNumTaps){
-				$tap->batchId = null;
-			}
-
-			$tap->save();
-		}
-
-
-		return Redirect::action('TapController@index');
-	}*/
+	private function mapToDomain($tap){
+		$tap->name       = Input::get('name');
+		$tap->batchId 	 = null;
+		if( Input::get('batchId') != "" )
+			$tap->batchId = Input::get('batchId');
+	}
 
 	private function loadFormViewData(&$data){
 

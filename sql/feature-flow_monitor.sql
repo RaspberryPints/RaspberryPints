@@ -46,10 +46,6 @@ SELECT beerId, kegId, active, ogAct, fgAct, srmAct, ibuAct, startAmount * 3.7854
 
 ALTER TABLE taps ADD COLUMN batchId int(11) NULL;
 
-ALTER TABLE taps ADD COLUMN tapIndex int(11) NULL;
-
-UPDATE taps set tapIndex = tapNumber;
-
 ALTER TABLE taps CHANGE COLUMN `tapNumber` `name` VARCHAR(255);
 
 UPDATE taps t LEFT JOIN batches b ON b.beerId = t.beerId AND b.kegId = t.KegId SET t.batchId = b.Id;
@@ -138,10 +134,9 @@ UPDATE kegTypes SET maxLiters = maxLiters * 3.7854;
 DELETE FROM taps;
 
 SET @rowNum=0;
-INSERT INTO taps(`name`, `tapIndex`, `createdDate`, `modifiedDate`, `batchId`)
+INSERT INTO taps(`name`, `createdDate`, `modifiedDate`, `batchId`)
 SELECT 
 	@rowNum:=@rowNum+1 AS `name`,
-	@rowNum AS `tapIndex`,
 	b2.createdDate,
 	b2.modifiedDate,
 	b2.Id AS `batchId`
@@ -210,7 +205,6 @@ SELECT
 	IFNULL(p.litersPoured, 0) as litersPoured,
 	ba.startLiter - IFNULL(p.litersPoured, 0) as remainAmount,
 	t.name as 'tapName',
-	t.tapIndex,
 	s.rgb as srmRgb
 FROM taps t
 	LEFT JOIN batches ba ON ba.id = t.batchId
@@ -218,7 +212,7 @@ FROM taps t
 	LEFT JOIN beerStyles bs ON bs.id = be.beerStyleId
 	LEFT JOIN srmRgb s ON s.srm = ba.srmAct
 	LEFT JOIN vwGetTapsAmountPoured as p ON p.batchId = ba.Id
-ORDER BY t.tapIndex;
+ORDER BY t.id;
 
 
 

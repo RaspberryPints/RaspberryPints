@@ -7,7 +7,7 @@ class HomeController extends BaseController {
 	{
 		$data['options'] = Option::AllAsFlatten();
 
-		$data['taps'] = ActiveTap::orderBy('tapIndex')->get();
+		$data['taps'] = ActiveTap::orderBy('id')->get();
 
 		return View::make('home.index', $data);
 	}

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import serial
 import syslog
-import time
+import datetime
 
 #The following line is for serial over GPIO
 port = '/dev/ttyS0'
@@ -10,6 +10,7 @@ port = '/dev/ttyS0'
 
 arduino = serial.Serial(port,9600,timeout=2)
 
+fo = open('/var/log/RaspberryPintsFlow.log', 'ab')
 
 running = True
 
@@ -18,6 +19,8 @@ try:
 		msg = arduino.readline()
 		if not msg:
 			continue
+		fo.write(str(datetime.datetime.now())+" - "+msg)
+		fo.flush()
 		reading = msg.split(";")
 		if ( len(reading) < 2 ):
 			print "Unknown message: "+msg
@@ -38,5 +41,8 @@ try:
 			print "  - Pin  : "+str(MCP_PIN)
 		else:
 			print "Unknown message: "+msg
+except:
+	print
 finally:
+	fo.close()
         print "Exiting"

@@ -17,7 +17,6 @@ class ActiveTap extends Eloquent
         'amountPoured',
         'remainAmount',
         'tapName',
-        'tapIndex',
         'srmRgb'
     );
 

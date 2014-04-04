@@ -6,7 +6,6 @@ class Tap extends Eloquent
 	protected $fillable = array(
 		'batchId',
 		'name',
-		'tapIndex',
 		'pinAddress',
 		'pulsesPerLiter'
 	);

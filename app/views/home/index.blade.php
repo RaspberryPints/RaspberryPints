@@ -102,6 +102,7 @@
 
 				<tbody>
 					<?php
+					$i=0;
 					foreach ($taps as $beer) {
 						if( $beer->batchId != null ){
 						?>
@@ -109,6 +110,7 @@
 						<?php }else{ ?>
 							@include('home.empty-tap')
 						<?php
+						$i++;
             			}
 					}
 					?>
