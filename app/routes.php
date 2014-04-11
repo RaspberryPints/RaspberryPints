@@ -31,9 +31,10 @@ Route::group(array('before' => 'auth'), function()
 	Route::resource('admin/batches', 'BatchController');
 	Route::get('admin/batches/inactivate/{id}', 'BatchController@inactivate');
 
-	Route::resource('admin/taps', 'TapController');
+	
 	Route::get('admin/taps/destroy/{id}', 'TapController@destroy');
 	Route::put('admin/taps/store/', 'TapController@store');
+	Route::resource('admin/taps', 'TapController');
 
 	Route::get('admin/options/', 'OptionController@index');
 	Route::put('admin/options/update/{id}', 'OptionController@update');

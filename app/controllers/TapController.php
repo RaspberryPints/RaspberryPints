@@ -50,6 +50,8 @@ class TapController extends BaseController {
 	{
 		$tap = Tap::find($id);
 		$tap->delete();
+		
+		return Redirect::action('TapController@index');
 	}
 
 	private function mapToDomain($tap){

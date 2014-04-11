@@ -5,3 +5,5 @@ composer.lock
 .env.php
 .DS_Store
 Thumbs.db
+public/img/background.*
+public/img/logo.*
