@@ -12,6 +12,17 @@
 			{{ HTML::style('styles/high-res.css'); }}
 		<?php } ?>
 
+		<style>
+			body {
+				background-image: url({{$options[OptionNames::BackgroundUrl] }});
+				<?php if( $options[OptionNames::BackgroundRepeat] == 1 ) { ?>
+					background-size: auto;
+					background-repeat: repeat;
+				<?php } ?>
+				
+			}
+		</style>
+
 		<link rel="shortcut icon" href="img/pint.ico">
 	</head>
 

@@ -109,10 +109,14 @@ ALTER TABLE pours DROP COLUMN `amountPoured`;
 --
 
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
-( 'useMetric', '0', 'Use Metric', '1', NOW(), NOW() );
+( 'useMetric', '0', 'Use Metric', '1', NOW(), NOW() ),
+( 'backgroundUrl', '/img/default-background.jpg', 'Background Image Url', 0, NOW(), NOW()),
+( 'backgroundRepeat', '0', 'If Background Image Should Repeat', 0, NOW(), NOW());
 
 UPDATE config SET configName = 'showTapNameCol', displayName = 'Tap Name Column' where configName = 'showTapNumCol';
 
+UPDATE config SET configValue = '/img/default-logo.png' WHERE configName = 'logoUrl' AND configValue = '/img/logo.png';
+DELETE FROM config WHERE configName = 'adminLogoUrl';
 
 -- --------------------------------------------------------
 

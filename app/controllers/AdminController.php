@@ -57,4 +57,5 @@ class AdminController extends BaseController {
 		Auth::logout();
 		return Redirect::action('HomeController@index');
 	}
+	
 }

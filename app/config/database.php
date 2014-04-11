@@ -57,7 +57,7 @@ return array(
 			'host'      => 'localhost',
 			'database'  => 'raspberrypints',
 			'username'  => 'beers',
-			'password'  => 'kerber',
+			'password'  => 'beers',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

@@ -13,4 +13,6 @@ abstract class OptionNames
 	const LogoUrl = 'logoUrl';
 	const HeaderText = 'headerText';
 	const HeaderTextTruncLen = 'headerTextTruncLen';
+	const BackgroundUrl = 'backgroundUrl';
+	const BackgroundRepeat = 'backgroundRepeat';
 }

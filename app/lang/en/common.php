@@ -104,4 +104,10 @@ return array(
 	'headerText' => 'Header Text',
 	'headers' => 'Headers',
 	'headerTextTruncLen' => 'Truncate To (# characters)',
+	'replace' => 'Replace',
+	'breweryLogo' => 'Brewery Logo',
+	'background' => 'Background',
+	'imageRepeat' => 'Image Repeat',
+	'yes' => 'Yes',
+	'no' => 'No',
 );

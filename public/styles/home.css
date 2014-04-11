@@ -1,7 +1,7 @@
 body {
 	background-image: url(../img/background.jpg);
 	background-color: #000000;
-	background-size: cover;
+	background-size: contain;
 	background-repeat:no-repeat;
 	overflow: hidden;
 	font: 1.5em Gerorgia, arial, verdana, sans-serif;

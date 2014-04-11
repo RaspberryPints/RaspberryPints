@@ -18,7 +18,6 @@ Route::get('login', 'AdminController@showLogin')->before('guest');
 Route::post('login', 'AdminController@doLogin');
 Route::get('logout', 'AdminController@doLogout');
 
-
 Route::group(array('before' => 'auth'), function()
 {
 	Route::get('admin', 'AdminController@index');
@@ -38,6 +37,8 @@ Route::group(array('before' => 'auth'), function()
 
 	Route::get('admin/options/', 'OptionController@index');
 	Route::put('admin/options/update/{id}', 'OptionController@update');
+	Route::put('admin/options/replaceLogo', 'OptionController@replaceLogo');
+	Route::put('admin/options/replaceBackground', 'OptionController@replaceBackground');
 
 	Route::get('admin/user', function()
 	{
