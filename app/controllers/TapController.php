@@ -12,6 +12,19 @@ class TapController extends BaseController {
 	}
 
 	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return Response
+	 */
+	public function create()
+	{
+		$tap = new Tap;
+		$tap->save();
+
+		return Redirect::action('TapController@index');
+	}
+
+	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @return Response
@@ -50,15 +63,13 @@ class TapController extends BaseController {
 	{
 		$tap = Tap::find($id);
 		$tap->delete();
-		
+
 		return Redirect::action('TapController@index');
 	}
 
 	private function mapToDomain($tap){
 		$tap->name       = Input::get('name');
-		$tap->batchId 	 = null;
-		if( Input::get('batchId') != "" )
-			$tap->batchId = Input::get('batchId');
+		$tap->batchId 	 = Input::get('batchId') == "" ? null : Input::get('batchId');
 	}
 
 	private function loadFormViewData(&$data){

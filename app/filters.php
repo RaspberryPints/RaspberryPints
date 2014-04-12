@@ -79,3 +79,9 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+
+View::composer('layouts.admin', function($view){
+
+    $view->with('logoUrl', Option::where('configName',OptionNames::LogoUrl)->first()->configValue);
+});
