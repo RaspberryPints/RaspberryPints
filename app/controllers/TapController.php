@@ -53,6 +53,25 @@ class TapController extends BaseController {
 		return Response::json(array('success' => true));
 	}
 
+	public function updateName($id)
+	{
+		$tap = Tap::find($id);
+		$tap->name = Input::get('name');
+		$tap->save();
+
+		return Response::json(array('success' => true));
+	}
+
+	public function updateBatch($id)
+	{
+		$tap = Tap::find($id);
+		$tap->batchId = Input::get('batchId') == "" ? null : Input::get('batchId');
+		$tap->save();
+
+		return Response::json(array('success' => true));
+	}
+
+
 	/**
 	 * Remove the specified resource from storage.
 	 *

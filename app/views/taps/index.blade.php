@@ -20,27 +20,26 @@
 					<th></th>
 				</tr>
 			</thead>
-			@foreach ($taps as $tap)				
-				{{ Form::model($tap, array('action' => array('TapController@update', $tap->id), 'method' => 'put')) }}
-					<tbody>
-						<tr>
-							<td>
-								
-									{{ Form::text('name') }}
-									<span class="ajax-loading geomicon raspberry" data-id="loading"></span>
-								
-							</td>
-							<td>
-									{{ Form::select('batchId', $batchList) }}
-									<span class="ajax-loading geomicon raspberry" data-id="loading"></span>
-								
-							</td>
-							<td>
-								{{ link_to_action("TapController@destroy", Lang::get('common.delete'), array( 'id' =>  $tap->id ), array( 'class' => 'btn')); }}
-							</td>
-						</tr>
-					</tbody>
-				{{ Form::close() }}
+			@foreach ($taps as $tap)
+				<tbody>
+					<tr>
+						<td>
+							{{ Form::model($tap, array('action' => array('TapController@updateName', $tap->id), 'method' => 'put')) }}
+								{{ Form::text('name') }}
+								<span class="ajax-loading geomicon raspberry" data-id="loading"></span>
+							{{ Form::close() }}
+						</td>
+						<td>
+							{{ Form::model($tap, array('action' => array('TapController@updateBatch', $tap->id), 'method' => 'put')) }}
+								{{ Form::select('batchId', $batchList) }}
+								<span class="ajax-loading geomicon raspberry" data-id="loading"></span>
+							{{ Form::close() }}
+						</td>
+						<td>
+							{{ link_to_action("TapController@destroy", Lang::get('common.delete'), array( 'id' =>  $tap->id ), array( 'class' => 'btn')); }}
+						</td>
+					</tr>
+				</tbody>
 			@endforeach
 		@endif
 	</table>
@@ -52,7 +51,6 @@
 		$(function () {
 
 			var updateTap = function(){
-				debugger;
 				var $form = $(this).closest('form'),
 					$loadingIcon = $form.find('.ajax-loading');
 

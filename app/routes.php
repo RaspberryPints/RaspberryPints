@@ -34,6 +34,8 @@ Route::group(array('before' => 'auth'), function()
 	
 	Route::get('admin/taps/destroy/{id}', 'TapController@destroy');
 	Route::put('admin/taps/store/', 'TapController@store');
+	Route::put('admin/taps/updateName/{id}', 'TapController@updateName');
+	Route::put('admin/taps/updateBatch/{id}', 'TapController@updateBatch');
 	Route::resource('admin/taps', 'TapController');
 
 	Route::get('admin/options/', 'OptionController@index');
