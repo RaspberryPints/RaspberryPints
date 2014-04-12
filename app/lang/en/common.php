@@ -110,4 +110,5 @@ return array(
 	'imageRepeat' => 'Image Repeat',
 	'yes' => 'Yes',
 	'no' => 'No',
+	'addTap' => 'Add Tap',
 );
