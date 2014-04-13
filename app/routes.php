@@ -22,6 +22,9 @@ Route::group(array('before' => 'auth'), function()
 {
 	Route::get('admin', 'AdminController@index');
 
+	Route::get('admin/myAccount', 'UserController@showAccount');
+	Route::put('admin/myAccount/update', 'UserController@update');
+
 	Route::resource('admin/beers', 'BeerController');
 	Route::get('admin/beer/inactivate/{id}', 'BeerController@inactivate');
 
@@ -31,7 +34,7 @@ Route::group(array('before' => 'auth'), function()
 	Route::resource('admin/batches', 'BatchController');
 	Route::get('admin/batches/inactivate/{id}', 'BatchController@inactivate');
 
-	
+
 	Route::get('admin/taps/destroy/{id}', 'TapController@destroy');
 	Route::put('admin/taps/store/', 'TapController@store');
 	Route::put('admin/taps/updateName/{id}', 'TapController@updateName');

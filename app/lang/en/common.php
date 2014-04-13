@@ -111,4 +111,6 @@ return array(
 	'yes' => 'Yes',
 	'no' => 'No',
 	'addTap' => 'Add Tap',
+	'accountInfo' => 'Account Info',
+	'email' => 'Email',
 );
