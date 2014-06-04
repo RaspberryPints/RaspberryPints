@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"Option",
+				"Option"
+			],
+			[
 				"O",
 				"OptionNames"
 			],
@@ -75,38 +79,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "app/lang/en/common.php",
-			"settings":
-			{
-				"buffer_size": 2800,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/routes.php",
-			"settings":
-			{
-				"buffer_size": 1366,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/views/home/index.blade.php",
-			"settings":
-			{
-				"buffer_size": 3477,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/models/ActiveTap.php",
-			"settings":
-			{
-				"buffer_size": 1249,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -192,31 +164,55 @@
 	},
 	"file_history":
 	[
+		"/C/Projects/Crunch/CrunchSOP/www_1/inc/common.asp",
+		"/C/Projects/GitHub/RaspberryPints/app/filters.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/taps/index.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/routes.php",
+		"/C/Projects/GitHub/RaspberryPints/app/controllers/TapController.php",
+		"/C/Projects/GitHub/RaspberryPints/app/controllers/KegController.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/options/index.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/controllers/BaseController.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/layouts/admin.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/admin/left_bar.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/lang/en/common.php",
+		"/C/Projects/GitHub/RaspberryPints/app/controllers/OptionController.php",
+		"/C/Projects/GitHub/RaspberryPints/vendor/laravel/framework/src/Illuminate/Foundation/Application.php",
+		"/C/Projects/GitHub/RaspberryPints/app/models/OptionNames.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/admin/header.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/admin/scripts.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/app/controllers/HomeController.php",
+		"/C/Projects/GitHub/RaspberryPints/app/views/home/index.blade.php",
+		"/C/Projects/GitHub/RaspberryPints/public/styles/home.css",
+		"/C/Projects/GitHub/RaspberryPints/app/controllers/AdminController.php",
+		"/C/Projects/GitHub/RaspberryPints/vendor/filp/whoops/src/Whoops/Exception/Frame.php",
+		"/C/Projects/GitHub/RaspberryPints/sql/jayunt_rpints_2014_03_21.sql",
+		"/C/Projects/GitHub/RaspberryPints/sql/test_data.sql",
+		"/C/Projects/GitHub/RaspberryPints/sql/schema.sql",
+		"/C/Projects/GitHub/RaspberryPints/sql/feature-flow_monitor.sql",
+		"/C/Projects/GitHub/RaspberryPints/app/config/database.php",
+		"/C/Projects/GitHub/RaspberryPints/app/models/Option.php",
+		"/C/Projects/GitHub/RaspberryPints/public/styles/styles.css",
+		"/C/Projects/GitHub/RaspberryPints/app/models/ActiveTap.php",
+		"/C/Projects/GitHub/RaspberryPints/vendor/laravel/framework/src/Illuminate/Routing/Controller.php",
+		"/C/Projects/GitHub/RaspberryPints/vendor/laravel/framework/src/Illuminate/Validation/Validator.php",
+		"/C/Projects/GitHub/RaspberryPints/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php",
+		"/C/Projects/GitHub/RaspberryPints/vendor/laravel/framework/src/Illuminate/Foundation/AliasLoader.php",
+		"/C/Projects/GitHub/RaspberryPints/app/controllers/PersonalizeController.php",
 		"/C/Projects/GitHub/RaspberryPints/public/scripts/geomicons/geomicons-defs.svg",
 		"/C/Projects/GitHub/RaspberryPints/public/scripts/geomicons/geomicons.js",
 		"/C/Projects/GitHub/RaspberryPints/public/scripts/geomicons/geomicons.min.js",
-		"/C/Projects/GitHub/RaspberryPints/app/models/Option.php",
-		"/C/Projects/GitHub/RaspberryPints/app/controllers/OptionController.php",
-		"/C/Projects/GitHub/RaspberryPints/public/styles/styles.css",
 		"/C/Projects/GitHub/RaspberryPints/app/views/batches/index.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/models/Batch.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/batches/create.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/batches/form.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/controllers/BatchController.php",
 		"/C/Projects/GitHub/RaspberryPints/app/models/Beer.php",
-		"/C/Projects/GitHub/RaspberryPints/app/controllers/TapController.php",
 		"/C/Projects/GitHub/RaspberryPints/app/models/Tap.php",
-		"/C/Projects/GitHub/RaspberryPints/app/views/taps/index.blade.php",
-		"/C/Projects/GitHub/RaspberryPints/app/views/admin/scripts.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/public/scripts/geomicons/geomicons.svg",
 		"/C/Projects/GitHub/RaspberryPints/app/views/batches/edit.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/storage/views/ac44e5ab5a4a90654d57bf9dfdc925b9",
-		"/C/Projects/GitHub/RaspberryPints/app/routes.php",
-		"/C/Projects/GitHub/RaspberryPints/app/views/admin/left_bar.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/home/tap.blade.php",
-		"/C/Projects/GitHub/RaspberryPints/app/models/ActiveTap.php",
 		"/C/Projects/GitHub/RaspberryPints/app/models/Keg.php",
-		"/C/Projects/GitHub/RaspberryPints/app/controllers/KegController.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/kegs/index.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/kegs/form.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/models/KegType.php",
@@ -226,30 +222,19 @@
 		"/C/Projects/GitHub/RaspberryPints/app/views/kegs/edit.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/beers/index.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/controllers/BeerController.php",
-		"/C/Projects/GitHub/RaspberryPints/sql/feature-flow_monitor.sql",
-		"/C/Projects/GitHub/RaspberryPints/app/lang/en/common.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/beers/form.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/admin/login.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/public/styles/login.css",
 		"/C/Projects/GitHub/RaspberryPints/app/views/layouts/login.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/admin/index.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/public/styles/admin.css",
-		"/C/Projects/GitHub/RaspberryPints/app/views/layouts/admin.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/beers/edit.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/lang/en/html.php",
-		"/C/Projects/GitHub/RaspberryPints/app/views/admin/header.blade.php",
-		"/C/Projects/GitHub/RaspberryPints/app/controllers/HomeController.php",
-		"/C/Projects/GitHub/RaspberryPints/app/models/OptionNames.php",
-		"/C/Projects/GitHub/RaspberryPints/public/styles/home.css",
-		"/C/Projects/GitHub/RaspberryPints/app/views/home/index.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/home/empty-tap.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/models/BeerStyle.php",
-		"/C/Projects/GitHub/RaspberryPints/app/controllers/AdminController.php",
 		"/C/Projects/GitHub/RaspberryPints/app/models/User.php",
-		"/C/Projects/GitHub/RaspberryPints/app/config/database.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/beers/create.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/config/auth.php",
-		"/C/Projects/GitHub/RaspberryPints/app/filters.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/shared/admin-header.blade.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/home/index.php",
 		"/C/Projects/GitHub/RaspberryPints/app/views/hello.php",
@@ -287,6 +272,7 @@
 		"height": 0.0,
 		"where_history":
 		[
+			"",
 			"C:\\Projects\\GitHub\\RaspberryPints",
 			"C:\\Projects\\GitHub\\RaspberryPints-CodeIgniter"
 		]
@@ -296,6 +282,14 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"error",
+			"vali",
+			"error",
+			"modifiedDate",
+			"createdDate",
+			"modifiedDate",
+			"createdDate",
+			"vwGetTaps",
 			"::",
 			"	\n",
 			"beername",
@@ -331,6 +325,10 @@
 		"regex": false,
 		"replace_history":
 		[
+			"updated_at",
+			"created_at",
+			"updated_at",
+			"created_at",
 			"actual",
 			"Act'",
 			"Act",
@@ -357,294 +355,8 @@
 	"groups":
 	[
 		{
-			"selected": 3,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "app/lang/en/common.php",
-					"settings":
-					{
-						"buffer_size": 2800,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2796,
-								2796
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 630.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "app/routes.php",
-					"settings":
-					{
-						"buffer_size": 1366,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1242,
-								1242
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "app/views/home/index.blade.php",
-					"settings":
-					{
-						"buffer_size": 3477,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3225,
-								3225
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1080.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "app/models/ActiveTap.php",
-					"settings":
-					{
-						"buffer_size": 1249,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								618,
-								626
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 45.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -681,7 +393,7 @@
 	"menu_visible": true,
 	"output.xdebug":
 	{
-		"height": 100.0
+		"height": 225.0
 	},
 	"replace":
 	{

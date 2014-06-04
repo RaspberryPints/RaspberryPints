@@ -80,8 +80,7 @@ Route::filter('csrf', function()
 	}
 });
 
-
+// http://heera.it/laravel-4-view-composer-master-layout#.U0idHfldVXU
 View::composer('layouts.admin', function($view){
-
     $view->with('logoUrl', Option::where('configName',OptionNames::LogoUrl)->first()->configValue);
 });
