@@ -61,5 +61,20 @@ $(document).ready(function(){
 // Rich text editor/WYSIWYG
 
 	$(document).ready(function() {
-			$('#wysiwyg').wysiwyg();
+		$('#wysiwyg').wysiwyg();
+	});
+
+
+$(document).ready(function(){
+	$('a.btn')
+		.on('click', function(){
+			if( $(this).attr('disabled') )
+				return false;
+
+			$(this)
+				.attr('disabled', true)
+				.append('<span class="button-clicked geomicon raspberry" data-id="loading"></span>');
+
+			createIcons();
 		});
+});

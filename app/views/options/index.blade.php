@@ -123,6 +123,7 @@
 				    data:  $form.serialize(),
 				    success: function(result) {
 						$loadingIcon.css('visibility','hidden');
+						debugger;
 				    }
 				});
 			};

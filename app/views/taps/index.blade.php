@@ -6,7 +6,9 @@
 
 @section('content')
 
-	<p>{{ link_to_action('TapController@create', Lang::get('common.addTap'), null, array( 'class' => 'btn')); }}</p>
+	<p>
+		{{ link_to_action('TapController@create', Lang::get('common.addTap'), null, array( 'id' => 'add-tap', 'class' => 'btn')); }}		
+	</p>
 
 	{{ HTML::ul($errors->all()) }}
 	<table id="tap-list" class="outerborder">
@@ -49,7 +51,6 @@
 @section('scripts')
 	<script>
 		$(function () {
-
 			var updateTap = function(){
 				var $form = $(this).closest('form'),
 					$loadingIcon = $form.find('.ajax-loading');
@@ -68,7 +69,8 @@
 
 			$('#tap-list')
 				.on('change', 'select', updateTap)
-				.on('focusout', 'input', updateTap);			
+				.on('focusout', 'input', updateTap);
+			
 		});
 	</script>
 @stop

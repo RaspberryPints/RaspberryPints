@@ -9,6 +9,7 @@
 		<link href='http://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
 	</head>
 	<body id="homepage">
+
 	
 		@include('admin.header')
 
@@ -36,6 +37,6 @@
 		</div>
 		
 		@include('admin.left_bar')
-		@include('admin.scripts')		
+		@include('admin.scripts')
 	</body>
 </html>

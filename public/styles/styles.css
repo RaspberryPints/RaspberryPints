@@ -98,6 +98,24 @@ label.required:after{
 	fill: #D6264F;
 }
 
+a.btn[disabled]{
+	position: relative;
+	cursor: not-allowed;
+	background-position: 0 0px;
+	padding-right: 30px;
+}
+
+.button-clicked{
+	z-index: 100;
+	position: absolute;
+	top: 50%;
+	right: 5px;
+	margin-top: -8px;
+	height: 16px;
+	width: 16px;
+}
+
+
 #tap-list{
 	/*width: 50%;*/
 }
