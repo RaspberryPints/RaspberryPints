@@ -146,6 +146,14 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td style="vertical-align:middle;">
+					<b>Pin Number: <font color="red">*</font></b>
+				</td>
+				<td>
+					<input type="text" id="pinId" class="mediumbox" name="pinId" value="<?php echo $tap->get_pinId() ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td style="vertical-align:middle;">
 					<b>Start Amount</b> (gal): <b><font color="red">*</font></b>
 				</td>
 				<td>

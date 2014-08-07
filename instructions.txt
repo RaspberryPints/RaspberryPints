@@ -1,0 +1,79 @@
+First things first:
+
+Assemble the Alamode according to the user guide:
+https://docs.google.com/document/d/1HBvd3KNmcs632ZgO6t_u37B-qwV6P9o9FQe62lGkumM/edit
+
+The quick version is this:
+
+on Page 7 follow the instructions to install the headers (requires solidering)
+
+Open LXTerminal (or connect via ssh) and type following commands: 
+
+pi@raspberrypi ~ $ sudo apt-get update
+pi@raspberrypi ~ $ sudo apt-get install arduino python-serial python-mysqldb php5-cli xdotool
+
+To make the necessary changes for the Arduino IDE to recognize AlaMode, download AlaMode set up from the link given below.
+
+https://github.com/wyolum/alamode/raw/master/bundles/alamode-setup.tar.gz
+
+From the command line, unpack and install it:
+
+pi@raspberrypi ~ $ tar -xvzf alamode-setup.tar.gz
+pi@raspberrypi ~ $ cd alamode-setup
+pi@raspberrypi ~ $ sudo ./setup
+
+Then:
+pi@raspberrypi ~ $ sudo shutdown -h now
+(this halts the rPi so you can safely remove power)
+
+To Power the Alamode and the rPi, set the 5V_link jumper to on (see page 11). This allows you to connect power to the alamode board 
+to power both the alamode and the rPi. This is important as the flow meters will draw more power than the rPi can safely supply via GPIO
+
+To connect the flow meter to the alamode:
+Pin1(red) -> Ground
+Pin2 (middle)-> Any digital pin 2-13. Be sure to set this at the top of the Arduino code
+Pin3 -> VIN
+
+Once the alamode has been seated on the rPi (on the gpio pins) and the flow meter has been attached you can power the 
+rPi up. Plug the power in to the micro usb on the alamode and not the rPi.
+
+Log in to the GUI on the rpi and go to the menu -> Programming -> arduino
+This opens a program used to edit the ino file for arduino as well as compiler and uploader.
+Click on file -> open
+Browse to your raspberrypints directory, look for the arduino -> raspberrypints folder and select the raspberrypints.ino file
+At the top of the file locate two lines:
+
+//This line is the number of flow sensors connected.
+const uint8_t numSensors = 4;
+//This line initializes an array with the pins connected to the flow sensors
+uint8_t pulsePin[] = {8,9,10,11};
+
+Change the number of sensors to the total number of flow meters you have in line (in my case I have 4) and set the next one to the pin numbers that 
+the meters are attached to (not the ground or vin). I started at 8 simply because it was easier to attach to these pins. MAKE A NOTE OF THE PINS AND TAPS
+you will need this information later.
+
+Save the file, do not close.
+Go to Tools -> Board and select the Alamode
+Go to Tools->Serial and click the box for the serial connection (there should only be one)
+In the menu bar there is a button that is a circle with an arrow in it ->
+Click that button to compile and upload the ino file to the Alamode board **This is important, the alamode needs the code uploaded to it in order to 
+read the flow meters. If you add meters you have to recompile and reupload**
+
+In phpmyadmin on your machine (if you haven't installed it yet, sudo apt-get install phpmyadmin then go to localhost/phpmyadmin)
+You need to run:
+ALTER TABLE  `pours` ADD  `pinId` INT( 11 ) NULL AFTER  `tapId`;
+ALTER TABLE  `taps` ADD  `pinId` INT( 11 ) NULL AFTER  `tapNumber`;
+INSERT INTO `raspberrypints`.`config` (`id`, `configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES (NULL, 'useFlowMeter', '0', 'Use Flow Monitoring', '1', NOW(), NOW());
+
+Log in to the admin area of your raspberrypints install.
+click on taps
+edit the taps and add the pinId.
+
+At this point you should be ready to run the python script.
+In a terminal window, 
+pi@raspberrypi ~ $ cd /location/of/raspberrypints/python
+pi@raspberrypi ~ $ python flow-meter.py
+
+This will start the script. You will not see anything output until you actually pour a pint. When a pint is poured it passes the pin number and the pulse count
+to a php script which then updates the pours table in the database and then refreshes the chromium browser on the localhost.
+You should also see output on the terminal window where you started the python script.

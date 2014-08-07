@@ -4,7 +4,8 @@ class Tap
 	private $_id;  
 	private $_beerId;  
 	private $_kegId;
-	private $_tapNumber;  
+	private $_tapNumber;
+	private $_pinId;
 	private $_og; 
 	private $_fg;  
 	private $_srm;  
@@ -28,6 +29,9 @@ class Tap
 
 	public function get_tapNumber(){ return $this->_tapNumber; }
 	public function set_tapNumber($_tapNumber){ $this->_tapNumber = $_tapNumber; }
+	
+	public function get_pinId() { return $this->_pinId; }
+	public function set_pinId($_pinId){ $this->_pinId = $_pinId; }
 	
 	public function get_og(){ return $this->_og; } 
 	public function set_og($_og){ $this->_og = $_og; }
@@ -77,6 +81,11 @@ class Tap
 			$this->set_tapNumber($postArr['tapNumber']);
 		else
 			$this->set_tapNumber(null);
+			
+		if( isset($postArr['pinId']) )
+			$this->set_pinId($postArr['pinId']);
+		else
+			$this->set_pinId(null);
 			
 		if( isset($postArr['og']) )
 			$this->set_og($postArr['og']);

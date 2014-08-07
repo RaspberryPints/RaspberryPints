@@ -114,6 +114,7 @@ include 'header.php';
 							<th>OG</th>
 							<th>FG</th>
 							<th>Keg</th>
+							<th>PIN</th>
 							<!-- <th>Start Amount</th> -->
 							<!-- <th>Current Amount</th> -->
 							<th colspan="3"></th>
@@ -158,6 +159,9 @@ include 'header.php';
 												<?php echo $keg->get_label() ?>
 											</td>
 											
+											<td>
+												<?php echo $tap->get_pinId() ?>
+											</td>
 											<!--
 											<td>
 												<?php echo $tap->get_startAmount() ?>
