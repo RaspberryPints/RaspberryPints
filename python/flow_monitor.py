@@ -42,7 +42,7 @@ try:
 			#print "  - Mliters: "+str(MLITERS)
 						
 			#The following 2 lines passes the PIN and PULSE COUNT to the php script
-			path = '../includes/utcheckin.php'
+			path = '../includes/pours.php'
 			subprocess.call(["php", path, MCP_PIN, POUR_COUNT])
 			
 			#con = mdb.connect('localhost','root','YEbrak4M!','devpints')
