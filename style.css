@@ -3,29 +3,52 @@ body {
 	background-color: #000000;
 	background-size: cover;
 	background-repeat:no-repeat;
-	/*overflow: hidden;*/
-	font: 1.5em Gerorgia, arial, verdana, sans-serif;
+	overflow: hidden;
+	color: #FFFFFF;
+	font: 1.5em Georgia, arial, verdana, sans-serif;
 	margin:5px;
 }
 hr {
-    border: 0;
-    height: 1px;
+	border: 0;
+	height: 1px;
 	-webkit-margin-before: 2px;
 	-webkit-margin-after: 2px;
-    background-image: -webkit-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
-    background-image:    -moz-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
-    background-image:     -ms-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
-    background-image:      -o-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
+	background-image: -webkit-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
+	background-image:    -moz-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
+	background-image:     -ms-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
+	background-image:      -o-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
 }
-h1{
+h1 {
+	display:block;
 	margin: 0;
-	font: Georgia;
-	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 1.5em;
+	opacity:1;
 }
-h2, h3, p {
+
+h2 {
 	margin: 0;
-	font: Georgia;
 	color: #A0A0A0;
+	font-weight: normal;
+	font-size: 1em;
+	-webkit-margin-before: 0px;
+	-webkit-margin-after: 0px;
+}
+
+h3 {
+	margin: 0;
+	color: #A0A0A0;
+	font-weight: normal;
+	font-size: .8em;
+	-webkit-margin-before: 5px;
+	-webkit-margin-after: 5px;
+}
+
+p {
+	margin: 20px 0 0 0;
+	color: #A0A0A0;
+	font-weight: normal;
+	font-size: .8em;
 }
 img {
 	margin-left: auto;
@@ -46,8 +69,7 @@ img {
 	width: 25%;
 	height: 100px;
 	float: left;
-	font: .85em Georgia;
-	color: white;
+	font-size: .85em;
 	font-weight: bold;
 	text-align: left;
 }
@@ -57,16 +79,13 @@ img {
 	text-align: center;
 	float: left;
 	font-size: 1em;
-	font: 1em Georgia;
-	color: white;
 	vertical-align: middle;
 	padding-top:25px;
 }
 .HeaderRight {
 	width: 25%;
 	float: right;
-	font: .85em Georgia;
-	color: white;
+	font-size: .85em;
 	font-weight: bold;
 	text-align: right;
 }
@@ -80,7 +99,6 @@ table td{
 	padding: 1px 5px;
 	text-align: center;
 	vertical-align: top;
-	color: white;
 }
 table th:first-child,
 table td:first-child{
@@ -93,8 +111,7 @@ table thead{
 }
 table thead th{
 	min-height:35px;
-	font: .65em Georgia;
-	color: white;
+	font-size: .65em;
 	font-weight: bold;
 	vertical-align: top;
 }
@@ -103,9 +120,13 @@ table .tap-num{
 }
 table .srm{
 	width: 125px;
+	text-align: center;
+	vertical-align: middle;
 }
 table .ibu{
 	width: 125px;
+	text-align: center;
+	vertical-align: middle;	
 }
 table td.name{
 	text-align: left;
@@ -118,6 +139,8 @@ table .abv{
 }
 table .keg{
 	width: 150px;
+	text-align: center;
+	vertical-align: middle;	
 }
 
 table td.tap-num{
@@ -129,7 +152,6 @@ span.tapcircle {
   border-radius: 1em;
   -moz-border-radius: 1em;
   -webkit-border-radius: 1em;
-  color: #ffffff;
   display: inline-block;
   font-weight: bold;
   line-height: 2em;
@@ -137,35 +159,19 @@ span.tapcircle {
   text-align: center;
   width: 2em; 
 }
-table h3{
-	font: .8em Georgia;
-	-webkit-margin-before: 5px;
-	-webkit-margin-after: 5px;
-	text-align:center;
+table h3 {
+	text-align: center;
 }
-table h2{
-	font: 1em Georgia;
-	-webkit-margin-before: 0px;
-	-webkit-margin-after: 0px;
-	text-align:center;
-}
-table h1{
-	color: white;
-	opacity:1;
-	display:block;
-	font: 1.5em Georgia;
-	font-weight: bold;
+
+table h2 {
+	text-align: center;
 }
 table .subhead{
 	width:100%;
-	font: .9em Georgia;
+	font-size: .9em;
 	text-align:left;
 }
-table p{
-	font: .8em Georgia;
-	color: #A0A0A0;
-	margin-top:20px;
-}
+
 .altrow{
 	background-color: rgba(153,153,153,.23);
 }

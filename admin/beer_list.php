@@ -44,18 +44,18 @@ $beers = $beerManager->GetAllActive();
 include 'header.php';
 ?>
 	<!-- End Header -->
-        
-    <!-- Top Breadcrumb Start -->
-    <div id="breadcrumb">
-    	<ul>	
-        	<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
-        	<li><strong>Location:</strong></li>
-            <li class="current">My Beers</li>            
-        </ul>
-    </div>
-    <!-- Top Breadcrumb End --> 
-     
-    <!-- Right Side/Main Content Start -->
+		
+	<!-- Top Breadcrumb Start -->
+	<div id="breadcrumb">
+		<ul>	
+			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
+			<li><strong>Location:</strong></li>
+			<li class="current">My Beers</li>            
+		</ul>
+	</div>
+	<!-- Top Breadcrumb End --> 
+	
+	<!-- Right Side/Main Content Start -->
 <div id="rightside">
 	<div class="contentcontainer lg left">
 		<div class="headings alt">
@@ -67,114 +67,141 @@ include 'header.php';
 			
 			<?php $htmlHelper->ShowMessage(); ?>
 			
-			<input type="submit" class="btn" value="Add Beer" onclick="window.location='beer_form.php'" />
+			<input type="submit" class="btn" value="Add a Beer" onclick="window.location='beer_form.php'" />
 			<br/><br/>
 			
-			<table width="770px" border="0" cellspacing="0" cellpadding="0">
-				<thead>
-					<tr>
-						<th width="28%">Name</th>
-						<th width="10%">Vitals</th>
-						<th width="22%">Yeast/Water/etc</th>
-						<th width="40%" colspan="3">Hop Additions</th>
-					</tr>
-				</thead>
+			<table width="770px" cellspacing="0" cellpadding="0" class="outerborder">
+
 				<tbody>
 					<?php 
 						if( count($beers) == 0 ){  
 					?>
 							<tr><td class="no-results" colspan="99">No beers :( Add some?</td></tr>
 					<?php 
-						}else{  
+						}else{
 							foreach ($beers as $beer){
 					?>
-								<tr>
-									<td>
-										<h3><?php echo $beer->get_name() ?></h3><br>
+								<tr class="intborder">
+									<th width="35%" style="vertical-align: middle;">
+										<h3><?php echo $beer->get_name() ?></h3>
+									</th>
+									<th width="35%" style="vertical-align: middle;">
 										<b><?php 
 											$beerStyle = $beerStyleManager->GetById($beer->get_beerStyleId());
-											echo $beerStyle->get_name();
-										?></b><br>
-										(BJCP 1A - Light Lager)</b><br><br>
-									</td>
-									
-									<td>
+											if (strpos($beerStyle->get_name(),'Non-beer') !== false)
+												echo str_replace("_Non-beer: ","",$beerStyle->get_name());
+											else
+												echo "Style: " , $beerStyle->get_name();
+										?></b>
 										<?php
+											if (strpos($beerStyle->get_catNum(),'N/A') !== false)
+												echo "&nbsp;";
+											else
+												echo "<br>BJCP Category: " , $beerStyle->get_catNum() , " - " , $beerStyle->get_category();
+										?>
+									</th>
+									<th align="center" width="5%" style="text-align: center; vertical-align: middle; margin: 0; padding: 0;">
+										<input name="editBeer" type="button" class="btn" value="Edit" style="text-align: center; margin: 0;" onclick="window.location='beer_form.php?id=<?php echo $beer->get_id()?>'" />
+									</th>
+									<th align="center" width="5%" style="text-align: center; vertical-align: middle; margin: 0; padding: 0">
+										<form method="POST">
+											<input type='hidden' name='id' value='<?php echo $beer->get_id()?> '/>
+											<input class="inactivateBeer btn" style="text-align: center; margin: 0;" name="inactivateBeer" type="submit" value="Delete" />
+										</form>
+									</th>
+								</tr>
+								<tr class="intborder">
+									<td colspan="4">
+											<?php if ($beer->get_notes()) { ?>
+												<blockquote>
+											<?php } ?>
+											<?php if ($beer->get_notes()) echo $beer->get_notes() ?>
+											<?php if ($beer->get_notes()) { ?>
+												</blockquote>
+											<?php } ?>
+										</blockquote>
+									</td>
+								</tr>
+								<tr class="intborder thick">
+									<td>
+										<p><b><u>Vitals</u></b></p>
+										<p><?php
 											if ( $beer->get_srm() != 0 )
 												echo "<b>SRM:</b> " , $beer->get_srm() , "<br>" ;
 											else
-												echo ""
+												echo "<b>SRM:</b> N/A<br>"
 										?>
 										<?php
 											if ( $beer->get_ibu() != 0 )
 												echo "<b>IBU:</b> " , $beer->get_ibu() , "<br>" ;
 											else
-												echo ""
+												echo "<b>IBU:</b> N/A<br>"
 										?>
 										<?php
 											if ( $beer->get_og() != 1 && $beer->get_og() != 0 )
 												echo "<b>OG:</b> " , $beer->get_og() , "<br>" ;
 											else
-												echo ""
+												echo "<b>OG:</b> N/A<br>"
 										?>
 										<?php
 											if ( $beer->get_fg() != 1 && $beer->get_fg() != 0 )
 												echo "<b>FG:</b> " , $beer->get_fg() , "<br>" ;
 											else
-												echo ""
-										?>
+												echo "<b>FG:</b> N/A"
+										?></p>
+										
+										<p><b>Water:</b> <!-- Sacramento, CA --> <br>
+										<b>Salts:</b> <!-- Camden, pH 5.2 Stabilizer --> <br>
+										<b>Finings:</b> <!-- Whirfloc --> <br>
+										<b>Yeast</b>: <!-- Fermentis S-04 --><br></p>
 									</td>
-									
-									<td>
-										<b>Yeast</b>: Fermentis S-04<br>
-										<b>Water:</b> Sacramento, CA<br>
-										<b>More:</b> Info Here...<br>
-										<b>More:</b> Info Here...<br>
-									</td>
-									
 									<td colspan="3">
-										1.42 oz Northern Brewer (6.8%) @ 60 min<br>
-										2.14 oz Nelson Sauvin (9.1%) @ 30 min<br>
-										2.41 oz Columbus/Tomahawk (8.6%) @ 15 min<br>
-										1.24 oz East Kent Goldings (2.1%) @ 0 min<br>
-									</td>
-								</tr>
-								<tr class="intborder">
-									<td colspan="3">
-										<?php if ($beer->get_notes()) echo '"' ?><?php echo $beer->get_notes() ?><?php if ($beer->get_notes()) echo '"' ?>
-									</td>
-									<td align="center" width="50px">
-										<input name="editBeer" type="button" class="btn" value="Edit" onclick="window.location='beer_form.php?id=<?php echo $beer->get_id()?>'" />
-									</td>
-									<td align="center" width="50px">
-										<form method="POST">
-											<input type='hidden' name='id' value='<?php echo $beer->get_id()?>'/>
-											<input class="inactivateBeer btn" name="inactivateBeer" type="submit" value="Delete" />
-										</form>
+										<p><b><u>Fermentables:</u></b></p><p>
+										<!--
+										60.5% Pilsner (2 Row) Ger (2.0 SRM)<br>
+										32.4% Pale Ale Malt, Northwestern (Great Western) (3.0 SRM)<br>
+										7.1% Crystal 15, 2-Row, (Great Western) (15.0 SRM)<br>
+										-->
+										</p>
+										
+										<p><b><u>Mash Profile:</u></b></p><p>
+										<!--
+										Step 1: Dough-in @ 70&deg;F (2 min)<br>
+										Step 2: Conversion @ 154&deg;F (60 min)<br>
+										Step 3: Batch Sparge @ 168&deg;F (5 min)<br>
+										Step 4: Batch Sparge @ 168&deg;F (5 min)</p>
+										-->
+										</p>
+										
+										<p><b><u>Hop Schedule:</u></b></p><p>
+										<!--
+										0.90 oz Simcoe (13.00% AA) @ 90 min<br>
+										0.90 oz Simcoe (13.00% AA) @ 30 min<br>
+										1.80 oz Simcoe (13.00% AA) @ 0 min<br>
+										2.00 oz Simcoe (13.00% AA) @ Dry Hop 10.0 Days</p>
+										-->
+										</p>
 									</td>
 								</tr>
 					<?php 
-							} 
+							}
 						}
 					?>
 				</tbody>
-			</table>
+			</table><br>
+			<input type="submit" class="btn" value="Add a Beer" onclick="window.location='beer_form.php'" />
 		</div>
-    </div>
-</div>
-</div>
-	
-	<!-- End On Tap Section -->
-
-    <!-- Start Footer -->   
-<?php
-include 'footer.php';
-?>
-
+	</div>
+	<!-- Start Footer -->   
+	<?php
+	include 'footer.php';
+	?>
 	<!-- End Footer -->
-          
-    </div>
-    <!-- Right Side/Main Content End -->
+</div>
+</div>
+	<!-- End On Tap Section -->
+	</div>
+	<!-- Right Side/Main Content End -->
 	<!-- Start Left Bar Menu -->   
 <?php
 include 'left_bar.php';
@@ -195,11 +222,11 @@ include 'scripts.php';
 </script>
 
 	<!-- End Js -->
-    <!--[if IE 6]>
-    <script type='text/javascript' src='scripts/png_fix.js'></script>
-    <script type='text/javascript'>
-      DD_belatedPNG.fix('img, .notifycount, .selected');
-    </script>
-    <![endif]--> 
+	<!--[if IE 6]>
+	<script type='text/javascript' src='scripts/png_fix.js'></script>
+	<script type='text/javascript'>
+	DD_belatedPNG.fix('img, .notifycount, .selected');
+	</script>
+	<![endif]--> 
 </body>
 </html>
