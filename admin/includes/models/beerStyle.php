@@ -1,15 +1,15 @@
 <?php
 class BeerStyle
 {  
-    private $_id;  
-    private $_name;
+	private $_id;  
+	private $_name;
 	private $_catNum;
 	private $_category;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
 	public function __construct(){}
-  
+
 	public function get_id(){ return $this->_id; }
 	public function set_id($_id){ $this->_id = $_id; }
 
@@ -24,12 +24,12 @@ class BeerStyle
 
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
-	
+
 	public function get_modifiedDate(){ return $this->_modifiedDate; }
 	public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
-	
-    public function setFromArray($postArr)  
-    {  	
+
+	public function setFromArray($postArr)  
+	{
 		if( isset($postArr['id']) )
 			$this->set_id($postArr['id']);
 		else
@@ -61,7 +61,7 @@ class BeerStyle
 			$this->set_modifiedDate($postArr['modifiedDate']);
 		else
 			$this->set_modifiedDate(null);
-    }  
+	}
 	
 	function toJson(){
 		return "{" . 

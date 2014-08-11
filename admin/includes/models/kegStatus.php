@@ -1,13 +1,13 @@
 <?php
 class KegStatus  
 {  
-    private $_code;  
-    private $_name;
+	private $_code;  
+	private $_name;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
 	public function __construct(){}
-  
+
 	public function get_code(){ return $this->_code; }
 	public function set_code($_code){ $this->_code = $_code; }
 
@@ -20,8 +20,8 @@ class KegStatus
 	public function get_modifiedDate(){ return $this->_modifiedDate; }
 	public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
 	
-    public function setFromArray($postArr)  
-    {  	
+	public function setFromArray($postArr)  
+	{  	
 		if( isset($postArr['code']) )
 			$this->set_code($postArr['code']);
 		else
@@ -41,7 +41,7 @@ class KegStatus
 			$this->set_modifiedDate($postArr['modifiedDate']);
 		else
 			$this->set_modifiedDate(null);
-    }  
+	}  
 	
 	function toJson(){
 		return "{" . 

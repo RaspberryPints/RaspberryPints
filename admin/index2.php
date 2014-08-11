@@ -12,23 +12,23 @@
 </head>
 <body>
 	<div id="logincontainer">
-    	<div id="loginbox">
-        	<div id="loginheader">
-            	<a href="../" style="text-decoration:none;"><h1><font color="#2DABD5">RaspberryPints Login</h1></font></a>
-            </div>
-            <div id="innerlogin">
-            	<form name="login" action="includes/checklogin.php" method="POST">
-                	<p>Enter your username:</p>
-                	<input type="text" class="logininput" autofocus="autofocus" name="myusername" placeholder="Login Name" />
-                    <p>Enter your password:</p>
-                	<input type="password" class="logininput"  name="mypassword" placeholder="Password"/>
-                                      <span class="bigtxt red">(Wrong Username Or Password)</span>
-                   	<input type="submit" class="loginbtn" value="Log In" /><br />
+		<div id="loginbox">
+			<div id="loginheader">
+				<a href="../" style="text-decoration:none;"><h1><font color="#2DABD5">RaspberryPints Login</h1></font></a>
+			</div>
+			<div id="innerlogin">
+				<form name="login" action="includes/checklogin.php" method="POST">
+					<p>Enter your username:</p>
+					<input type="text" class="logininput" autofocus="autofocus" name="myusername" placeholder="Login Name" />
+					<p>Enter your password:</p>
+					<input type="password" class="logininput"  name="mypassword" placeholder="Password"/>
+									<span class="bigtxt red">(Wrong Username Or Password)</span>
+					<input type="submit" class="loginbtn" value="Log In" /><br />
 <img src="img/lock.png" height="50" width="50">
-                    <p><a href="reset_account.php" title="Forgoteen Password?">Forgotten Password?</a></p>
-                </form>
-            </div>
-        </div>
-    </div>
+					<p><a href="reset_account.php" title="Forgotten Password?">Forgotten Password?</a></p>
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

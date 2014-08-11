@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
-* Config files for V1.0
+* Config files for V1.0.3.395
 ****************************************************************************/
 	
 	//Main config files - /includes/config.php
@@ -10,7 +10,7 @@
 	$mainconfigstring .= "mysql_connect('" . $servername . "', '" . $dbuser . "', '" . $dbpass1 . "');\n";
 	$mainconfigstring .= "        mysql_select_db('raspberrypints');\n";
 	$mainconfigstring .= "	}\n";
-	$mainconfigstring .= '    $rpintsversion="1.0.0.279";' . "\n";
+	$mainconfigstring .= '    $rpintsversion="1.0.3.395";' . "\n";
 	$mainconfigstring .= "?>";
 	
 	//Admin config file - /admin/conn.php
@@ -32,7 +32,7 @@
 	$adminconfig2 .= '  $dbuser="' . "{$dbuser}" . '";' . "\n";
 	$adminconfig2 .= '  $dbpass="' . "${dbpass1}" . '";' . "\n";
 	$adminconfig2 .= '	$conn = new PDO("mysql:host=$dbhost;dbname=$dbname",$dbuser,$dbpass);' . "\n";
-	$adminconfig2 .= '	$stmt = $conn->prepare(' . "'SELECT * FROM config WHERE id <= 6')" . ";\n";
+	$adminconfig2 .= '	$stmt = $conn->prepare(' . "'SELECT * FROM config WHERE showOnPanel = 1')" . ";\n";
 	$adminconfig2 .= '	$stmt->execute();' . "\n";
 	$adminconfig2 .= '	$result = $stmt->fetchAll();' . "\n";
 	$adminconfig2 .= '?>';
