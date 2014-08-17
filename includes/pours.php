@@ -38,7 +38,7 @@ if($db){
 		//$amount = $PULSE_COUNT / 165;
 		
 		// Sets the amount to be a fraction of a gallon based on 165 ounces per pulse
-		$amount = $PULSE_COUNT / 10560;
+		$amount = $PULSE_COUNT / 21120;
 		 if (!$taps[0]) {
                 echo "No Active Taps";
                 } else {
