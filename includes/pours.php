@@ -52,7 +52,7 @@ if($db){
 	
 	
 } 
-*/
+
 }
 
 		// REFRESHES CHROMIUM BROWSER ON LOCAL HOST ONLY
