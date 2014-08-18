@@ -156,7 +156,6 @@ include 'header.php';
 		<?php 
 			if($config[ConfigNames::UseFlowMeter]) {
 				?>
-			}
 			<tr>
 				<td style="vertical-align:middle;">
 					<b>Pin Number: <font color="red">*</font></b>
