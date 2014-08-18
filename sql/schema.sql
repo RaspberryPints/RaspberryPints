@@ -357,7 +357,7 @@ CREATE TABLE IF NOT EXISTS `pours` (
 	`pinId` int(11) DEFAULT NULL,
   `amountPoured` float(6,3) NOT NULL,
   `pulses` int(6) NOT NULL,
-  `userID` int(11) DEFAULT NULL,
+ 
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
