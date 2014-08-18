@@ -13,4 +13,5 @@ abstract class ConfigNames
 	const HeaderText = 'headerText';
 	const HeaderTextTruncLen = 'headerTextTruncLen';
 	const NumberOfTaps = 'numberOfTaps';
+	const UseFlowMeter = 'useFlowMeter';
 }
