@@ -33,11 +33,11 @@ try:
 			
                         #MLITERS = (POUR_COUNT/5.600)/1000			
 			
-			
-			print "Pour:"
-			print "  - Addr : "+hex(MCP_ADDR)
-			print "  - Pin  : "+str(MCP_PIN)
-			print "  - Count: "+str(POUR_COUNT)
+			#Uncomment next for lines for debugging
+			#print "Pour:"
+			#print "  - Addr : "+hex(MCP_ADDR)
+			#print "  - Pin  : "+str(MCP_PIN)
+			#print "  - Count: "+str(POUR_COUNT)
 			#print "  - Ounces: "+str(POUR_COUNT / 165)
 			#print "  - Mliters: "+str(MLITERS)
 						
@@ -58,18 +58,9 @@ try:
 		elif ( reading[0] == "K" ):
 			MCP_ADDR = int(reading[1])
 			MCP_PIN = int(reading[2])
-			print "Keg Kicked:"
-			print "  - Addr : "+hex(MCP_ADDR)
-			print "  - Pin  : "+str(MCP_PIN)
-			
-			if ( MCP_PIN == 8 ):
-				TAP = 4
-			elif ( MCP_PIN == 9 ):
-				TAP = 3
-			elif ( MCP_PIN == 10 ):
-				TAP = 2
-			elif ( MCP_PIN == 11 ):
-				TAP = 1
+			#print "Keg Kicked:"
+			#print "  - Addr : "+hex(MCP_ADDR)
+			#print "  - Pin  : "+str(MCP_PIN)
 				
 			#con = mdb.connect('localhost','root','YEbrak4M!','raspberrypints')
 			
