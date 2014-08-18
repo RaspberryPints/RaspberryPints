@@ -66,7 +66,7 @@ INSERT INTO `beerStyles`( name, catNum, category, ogMin, ogMax, fgMin, fgMax, ab
 ( 'Dark American Lager', '4A', 'Dark Lager', '1.044', '1.056', '1.008', '1.012', '4.2', '6', '8', '20', '14', '22', NOW(), NOW() ),
 ( 'Munich Dunkel', '4B', 'Dark Lager', '1.048', '1.056', '1.01', '1.016', '4.5', '5.6', '18', '28', '14', '28', NOW(), NOW() ),
 ( 'Schwarzbier (Black Beer)', '4C', 'Dark Lager', '1.046', '1.052', '1.01', '1.016', '4.4', '5.4', '22', '32', '17', '30', NOW(), NOW() ),
-( 'Mailbock/Helles Bock', '5A', 'Bock', '1.064', '1.072', '1.011', '1.018', '6.3', '7.4', '23', '35', '6', '11', NOW(), NOW() ),
+( 'Maibock/Helles Bock', '5A', 'Bock', '1.064', '1.072', '1.011', '1.018', '6.3', '7.4', '23', '35', '6', '11', NOW(), NOW() ),
 ( 'Traditional Bock', '5B', 'Bock', '1.064', '1.072', '1.013', '1.019', '6.3', '7.2', '20', '27', '14', '22', NOW(), NOW() ),
 ( 'Doppelbock', '5C', 'Bock', '1.072', '1.112', '1.016', '1.024', '7', '10', '16', '26', '6', '25', NOW(), NOW() ),
 ( 'Eisbock', '5D', 'Bock', '1.078', '1.12', '1.02', '1.035', '9', '14', '25', '35', '18', '30', NOW(), NOW() ),
@@ -219,7 +219,8 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() ),
 ( 'numberOfTaps', '0', 'Number of Taps', '0', NOW(), NOW() ),
 ( 'version', '1.0.3.395', 'Version', '0', NOW(), NOW() ),
-( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() );
+( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() ),
+( 'useFlowMeter','1','Use Flow Monitoring', '1', NOW(),NOW() );
 
 
 -- --------------------------------------------------------
@@ -328,6 +329,7 @@ CREATE TABLE IF NOT EXISTS `taps` (
 	`beerId` int(11) NOT NULL,
 	`kegId` int(11) NOT NULL,
 	`tapNumber` int(11) NOT NULL,
+	`pinId` int(2) DEFAULT NULL,
 	`active` tinyint(1) NOT NULL,
 	`ogAct` decimal(4,3) NOT NULL,
 	`fgAct` decimal(4,3) NOT NULL,
@@ -352,7 +354,10 @@ CREATE TABLE IF NOT EXISTS `taps` (
 CREATE TABLE IF NOT EXISTS `pours` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`tapId` int(11) NOT NULL,
-	`amountPoured` decimal(6,1) NOT NULL,
+	`pinId` int(11) DEFAULT NULL,
+  `amountPoured` float(6,3) NOT NULL,
+  `pulses` int(6) NOT NULL,
+ 
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	

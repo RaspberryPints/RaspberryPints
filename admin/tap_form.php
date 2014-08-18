@@ -52,6 +52,14 @@ if( isset($_GET['id'])){
 	$tap->set_active(true);
 }
 
+// Code to set config values
+$config = array();
+		$sql = "SELECT * FROM config";
+		$qry = mysql_query($sql);
+		while($c = mysql_fetch_array($qry)){
+			$config[$c['configName']] = $c['configValue'];
+		}
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -144,6 +152,11 @@ include 'header.php';
 					<?php echo $htmlHelper->ToSelectList("kegId", $kegList, "label", "id", $tap->get_kegId(), "Select One"); ?>
 				</td>
 			</tr>
+		<!-- If useFlowMeters is off this will not display -->
+		<?php 
+			if($config[ConfigNames::UseFlowMeter]) {
+				?>
+			}
 			<tr>
 				<td style="vertical-align:middle;">
 					<b>Pin Number: <font color="red">*</font></b>
@@ -152,6 +165,9 @@ include 'header.php';
 					<input type="text" id="pinId" class="mediumbox" name="pinId" value="<?php echo $tap->get_pinId() ?>" />
 				</td>
 			</tr>
+			<?php
+			}
+			?>
 			<tr>
 				<td style="vertical-align:middle;">
 					<b>Start Amount</b> (gal): <b><font color="red">*</font></b>

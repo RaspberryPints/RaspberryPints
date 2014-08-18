@@ -44,7 +44,7 @@
 		<a class="expanded heading">Help!</a>
 		<ul class="navigation">
 			<li><a href="http://raspberrypints.com/report-bug/" target="_blank">Report a Bug</a></li>
-			<li><a href="http://raspberrypints.com/suggestion/" target="_blank">Suggest a Feature</a></li>
+			<li><a href="http://raspberrypints.com/request-feature/" target="_blank">Suggest a Feature</a></li>
 		</ul>	
 	</li>
 	<li>
