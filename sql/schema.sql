@@ -219,7 +219,8 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() ),
 ( 'numberOfTaps', '0', 'Number of Taps', '0', NOW(), NOW() ),
 ( 'version', '1.0.3.395', 'Version', '0', NOW(), NOW() ),
-( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() );
+( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() ),
+( 'useFlowMeter','1','Use Flow Monitoring', '1', NOW(),NOW() );
 
 
 -- --------------------------------------------------------
@@ -328,6 +329,7 @@ CREATE TABLE IF NOT EXISTS `taps` (
 	`beerId` int(11) NOT NULL,
 	`kegId` int(11) NOT NULL,
 	`tapNumber` int(11) NOT NULL,
+	`pinId` int(2) DEFAULT NULL,
 	`active` tinyint(1) NOT NULL,
 	`ogAct` decimal(4,3) NOT NULL,
 	`fgAct` decimal(4,3) NOT NULL,
@@ -352,7 +354,10 @@ CREATE TABLE IF NOT EXISTS `taps` (
 CREATE TABLE IF NOT EXISTS `pours` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`tapId` int(11) NOT NULL,
-	`amountPoured` decimal(6,1) NOT NULL,
+	`pinId` int(11) DEFAULT NULL,
+  `amountPoured` float(6,3) NOT NULL,
+  `pulses` int(6) NOT NULL,
+  `userID` int(11) DEFAULT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
