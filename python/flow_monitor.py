@@ -12,6 +12,8 @@ port = '/dev/ttyS0'
 
 arduino = serial.Serial(port,9600,timeout=2)
 
+# Edit this line to point to where your rpints install is
+poursdir = '/var/www'
 
 
 running = True
@@ -42,7 +44,7 @@ try:
 			#print "  - Mliters: "+str(MLITERS)
 						
 			#The following 2 lines passes the PIN and PULSE COUNT to the php script
-			path = '../includes/pours.php'
+			path = '/var/www/includes/pours.php'
 			subprocess.call(["php", path, MCP_PIN, POUR_COUNT])
 			
 			#con = mdb.connect('localhost','root','YEbrak4M!','devpints')
