@@ -148,7 +148,7 @@ include 'header.php';
 					Notes: <b><font color="red">*</color></b>
 				</td>
 				<td>
-					<textarea id="notes" class="text-input textarea" name="notes" style="width:500px;height:100px"><?php echo $keg->get_stampedOwner() ?></textarea>
+					<textarea id="notes" class="text-input textarea" name="notes" style="width:500px;height:100px"><?php echo $keg->get_notes() ?></textarea>
 				</td>
 			</tr>
 			<tr>
