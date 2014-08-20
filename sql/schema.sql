@@ -212,7 +212,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'showIbuCol', '1', 'IBU Column', '1', NOW(), NOW() ),
 ( 'showAbvCol', '1', 'ABV Column', '1', NOW(), NOW() ),
 ( 'showAbvImg', '1', 'ABV Images', '1', NOW(), NOW() ),
-( 'showKegCol', '0', 'Keg Column (beta!)', '1', NOW(), NOW() ),
+( 'showKegCol', '0', 'Keg Column', '1', NOW(), NOW() ),
 ( 'useHighResolution', '0', '4k Monitor Support', '1', NOW(), NOW() ),
 ( 'logoUrl', 'img/logo.png', 'Logo Url', '0', NOW(), NOW() ),
 ( 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '0', NOW(), NOW() ),
@@ -220,7 +220,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'numberOfTaps', '0', 'Number of Taps', '0', NOW(), NOW() ),
 ( 'version', '1.0.3.395', 'Version', '0', NOW(), NOW() ),
 ( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() ),
-( 'useFlowMeter','1','Use Flow Monitoring', '1', NOW(),NOW() );
+( 'useFlowMeter','0','Use Flow Monitoring', '1', NOW(),NOW() );
 
 
 -- --------------------------------------------------------
