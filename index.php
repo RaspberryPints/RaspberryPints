@@ -271,7 +271,7 @@
                                                                                         $sql = "Select kegId from taps where id=".$tid." limit 1";
                                                                                         $kegID = mysql_query($sql);
                                                                                         $kegID = mysql_fetch_array($kegID);
-                                                                                        echo $kegID[0];
+                                                                                        //echo $kegID[0];
                                                                                         $sql = "SELECT `kegTypes`.`maxAmount` as kVolume FROM  `kegs`,`kegTypes` where $
                                                                                         $kvol = mysql_query($sql);
                                                                                         $kvol = mysql_fetch_array($kvol);
