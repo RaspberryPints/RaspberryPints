@@ -263,10 +263,25 @@
 								
 								<?php if($config[ConfigNames::ShowKegCol]){ ?>
 									<td class="keg">
+										
+										
 										<h3><?php echo number_format((($beer['startAmount'] - $beer['remainAmount']) * 128)); ?> fl oz poured</h3>
 										<?php 
-											$kegImgClass = "";
-											$percentRemaining = $beer['remainAmount'] / $beer['startAmount'] * 100;
+											// Code for new kegs that are not full
+                                                                                        $sql = "Select kegId from taps where id=".$tid." limit 1";
+                                                                                        $kegID = mysql_query($sql);
+                                                                                        $kegID = mysql_fetch_array($kegID);
+                                                                                        echo $kegID[0];
+                                                                                        $sql = "SELECT `kegTypes`.`maxAmount` as kVolume FROM  `kegs`,`kegTypes` where $
+                                                                                        $kvol = mysql_query($sql);
+                                                                                        $kvol = mysql_fetch_array($kvol);
+                                                                                        $kvol = $kvol[0];
+                                                                                        $kegImgClass = "";
+                                                                                        if ($beer['startAmount']>=$kvol) {
+                                                                                        $percentRemaining = $beer['remainAmount'] / $beer['startAmount'] * 100;
+                                                                                        } else {
+                                                                                        $percentRemaining =  $beer['remainAmount'] / $kvol * 100;
+                                                                                        }
 											if( $beer['remainAmount'] <= 0 ) {
 												$kegImgClass = "keg-empty";
 												$percentRemaining = 100; }
