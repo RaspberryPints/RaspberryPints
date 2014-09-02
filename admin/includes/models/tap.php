@@ -85,7 +85,7 @@ class Tap
 		if( isset($postArr['pinId']) )
 			$this->set_pinId($postArr['pinId']);
 		else
-			$this->set_pinId(null);
+			$this->set_pinId('0');
 			
 		if( isset($postArr['og']) )
 			$this->set_og($postArr['og']);
