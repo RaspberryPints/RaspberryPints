@@ -268,6 +268,7 @@
 										<h3><?php echo number_format((($beer['startAmount'] - $beer['remainAmount']) * 128)); ?> fl oz poured</h3>
 										<?php 
 											// Code for new kegs that are not full
+                                                                                        $tid = $beer['id'];
                                                                                         $sql = "Select kegId from taps where id=".$tid." limit 1";
                                                                                         $kegID = mysql_query($sql);
                                                                                         $kegID = mysql_fetch_array($kegID);
