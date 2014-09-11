@@ -70,9 +70,20 @@ click on taps
 edit the taps and add the pinId.
 
 At this point you should be ready to run the python script.
-In a terminal window, 
-pi@raspberrypi ~ $ cd /location/of/raspberrypints/python
-pi@raspberrypi ~ $ python flow-meter.py
+Copy the flowmon file from the python (/var/www/python) directory to /etc/init.d
+ $ sudo cp flowmon /etc/init.d
+Then give it the proper permissions:
+ $ sudo chmod a+x /etc/init.d/flowmon
+**IF YOUR INSTALL IS IN /var/www you should be good to go forward. if not, you need to edit the 14th line and set the root dir for your install.
+
+You can test the program by running:
+ $ sudo /etc/init.d/flowmon start $ ps aux | grep flow_monitor.py
+Should return:
+ pi 3508 0.0 0.9 8796 4112 ? S 15:35 0:00 /usr/bin/python /home/pi/raspberrypints/python/flow_monitor.py pi 3558 0.0 0.1 3548 808 pts/0 S+ 15:43 0:00 grep --color=auto flow_monitor.py
+
+then run:
+ $ sudo update-rc.d flowmon defaults
+to ensure it runs at startup.
 
 This will start the script. You will not see anything output until you actually pour a pint. When a pint is poured it passes the pin number and the pulse count
 to a php script which then updates the pours table in the database and then refreshes the chromium browser on the localhost.
