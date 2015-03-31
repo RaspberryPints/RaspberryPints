@@ -3,18 +3,18 @@ session_start();
 if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
-require_once 'includes/conn.php';
-require_once '../includes/config_names.php';
-require_once 'includes/html_helper.php';
-require_once 'includes/functions.php';
+require_once dirname(__FILE__) . '/../includes/config.php';
+require_once dirname(__FILE__) . '/../includes/config_names.php';
+require_once dirname(__FILE__) . '/includes/html_helper.php';
+require_once dirname(__FILE__) . '/includes/functions.php';
 
-require_once 'includes/models/keg.php';
-require_once 'includes/models/kegType.php';
-require_once 'includes/models/kegStatus.php';
+require_once dirname(__FILE__) . '/includes/models/keg.php';
+require_once dirname(__FILE__) . '/includes/models/kegType.php';
+require_once dirname(__FILE__) . '/includes/models/kegStatus.php';
 
-require_once 'includes/managers/keg_manager.php';
-require_once 'includes/managers/kegStatus_manager.php';
-require_once 'includes/managers/kegType_manager.php';
+require_once dirname(__FILE__) . '/includes/managers/keg_manager.php';
+require_once dirname(__FILE__) . '/includes/managers/kegStatus_manager.php';
+require_once dirname(__FILE__) . '/includes/managers/kegType_manager.php';
 
 $htmlHelper = new HtmlHelper();
 $kegManager = new KegManager();

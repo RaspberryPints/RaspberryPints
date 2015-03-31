@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/functions.php';
+require_once dirname(__FILE__) . '/functions.php';
 
 class HtmlHelper{
 

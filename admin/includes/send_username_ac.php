@@ -1,51 +1,36 @@
 <?
-require("../includes/conn.php");
+require_once dirname(__FILE__) . "/../../includes/config.php";
 
 // value sent from form
 $email_to=$_POST['email_tou'];
 
 
-$sql="SELECT username FROM $tbl_name WHERE email='$email_to'";
-$result=mysql_query($sql);
+$username = $db->where('email', $email_to)->getValue('users', 'username');
 
-// if found this e-mail address, row must be 1 row
-// keep value in variable name "$count"
-$count=mysql_num_rows($result);
+if($username){
 
-// compare if $count =1 row
-if($count==1){
+    $your_username=$username;
 
-$rows=mysql_fetch_array($result);
+    // ---------------- SEND MAIL FORM ----------------
 
-$your_username=$rows['username'];
+    // send e-mail to ...
+    $to=$email_to;
 
-// ---------------- SEND MAIL FORM ----------------
+    // Your subject
+    $subject="Your username";
 
-// send e-mail to ...
-$to=$email_to;
+    // From
+    $header="from: Support <shawn@besmartdesigns.com>";
 
-// Your subject
-$subject="Your username";
+    // Your message
+    $messages.="This is your username to your login ( $your_username ) \r\n";
 
-// From
-$header="from: Support <shawn@besmartdesigns.com>";
+    // send email
+    $sentmail = mail($to,$subject,$messages,$header);
 
-// Your message
-$messages.="This is your username to your login ( $your_username ) \r\n";
-
-// send email
-$sentmail = mail($to,$subject,$messages,$header);
-
-}
-
-// else if $count not equal 1
-else {
-echo "Error ";
+} else {
+    echo "Error ";
 }
 
 // if your email succesfully sent
-{
 echo "An email has been sent including the info you have requested.";?><a href="../index.php">Click Here<a/> to go back to the login.
-<?php
-}
-?>

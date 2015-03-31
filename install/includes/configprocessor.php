@@ -136,15 +136,6 @@ require_once __DIR__.'/config_files.php';
 
 	echo "Success!<br>";
 	flush();
-	// -----------------Create the admin files----------------------
-	echo "Update admin config files...";
-	flush();
-
-	file_put_contents('../../admin/includes/conn.php', $adminconfig1);
-	file_put_contents('../../admin/includes/configp.php', $adminconfig2);
-	
-	echo "Success!<br>";
-	flush();
 	//-----------------Create RPints User--------------------------
 	echo "Creating RPints database user...";
 	flush();

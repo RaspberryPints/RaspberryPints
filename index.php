@@ -1,59 +1,51 @@
 <?php
-	if (!file_exists(__DIR__.'/includes/config.php')) {
-		header('Location: install/index.php', true, 303);
-		die();
-	}
-?>
-<?php
-	require_once __DIR__.'/includes/config_names.php';
+if (!file_exists(__DIR__.'/includes/config.php')) {
+	header('Location: install/index.php', true, 303);
+	die();
+}
 
-	require_once __DIR__.'/includes/config.php';
-
-	require_once __DIR__.'/admin/includes/managers/tap_manager.php';
+require_once __DIR__.'/includes/config_names.php';
+require_once __DIR__.'/includes/config.php';
+require_once __DIR__.'/admin/includes/managers/tap_manager.php';
 	
-	//This can be used to choose between CSV or MYSQL DB
-	$db = true;
+// Setup array for all the beers that will be contained in the list
+$beers = array();
 	
-	// Setup array for all the beers that will be contained in the list
-	$beers = array();
-	
-	if($db){
-		// Connect to the database
-		db();
-		
-		
-		$config = array();
-		$sql = "SELECT * FROM config";
-		$qry = mysql_query($sql);
-		while($c = mysql_fetch_array($qry)){
-			$config[$c['configName']] = $c['configValue'];
-		}
-		
-		$sql =  "SELECT * FROM vwGetActiveTaps";
-		$qry = mysql_query($sql);
-		while($b = mysql_fetch_array($qry))
-		{
-			$beeritem = array(
-				"id" => $b['id'],
-				"beername" => $b['name'],
-				"style" => $b['style'],
-				"notes" => $b['notes'],
-				"og" => $b['ogAct'],
-				"fg" => $b['fgAct'],
-				"srm" => $b['srmAct'],
-				"ibu" => $b['ibuAct'],
-				"startAmount" => $b['startAmount'],
-				"amountPoured" => $b['amountPoured'],
-				"remainAmount" => $b['remainAmount'],
-				"tapNumber" => $b['tapNumber'],
-				"srmRgb" => $b['srmRgb']
-			);
-			$beers[$b['tapNumber']] = $beeritem;
-		}
-		
-		$tapManager = new TapManager();
-		$numberOfTaps = $tapManager->GetTapNumber();
+$config = array();
+$config_values = $db->get('config');
+if ($db->count > 0) {
+	foreach ($config_values as $c) {
+		$config[$c['configName']] = $c['configValue'];
 	}
+}
+
+//Get that active taps
+$active_taps = $db->get('vwGetActiveTaps');
+
+if ($db->count > 0) {
+	foreach ($active_taps as $b) {
+		$beeritem = array(
+			"id" => $b['id'],
+			"beername" => $b['name'],
+			"style" => $b['style'],
+			"notes" => $b['notes'],
+			"og" => $b['ogAct'],
+			"fg" => $b['fgAct'],
+			"srm" => $b['srmAct'],
+			"ibu" => $b['ibuAct'],
+			"startAmount" => $b['startAmount'],
+			"amountPoured" => $b['amountPoured'],
+			"remainAmount" => $b['remainAmount'],
+			"tapNumber" => $b['tapNumber'],
+			"srmRgb" => $b['srmRgb']
+		);
+		$beers[$b['tapNumber']] = $beeritem;
+	}
+}
+		
+$tapManager = new TapManager();
+$numberOfTaps = $tapManager->GetTapNumber();
+	
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
 "http://www.w3.org/TR/html4/strict.dtd">
@@ -269,14 +261,12 @@
 										<?php 
 											// Code for new kegs that are not full
                                                                                         $tid = $beer['id'];
-                                                                                        $sql = "Select kegId from taps where id=".$tid." limit 1";
-                                                                                        $kegID = mysql_query($sql);
-                                                                                        $kegID = mysql_fetch_array($kegID);
-                                                                                        //echo $kegID[0];
-                                                                                        $sql = "SELECT `kegTypes`.`maxAmount` as kVolume FROM  `kegs`,`kegTypes` where  kegs.kegTypeId = kegTypes.id and kegs.id =".$kegID[0]."";
-                                                                                        $kvol = mysql_query($sql);
-                                                                                        $kvol = mysql_fetch_array($kvol);
-                                                                                        $kvol = $kvol[0];
+											$kegID = $db->where('id', $tid)->getValue('taps', 'kegId');
+                                                                                        
+											$params = array($kegID);
+											$kvol = $db->rawQuery("SELECT `kegTypes`.`maxAmount` as kVolume FROM  `kegs`,`kegTypes` where  kegs.kegTypeId = kegTypes.id and kegs.id = ?", $params);
+                                                                                        
+											$kvol = $kvol[0]['kVolume'];
                                                                                         $kegImgClass = "";
                                                                                         if ($beer['startAmount']>=$kvol) {
                                                                                         $percentRemaining = $beer['remainAmount'] / $beer['startAmount'] * 100;

@@ -5,9 +5,8 @@
 <div id="welcome"> &nbsp; Logged in as: <br />
 	&nbsp;
 	<?php
-		$sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
-		$result=mysql_query($sql);
-		echo mysql_result($result, 0, 'name');
+		$name = $db->where('username', $_SESSION['myusername'])->getValue('users', 'name');
+		echo $name;
 	?>
 </div>
 

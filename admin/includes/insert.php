@@ -3,11 +3,22 @@ session_start();
 if(!isset( $_SESSION['myusername'] )){
 	//header("location:index.php");
 }
-require 'conn.php';
-require_once '../includes/functions.php';
+require_once dirname(__FILE__) . '/../../includes/config.php';
+require_once dirname(__FILE__) . '/functions.php';
 
 
-$sql="INSERT INTO beers (name, style, notes, ogEst, fgEst, srmEst, ibuEst, modifiedDate) VALUES ('$_POST[name]','$_POST[style]','$_POST[notes]','$_POST[ogEst]','$_POST[fgEst]','$_POST[srmEst]','$_POST[ibuEst]', NOW())";
+$data = array(
+    'name' => $_POST['name'],
+    'style' => $_POST['style'],
+    'notes' => $_POST['notes'],
+    'ogEst' => $_POST['ogEst'],
+    'fgEst' => $_POST['fgEst'],
+    'srmEst' => $_POST['srmEst'],
+    'ibuEst' => $_POST['ibuEst'],
+    'modifiedDate' => 'NOW()'
+)
+
+$db->insert('beers', $data);
 
 if (!mysql_query($sql)) {
 die('Error: ' . mysql_error());

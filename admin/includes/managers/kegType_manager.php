@@ -2,33 +2,38 @@
 require_once __DIR__.'/../models/kegType.php';
 
 class KegTypeManager{
+	
+	function __construct() {
+		$this->db = MysqliDb::getInstance();
+	}
 
 	function GetAll(){
-		$sql="SELECT * FROM kegTypes ORDER BY displayName";
-		$qry = mysql_query($sql);
+		
+		$kegType_data = $this->db->orderBy('displayName', 'ASC')->get('kegTypes');
 		
 		$kegTypes = array();
-		while($i = mysql_fetch_array($qry)){
-			$kegType = new KegType();
-			$kegType->setFromArray($i);
-			$kegTypes[$kegType->get_id()] = $kegType;		
-		}
 		
+		foreach ($kegType_data as $k) {
+			$kegType = new KegType();
+			$kegType->setFromArray($k);
+			$kegTypes[$kegType->get_id()] = $kegType;
+		}
+				
 		return $kegTypes;
 	}
 	
 	
 		
 	function GetById($id){
-		$sql="SELECT * FROM kegTypes WHERE id = $id";
-		$qry = mysql_query($sql);
 		
-		if( $i = mysql_fetch_array($qry) ){		
+		$kegType_data = $this->db->where('id', $id)->getOne('kegTypes');
+		
+		if( $this->db->count > 0 ){
 			$kegType = new KegType();
-			$kegType->setFromArray($i);
+			$kegType->setFromArray($kegType_data);
 			return $kegType;
 		}
-
+		
 		return null;
 	}
 }
