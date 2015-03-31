@@ -3,16 +3,14 @@ session_start();
 if(!isset( $_SESSION['myusername'] )){
 header("location:index.php");
 }
-require 'includes/conn.php';
+require dirname(__FILE__) . '/../includes/config.php';
 
 // get value of id that sent from address bar
 $beerid=$_GET['beerid'];
 
 // Retrieve data from database
-$sql="SELECT * FROM $tbl_name WHERE beerid='$beerid'";
-$result=mysql_query($sql);
+$rows = $db->where('beerid', $beerid)->getOne('beers');
 
-$rows=mysql_fetch_array($result);
 ?>
 
 <head>
@@ -28,7 +26,7 @@ $rows=mysql_fetch_array($result);
 <td>&nbsp;</td>
 </tr>
 <tr>
-<td align="center"><strong>Update Your Beers Information</strong> </td>
+<td align="center"><strong>Update Your Beer's Information</strong> </td>
 </tr>
 <tr>
 <td align="center">&nbsp;</td></tr>

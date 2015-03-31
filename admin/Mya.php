@@ -4,7 +4,7 @@ if(!isset( $_SESSION['myusername'] )){
 header("location:index.php");
 }
 
-require 'includes/conn.php';
+require dirname(__FILE__) . '/../includes/config.php';
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -47,29 +47,20 @@ include 'header.php';
 			<p style="padding:0px;margin:0px">
 <font size="2" Color="Black" font-family="Impact">Name:</font>
 <?php
-
-$sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
-$result=mysql_query($sql);
-
-echo mysql_result($result, 0, 'name');
-?><br />
+$name = $db->where('username', $_SESSION['myusername'])->getValue('users', 'name');
+echo $name;
+?>
+<br />
 <font size="2" Color="Black" font-family="Impact">Username:</font>
 <?php
-
-$sql="SELECT `username` FROM `users` WHERE username='$_SESSION[myusername]'";
-$result=mysql_query($sql);
-
-echo mysql_result($result, 0, 'username');
-
-?><br />
+$username = $db->where('username', $_SESSION['myusername'])->getValue('users', 'username');
+echo $username;
+?>
+<br />
 <font size="2" Color="Black" font-family="Impact"> Email:</font>
 <?php
-
-$sql="SELECT `email` FROM `users` WHERE username='$_SESSION[myusername]'";
-$result=mysql_query($sql);
-
-echo mysql_result($result, 0, 'email');
-
+$email = $db->where('username', $_SESSION['myusername'])->getValue('users', 'email');
+echo $email;
 ?>
 <br />
 <br />

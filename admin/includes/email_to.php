@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'conn.php';
+require_once dirname(__FILE__) . '/../../includes/config.php';
 ?> 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">

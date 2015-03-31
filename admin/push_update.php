@@ -3,7 +3,7 @@ session_start();
 if(!isset( $_SESSION['myusername'] )){
 header("location:index.php");
 }
-require 'includes/conn.php';
+require dirname(__FILE__) . '/../includes/config.php';
 
 
 // Get values from form 
@@ -21,19 +21,25 @@ $beerid=$_POST['beerid'];
 
 
 // update data in mysql database
-$sql="UPDATE beers SET name='$name', style='$style', notes='$notes', og='$og', fg='$fg', srm='$srm', 
-ibu='$ibu', active='$active', tapnumber='$tapnumber' WHERE beerid='$beerid'";
-$result=mysql_query($sql);
+$data = array(
+    'name' => $name,
+    'style' => $style,
+    'notes' => $notes,
+    'og' => $og,
+    'fg' => $fg,
+    'srm' => $srm,
+    'ibu' => $ibu,
+    'active' => $active,
+    'tapnumber' => $tapnumber
+);
 
 // if successfully updated.
-if($result){
-echo "Successful";
-echo "<BR>";
-echo "<a href='beer_main.php'>Back To Beers</a>";
-}
-
-else {
-echo "ERROR";
+if($db->where('beerid', $beerid)->update('beers', $data)){
+    echo "Successful";
+    echo "<BR>";    
+    echo "<a href='beer_main.php'>Back To Beers</a>";
+} else {
+    echo "ERROR";
 }
 
 ?> 

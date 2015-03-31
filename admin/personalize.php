@@ -4,9 +4,8 @@ if(!isset( $_SESSION['myusername'] )){
 header("location:index.php");
 }
 
-require 'includes/conn.php';
-require '../includes/config_names.php';
-require 'includes/configp.php';
+require dirname(__FILE__) . '/../includes/config.php';
+require dirname(__FILE__) . '/../includes/config_names.php';
 
 ?> 
 
@@ -49,6 +48,8 @@ include 'header.php';
 		<h2>Show/Hide Columns</h2><br /> 
 		<form method="post" action="update_column.php">
 			<?php
+				$result = $db->where('showOnPanel',1)->get('config');
+			
 				foreach($result as $row) {
 				echo '<h3>' . $row['displayName'] . ":" . '</h3>' . 
 					'On<input type="radio" ' . ($row['configValue']?'checked':'') . ' name="' . str_replace(' ','',$row['id']) . '" value="1">' .
@@ -63,23 +64,19 @@ include 'header.php';
 	<a name="header"></a> 
 		<h2>Taplist Header</h2><br><br>
 		<?php
-			$sql="SELECT configValue FROM config WHERE configName ='".ConfigNames::HeaderText."'";
-			$result=mysql_query($sql);
-			$headerText=mysql_fetch_array($result);
+			$headerText = $db->where('configName', ConfigNames::HeaderText)->getValue('config', 'configValue');
 		?>
 		<p><b>Text to Display:</b></p>
 			<form method="post" action="update_header_text.php">
-				<input type="text" class="largebox" value="<?php echo $headerText['configValue']; ?>" name="header_text"> &nbsp 
+				<input type="text" class="largebox" value="<?php echo $headerText; ?>" name="header_text"> &nbsp 
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form><br><br>
 		<?php
-			$sql="SELECT configValue FROM config WHERE configName ='".ConfigNames::HeaderTextTruncLen."'";
-			$result=mysql_query($sql);
-			$headerTextTruncLen=mysql_fetch_array($result);
+			$headerTextTruncLen = $db->where('configName', ConfigNames::HeaderTextTruncLen)->getValue('config', 'configValue');
 		?>
 		<p><b>Truncate To:</b> (# characters)</p>
 			<form method="post" action="update_header_text_trunclen.php">
-				<input type="text" class="smallbox" value="<?php echo $headerTextTruncLen['configValue']; ?>" name="header_text_trunclen"> &nbsp 
+				<input type="text" class="smallbox" value="<?php echo $headerTextTruncLen; ?>" name="header_text_trunclen"> &nbsp 
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
 		<hr />

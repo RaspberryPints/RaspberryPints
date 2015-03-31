@@ -1,95 +1,98 @@
 <?php
-require_once __DIR__.'/../models/beer.php';
+require_once dirname(__FILE__) . '/../models/beer.php';
 
 class BeerManager{
-
+	
+	function __construct() {
+		$this->db = MysqliDb::getInstance();
+	}
+	
 	function Save($beer){
-		$sql = "";
+		
+
 		if($beer->get_id()){
-			$sql = 	"UPDATE beers " .
-					"SET " .
-						"name = '" . encode($beer->get_name()) . "', " .
-						"beerStyleId = '" . encode($beer->get_beerStyleId()) . "', " .
-						"notes = '" . encode($beer->get_notes()) . "', " .
-						"ogEst = '" . $beer->get_og() . "', " .
-						"fgEst = '" . $beer->get_fg() . "', " .
-						"srmEst = '" . $beer->get_srm() . "', " .
-						"ibuEst = '" . $beer->get_ibu() . "', " .
-						"modifiedDate = NOW() ".
-					"WHERE id = " . $beer->get_id();
-					
-		}else{		
-			$sql = 	"INSERT INTO beers(name, beerStyleId, notes, ogEst, fgEst, srmEst, ibuEst, createdDate, modifiedDate ) " .
-					"VALUES(" . 
-					"'" . encode($beer->get_name()) . "', " .
-					$beer->get_beerStyleId() . ", " .
-					"'" . encode($beer->get_notes()) . "', " .
-					"'" . $beer->get_og() . "', " . 
-					"'" . $beer->get_fg() . "', " . 
-					"'" . $beer->get_srm() . "', " . 
-					"'" . $beer->get_ibu() . "' " .
-					", NOW(), NOW())";
+			$data = array(
+				'name' => encode($beer->get_name()),
+				'beerStyleId' => encode($beer->get_beerStyleId()),
+				'notes' => encode($beer->get_notes()),
+				'ogEst' => $beer->get_og(),
+				'fgEst' => $beer->get_fg(),
+				'srmEst' => $beer->get_srm(),
+				'ibuEst' => $beer->get_ibu(),
+				'modifiedDate' => 'NOW()'
+			);
+			
+			$this->db->where('id', $beer->get_id())->update('beers', $data);					
+		}else{
+			$data = array(
+				'name' => encode($beer->get_name()),
+				'beerStyleId' => encode($beer->get_beerStyleId()),
+				'notes' => encode($beer->get_notes()),
+				'ogEst' => $beer->get_og(),
+				'fgEst' => $beer->get_fg(),
+				'srmEst' => $beer->get_srm(),
+				'ibuEst' => $beer->get_ibu(),
+				'createdDate' => 'NOW()',
+				'modifiedDate' => 'NOW()'
+			);
+			
+			$this->db->insert('beers', $data);			
 		}
-		
-		//echo $sql; exit();
-		
-		mysql_query($sql);
 	}
 	
 	function GetAll(){
-		$sql="SELECT * FROM beers ORDER BY name";
-		$qry = mysql_query($sql);
+		
+		$beer_data = $this->db->orderBy('name', 'ASC')->get('beers');
 		
 		$beers = array();
-		while($i = mysql_fetch_array($qry)){
+		
+		foreach ($beer_data as $b) {
 			$beer = new Beer();
-			$beer->setFromArray($i);
-			$beers[$beer->get_id()] = $beer;		
+			$beer->setFromArray($b);
+			$beers[$beer->get_id()] = $beer;
 		}
 		
 		return $beers;
 	}
 	
 	function GetAllActive(){
-		$sql="SELECT * FROM beers WHERE active = 1 ORDER BY name";
-		$qry = mysql_query($sql);
 		
+		$beer_data = $this->db->where('active', 1)->orderBy('name', 'ASC')->get('beers');
+				
 		$beers = array();
-		while($i = mysql_fetch_array($qry)){
+		
+		foreach ($beer_data as $b) {
 			$beer = new Beer();
-			$beer->setFromArray($i);
-			$beers[$beer->get_id()] = $beer;	
+			$beer->setFromArray($b);
+			$beers[$beer->get_id()] = $beer;
 		}
 		
 		return $beers;
 	}
 		
 	function GetById($id){
-		$sql="SELECT * FROM beers WHERE id = $id";
-		$qry = mysql_query($sql);
 		
-		if( $i = mysql_fetch_array($qry) ){		
+		$beer_data = $this->db->where('id', $id)->getOne('beers');
+		
+		if( $this->db->count > 0 ){
 			$beer = new Beer();
-			$beer->setFromArray($i);
+			$beer->setFromArray($beer_data);
 			return $beer;
 		}
-
+		
 		return null;
 	}
 	
 	function Inactivate($id){
-		$sql = "SELECT * FROM taps WHERE beerId = $id AND active = 1";
-		$qry = mysql_query($sql);
+		$this->db->where('beerId', $id)->where('active', 1)->get('taps');
 		
-		if( mysql_fetch_array($qry) ){		
+		if( $this->db->count > 0 ){		
 			$_SESSION['errorMessage'] = "Beer is associated with an active tap and could not be deleted.";
 			return;
+		} else {
+			if ($this->db->where('id', $id)->update('beers', array('active' => 0))) {
+				$_SESSION['successMessage'] = "Beer successfully deleted.";
+			}
 		}
-	
-		$sql="UPDATE beers SET active = 0 WHERE id = $id";
-		//echo $sql; exit();
-		$qry = mysql_query($sql);
-		
-		$_SESSION['successMessage'] = "Beer successfully deleted.";
 	}
 }
