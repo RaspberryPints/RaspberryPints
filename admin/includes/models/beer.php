@@ -3,20 +3,21 @@ require_once __DIR__.'/../functions.php';
 
 class Beer  
 {  
-    private $_id;  
-    private $_name;
+	private $_id;  
+	private $_name;
 	private $_beerStyleId;
 	private $_notes;
 	private $_og; 
 	private $_fg;  
 	private $_srm;  
 	private $_ibu;
+    private $_recipe;
 	private $_active;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
 	public function __construct(){}
-  
+
 	public function get_id(){ return $this->_id; }
 	public function set_id($_id){ $this->_id = $_id; }
 
@@ -41,6 +42,9 @@ class Beer
 	public function get_ibu(){ return $this->_ibu; }
 	public function set_ibu($_ibu){ $this->_ibu = $_ibu; }
 	
+    public function get_recipe(){ return $this->_recipe; }
+	public function set_recipe($_recipe){ $this->_recipe = $_recipe; }
+
 	public function get_active(){ return $this->_active; }
 	public function set_active($_active){ $this->_active = $_active; }
 	
@@ -50,8 +54,8 @@ class Beer
 	public function get_modifiedDate(){ return $this->_modifiedDate; }
 	public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
 	
-    public function setFromArray($postArr)  
-    {  
+	public function setFromArray($postArr)  
+	{  
 		if( isset($postArr['id']) )
 			$this->set_id($postArr['id']);
 		else
@@ -118,7 +122,12 @@ class Beer
 			$this->set_ibu($postArr['ibu']);
 		else
 			$this->set_ibu(null);
-			
+	
+    		if( isset($postArr['recipe']) )
+			$this->set_recipe($postArr['recipe']);
+		else
+			$this->set_recipe(null);
+    
 		if( isset($postArr['active']) )
 			$this->set_active($postArr['active']);
 		else
@@ -133,7 +142,7 @@ class Beer
 			$this->set_modifiedDate($postArr['modifiedDate']);
 		else
 			$this->set_modifiedDate(null);
-    }  
+	}  
 	
 	function toJson(){
 		return "{" . 
@@ -145,6 +154,7 @@ class Beer
 			"og: '" . $this->get_og() . "', " .
 			"fg: '" . $this->get_fg() . "', " .
 			"ibu: '" . $this->get_ibu() . "', " .
+            "recipe: '" . encode($this->get_recipe()) . "', " .
 			"active: '" . $this->get_active() . "', " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  

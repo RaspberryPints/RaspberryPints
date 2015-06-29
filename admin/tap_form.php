@@ -7,24 +7,19 @@ require_once __DIR__.'/includes/conn.php';
 require_once __DIR__.'/../includes/config_names.php';
 require_once __DIR__.'/includes/html_helper.php';
 require_once __DIR__.'/includes/functions.php';
-
 require_once __DIR__.'/includes/models/tap.php';
 require_once __DIR__.'/includes/models/beer.php';
 require_once __DIR__.'/includes/models/keg.php';
 require_once __DIR__.'/includes/models/kegType.php';
-
 require_once __DIR__.'/includes/managers/beer_manager.php';
 require_once __DIR__.'/includes/managers/keg_manager.php';
 require_once __DIR__.'/includes/managers/kegType_manager.php';
 require_once __DIR__.'/includes/managers/tap_manager.php';
-
 $htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
 $beerManager = new BeerManager();
 $kegManager = new KegManager();
 $kegTypeManager = new KegTypeManager();
-
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if( isset($_POST['saveTap']) ){
 		$tap = new Tap();
@@ -33,11 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 	redirect('tap_list.php');
 }
-
-
 $beerList = $beerManager->GetAllActive();
 $kegList = $kegManager->GetAllAvailable();
-
 $tapNumber = $_GET['tapNumber'];
 if( isset($_GET['id'])){
 	$tap = $tapManager->GetById($_GET['id']);
@@ -51,7 +43,6 @@ if( isset($_GET['id'])){
 	$tap->set_tapNumber($tapNumber);
 	$tap->set_active(true);
 }
-
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

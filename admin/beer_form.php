@@ -51,22 +51,22 @@ $beerStyleList = $beerStyleManager->GetAll();
 require __DIR__.'/header.php';
 ?>
 	<!-- End Header -->
-        
-    <!-- Top Breadcrumb Start -->
-    <div id="breadcrumb">
-    	<ul>	
-        	<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
-        	<li><strong>Location:</strong></li>
-            <li><a href="beer_list.php">My Beers</a></li>
-            <li>/</li>
-            <li class="current">Beer Form</li>
-        </ul>
-    </div>
-    <!-- Top Breadcrumb End --> 
-     
-    <!-- Right Side/Main Content Start -->
-    <div id="rightside">
-		 <div class="contentcontainer med left">
+		
+	<!-- Top Breadcrumb Start -->
+	<div id="breadcrumb">
+		<ul>	
+			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
+			<li><strong>Location:</strong></li>
+			<li><a href="beer_list.php">My Beers</a></li>
+			<li>/</li>
+			<li class="current">Beer Form</li>
+		</ul>
+	</div>
+	<!-- Top Breadcrumb End --> 
+	
+	<!-- Right Side/Main Content Start -->
+	<div id="rightside">
+		<div class="contentcontainer med left">
 	<p>
 		Fields marked with <b><font color="red">*</font></b> are required.<br><br>
 
@@ -128,7 +128,15 @@ require __DIR__.'/header.php';
 					<b>Tasting<br>Notes:</b>
 				</td>
 				<td>
-					<textarea type="text" id="notes" class="text-input textarea" style="width:320px;height:80px" name="notes"><?php echo $beer->get_notes() ?></textarea>
+					<textarea type="text" id="notes" class="text-input textarea" style="width:320px;height:80px" name="notes"><?php echo nl2br$beer->get_notes() ?></textarea>
+				</td>
+			</tr>
+               <tr>
+				<td>
+					<b>Recipe:</b>
+				</td>
+				<td>
+					<textarea type="text" id="recipe" class="text-input textarea" style="width:320px;height:80px" name="recipe"><?php echo nl2br$beer->get_recipe() ?></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -140,22 +148,22 @@ require __DIR__.'/header.php';
 		</table>
 		<br />
 		<div align="right">			
-			 &nbsp &nbsp 
+			&nbsp &nbsp 
 		</div>
 
 	</form>
-    </div>
+	</div>
 	<!-- End On Tap Section -->
 
-    <!-- Start Footer -->   
+	<!-- Start Footer -->   
 <?php 
 require __DIR__.'/footer.php';
 ?>
 
 	<!-- End Footer -->
-          
-    </div>
-    <!-- Right Side/Main Content End -->
+		
+	</div>
+	<!-- Right Side/Main Content End -->
 	<!-- Start Left Bar Menu -->   
 <?php 
 require __DIR__.'/left_bar.php';
@@ -170,26 +178,26 @@ require __DIR__.'/scripts.php';
 	$(function() {		
 		
 		$('#beer-form').validate({
-		  rules: {
+		rules: {
 			name: { required: true },
 			style: { required: true },			
 			srm: { required: true, number: true },
 			ibu: { required: true, number: true },
 			og: { required: true, number: true },
 			fg: { required: true, number: true }
-		  }
+		}
 		});
 		
 	});
 </script>
 
 	<!-- End Js -->
-    <!--[if IE 6]>
-    <script type='text/javascript' src='scripts/png_fix.js'></script>
-    <script type='text/javascript'>
-      DD_belatedPNG.fix('img, .notifycount, .selected');
-    </script>
-    <![endif]--> 
+	<!--[if IE 6]>
+	<script type='text/javascript' src='scripts/png_fix.js'></script>
+	<script type='text/javascript'>
+	DD_belatedPNG.fix('img, .notifycount, .selected');
+	</script>
+	<![endif]--> 
 
 </body>
 </html>

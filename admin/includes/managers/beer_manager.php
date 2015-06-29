@@ -15,11 +15,12 @@ class BeerManager{
 						"fgEst = '" . $beer->get_fg() . "', " .
 						"srmEst = '" . $beer->get_srm() . "', " .
 						"ibuEst = '" . $beer->get_ibu() . "', " .
+                        "recipe = '" . encode($beer->get_recipe()) . "', " .
 						"modifiedDate = NOW() ".
 					"WHERE id = " . $beer->get_id();
 					
 		}else{		
-			$sql = 	"INSERT INTO beers(name, beerStyleId, notes, ogEst, fgEst, srmEst, ibuEst, createdDate, modifiedDate ) " .
+			$sql = 	"INSERT INTO beers(name, beerStyleId, notes, ogEst, fgEst, srmEst, ibuEst, recipe, createdDate, modifiedDate ) " .
 					"VALUES(" . 
 					"'" . encode($beer->get_name()) . "', " .
 					$beer->get_beerStyleId() . ", " .
@@ -27,7 +28,8 @@ class BeerManager{
 					"'" . $beer->get_og() . "', " . 
 					"'" . $beer->get_fg() . "', " . 
 					"'" . $beer->get_srm() . "', " . 
-					"'" . $beer->get_ibu() . "' " .
+					"'" . $beer->get_ibu() . "', " .
+                    "'" . encode($beer->get_recipe()) . "' " .
 					", NOW(), NOW())";
 		}
 		
@@ -51,7 +53,7 @@ class BeerManager{
 	}
 	
 	function GetAllActive(){
-		$sql="SELECT * FROM beers WHERE active = 1 ORDER BY name";
+		$sql="SELECT * FROM beers WHERE active = 1 ORDER BY modifiedDate DESC";
 		$qry = mysql_query($sql);
 		
 		$beers = array();
