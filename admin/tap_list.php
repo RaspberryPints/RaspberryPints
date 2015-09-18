@@ -175,6 +175,11 @@ include 'header.php';
 											-->
 											
 											<td>
+												<input name="enableTap" type="submit" class="btn" value="Let it flow" />
+												
+											</td>
+											
+											<td>
 												<input name="editTap" type="submit" class="btn" value="Update Tap Info" />
 												
 											</td>
