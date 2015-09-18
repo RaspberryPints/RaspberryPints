@@ -298,7 +298,10 @@
 												$kegImgClass = "keg-full";
 										?>
 										<div class="keg-container">
-											<div class="keg-indicator"><div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%"></div></div>
+											<div class="keg-indicator">
+												<div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%"></div>
+												<div class="keg-enabled"></div>
+											</div>
 										</div>
 										<h2><?php echo number_format(($beer['remainAmount'] * 128)); ?> fl oz left</h2>
 									</td>

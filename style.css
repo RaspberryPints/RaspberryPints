@@ -272,6 +272,24 @@ table .subhead{
 	margin: 8px auto;
 }
 
+.keg-disabled{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: url(img/keg/disabled.png) no-repeat bottom right;	
+}
+
+.keg-enabled{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: url(img/keg/enabled.png) no-repeat bottom right;	
+}
+
 .keg-indicator{
 	position: absolute;
 	bottom: 0;
