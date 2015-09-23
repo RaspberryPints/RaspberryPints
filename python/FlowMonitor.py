@@ -20,9 +20,38 @@ class FlowMonitor(object):
         # Edit this line to point to where your rpints install is
         self.poursdir = '/var/www'
     
+    def fakemonitor(self):
+        running = True
+        print "RPINTS: Listening to arduino\n"
+        
+        try:
+            while running:  
+                time.sleep(9)  
+                msg = "P;0;9;450"
+                if not msg:
+                    continue
+                reading = msg.split(";")
+                if ( len(reading) < 2 ):
+                    print "Unknown message: "+msg
+                    continue
+                if ( reading[0] == "P" ):
+                    MCP_ADDR = int(reading[1])
+                    MCP_PIN = str(reading[2])
+                    POUR_COUNT = str(reading[3])
+                    PULSES_PERL = 5600
+                    self.dispatch.sendflowupdate(MCP_PIN, POUR_COUNT)
+                elif ( reading[0] == "K" ):
+                    MCP_ADDR = int(reading[1])
+                    MCP_PIN = int(reading[2])
+                else:
+                    print "Unknown message: "+msg
+        finally:
+            print "Closing serial connection to arduino..."
+            print "Exiting"
+        
     def monitor(self):
         running = True
-        print "Listening to arduino "
+        print "RPINTS: Listening to arduino\n"
         
         try:
             while running:    
@@ -62,7 +91,7 @@ class FlowMonitor(object):
                     #if taps:
                     #    cur.execute("INSERT INTO pours(tapId,amountPoured,batchId,pinAddress,pulseCount,pulsesPerLiter,liters) values (%s,%s,%s,%s,%s,%s,%s)",(taps[0][0],POUR_COUNT / 165,taps[0][1],MCP_PIN,POUR_COUNT,taps[0][2],round((POUR_COUNT/5.600)/1000,3)))
                     #    con.commit()
-                    self.dispatch.sendupdate(MCP_PIN, POUR_COUNT)
+                    self.dispatch.sendflowupdate(MCP_PIN, POUR_COUNT)
                     #else:
                     #    print "Tap is not active"
                 elif ( reading[0] == "K" ):
