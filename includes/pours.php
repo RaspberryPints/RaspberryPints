@@ -57,6 +57,6 @@ if($db){
 
 		// REFRESHES CHROMIUM BROWSER ON LOCAL HOST ONLY
 		// COMMENT OUT TO DISABLE
-		exec(__DIR__."/refresh.sh");
+		//exec(__DIR__."/refresh.sh");
 
 ?>
