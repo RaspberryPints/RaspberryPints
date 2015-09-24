@@ -29,7 +29,8 @@
 			<li><a href="beer_list.php">My Beers</a></li>
 			<li><a href="keg_list.php">My Kegs</a></li>
 			<li><a href="tap_list.php">My Taps</a></li>
-		</ul>
+			<li><a href="tap_config.php">My Tap Config</a></li>
+			</ul>
 	</li>
 		<li>
 		<a class="expanded heading">Personalization</a>

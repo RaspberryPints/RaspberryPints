@@ -6,6 +6,8 @@ class Tap
 	private $_kegId;
 	private $_tapNumber;
 	private $_pinId;
+	private $_valvePinId;
+	private $_valveOn;
 	private $_og; 
 	private $_fg;  
 	private $_srm;  
@@ -29,6 +31,12 @@ class Tap
 
 	public function get_tapNumber(){ return $this->_tapNumber; }
 	public function set_tapNumber($_tapNumber){ $this->_tapNumber = $_tapNumber; }
+	
+	public function get_valvePinId() { return $this->_valvePinId; }
+	public function set_valvePinId($_pinId){ $this->_valvePinId = $_pinId; }
+	
+	public function get_valveOn() { return $this->_valveOn; }
+	public function set_valveOn($_valveOn){ $this->_valveOn = $_valveOn; }
 	
 	public function get_pinId() { return $this->_pinId; }
 	public function set_pinId($_pinId){ $this->_pinId = $_pinId; }
@@ -82,10 +90,20 @@ class Tap
 		else
 			$this->set_tapNumber(null);
 			
-		if( isset($postArr['pinId']) )
-			$this->set_pinId($postArr['pinId']);
+		if( isset($postArr['flowPin']) )
+			$this->set_pinId($postArr['flowPin']);
 		else
 			$this->set_pinId('0');
+			
+		if( isset($postArr['valvePin']) )
+			$this->set_valvePinId($postArr['valvePin']);
+		else
+			$this->set_valvePinId('0');
+			
+		if( isset($postArr['valveOn']) )
+			$this->set_valveOn($postArr['valveOn']);
+		else
+			$this->set_valveOn('0');
 			
 		if( isset($postArr['og']) )
 			$this->set_og($postArr['og']);

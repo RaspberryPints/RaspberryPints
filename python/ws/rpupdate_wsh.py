@@ -16,8 +16,8 @@ def web_socket_transfer_data(request):
     
     while True:
         try: 
-            #keep apache socket alive by sending hello every 5 seconds
-            ready = select.select([sock], [], [], 5.0)
+            #keep apache socket alive by sending hello every 20 seconds
+            ready = select.select([sock], [], [], 20.0)
             if ready[0]:
                 line = sock.recv(1024)
             else:

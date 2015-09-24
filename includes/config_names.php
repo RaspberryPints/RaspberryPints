@@ -14,4 +14,9 @@ abstract class ConfigNames
 	const HeaderTextTruncLen = 'headerTextTruncLen';
 	const NumberOfTaps = 'numberOfTaps';
 	const UseFlowMeter = 'useFlowMeter';
+	const UseTapValves = 'useTapValves';
+	const UseFanControl = 'useFanControl';
+	const UseFanPin = 'useFanPin';
+	const FanInterval = 'fanInterval';
+	const FanOnTime = 'fanOnTime';
 }

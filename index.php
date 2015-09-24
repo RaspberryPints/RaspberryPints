@@ -53,6 +53,7 @@
 		
 		$tapManager = new TapManager();
 		$numberOfTaps = $tapManager->GetTapNumber();
+		$taps = $tapManager->getActiveTaps();
 	}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -71,9 +72,10 @@
 		<?php } ?>
 		
 		<link rel="shortcut icon" href="img/pint.ico">
-	</head> 
+		<script type="text/javascript" src="admin/scripts/ws.js"></script>	
+		</head> 
 
-	<body>
+	<body onload="wsconnect()">
 		<div class="bodywrapper">
 			<!-- Header with Brewery Logo and Project Name -->
 			<div class="header clearfix">
@@ -147,6 +149,7 @@
 					<?php for($i = 1; $i <= $numberOfTaps; $i++) {
 						if( isset($beers[$i]) ) {
 							$beer = $beers[$i];
+							$tap = $taps[$i];
 					?>
 							<tr class="<?php if($i%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beer['id']; ?>">
 								<?php if($config[ConfigNames::ShowTapNumCol]){ ?>
@@ -296,11 +299,21 @@
 												$kegImgClass = "keg-green";
 											else if( $percentRemaining >= 100 )
 												$kegImgClass = "keg-full";
+											
+											$kegOn ="";
+											if($config[ConfigNames::UseTapValves]){
+												if ( $tap->get_valveOn() > 0 ) 
+													$kegOn = "keg-enabled";
+												else
+													$kegOn = "keg-disabled";
+											}
 										?>
 										<div class="keg-container">
 											<div class="keg-indicator">
 												<div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%"></div>
-												<div class="keg-enabled"></div>
+												<?php if($config[ConfigNames::UseTapValves]){ ?>
+													<div class="<?php echo $kegOn ?>"></div>
+												<?php } ?>
 											</div>
 										</div>
 										<h2><?php echo number_format(($beer['remainAmount'] * 128)); ?> fl oz left</h2>
@@ -365,7 +378,11 @@
 									<td class="keg">
 										<h3></h3>
 										<div class="keg-container">
-											<div class="keg-indicator"><div class="keg-full keg-empty" style="height:0%"></div></div>
+											<div class="keg-indicator"><div class="keg-full keg-empty" style="height:0%"></div>
+												<?php if($config[ConfigNames::UseTapValves]){ ?>
+													<div class="keg-enabled"></div>
+												<?php } ?>
+											</div>
 										</div>
 										<h2>0 fl oz left</h2>
 									</td>

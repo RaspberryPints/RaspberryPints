@@ -19,24 +19,28 @@ require_once __DIR__.'/includes/managers/tap_manager.php';
 
 $htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
-$beerManager = new BeerManager();
-$kegManager = new KegManager();
 
 if( isset($_POST['updateNumberOfTaps'])) {
 	$tapManager->updateTapNumber($_POST['numberOfTaps']);
 
-}else if( isset($_POST['newTap'])){
+}else if( isset($_POST['saveTapConfig'])){
 	$tapNumber=$_POST['tapNumber'];
-	redirect("tap_form.php?tapNumber=$tapNumber");
+	$flowpin=$_POST['flowpin'];
+	$valvepin=$_POST['valvepin'];
+	$tapManager->saveTapConfig($tapNumber, $flowpin, $valvepin);
 	
-}else if( isset($_POST['editTap'])){
-	$tapNumber=$_POST['tapNumber'];
-	$id=$_POST['id'];
-	redirect("tap_form.php?tapNumber=$tapNumber&id=$id");
-
-}else if( isset($_POST['closeTap'])){
-	$tapManager->closeTap($_POST['id']);	
-
+}else if( isset($_POST['fanConfig'])){
+	$useFanPin=$_POST['useFanPin'];
+	$fanInterval=$_POST['fanInterval'];
+	$fanOnTime=$_POST['fanOnTime'];
+	$sql = "UPDATE config SET configValue = " . $useFanPin ." WHERE configName = \"useFanPin\"";
+	mysql_query($sql);
+	$sql = "UPDATE config SET configValue = " . $fanInterval ." WHERE configName = \"fanInterval\"";
+	mysql_query($sql);
+	$sql = "UPDATE config SET configValue = " . $fanOnTime ." WHERE configName = \"fanOnTime\"";
+	mysql_query($sql);
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=fan');
+	
 }else if( isset($_POST['enableTap'])){
 	$tapManager->enableTap($_POST['tapNumber']);
 	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=valve');
@@ -47,14 +51,21 @@ if( isset($_POST['updateNumberOfTaps'])) {
 }
 
 $numberOfTaps = $tapManager->getTapNumber();
-$activeTaps = $tapManager->getActiveTaps();
 
-// Code to set config values
+// Code to get config values
 $config = array();
 $sql = "SELECT * FROM config";
 $qry = mysql_query($sql);
 while($c = mysql_fetch_array($qry)){
 	$config[$c['configName']] = $c['configValue'];
+}
+
+// Code to get tap config values
+$tapsconfig = array();
+$sql = "SELECT * FROM tapconfig";
+$qry = mysql_query($sql);
+while($c = mysql_fetch_array($qry)){
+	$tapsconfig[$c['tapNumber']] = $c;
 }
 
 ?>
@@ -82,7 +93,7 @@ include 'header.php';
 		<ul>	
 			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
 			<li><strong>Location:</strong></li>
-			<li class="current">Tap List</li>            
+			<li class="current">Tap Config</li>            
 		</ul>
 	</div>
 	<!-- Top Breadcrumb End --> 
@@ -97,26 +108,8 @@ include 'header.php';
 		</form>
 	</p>
 	<!-- End Tap Number Form -->
-<br />
-	<!-- Start On Tap Section -->
-	
+<br />	
 	<?php 
-		$tapsErrorMsg = "";
-		$beers = $beerManager->GetAll();
-		$kegs = $kegManager->GetAll();
-		
-		if( count($beers) == 0 ){
-			$tapsErrorMsg .= "At least 1 beer needs to be created, before you can assign a tap. <a href='beer_form.php'>Click here to create a beer</a><br/>";
-		}
-		
-		if( count($kegs) == 0 ){
-			$tapsErrorMsg .= "At least 1 keg needs to be created, before you can assign a tap. <a href='keg_form.php'>Click here to create a keg</a><br/>";
-		}					
-		
-		if( strlen($tapsErrorMsg) > 0 ){ 
-			echo $htmlHelper->CreateMessage('warning', $tapsErrorMsg);	
-			
-		}else{
 	?>	
 	
 			<form method="POST">
@@ -126,99 +119,47 @@ include 'header.php';
 					<thead>
 						<tr>
 							<th>Tap #</th>
-							<th>Beer Name</th>
-							<th>SRM</th>
-							<th>IBU</th>
-							<th>OG</th>
-							<th>FG</th>
-							<th>Keg</th>
-							<th>PIN</th>
-							<!-- <th>Start Amount</th> -->
-							<!-- <th>Current Amount</th> -->
-							<th colspan="4"></th>
+							<?php if($config[ConfigNames::UseFlowMeter]) { ?>
+							<th>Flow Pin</th>
+							<?php } ?>
+							<?php if($config[ConfigNames::UseTapValves]) { ?>
+							<th>Valve Pin</th>
+							<th>Enabled</th>
+							<?php } ?>
+							<th colspan="3"></th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php for($c = 1; $c <= $numberOfTaps; $c++ ){ ?>
 							<form method="POST">
-								<?php if( array_key_exists($c, $activeTaps) ){
-										$tap = $activeTaps[$c];							
-										$beer = $beerManager->GetById($tap->get_beerId());
-										$keg = $kegManager->GetById($tap->get_kegId());
+								<?php if( array_key_exists($c, $tapsconfig) ){
+										$tapconfig = $tapsconfig[$c];							
+
 								?>
-										<input type="hidden" name="id" value="<?php echo $tap->get_id()?>" />
 										<input type="hidden" name="tapNumber" value="<?php echo $c?>" />
 										<tr>
 											<td>
 												<?php echo $c ?>
 											</td>
 											
-											<td>							
-												<?php echo $beer->get_name() ?>
-											</td>
-											
+											<?php if($config[ConfigNames::UseFlowMeter]) { ?>
 											<td>
-												<?php echo $tap->get_srm() ?>
+												<input type="text" id="flowpin" class="mediumbox" name="flowpin" value="<?php echo $tapconfig["flowPin"]; ?>" />
 											</td>
+											<?php } ?>
 											
-											<td>							
-												<?php echo $tap->get_ibu() ?>
-											</td>
-											
-											<td>							
-												<?php echo $tap->get_og() ?>
-											</td>
-											
-											<td>
-												<?php echo $tap->get_fg() ?>
-											</td>
-																		
-											<td>
-												<?php echo $keg->get_label() ?>
-											</td>
-											
-											<td>
-												<?php echo $tap->get_pinId() ?>
-											</td>
-											<!--
-											<td>
-												<?php echo $tap->get_startAmount() ?>
-											</td>
-											-->
-											
-											<!--
-											<td>
-												<?php echo $tap->get_currentAmount() ?>
-											</td>
-											-->
 											<?php if($config[ConfigNames::UseTapValves]) { 
-												$kegOn = "";
-												$kegOnSay = "";
-												if ( $tap->get_valveOn() < 1 ) {
-													$kegOn = "enableTap";
-													$kegOnSay = "Let it flow";
-												} else {
-													$kegOn = "disableTap";
-													$kegOnSay = "Stop this";
-												}
 												?>
 											<td>
-												<input name="<?php echo $kegOn?>" type="submit" class="btn" value="<?php echo $kegOnSay?>" />
+												<input type="text" id="valvepin" class="mediumbox" name="valvepin" value="<?php echo $tapconfig["valvePin"]; ?>" />
+											</td>
+											<td>							
+												<?php echo $tapconfig["valveOn"];  ?>
 											</td>
 											<?php } ?>
 											<td>
-												<input name="editTap" type="submit" class="btn" value="Update Tap Info" />
-												
+												<input name="saveTapConfig" type="submit" class="btn" value="Save Tap Config" />												
 											</td>
-											
-											<td>
-												<input name="newTap" type="submit" class="btn" value="New Keg" />
-											</td>
-											
-											<td>
-												<input name="closeTap" type="submit" class="btn" value="Kick Keg" />
-											</td>
-											
 										</tr>
 								<?php } else { ?>
 										<input type="hidden" name="tapNumber" value="<?php echo $c?>" />
@@ -226,9 +167,24 @@ include 'header.php';
 											<td>
 												<?php echo $c ?>
 											</td>
+											<?php if($config[ConfigNames::UseFlowMeter]) { ?>
+											<td>
+												<input type="text" id="flowpin" class="mediumbox" name="flowpin" value="0" />
+											</td>
+											<?php } ?>
+											
+											<?php if($config[ConfigNames::UseTapValves]) { 
+												?>
+											<td>
+												<input type="text" id="valvepin" class="mediumbox" name="valvepin" value="0" />
+											</td>
+											<td>							
+												0
+											</td>
+											<?php } ?>
 											
 											<td colspan="99">
-												<input name="newTap" type="submit" class="btn" value="Tap a Keg" />
+												<input name="saveTapConfig" type="submit" class="btn" value="Save Tap Config" />												
 											</td>
 										</tr>								
 								<?php } ?>	
@@ -241,35 +197,43 @@ include 'header.php';
 					&nbsp &nbsp 
 				</div>
 			
-			</form>
-		<?php } ?>
+			</form><br />
+	<?php if($config[ConfigNames::UseFanControl]) { ?>
+	<p>
+	<form method="POST">
+	<table width="300" border="0" cellspacing="0" cellpadding="0">
+	<thead><tr><th colspan="99"><b>Fan Setup:</b></th></tr></thead>
+	<tbody>
+	<tr>
+	<td><b>Fan Pin (GPIO):</b> </td> <td><input type="text" name="useFanPin" class="smallbox" value="<?php echo $config[ConfigNames::UseFanPin] ?>" /></td>
+	</tr>
+		<tr>
+	<td><b>Fan Interval (mins):</b> </td> <td><input type="text" name="fanInterval" class="smallbox" value="<?php echo $config[ConfigNames::FanInterval] ?>" /></td>
+	</tr>
+		<tr>
+	<td><b>Fan Duration (mins):</b> </td><td> <input type="text" name="fanOnTime" class="smallbox" value="<?php echo $config[ConfigNames::FanOnTime] ?>" /></td>
+	</tr>
+	<tr>
+	<td><input type="submit" name="fanConfig" class="btn" value="Update Fan Config" /></td>
+	</tr></tbody></table>
+	</form>
+	<br />
+	Interval is the interval with which the fan will be triggered (every x minutes, turn the fan on). <br/>
+	Duration is the time the fan will run after it has been triggered.<br>
+	If Duration is bigger that Interval, the fan always runs, if Duration is zero or less, the fan never runs.
+	</p>
+	<?php } ?>
 	</div>
-	<!-- End On Tap Section -->
-
 	<!-- Start Footer -->   
 <?php
 include 'footer.php';
 ?>
-
-	<!-- End Footer -->
-		
 	</div>
-	<!-- Right Side/Main Content End -->
-	<!-- Start Left Bar Menu -->   
 <?php
 include 'left_bar.php';
 ?>
-	<!-- End Left Bar Menu -->  
-	<!-- Start Js  -->
 <?php
 include 'scripts.php';
 ?>
-	<!-- End Js -->
-	<!--[if IE 6]>
-	<script type='text/javascript' src='scripts/png_fix.js'></script>
-	<script type='text/javascript'>
-	DD_belatedPNG.fix('img, .notifycount, .selected');
-	</script>
-	<![endif]--> 
 </body>
 </html>
