@@ -1,12 +1,20 @@
 import threading
 import time
 import sys
+import os
 import struct
 import socket
 import RPi.GPIO as GPIO
 import MySQLdb as mdb
 from FlowMonitor import FlowMonitor
+from threading import Timer
 import SocketServer
+import pprint
+from sys import stdin
+from mod_pywebsocket.standalone import WebSocketServer
+from mod_pywebsocket.standalone import _parse_args_and_config
+from mod_pywebsocket.standalone import _configure_logging
+
 
 # change as necessary if installed elsewhere
 PINTS_DIR               = "/var/www"
@@ -20,6 +28,16 @@ ADMIN_INCLUDES_DIR      = ADMIN_DIR + "/includes"
 MCAST_GRP = '224.1.1.1'
 MCAST_PORT = 0xBEE2
 
+OPTION_RESTART_FANTIMER_AFTER_POUR = False
+OPTION_DEBUG = True
+
+def debug(msg):
+    if(OPTION_DEBUG):
+        print "RPINTS: " + msg
+        
+def log(msg):
+    print "RPINTS: " + msg
+    
 class CommandTCPHandler(SocketServer.StreamRequestHandler):
 
     def handle(self):
@@ -35,20 +53,19 @@ class CommandTCPHandler(SocketServer.StreamRequestHandler):
         
         reading = self.data.split(":")
         if ( len(reading) < 2 ):
-            print "Unknown message: "+ self.data
+            log( "Unknown message: "+ self.data)
             self.wfile.write("RPNAK\n")
             return
-        
-        if ( reading[0] == "RPV" ):
-            valvecommand = reading[1].split("=")
-            if ( len(valvecommand) < 2 ):
-                print "Unknown valvecommand: "+ self.data
-                self.wfile.write("RPNAK\n")
-                return
-            
-            pin = int(valvecommand[0])
-            value = int(valvecommand[1])
-            self.server.pintdispatch.updatepin(pin, value)
+        if(reading[0] == "RPC"): # reconfigure
+            debug("reconfigure trigger: " + reading[1])
+            if ( reading[1] == "valve" ):
+                debug("updating valve status from db")
+                self.server.pintdispatch.updateValvePins()
+            if ( reading[1] == "fan" ):
+                debug("updating fan status from db")
+                self.server.pintdispatch.resetFanConfig()
+            if ( reading[1] == "flow" ):
+                pass #TODO: reconfig/restart flow settings
         
         self.wfile.write("RPACK\n")
 
@@ -66,6 +83,7 @@ class PintDispatch(object):
         GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
 
         self.flowmonitor = FlowMonitor(self)
+        self.fanTimer = None
         #multicast socket
         self.mcast = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.mcast.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_LOOP, 1)
@@ -112,26 +130,151 @@ class PintDispatch(object):
         rows = cursor.fetchall()
         con.close()
         return rows
+    
+    def getFanConfig(self):
+        pin = self.getFanPin()
+        if (pin < 0):
+            return
+        fanOnTimeItem = self.getConfigItem("fanOnTime")
+        if(fanOnTimeItem is None):
+            return None
+        fanIntervalItem = self.getConfigItem("fanInterval")
+        if(fanIntervalItem is None):
+            return None
+        interval = int(fanIntervalItem["configValue"])
+        onTime = int(fanOnTimeItem["configValue"])
+        return pin, interval, onTime
+    
+    def fanStart(self):
+        pin = self.getFanPin()
+        if pin < 1:
+            return
+        if self.updatepin(pin, 1):
+            self.sendfanupdate(pin, 1)
+        
+    def fanStartTimer(self):
+        debug( "starting fan timer" )
+        
+        fanConfig = self.getFanConfig()
+        if fanConfig is None:
+            debug( "starting fan timer - no config?" )
+            return
+        
+        if self.fanTimer is not None:
+            debug( "starting fan timer - canceling running timer" )
+            self.fanTimer.cancel()
+        
+        #all times are in minutes
+        time = fanConfig[2]
+        #don't turn on if no time set (set to 0 or less)
+        if (time < 1):
+            return
+        pin = fanConfig[0]
+        self.fanTimer = Timer(time * 60, self.fanStopTimer)
+        self.fanTimer.daemon=True
+        self.fanTimer.start()
+        debug( "starting fan timer - updating pin" )
+        self.fanStart()
+        
+    def fanStop(self):
+        pin = self.getFanPin()
+        if pin < 1:
+            return
+        if self.updatepin(pin, 0):
+            self.sendfanupdate(pin, 0)
+                
+    def fanStopTimer(self):
+        debug( "stopping fan timer" )
+        fanConfig = self.getFanConfig()
+        if fanConfig is None:
+            debug( "stopping fan timer - no config?" )
+            return
+        
+        #all times are in minutes
+        pin = fanConfig[0]
+        interval = fanConfig[1]
+        time = fanConfig[2]
+        
+        # don't turn off 
+        if(interval <= time):
+            debug( "stopping fan timer - interval less than time, exiting" )
+            return
+        
+        if self.fanTimer is not None:
+            debug( "stopping fan timer - ccanceling running timer" )
+            self.fanTimer.cancel()
+        self.fanTimer = Timer((interval - time) * 60, self.fanStartTimer)
+        self.fanTimer.daemon=True
+        self.fanTimer.start()
+        debug( "stopping fan timer - updating pin" )
+        self.fanStop()
+    
+    def resetFanConfig(self):
+        self.fanStartTimer()
             
     # send a mcast flow update
     def sendflowupdate(self, pin, count):
+        if OPTION_RESTART_FANTIMER_AFTER_POUR:
+            debug( "restarting fan timer after pour" )
+            self.fanStartTimer()
         self.mcast.sendto("RPU:FLOW:%s=%s\n" % (pin, count), (MCAST_GRP, MCAST_PORT))
         
     # send a mcast valve/pin update
     def sendvalveupdate(self, pin, value):
         self.mcast.sendto("RPU:VALVE:%s=%s\n" % (pin, value), (MCAST_GRP, MCAST_PORT))
         
+    # send a mcast valve/pin update
+    def sendfanupdate(self, pin, value):
+        self.mcast.sendto("RPU:FAN:%s=%s\n" % (pin, value), (MCAST_GRP, MCAST_PORT))
+        
     # start running the flow monitor in it's own thread
-    def spawn_monitor(self):
-        self.flowmonitor.fakemonitor()
+    def spawn_flowmonitor(self):
+        while True:
+            self.flowmonitor.fakemonitor()
+            log("flowmonitor aborted, restarting in 5 seconds...")
+            time.sleep(5)
+
+    def spawnWebSocketServer(self):
+        args = ["-p", "8081", "-d", "/var/www/python/ws"]
+        options, args = _parse_args_and_config(args=args)
+        options.cgi_directories = []
+        options.is_executable_method = None
+        os.chdir(options.document_root)
+        _configure_logging(options)        
+        server = WebSocketServer(options)
+        server.serve_forever()
 
     # main start method
     def start(self):
-        t = threading.Thread(target=self.spawn_monitor)
-        t.setDaemon(True)
-        t.start()
-        print("RPINTS: flow monitor thread started, starting command server\n")
-        self.commandserver.serve_forever()
+
+        if self.useOption("useFlowMeter") | self.useOption("useFanControl") | self.useOption("useTapValves") :
+            log("starting WS server")
+            t = threading.Thread(target=self.spawnWebSocketServer)
+            t.setDaemon(True)
+            t.start()
+
+        if self.useOption("useFlowMeter"):
+            log("starting tap flow meters...")
+            t = threading.Thread(target=self.spawn_flowmonitor)
+            t.setDaemon(True)
+            t.start()
+        else:
+            log("tap flow meters not enabled")
+            
+        if self.useOption("useFanControl"):
+            log("starting kegerator fan control...")
+            self.fanStartTimer()
+        else:
+            log("kegerator fan control not enabled")
+
+        if self.useOption("useTapValves"):
+            log("starting tap valve control")
+            t = threading.Thread(target=self.commandserver.serve_forever)
+            t.setDaemon(True)
+            t.start()
+        else:
+            log("tap valve control not enabled")
+        stdin.readline()
 
     # update PI gpio pin (either turn on or off), this requires that this is run as root 
     def updatepin(self, pin, value):
@@ -139,14 +282,15 @@ class PintDispatch(object):
         GPIO.setup(int(pin), GPIO.OUT)
         oldValue = GPIO.input(pin)
         if(oldValue != value):
-            print "update pin %s from %s to %s" %(pin, oldValue, value)
+            debug( "update pin %s from %s to %s" %(pin, oldValue, value))
             if int(value) == 0 :
                 GPIO.output(int(pin), GPIO.LOW)
             else:
                 GPIO.output(int(pin), GPIO.HIGH)
-            self.sendvalveupdate(pin, value)
+            return True
+        return False
 
-    def updatePins(self):
+    def updateValvePins(self):
         taps = self.getTapConfig()
         for tap in taps:
             if(tap["valveOn"] is None):
@@ -154,7 +298,8 @@ class PintDispatch(object):
                 
             pin = int(tap["valvePin"])
             pinNewValue = int(tap["valveOn"])
-            self.updatepin(pin, pinNewValue)
+            if self.updatepin(pin, pinNewValue):
+                self.sendvalveupdate(pin, pinNewValue)
     
     def getConfigItem(self, itemName):
         config = self.getConfig()
@@ -175,11 +320,11 @@ class PintDispatch(object):
     def getFanPin(self):
         if self.useOption("useFanControl"):
             fanItem = self.getConfigItem("useFanPin")
-            return int(fanItem["configValue"])
+            if fanItem is not None:
+                return int(fanItem["configValue"])
         return -1
 
         
 dispatch = PintDispatch()
-pd = dispatch.getFanPin()
-print pd
-#dispatch.start()
+dispatch.start()
+log( "Exiting...")
