@@ -1,6 +1,6 @@
 var socket = null;
 var scheme = window.location.protocol == 'https:' ? 'wss://' : 'ws://';
-var defaultAddress = scheme + window.location.host + '/rpupdate';
+var defaultAddress = scheme + window.location.host + ':8081/rpupdate';
 
 var showTimeStamp = false;
 var thelog = [];
@@ -30,7 +30,7 @@ function send(msg) {
 
 function wsconnect() {
 	var url = defaultAddress;
-	window.onunload = wsclose;
+	window.onbeforeunload = wsclose;
 	
 	socket = new WebSocket(url);
 

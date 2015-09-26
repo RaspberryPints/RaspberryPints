@@ -75,8 +75,9 @@
 		<script type="text/javascript" src="admin/scripts/ws.js"></script>	
 		</head> 
 
-	<body onload="wsconnect()">
-		<div class="bodywrapper">
+<body onload="wsconnect()">
+<!--	<body> -->
+	<div class="bodywrapper">
 			<!-- Header with Brewery Logo and Project Name -->
 			<div class="header clearfix">
 				<div class="HeaderLeft">

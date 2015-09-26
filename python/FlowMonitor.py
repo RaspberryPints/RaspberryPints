@@ -22,17 +22,17 @@ class FlowMonitor(object):
     
     def fakemonitor(self):
         running = True
-        print "RPINTS: Listening to arduino\n"
+        print "RPINTS: Listening to arduino"
         
         try:
             while running:  
-                time.sleep(9)  
+                time.sleep(30)  
                 msg = "P;0;9;450"
                 if not msg:
                     continue
                 reading = msg.split(";")
                 if ( len(reading) < 2 ):
-                    print "Unknown message: "+msg
+                    print "RPINTS: Arduino - Unknown message (length too short): "+ msg
                     continue
                 if ( reading[0] == "P" ):
                     MCP_ADDR = int(reading[1])
@@ -44,14 +44,14 @@ class FlowMonitor(object):
                     MCP_ADDR = int(reading[1])
                     MCP_PIN = int(reading[2])
                 else:
-                    print "Unknown message: "+msg
+                    print "RPINTS: Unknown message: "+ msg
         finally:
             print "Closing serial connection to arduino..."
             print "Exiting"
         
     def monitor(self):
         running = True
-        print "RPINTS: Listening to arduino\n"
+        print "RPINTS: Listening to arduino"
         
         try:
             while running:    
@@ -60,7 +60,7 @@ class FlowMonitor(object):
                     continue
                 reading = msg.split(";")
                 if ( len(reading) < 2 ):
-                    print "Unknown message: "+msg
+                    print "RPINTS: Arduino - Unknown message (length too short): "+ msg
                     continue
                 if ( reading[0] == "P" ):
                     MCP_ADDR = int(reading[1])
@@ -108,8 +108,7 @@ class FlowMonitor(object):
                     #cur.execute("INSERT INTO pourData(count,pin,reading) values (%s,%s,%s)", (0,MCP_PIN,reading[0]))
                     #con.commit()
                 else:
-                    print "Unknown message: "+msg
+                    print "RPINTS: Unknown message: "+ msg
         finally:
-            print "Closing serial connection to arduino..."
+            print "RPints: Closing serial connection to arduino..."
             self.arduino.close()
-            print "Exiting"
