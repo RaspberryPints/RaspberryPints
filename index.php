@@ -63,19 +63,28 @@
 	<head>
 		<title>RaspberryPints</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
 		<!-- Set location of Cascading Style Sheet -->
 		<link rel="stylesheet" type="text/css" href="style.css">
 		
 		<?php if($config[ConfigNames::UseHighResolution]) { ?>
 			<link rel="stylesheet" type="text/css" href="high-res.css">
 		<?php } ?>
+			
+		<?php	
+		if(! empty($_SERVER['HTTP_USER_AGENT'])){
+    		$useragent = $_SERVER['HTTP_USER_AGENT'];
+    		if( preg_match('@(Android)@', $useragent) ){ ?>
+			<link rel="stylesheet" type="text/css" href="style-aftv.css">
+    	<?php	    
+    		}
+		} ?>
 		
 		<link rel="shortcut icon" href="img/pint.ico">
+<!-- <meta name="viewport" content="initial-scale=0.7,width=device-width,height=device-height,target-densitydpi=device-dpi,user-scalable=yes" />  -->		
 		<script type="text/javascript" src="admin/scripts/ws.js"></script>	
 		</head> 
 
-<body onload="wsconnect()">
+<body onload="wsconnect(); ">
 <!--	<body> -->
 	<div class="bodywrapper">
 			<!-- Header with Brewery Logo and Project Name -->
@@ -84,7 +93,7 @@
 					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
 						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="200" alt=""></a>
 					<?php } else { ?>
-						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="100" alt=""></a>
+						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="30" alt=""></a>
 					<?php } ?>
 				</div>
 				<div class="HeaderCenter">
@@ -102,7 +111,7 @@
 					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
 						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints-4k.png" height="200" alt=""></a>
 					<?php } else { ?>
-						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints.png" height="100" alt=""></a>
+						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints.png" height="30" alt=""></a>
 					<?php } ?>
 				</div>
 			</div>
@@ -311,7 +320,7 @@
 										?>
 										<div class="keg-container">
 											<div class="keg-indicator">
-												<div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%"></div>
+												<div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%; width: 100%" ></div>
 												<?php if($config[ConfigNames::UseTapValves]){ ?>
 													<div class="<?php echo $kegOn ?>"></div>
 												<?php } ?>
