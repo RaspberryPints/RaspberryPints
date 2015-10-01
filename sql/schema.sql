@@ -318,6 +318,28 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 
+--
+-- Table structure for table `tapconfig`
+--
+
+CREATE TABLE IF NOT EXISTS `tapconfig` (
+  `tapNumber` int(11) DEFAULT NULL,
+  `flowPin` int(11) DEFAULT NULL,
+  `valvePin` int(11) DEFAULT NULL,
+  `valveOn` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Dumping data for table `tapconfig`
+--
+-- INSERT INTO `tapconfig` (`tapNumber`, `flowPin`, `valvePin`, `valveOn`) VALUES
+-- (2, 10, 22, 0),
+-- (1, 9, 18, 0),
+-- (3, 5, 23, 0),
+-- (4, 6, 24, 0),
+-- (5, 7, 25, 0);
 -- --------------------------------------------------------
 
 --

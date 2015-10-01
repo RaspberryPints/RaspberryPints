@@ -1,5 +1,8 @@
+#!/usr/bin/python
+
 import threading
 import time
+import signal
 import sys
 import os
 import struct
@@ -274,7 +277,9 @@ class PintDispatch(object):
             t.start()
         else:
             log("tap valve control not enabled")
-        stdin.readline()
+
+        signal.pause()
+#        stdin.readline()
 
     # update PI gpio pin (either turn on or off), this requires that this is run as root 
     def updatepin(self, pin, value):
