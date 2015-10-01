@@ -27,7 +27,9 @@ if( isset($_POST['updateNumberOfTaps'])) {
 	$tapNumber=$_POST['tapNumber'];
 	$flowpin=$_POST['flowpin'];
 	$valvepin=$_POST['valvepin'];
-	$tapManager->saveTapConfig($tapNumber, $flowpin, $valvepin);
+	$valveon=$_POST['valveon'];
+	$tapManager->saveTapConfig($tapNumber, $flowpin, $valvepin, $valveon);
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=valve');
 	
 }else if( isset($_POST['fanConfig'])){
 	$useFanPin=$_POST['useFanPin'];
@@ -120,11 +122,11 @@ include 'header.php';
 						<tr>
 							<th>Tap #</th>
 							<?php if($config[ConfigNames::UseFlowMeter]) { ?>
-							<th>Flow Pin</th>
+							<th>Flow Pin (Alamode)</th>
 							<?php } ?>
 							<?php if($config[ConfigNames::UseTapValves]) { ?>
-							<th>Valve Pin</th>
-							<th>Enabled</th>
+							<th>Valve Pin (GPIO)</th>
+							<th>Valve</th>
 							<?php } ?>
 							<th colspan="3"></th>
 						</tr>
@@ -153,10 +155,14 @@ include 'header.php';
 											<td>
 												<input type="text" id="valvepin" class="mediumbox" name="valvepin" value="<?php echo $tapconfig["valvePin"]; ?>" />
 											</td>
-											<td>							
-												<?php echo $tapconfig["valveOn"];  ?>
+											<td>	
+																	
+											<?php echo 'On<input type="radio" ' . ($tapconfig["valveOn"]?'checked':'') . ' name="valveon" value="1">' .
+					'									Off<input type="radio" ' . (!$tapconfig["valveOn"]?'checked':'') . ' name="valveon" value="0"><br>';
+											?>
 											</td>
 											<?php } ?>
+											
 											<td>
 												<input name="saveTapConfig" type="submit" class="btn" value="Save Tap Config" />												
 											</td>
@@ -179,7 +185,7 @@ include 'header.php';
 												<input type="text" id="valvepin" class="mediumbox" name="valvepin" value="0" />
 											</td>
 											<td>							
-												0
+												Off
 											</td>
 											<?php } ?>
 											
