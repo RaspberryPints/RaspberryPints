@@ -1,0 +1,27 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="55.000000pt" height="100.000000pt" viewBox="0 0 55.000000 100.000000"
+ preserveAspectRatio="xMidYMid meet">
+<metadata>
+Created by potrace 1.12, written by Peter Selinger 2001-2015
+</metadata>
+<defs>
+    <mask id="maskid" maskUnits="objectBoundingBox">
+		<g transform="translate(0.000000,39.000000) scale(0.06000000,-0.0400000)" fill="#FFFFFF" stroke="none">
+			<path d="M42 983 c-36 -5 -34 6 -16 -110 3 -20 0 -65 -7 -99 -11 -54 -10 -71
+			4 -121 11 -36 24 -165 37 -342 11 -156 23 -287 26 -290 7 -8 371 -8 378 0 3 3
+			15 133 26 290 12 170 27 307 37 341 13 48 14 66 3 121 -9 48 -9 82 -1 133 6
+			37 8 70 5 74 -7 6 -446 10 -492 3z" style="stroke: none; fill: #FFFFFF;" />
+		</g>
+    </mask>
+</defs>
+<g transform="translate(0.000000,100.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path d="M42 983 c-36 -5 -34 6 -16 -110 3 -20 0 -65 -7 -99 -11 -54 -10 -71
+4 -121 11 -36 24 -165 37 -342 11 -156 23 -287 26 -290 7 -8 371 -8 378 0 3 3
+15 133 26 290 12 170 27 307 37 341 13 48 14 66 3 121 -9 48 -9 82 -1 133 6
+37 8 70 5 74 -7 6 -446 10 -492 3z" style="stroke: none; fill: #000000; mask: url(#maskid)" />
+</g>
+</svg>
