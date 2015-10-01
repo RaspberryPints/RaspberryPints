@@ -58,7 +58,7 @@ class TapManager{
 		$sql="UPDATE config SET configValue = $newTapNumber, modifiedDate = NOW() WHERE configName = '".ConfigNames::NumberOfTaps."'";
 		mysql_query($sql);
 
-		$sql="UPDATE kegs SET kegStatusCode = 'SANITIZED', modifiedDate = NOW() WHERE id IN (SELECT kegId FROM Taps WHERE tapNumber > $newTapNumber AND active = 1) ";
+		$sql="UPDATE kegs SET kegStatusCode = 'CLEAN', modifiedDate = NOW() WHERE id IN (SELECT kegId FROM taps WHERE tapNumber > $newTapNumber AND active = 1) ";
 		mysql_query($sql);
 		
 		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE active = 1 AND tapNumber > $newTapNumber";
