@@ -24,7 +24,8 @@ $kegManager = new KegManager();
 
 if( isset($_POST['updateNumberOfTaps'])) {
 	$tapManager->updateTapNumber($_POST['numberOfTaps']);
-
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=valve');
+	
 }else if( isset($_POST['newTap'])){
 	$tapNumber=$_POST['tapNumber'];
 	redirect("tap_form.php?tapNumber=$tapNumber");
@@ -36,7 +37,8 @@ if( isset($_POST['updateNumberOfTaps'])) {
 
 }else if( isset($_POST['closeTap'])){
 	$tapManager->closeTap($_POST['id']);	
-
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=valve');
+	
 }else if( isset($_POST['enableTap'])){
 	$tapManager->enableTap($_POST['tapNumber']);
 	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=valve');

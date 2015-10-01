@@ -230,7 +230,7 @@ class PintDispatch(object):
     # start running the flow monitor in it's own thread
     def spawn_flowmonitor(self):
         while True:
-            self.flowmonitor.fakemonitor()
+            self.flowmonitor.monitor()
             log("flowmonitor aborted, restarting in 5 seconds...")
             time.sleep(5)
 

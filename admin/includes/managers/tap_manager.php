@@ -37,6 +37,10 @@ class TapManager{
 		//echo $sql; exit();
 		
 		mysql_query($sql);
+
+		$sql="UPDATE tapconfig SET valveOn = 1 WHERE tapNumber = " . $tap->get_tapNumber();
+		mysql_query($sql);
+		
 	}
 	
 	function GetById($id){
@@ -92,11 +96,18 @@ class TapManager{
 	}
 	
 	function closeTap($id){
+		$tap = $this->GetById($id);
+		
 		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE id = $id";
 		mysql_query($sql);
 		
 		$sql="UPDATE kegs k, taps t SET k.kegStatusCode = 'NEEDS_CLEANING' WHERE t.kegId = k.id AND t.Id = $id";
 		mysql_query($sql);
+
+		if($tap) {
+			$sql="UPDATE tapconfig SET valveOn = 0 WHERE tapNumber = " . $tap->get_tapNumber();
+			mysql_query($sql);
+		}
 	}
 	
 	function enableTap($tapNumber){
