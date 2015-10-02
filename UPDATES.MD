@@ -3,6 +3,7 @@ Updates in this fork
 Bug fixes:
 
 * fixed incorrect display of SRM mask in Firefox based browsers
+* fixed invalid keg state when a keg is kicked
 * RPints now updates keg pours (and other stuff) to remote browser displays
 * the tap form no longer requires input of associated alamode pin (see below)
 
