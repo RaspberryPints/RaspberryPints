@@ -14,7 +14,8 @@ New features:
 * added ability to use FireFox on Amazon FireTV as a tap list display
 
 Requirements:
-* requires PyWebsockets: please read https://github.com/google/pywebsocket/wiki and follow the instructions for a standalone server
+* requires PyWebsockets: please read and follow https://github.com/google/pywebsocket/wiki and follow the instructions for a standalone server
+* requires mod_python for apache2, please read and follow https://www.howtoforge.com/embedding-python-in-apache2-with-mod_python-debian-etch
 
 Issues:
 * The RPINTS install has been modified, but has not been tested.
