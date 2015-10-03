@@ -24,7 +24,7 @@ $kegManager = new KegManager();
 
 if( isset($_POST['updateNumberOfTaps'])) {
 	$tapManager->updateTapNumber($_POST['numberOfTaps']);
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=valve');
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
 	
 }else if( isset($_POST['newTap'])){
 	$tapNumber=$_POST['tapNumber'];
@@ -37,15 +37,15 @@ if( isset($_POST['updateNumberOfTaps'])) {
 
 }else if( isset($_POST['closeTap'])){
 	$tapManager->closeTap($_POST['id']);	
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=valve');
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
 	
 }else if( isset($_POST['enableTap'])){
 	$tapManager->enableTap($_POST['tapNumber']);
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=valve');
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
 
 }else if( isset($_POST['disableTap'])){
 	$tapManager->disableTap($_POST['tapNumber']);
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=valve');
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
 }
 
 $numberOfTaps = $tapManager->getTapNumber();

@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$tap->setFromArray($_POST);
 		$tapManager->Save($tap);
 	}
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=valve');
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
 	redirect('tap_list.php');
 }
 

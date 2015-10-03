@@ -29,7 +29,7 @@ if( isset($_POST['updateNumberOfTaps'])) {
 	$valvepin=$_POST['valvepin'];
 	$valveon=$_POST['valveon'];
 	$tapManager->saveTapConfig($tapNumber, $flowpin, $valvepin, $valveon);
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=valve');
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
 	
 }else if( isset($_POST['fanConfig'])){
 	$useFanPin=$_POST['useFanPin'];
@@ -41,15 +41,15 @@ if( isset($_POST['updateNumberOfTaps'])) {
 	mysql_query($sql);
 	$sql = "UPDATE config SET configValue = " . $fanOnTime ." WHERE configName = \"fanOnTime\"";
 	mysql_query($sql);
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=fan');
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=fan');
 	
 }else if( isset($_POST['enableTap'])){
 	$tapManager->enableTap($_POST['tapNumber']);
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=valve');
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
 
 }else if( isset($_POST['disableTap'])){
 	$tapManager->disableTap($_POST['tapNumber']);
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/python/trigger.py?value=valve');
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
 }
 
 $numberOfTaps = $tapManager->getTapNumber();

@@ -15,7 +15,7 @@ New features:
 
 Requirements:
 * requires PyWebsockets: please read and follow https://github.com/google/pywebsocket/wiki and follow the instructions for a standalone server
-* requires mod_python for apache2, please read and follow https://www.howtoforge.com/embedding-python-in-apache2-with-mod_python-debian-etch
 
 Issues:
-* The RPINTS install has been modified, but has not been tested.
+* flowmon daemon needs restarting by hand (sudo service flowmon restart) after changing hardware config (turning flow monitoring, tap valves on/off etc. in "personalize" screen) 
+* The RPINTS install has been modified, but has not been tested
