@@ -1,4 +1,9 @@
 <?php
+	session_start();
+	if(!isset( $_SESSION['myusername'] )){
+		header("location:index.php");
+	}
+	
 	$MCAST_PORT = 0xBEE2;
 	$HOST = "localhost";
 	$errno = 0;
