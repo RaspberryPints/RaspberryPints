@@ -18,8 +18,10 @@
 		$data = "RPC:valve\n";
 	} else if ($value == "fan") {
 		$data = "RPC:fan\n";
-	} else if ($value = "flow") {
+	} else if ($value == "flow") {
 		$data = "RPC:flow\n";
+	} else if ($value == "config") {
+		$data = "RPC:config\n";
 	} else {
 		echo $received;
 		exit();

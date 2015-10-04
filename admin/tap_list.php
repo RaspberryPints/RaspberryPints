@@ -36,8 +36,8 @@ if( isset($_POST['updateNumberOfTaps'])) {
 	redirect("tap_form.php?tapNumber=$tapNumber&id=$id");
 
 }else if( isset($_POST['closeTap'])){
-	$tapManager->closeTap($_POST['id']);	
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
+	$tapManager->closeTap($_POST['id']);
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=config');
 	
 }else if( isset($_POST['enableTap'])){
 	$tapManager->enableTap($_POST['tapNumber']);

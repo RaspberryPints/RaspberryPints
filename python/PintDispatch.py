@@ -67,6 +67,9 @@ class CommandTCPHandler(SocketServer.StreamRequestHandler):
             if ( reading[1] == "fan" ):
                 debug("updating fan status from db")
                 self.server.pintdispatch.resetFanConfig()
+            if ( reading[1] == "config" ):
+                debug("triggering config update refresh")
+                self.server.pintdispatch.sendconfigupdate()
             if ( reading[1] == "flow" ):
                 debug("updating flow meter config from db")
                 self.server.pintdispatch.updateFlowmeterConfig()
@@ -86,17 +89,17 @@ class PintDispatch(object):
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
 
-        self.flowmonitor = FlowMonitor(self)
-        self.fanTimer = None
-        self.updateFlowmeterConfig()
-        self.updateValvePins()
-        
         #multicast socket
         self.mcast = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.mcast.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_LOOP, 1)
 
         mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
         self.mcast.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+        
+        self.flowmonitor = FlowMonitor(self)
+        self.fanTimer = None
+        self.updateFlowmeterConfig()
+        self.updateValvePins()
         
         self.commandserver = CommandTCPServer(('localhost', MCAST_PORT), CommandTCPHandler)
         self.commandserver.pintdispatch = self
@@ -226,6 +229,12 @@ class PintDispatch(object):
                 debug( "too long a pour, shutting down tap with flow pin " + str(pin) + ", count: " + str(count) + ", shut off: " + str(self.pourShutOffCount) )
                 self.shutDownTap(pin)
         
+    # check if we're exceeding the pour threshold
+    def sendkickupdate(self, pin):
+        if self.useOption("useTapValves"):
+            debug( "keg kicked, shutting down tap with flow pin " + str(pin) )
+            self.kickTap(pin)
+            
     # send a mcast flow update
     def sendflowcount(self, pin, count):
         if OPTION_RESTART_FANTIMER_AFTER_POUR:
@@ -237,9 +246,13 @@ class PintDispatch(object):
     def sendvalveupdate(self, pin, value):
         self.mcast.sendto("RPU:VALVE:%s=%s\n" % (pin, value), (MCAST_GRP, MCAST_PORT))
         
-    # send a mcast valve/pin update
+    # send a mcast fan update
     def sendfanupdate(self, pin, value):
         self.mcast.sendto("RPU:FAN:%s=%s\n" % (pin, value), (MCAST_GRP, MCAST_PORT))
+        
+    # send a mcast fan update
+    def sendconfigupdate(self,):
+        self.mcast.sendto("RPU:CONFIG\n", (MCAST_GRP, MCAST_PORT))
         
     # start running the flow monitor in it's own thread
     def spawn_flowmonitor(self):
@@ -292,20 +305,36 @@ class PintDispatch(object):
         signal.pause()
 #        stdin.readline()
 
-    def shutDownTap(self, flowPin):
+    def kickTap(self, flowPin):
         
         taps = self.getTapConfig();
         for tap in taps:
             if(int(tap["flowPin"]) == int(flowPin)):
                 valvePin = int(tap["valvePin"])
                 self.updatepin(valvePin, 0) 
+
+                tapNumber = int(tap["tapNumber"])
                 
-                sql = "UPDATE tapconfig SET valveOn=0 WHERE tapNumber=" +  str(tap["tapNumber"])
-                # update db
+                
                 con = self.connectDB()
                 cursor = con.cursor(mdb.cursors.DictCursor)
+                
+                sql = "SELECT id from taps WHERE tapNumber=" +  str(tapNumber)
+                cursor.execute(sql)
+                id = int(cursor.fetchall()[0]["id"])
+
+                sql = "UPDATE tapconfig SET valveOn=0 WHERE tapNumber=" +  str(tapNumber)
                 result = cursor.execute(sql)
                 con.commit()
+                
+                sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE id=" + str(id)
+                result = cursor.execute(sql)
+                con.commit()
+                
+                sql="UPDATE kegs k, taps t SET k.kegStatusCode = 'NEEDS_CLEANING' WHERE t.kegId = k.id AND t.Id = " + str(id) 
+                result = cursor.execute(sql)
+                con.commit()
+                
                 con.close()
                 # update browsers
                 self.sendvalveupdate(valvePin, 0)
