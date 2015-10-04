@@ -1,12 +1,13 @@
 //This line is the number of flow sensors connected.
-const uint8_t numSensors = 4;
+const uint8_t numSensors = 5;
 //This line initializes an array with the pins connected to the flow sensors
-uint8_t pulsePin[] = {8,9,10,11};
+uint8_t pulsePin[] = {5,6,7,9,10};
 //number of milliseconds to wait after pour before sending message
 unsigned int pourMsgDelay = 300;
 
 unsigned int pulseCount[numSensors];
 unsigned int kickedCount[numSensors];
+unsigned int updateCount[numSensors];
 unsigned long nowTime;
 unsigned long lastPourTime = 0;
 unsigned long lastPinStateChangeTime[numSensors];
@@ -26,6 +27,7 @@ void setup() {
     pinMode(pulsePin[i], INPUT);
     digitalWrite(pulsePin[i], HIGH);
     kickedCount[i] = 0;
+    updateCount[i] = 0;
     lastPinState[i] = digitalRead(pulsePin[i]);
   }
 }
@@ -33,6 +35,7 @@ void setup() {
 void loop() {
   nowTime = millis();
   pollPins();
+  checkUpdate();
   if ( (nowTime - lastPourTime) > pourMsgDelay && lastPourTime > 0) {
     //only send pour messages after all taps have stopped pulsing for a short period
     //use lastPourTime=0 to ensure this code doesn't get run constantly
@@ -50,6 +53,7 @@ void pollPins() {
         //separate high speed pulses to detect kicked kegs
         if( nowTime - lastPinStateChangeTime[i] > 0 ){
           pulseCount[i] ++;
+          updateCount[i] ++;
         }
         else{
           kickedCount[i] ++;
@@ -65,11 +69,21 @@ void pollPins() {
 void checkPours() {
   for( int i = 0; i < numSensors; i++ ) {
     if ( pulseCount[i] > 0 ) {
-      if ( pulseCount[i] > 100 ) {
+      if ( pulseCount[i] > 10 ) {
       //filter out tiny bursts
         sendPulseCount(0, pulsePin[i], pulseCount[i]);
       }
       pulseCount[i] = 0;
+      updateCount[i] = 0;
+    }
+  }
+}
+
+void checkUpdate() {
+  for( int i = 0; i < numSensors; i++ ) {
+    if ( updateCount[i] > 200 ) {
+        sendUpdateCount(0, pulsePin[i], pulseCount[i]);
+        updateCount[i] = 0;
     }
   }
 }

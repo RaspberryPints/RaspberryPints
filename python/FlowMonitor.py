@@ -23,11 +23,15 @@ class FlowMonitor(object):
     def fakemonitor(self):
         running = True
         print "RPINTS: Listening to arduino"
+        updatecount = 0;
+        pin = 18;
         
         try:
             while running:  
-                time.sleep(30)  
-                msg = "P;0;9;450"
+                time.sleep(15)  
+                updatecount = updatecount + 500
+                msg = "U;0;%s;%s" % (pin, updatecount)
+                
                 if not msg:
                     continue
                 reading = msg.split(";")
@@ -39,7 +43,13 @@ class FlowMonitor(object):
                     MCP_PIN = str(reading[2])
                     POUR_COUNT = str(reading[3])
                     PULSES_PERL = 5600
+                    self.dispatch.sendflowcount(MCP_PIN, POUR_COUNT)
+                elif ( reading[0] == "U" ):
+                    MCP_ADDR = int(reading[1])
+                    MCP_PIN = str(reading[2])
+                    POUR_COUNT = str(reading[3])
                     self.dispatch.sendflowupdate(MCP_PIN, POUR_COUNT)
+                    updatecount = 0;
                 elif ( reading[0] == "K" ):
                     MCP_ADDR = int(reading[1])
                     MCP_PIN = int(reading[2])
@@ -91,9 +101,16 @@ class FlowMonitor(object):
                     #if taps:
                     #    cur.execute("INSERT INTO pours(tapId,amountPoured,batchId,pinAddress,pulseCount,pulsesPerLiter,liters) values (%s,%s,%s,%s,%s,%s,%s)",(taps[0][0],POUR_COUNT / 165,taps[0][1],MCP_PIN,POUR_COUNT,taps[0][2],round((POUR_COUNT/5.600)/1000,3)))
                     #    con.commit()
-                    self.dispatch.sendflowupdate(MCP_PIN, POUR_COUNT)
+                    self.dispatch.sendflowcount(MCP_PIN, POUR_COUNT)
                     #else:
                     #    print "Tap is not active"
+                    
+                elif ( reading[0] == "U" ):
+                    MCP_ADDR = int(reading[1])
+                    MCP_PIN = str(reading[2])
+                    POUR_COUNT = str(reading[3])
+                    self.dispatch.sendflowupdate(MCP_PIN, POUR_COUNT)
+                    
                 elif ( reading[0] == "K" ):
                     MCP_ADDR = int(reading[1])
                     MCP_PIN = int(reading[2])

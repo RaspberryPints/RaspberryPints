@@ -217,6 +217,13 @@ class PintDispatch(object):
             
     # send a mcast flow update
     def sendflowupdate(self, pin, count):
+        if(count > 1200):
+            if self.useOption("useTapValves"):
+                debug( "Too long a pour, shutting down pin %s" % pin)
+                self.shutDownTap(pin)
+        
+    # send a mcast flow update
+    def sendflowcount(self, pin, count):
         if OPTION_RESTART_FANTIMER_AFTER_POUR:
             debug( "restarting fan timer after pour" )
             self.fanStartTimer()
@@ -281,6 +288,25 @@ class PintDispatch(object):
         signal.pause()
 #        stdin.readline()
 
+    def shutDownTap(self, pin):
+        # shut down hardware first
+        self.updatepin(int(pin), 0) 
+        taps = self.getTapConfig();
+        
+        for tap in taps:
+            if(int(tap["valvePin"]) == int(pin)):
+                tapNumber = tap["tapNumber"]
+                sql = "UPDATE tapconfig SET valveOn=0 WHERE tapNumber=" +  str(tapNumber)
+                
+                # update db
+                con = self.connectDB()
+                cursor = con.cursor(mdb.cursors.DictCursor)
+                result = cursor.execute(sql)
+                con.commit()
+                con.close()
+        # update browsers
+        self.sendvalveupdate(int(pin), 0)
+    
     # update PI gpio pin (either turn on or off), this requires that this is run as root 
     def updatepin(self, pin, value):
 
