@@ -217,9 +217,10 @@ class PintDispatch(object):
             
     # send a mcast flow update
     def sendflowupdate(self, pin, count):
-        if(count > 1200):
+        if False:
+#        if(count > 1200):
             if self.useOption("useTapValves"):
-                debug( "Too long a pour, shutting down pin %s" % pin)
+                debug( "too long a pour, shutting down pin %s" % pin)
                 self.shutDownTap(pin)
         
     # send a mcast flow update
