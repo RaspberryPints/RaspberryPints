@@ -68,7 +68,8 @@ class CommandTCPHandler(SocketServer.StreamRequestHandler):
                 debug("updating fan status from db")
                 self.server.pintdispatch.resetFanConfig()
             if ( reading[1] == "flow" ):
-                pass #TODO: reconfig/restart flow settings
+                debug("updating flow meter config from db")
+                self.server.pintdispatch.updateFlowmeterConfig()
         
         self.wfile.write("RPACK\n")
 
@@ -87,6 +88,9 @@ class PintDispatch(object):
 
         self.flowmonitor = FlowMonitor(self)
         self.fanTimer = None
+        self.updateFlowmeterConfig()
+        self.updateValvePins()
+        
         #multicast socket
         self.mcast = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.mcast.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_LOOP, 1)
@@ -215,12 +219,11 @@ class PintDispatch(object):
     def resetFanConfig(self):
         self.fanStartTimer()
             
-    # send a mcast flow update
+    # check if we're exceeding the pour threshold
     def sendflowupdate(self, pin, count):
-        if False:
-#        if(count > 1200):
+        if( self.pourShutOffCount > 10 ) and ( int(count) > self.pourShutOffCount ):
             if self.useOption("useTapValves"):
-                debug( "too long a pour, shutting down pin %s" % pin)
+                debug( "too long a pour, shutting down tap with flow pin " + str(pin) + ", count: " + str(count) + ", shut off: " + str(self.pourShutOffCount) )
                 self.shutDownTap(pin)
         
     # send a mcast flow update
@@ -289,24 +292,23 @@ class PintDispatch(object):
         signal.pause()
 #        stdin.readline()
 
-    def shutDownTap(self, pin):
-        # shut down hardware first
-        self.updatepin(int(pin), 0) 
-        taps = self.getTapConfig();
+    def shutDownTap(self, flowPin):
         
+        taps = self.getTapConfig();
         for tap in taps:
-            if(int(tap["valvePin"]) == int(pin)):
-                tapNumber = tap["tapNumber"]
-                sql = "UPDATE tapconfig SET valveOn=0 WHERE tapNumber=" +  str(tapNumber)
+            if(int(tap["flowPin"]) == int(flowPin)):
+                valvePin = int(tap["valvePin"])
+                self.updatepin(valvePin, 0) 
                 
+                sql = "UPDATE tapconfig SET valveOn=0 WHERE tapNumber=" +  str(tap["tapNumber"])
                 # update db
                 con = self.connectDB()
                 cursor = con.cursor(mdb.cursors.DictCursor)
                 result = cursor.execute(sql)
                 con.commit()
                 con.close()
-        # update browsers
-        self.sendvalveupdate(int(pin), 0)
+                # update browsers
+                self.sendvalveupdate(valvePin, 0)
     
     # update PI gpio pin (either turn on or off), this requires that this is run as root 
     def updatepin(self, pin, value):
@@ -340,6 +342,20 @@ class PintDispatch(object):
                 return item
         return None
            
+    def updateFlowmeterConfig(self):
+        pourCountConversionItem = self.getConfigItem("pourCountConversion")
+        if(pourCountConversionItem is None):
+            self.pourCountConversion = 0;
+        else:
+            self.pourCountConversion = int(pourCountConversionItem["configValue"])
+            
+        pourShutOffCountItem = self.getConfigItem("pourShutOffCount")
+        if(pourShutOffCountItem is None):
+            self.pourShutOffCount = 0;
+        else:
+            self.pourShutOffCount = int(pourShutOffCountItem["configValue"])
+
+    
     def useOption(self, option):
         cfItem = self.getConfigItem(option)
         if cfItem is None:

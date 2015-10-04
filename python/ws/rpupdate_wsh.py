@@ -14,17 +14,20 @@ def web_socket_transfer_data(request):
     sock.bind((MCAST_GRP, MCAST_PORT))  # use MCAST_GRP instead of '' to listen only to MCAST_GRP, not all groups on MCAST_PORT
     sock.setblocking(0)
     
-    while True:
-        try: 
-            #keep apache socket alive by sending hello every 20 seconds
-            ready = select.select([sock], [], [], 20.0)
-            if ready[0]:
-                line = sock.recv(1024)
-            else:
-                line = "RPH \n"
-        finally:
-            pass
-
-        if not line is None:
-            request.ws_stream.send_message(line, binary=False)
+    try:
+        while True:
+            try: 
+                #keep apache socket alive by sending hello every 20 seconds
+                ready = select.select([sock], [], [], 20.0)
+                if ready[0]:
+                    line = sock.recv(1024)
+                else:
+                    line = "RPH \n"
+            finally:
+                pass
+    
+            if not line is None:
+                request.ws_stream.send_message(line, binary=False)
+    finally:
+        sock.close()
 

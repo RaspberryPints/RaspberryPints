@@ -72,9 +72,11 @@ class FlowMonitor(object):
                 if ( len(reading) < 2 ):
                     print "RPINTS: Arduino - Unknown message (length too short): "+ msg
                     continue
+                
                 if ( reading[0] == "P" ):
                     MCP_ADDR = int(reading[1])
                     MCP_PIN = str(reading[2])
+  
                     POUR_COUNT = str(reading[3])
                     PULSES_PERL = 5600
                     

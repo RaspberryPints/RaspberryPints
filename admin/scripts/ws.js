@@ -30,7 +30,7 @@ function send(msg) {
 
 function wsconnect() {
 	var url = defaultAddress;
-	window.onbeforeunload = wsclose;
+	window.onunload = wsclose;
 	
 	socket = new WebSocket(url);
 

@@ -19,4 +19,6 @@ abstract class ConfigNames
 	const UseFanPin = 'useFanPin';
 	const FanInterval = 'fanInterval';
 	const FanOnTime = 'fanOnTime';
+	const PourShutOffCount = 'pourShutOffCount';
+	const PourCountConversion = 'pourCountConversion';
 }

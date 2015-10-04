@@ -223,6 +223,15 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'useFlowMeter','0','Use Flow Monitoring', '1', NOW(),NOW() );
 
 
+INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
+('useTapValves', '0', 'Use Tap Valves', 1, NOW(), NOW() ),
+('useFanControl', '0', 'Use Fan Control', 1, NOW(), NOW() ),
+('useFanPin', '17', 'Use Fan I/O Pin', 0, NOW(), NOW() ),
+('fanInterval', '120', 'Fan Interval', 0, NOW(), NOW() ),
+('fanOnTime', '1', 'Fan On time', 0, NOW(), NOW() ),
+('pourShutOffCount', '0', 'pour shutoff amount in counts', 0, NOW(), NOW() ),
+('pourCountConversion', '1500', 'pour count conversion to gallons', 0, NOW(), NOW() );
+
 -- --------------------------------------------------------
 
 --
@@ -318,28 +327,6 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 
---
--- Table structure for table `tapconfig`
---
-
-CREATE TABLE IF NOT EXISTS `tapconfig` (
-  `tapNumber` int(11) DEFAULT NULL,
-  `flowPin` int(11) DEFAULT NULL,
-  `valvePin` int(11) DEFAULT NULL,
-  `valveOn` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Dumping data for table `tapconfig`
---
--- INSERT INTO `tapconfig` (`tapNumber`, `flowPin`, `valvePin`, `valveOn`) VALUES
--- (2, 10, 22, 0),
--- (1, 9, 18, 0),
--- (3, 5, 23, 0),
--- (4, 6, 24, 0),
--- (5, 7, 25, 0);
 -- --------------------------------------------------------
 
 --
