@@ -305,6 +305,24 @@ class PintDispatch(object):
         signal.pause()
 #        stdin.readline()
 
+    def shutDownTap(self, flowPin):
+        
+        taps = self.getTapConfig();
+        for tap in taps:
+            if(int(tap["flowPin"]) == int(flowPin)):
+                valvePin = int(tap["valvePin"])
+                self.updatepin(valvePin, 0) 
+                
+                sql = "UPDATE tapconfig SET valveOn=0 WHERE tapNumber=" +  str(tap["tapNumber"])
+                # update db
+                con = self.connectDB()
+                cursor = con.cursor(mdb.cursors.DictCursor)
+                result = cursor.execute(sql)
+                con.commit()
+                con.close()
+                # update browsers
+                self.sendvalveupdate(valvePin, 0)
+
     def kickTap(self, flowPin):
         
         taps = self.getTapConfig();
