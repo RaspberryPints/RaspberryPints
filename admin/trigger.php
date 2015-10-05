@@ -22,6 +22,8 @@
 		$data = "RPC:flow\n";
 	} else if ($value == "config") {
 		$data = "RPC:config\n";
+	} else if ($value == "alamode") {
+		$data = "RPC:alamode\n";
 	} else {
 		echo $received;
 		exit();

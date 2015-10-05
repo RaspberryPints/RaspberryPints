@@ -73,6 +73,9 @@ class CommandTCPHandler(SocketServer.StreamRequestHandler):
             if ( reading[1] == "flow" ):
                 debug("updating flow meter config from db")
                 self.server.pintdispatch.updateFlowmeterConfig()
+            if ( reading[1] == "alamode" ):
+                debug("resetting alamode config from db")
+                self.server.pintdispatch.triggerAlaModeReset()
         
         self.wfile.write("RPACK\n")
 
@@ -88,6 +91,7 @@ class PintDispatch(object):
     def __init__(self):
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
+        self.alaModeReconfig = False;
 
         #multicast socket
         self.mcast = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
@@ -258,8 +262,8 @@ class PintDispatch(object):
     def spawn_flowmonitor(self):
         while True:
             self.flowmonitor.monitor()
-            log("flowmonitor aborted, restarting in 5 seconds...")
-            time.sleep(5)
+            log("flowmonitor aborted, restarting in 1 seconds...")
+            time.sleep(1)
 
     def spawnWebSocketServer(self):
         args = ["-p", "8081", "-d", "/var/www/python/ws"]
@@ -323,6 +327,29 @@ class PintDispatch(object):
                 # update browsers
                 self.sendvalveupdate(valvePin, 0)
 
+    # 
+    def triggerAlaModeReset(self):
+        self.alaModeReconfig = True;
+        
+    # check if something got changed which requires reset/reconfigure of alamode
+    def needAlaModeReconfig(self):
+        return self.alaModeReconfig
+                    
+    # reset the alamode by tripping it's reset line
+    def resetAlaMode(self):
+        self.alaModeReconfig = False;
+        resetpin = 18
+
+        oldValue = GPIO.input(resetpin)
+        if (oldValue == 1):
+            value1 = 0
+        else:
+            value1 = 1
+            
+        self.updatepin(resetpin, value1)
+        time.sleep(1)
+        self.updatepin(resetpin, oldValue)
+    
     def kickTap(self, flowPin):
         
         taps = self.getTapConfig();

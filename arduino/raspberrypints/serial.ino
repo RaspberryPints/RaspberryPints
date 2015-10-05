@@ -22,3 +22,19 @@ void sendKickedMsg(uint8_t addr, int pinNum) {
   Serial.print(";");
   Serial.println(pinNum);
 }
+
+void establishContact() {
+  while (Serial.available() <= 0) {
+    Serial.print('a');   // send 'a' to get the Pi side started after reset
+    delay(300);
+  }
+}
+
+int getsc() {
+  while(!(Serial.available() > 0 ));
+  return Serial.read();
+}
+
+
+
+
