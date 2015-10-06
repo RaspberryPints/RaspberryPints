@@ -22,11 +22,7 @@ $tapManager = new TapManager();
 $beerManager = new BeerManager();
 $kegManager = new KegManager();
 
-if( isset($_POST['updateNumberOfTaps'])) {
-	$tapManager->updateTapNumber($_POST['numberOfTaps']);
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
-	
-}else if( isset($_POST['newTap'])){
+if( isset($_POST['newTap'])){
 	$tapNumber=$_POST['tapNumber'];
 	redirect("tap_form.php?tapNumber=$tapNumber");
 	
@@ -92,13 +88,6 @@ include 'header.php';
 	<!-- Right Side/Main Content Start -->
 	<div id="rightside">
 		<div class="contentcontainer med left">
-	<p>
-	<!-- Set Tap Number Form -->
-		<form method="POST" name="taplimit">
-			<b>Number Of Taps:</b> &nbsp <input type="text" name="numberOfTaps" class="smallbox" value="<?php echo $numberOfTaps ?>"> &nbsp <input type="submit" name="updateNumberOfTaps" class="btn" value="Update Number of Taps" />
-		</form>
-	</p>
-	<!-- End Tap Number Form -->
 <br />
 	<!-- Start On Tap Section -->
 	
