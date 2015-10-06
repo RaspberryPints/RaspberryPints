@@ -37,18 +37,16 @@ OPTION_DEBUG = True
 def debug(msg):
     if(OPTION_DEBUG):
         print "RPINTS: " + msg
-        
+        sys.stdout.flush()
+                 
 def log(msg):
     print "RPINTS: " + msg
+    sys.stdout.flush() 
     
 class CommandTCPHandler(SocketServer.StreamRequestHandler):
 
     def handle(self):
         self.data = self.rfile.readline().strip()
-
-        #DEBUG
-#        print "{} wrote:".format(self.client_address[0])
-#        print self.data
         
         if not self.data:
             self.wfile.write("RPNAK\n")
@@ -275,6 +273,13 @@ class PintDispatch(object):
         server = WebSocketServer(options)
         server.serve_forever()
 
+    # main setup
+    def setup(self):
+        # need small delay to get logging going, otherwise first log entries are missing
+        time.sleep(2)
+        debug("starting setup...")
+        self.flowmonitor.setup()
+        
     # main start method
     def start(self):
 
@@ -307,6 +312,7 @@ class PintDispatch(object):
             log("tap valve control not enabled")
 
         signal.pause()
+        debug( "exiting...")
 #        stdin.readline()
 
     def shutDownTap(self, flowPin):
@@ -387,7 +393,10 @@ class PintDispatch(object):
     
     # update PI gpio pin (either turn on or off), this requires that this is run as root 
     def updatepin(self, pin, value):
-
+        if (pin < 1):
+            debug("invalid pin " + str(pin))
+            return False
+        
         GPIO.setup(int(pin), GPIO.OUT)
         oldValue = GPIO.input(pin)
         if(oldValue != value):
@@ -449,5 +458,6 @@ class PintDispatch(object):
 
         
 dispatch = PintDispatch()
+dispatch.setup()
 dispatch.start()
-log( "Exiting...")
+debug( "Exiting...")

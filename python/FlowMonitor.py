@@ -7,6 +7,18 @@ import time
 import MySQLdb as mdb
 import subprocess
 
+OPTION_DEBUG = True
+
+def debug(msg):
+    if(OPTION_DEBUG):
+        print "RPINTS: " + msg
+        sys.stdout.flush()
+                 
+def log(msg):
+    print "RPINTS: " + msg
+    sys.stdout.flush() 
+    
+
 class FlowMonitor(object):
     
     def __init__(self, dispatcher):
@@ -31,9 +43,18 @@ class FlowMonitor(object):
                     break
         return bytes(line)
     
-    def reconfigAlaMode(self):
+    def setup(self):
+        hexfile = self.poursdir + "/arduino/raspberrypints/raspberrypints.cpp.hex"
+        cmdline = "/usr/share/arduino/hardware/tools/avrdude -C/usr/share/arduino/hardware/tools/avrdude.conf -patmega328p -calamode -P/dev/ttyS0 -b115200 -D -Uflash:w:"
+        cmdline = cmdline + hexfile
+        cmdline = cmdline + ":i"
+        debug("reflashing alamode via:\n" + cmdline)
 
-        print "RPINTS: getting config data for alamode"
+        output = subprocess.check_output(cmdline, shell=True, stderr=subprocess.STDOUT,)
+        debug( output )
+                
+    def reconfigAlaMode(self):
+        debug(  "getting config data for alamode" )
 
         config = self.dispatch.getConfig()
         taps = self.dispatch.getTapConfig()
@@ -63,7 +84,7 @@ class FlowMonitor(object):
         cfgmsg = cfgmsg + alamodeKickTriggerCount + ":"
         cfgmsg = cfgmsg + alamodeUpdateTriggerCount + "|"
 
-        print "RPINTS: waiting for alamode to come alive"
+        debug( "waiting for alamode to come alive" )
         
         commEst = 0
         # wait for arduiono to come alive, it sens out a stream of 'a' once it's ready
@@ -72,21 +93,21 @@ class FlowMonitor(object):
             if( somechar == 'a'):
                 commEst += 1
 
-        print "RPINTS: alamode alive, about to sent: " + cfgmsg
+        debug( "alamode alive, about to sent: " + cfgmsg )
         
         self.arduino.write(cfgmsg) # send config message, this will make it send pulses
         reply = self.arduino.readline()
-        print "RPINTS: alamode says: " + reply
+        debug( "alamode says: " + reply )
         
     # 'C:<numSensors>:<sensor pin>:<...>:<pourTriggerValue>:<kickTriggerValue>:<updateTriggerValue>'    
     def monitor(self):
         running = True
         
-        print "RPINTS: resetting alamode"
+        debug( "resetting alamode" )
         self.dispatch.resetAlaMode()
         self.arduino = serial.Serial(self.port,9600,timeout=1)
         self.reconfigAlaMode()
-        print "RPINTS: listening to alamode"
+        debug( "listening to alamode" )
         
         try:
             while running:    
@@ -98,11 +119,11 @@ class FlowMonitor(object):
                     continue
                 reading = msg.split(";")
                 if ( len(reading) < 2 ):
-                    print "RPINTS: alamode - Unknown message (length too short): "+ msg
+                    debug( "alamode - Unknown message (length too short): "+ msg )
                     continue
                 
                 if ( reading[0] == "P" ):
-                    print "RPINTS: got a pour: "+ msg
+                    debug( "got a pour: "+ msg )
                     MCP_ADDR = int(reading[1])
                     MCP_PIN = str(reading[2])
   
@@ -115,26 +136,26 @@ class FlowMonitor(object):
                     self.dispatch.sendflowcount(MCP_PIN, POUR_COUNT)
                     
                 elif ( reading[0] == "U" ):
-                    print "RPINTS: got a update: "+ msg
+                    debug( "got a update: "+ msg )
                     MCP_ADDR = int(reading[1])
                     MCP_PIN = str(reading[2])
                     POUR_COUNT = str(reading[3])
                     self.dispatch.sendflowupdate(MCP_PIN, POUR_COUNT)
                     
                 elif ( reading[0] == "K" ):
-                    print "RPINTS: got a kick: "+ msg
+                    debug( "got a kick: "+ msg )
                     MCP_ADDR = int(reading[1])
                     MCP_PIN = int(reading[2])
                     self.dispatch.sendkickupdate(MCP_PIN)
                 else:
-                    print "RPINTS: unknown message: "+ msg
+                    debug( "unknown message: "+ msg )
         finally:
-            print "RPINTS: closing serial connection to alamode..."
+            debug( "closing serial connection to alamode..." )
             self.arduino.close()
 
     def fakemonitor(self):
         running = True
-        print "RPINTS: listening to alamode"
+        debug( "listening to alamode" )
         updatecount = 0;
         pin = 9;
         
@@ -148,7 +169,7 @@ class FlowMonitor(object):
                     continue
                 reading = msg.split(";")
                 if ( len(reading) < 2 ):
-                    print "RPINTS: alamode - Unknown message (length too short): "+ msg
+                    debug( "alamode - Unknown message (length too short): "+ msg )
                     continue
                 if ( reading[0] == "P" ):
                     MCP_ADDR = int(reading[1])
@@ -167,7 +188,7 @@ class FlowMonitor(object):
                     MCP_PIN = int(reading[2])
                     self.dispatch.sendkickupdate(MCP_PIN)
                 else:
-                    print "RPINTS: Unknown message: "+ msg
+                    debug( "Unknown message: "+ msg )
         finally:
-            print "Closing serial connection to alamode..."
-            print "Exiting"
+            debug( "Closing serial connection to alamode..." )
+            debug( "Exiting" )
