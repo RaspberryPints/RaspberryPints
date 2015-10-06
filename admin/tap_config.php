@@ -240,7 +240,7 @@ include 'header.php';
 			<div align="right">&nbsp &nbsp</div>
 		</form>
 
-			<?php if($config[ConfigNames::UseTapValves]) { ?>
+			<?php if($config[ConfigNames::UseFlowMeter]) { ?>
 		<p>
 			<form method="POST" name="flowMeterConfig">
 				<table width="300" border="0" cellspacing="0" cellpadding="0">
