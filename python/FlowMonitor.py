@@ -39,8 +39,6 @@ class FlowMonitor(object):
         taps = self.dispatch.getTapConfig()
         
         for item in config:
-            if (item["configName"] == 'numberOfTaps'):
-                    numberOFTaps = item["configValue"]
             if (item["configName"] == 'alamodePourMessageDelay'):
                     alamodePourMessageDelay = item["configValue"]
             if (item["configName"] == 'alamodePourTriggerCount'):
@@ -50,13 +48,14 @@ class FlowMonitor(object):
             if (item["configName"] == 'alamodeUpdateTriggerCount'):
                     alamodeUpdateTriggerCount = item["configValue"]
         
+        numberOfTaps = len(taps)
         pins = []
         for tap in taps:
             pins.append(tap["flowPin"])
         pins.sort();
         
         #'C:<numSensors>:<sensor pin>:<...>:<pourMsgDelay>:<pourTriggerValue>:<kickTriggerValue>:<updateTriggerValue>'|
-        cfgmsg = "C:" + numberOFTaps + ":"
+        cfgmsg = "C:" + str(numberOfTaps) + ":"
         for pin in pins:
             cfgmsg = cfgmsg + str(pin) + ":"
         cfgmsg = cfgmsg + alamodePourMessageDelay + ":"
