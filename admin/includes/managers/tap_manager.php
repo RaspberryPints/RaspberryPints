@@ -28,19 +28,16 @@ class TapManager{
 						"active = " . $tap->get_active() . ", " .
 						"modifiedDate = NOW() ".
 					"WHERE id = " . $tap->get_id();
-					
+			mysql_query($sql);
+				
 		}else{
+			
 			$sql = 	"INSERT INTO taps(beerId, kegId, tapNumber, ogAct, fgAct, srmAct, ibuAct, startAmount, currentAmount, active, createdDate, modifiedDate ) " .
 					"VALUES(" . $tap->get_beerId() . ", " . $tap->get_kegId() . ", " . $tap->get_tapNumber() .  ", " . $tap->get_og() . ", " . $tap->get_fg() . ", " . $tap->get_srm() . ", " . $tap->get_ibu() . ", " . $tap->get_startAmount() . ", " . $tap->get_startAmount() . ", " . $tap->get_active	() . ", NOW(), NOW())";
+			mysql_query($sql);
 		}		
-		
-		//echo $sql; exit();
-		
+		$sql="UPDATE tapconfig SET valveOn = 0 WHERE tapNumber = " . $tap->get_tapNumber();
 		mysql_query($sql);
-
-		$sql="UPDATE tapconfig SET valveOn = 1 WHERE tapNumber = " . $tap->get_tapNumber();
-		mysql_query($sql);
-		
 	}
 	
 	function GetById($id){

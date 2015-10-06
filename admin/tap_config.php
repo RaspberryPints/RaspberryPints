@@ -29,9 +29,15 @@ if (isset ( $_POST ['updateNumberOfTaps'] )) {
 
 } else if (isset ( $_POST ['saveTapConfig'] )) {
 	$tapNumber = $_POST ['tapNumber'];
-	$flowpin = $_POST ['flowpin'];
-	$valvepin = $_POST ['valvepin'];
-	$valveon = $_POST ['valveon'];
+	$flowpin = 0;
+	if (isset ( $_POST ['flowpin'] )) {
+		$flowpin = $_POST ['flowpin'];
+	}
+	$valvepin = 0;
+	if (isset ( $_POST ['valvepin'] )) {
+		$valvepin = $_POST ['valvepin'];
+	}
+	$valveon = 0;
 	$tapManager->saveTapConfig ( $tapNumber, $flowpin, $valvepin, $valveon );
 	file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=valve' );
 	file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=alamode' );
