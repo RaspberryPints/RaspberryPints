@@ -193,7 +193,7 @@ include 'header.php';
 												<?php echo $tap->get_currentAmount() ?>
 											</td>
 											-->
-											<?php if($config[ConfigNames::UseTapValves]) { 
+											<?php if($config[ConfigNames::UseTapValves]) {
 												$kegOn = "";
 												$kegOnSay = "";
 												if ( $tap->get_valveOn() < 1 ) {
@@ -203,7 +203,7 @@ include 'header.php';
 													$kegOn = "disableTap";
 													$kegOnSay = "Stop this";
 												}
-												?>
+											?>
 											<td>
 												<input name="<?php echo $kegOn?>" type="submit" class="btn" value="<?php echo $kegOnSay?>" />
 											</td>

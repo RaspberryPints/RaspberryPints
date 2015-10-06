@@ -1,12 +1,18 @@
 
-const unsigned int maxpins = 20;
-//This line is the number of flow sensors connected.
-uint8_t numSensors = 5;
-//This line initializes an array with the pins connected to the flow sensors
-uint8_t pulsePin[] = {5,6,7,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
+const int maxpins = 50;
+//This is the number of flow sensors connected.
+int numSensors = 5;
+int pulsePin[maxpins];
 //number of milliseconds to wait after pour before sending message
-unsigned int pourMsgDelay = 300;
+int pourMsgDelay = 300;
+// the number of counts until a pour starts (used to filteer small flukes)
+int pourTriggerValue = 10;
+// the number of counts in the same time slice which are considered a kick
+int kickTriggerValue = 30;
+// the number of counts when a pour update will be send out
+int updateTriggerValue = 200;
 
+// data structures to keep current state
 unsigned int pulseCount[maxpins];
 unsigned int kickedCount[maxpins];
 unsigned int updateCount[maxpins];
@@ -14,10 +20,6 @@ unsigned long nowTime;
 unsigned long lastPourTime = 0;
 unsigned long lastPinStateChangeTime[maxpins];
 int lastPinState[maxpins];
-
-int pourTriggerValue = 10;
-int kickTriggerValue = 30;
-int updateTriggerValue = 200;
 
 
 unsigned long lastSend = 0;
@@ -35,10 +37,10 @@ void setup() {
   while(Serial.available()) {
     Serial.read();
   }
-
+  // send a stream of 'a' to signal the Pi we're alive
   establishContact();
   // config string is in the form:
-  // 'C:<numSensors>:<sensor pin>:<...>:<pourTriggerValue>:<kickTriggerValue>:<updateTriggerValue>'|
+  // 'C:<numSensors>:<sensor pin>:<...>:<pourMsgDelay>:<pourTriggerValue>:<kickTriggerValue>:<updateTriggerValue>'|
   
   while('C' != getsc());       // wait for 'C'
   while(':' != getsc());       // read ':'
@@ -57,6 +59,8 @@ void setup() {
   }
   
   while(':' != getsc());           // read ':'
+  pourMsgDelay = Serial.parseInt();
+  while(':' != getsc());           // read ':'
   pourTriggerValue = Serial.parseInt();
   while(':' != getsc());           // read ':'
   kickTriggerValue = Serial.parseInt();
@@ -64,12 +68,15 @@ void setup() {
   updateTriggerValue = Serial.parseInt();
   while('|' != getsc());           // read '|' (end of message)
   
+  // echo back the config string with our own stuff
   Serial.print("C:");
   Serial.print(numSensors);
   for( int i = 0; i < numSensors; i++ ) {
     Serial.print(":");
     Serial.print(pulsePin[i]);
   }
+  Serial.print(":");
+  Serial.print(pourMsgDelay);
   Serial.print(":");
   Serial.print(pourTriggerValue);
   Serial.print(":");

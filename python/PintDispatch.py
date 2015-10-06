@@ -140,7 +140,7 @@ class PintDispatch(object):
     def getTapConfig(self):
         con = self.connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)
-        cursor.execute("SELECT tapNumber,flowPin,valvePin,valveOn from tapconfig")
+        cursor.execute("SELECT tapNumber,flowPin,valvePin,valveOn FROM tapconfig ORDER BY tapNumber")
         rows = cursor.fetchall()
         con.close()
         return rows
@@ -215,7 +215,7 @@ class PintDispatch(object):
             return
         
         if self.fanTimer is not None:
-            debug( "stopping fan timer - ccanceling running timer" )
+            debug( "stopping fan timer - canceling running timer" )
             self.fanTimer.cancel()
         self.fanTimer = Timer((interval - time) * 60, self.fanStartTimer)
         self.fanTimer.daemon=True
@@ -262,8 +262,8 @@ class PintDispatch(object):
     def spawn_flowmonitor(self):
         while True:
             self.flowmonitor.monitor()
-            log("flowmonitor aborted, restarting in 1 seconds...")
-            time.sleep(1)
+            log("flowmonitor aborted, restarting...")
+           # time.sleep(1)
 
     def spawnWebSocketServer(self):
         args = ["-p", "8081", "-d", "/var/www/python/ws"]
@@ -340,6 +340,7 @@ class PintDispatch(object):
         self.alaModeReconfig = False;
         resetpin = 18
 
+        GPIO.setup(int(resetpin), GPIO.OUT)
         oldValue = GPIO.input(resetpin)
         if (oldValue == 1):
             value1 = 0

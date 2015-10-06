@@ -21,4 +21,8 @@ abstract class ConfigNames
 	const FanOnTime = 'fanOnTime';
 	const PourShutOffCount = 'pourShutOffCount';
 	const PourCountConversion = 'pourCountConversion';
+	const AlamodePourMessageDelay = 'alamodePourMessageDelay';
+	const AlamodePourTriggerCount = 'alamodePourTriggerCount';
+	const AlamodeKickTriggerCount = 'alamodeKickTriggerCount';
+	const AlamodeUpdateTriggerCount = 'alamodeUpdateTriggerCount';
 }

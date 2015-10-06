@@ -67,6 +67,9 @@ class TapManager{
 		
 		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE active = 1 AND tapNumber > $newTapNumber";
 		mysql_query($sql);
+
+		$sql="DELETE FROM tapconfig WHERE tapNumber > $newTapNumber";
+		mysql_query($sql);
 	}
 
 	function getTapNumber(){
