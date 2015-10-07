@@ -46,14 +46,20 @@ if( isset($_POST['newTap'])){
 
 $numberOfTaps = $tapManager->getTapNumber();
 $activeTaps = $tapManager->getActiveTaps();
-
 // Code to set config values
+$tapsconfig = array();
+$sql = "SELECT * FROM tapconfig";
+$qry = mysql_query($sql);
+while( $u = mysql_fetch_array($qry) ){
+	$tapsconfig[$u['tapNumber']] = $u;
+};
+
 $config = array();
 $sql = "SELECT * FROM config";
 $qry = mysql_query($sql);
 while($c = mysql_fetch_array($qry)){
 	$config[$c['configName']] = $c['configValue'];
-}
+};
 
 ?>
 
@@ -211,7 +217,9 @@ include 'header.php';
 											</td>
 											
 										</tr>
-								<?php } else { ?>
+								<?php } else { 
+										if(isset($tapsconfig[$tapNumber])) {
+									?>
 										<input type="hidden" name="tapNumber" value="<?php echo $c?>" />
 										<tr>
 											<td>
@@ -221,7 +229,20 @@ include 'header.php';
 											<td colspan="99">
 												<input name="newTap" type="submit" class="btn" value="Tap a Keg" />
 											</td>
-										</tr>								
+										</tr>
+										<?php 
+										} else {
+										?>
+										<tr>
+											<td>
+												<?php echo $c ?>
+											</td>
+											<td colspan="99">
+												<b>Tap not configured.</b><br/>Hit 'Save Tap Config' for this entry in the 'My Tap Config' screen...
+											</td>
+										</tr>
+										<?php 
+										} ?>
 								<?php } ?>	
 							</form>						
 						<?php } ?>
