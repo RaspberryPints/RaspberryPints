@@ -283,11 +283,10 @@ class PintDispatch(object):
     # main start method
     def start(self):
 
-        if self.useOption("useFlowMeter") | self.useOption("useFanControl") | self.useOption("useTapValves") :
-            log("starting WS server")
-            t = threading.Thread(target=self.spawnWebSocketServer)
-            t.setDaemon(True)
-            t.start()
+        log("starting WS server")
+        t = threading.Thread(target=self.spawnWebSocketServer)
+        t.setDaemon(True)
+        t.start()
 
         if self.useOption("useFlowMeter"):
             log("starting tap flow meters...")
@@ -303,13 +302,10 @@ class PintDispatch(object):
         else:
             log("kegerator fan control not enabled")
 
-        if self.useOption("useTapValves"):
-            log("starting tap valve control")
-            t = threading.Thread(target=self.commandserver.serve_forever)
-            t.setDaemon(True)
-            t.start()
-        else:
-            log("tap valve control not enabled")
+        log("starting command server")
+        t = threading.Thread(target=self.commandserver.serve_forever)
+        t.setDaemon(True)
+        t.start()
 
         signal.pause()
         debug( "exiting...")
@@ -320,8 +316,10 @@ class PintDispatch(object):
         taps = self.getTapConfig();
         for tap in taps:
             if(int(tap["flowPin"]) == int(flowPin)):
-                valvePin = int(tap["valvePin"])
-                self.updatepin(valvePin, 0) 
+                
+                if self.useOption("useTapValves"):
+                    valvePin = int(tap["valvePin"])
+                    self.updatepin(valvePin, 0) 
                 
                 sql = "UPDATE tapconfig SET valveOn=0 WHERE tapNumber=" +  str(tap["tapNumber"])
                 # update db
@@ -362,8 +360,10 @@ class PintDispatch(object):
         taps = self.getTapConfig();
         for tap in taps:
             if(int(tap["flowPin"]) == int(flowPin)):
-                valvePin = int(tap["valvePin"])
-                self.updatepin(valvePin, 0) 
+                
+                if self.useOption("useTapValves"):
+                    valvePin = int(tap["valvePin"])
+                    self.updatepin(valvePin, 0) 
 
                 tapNumber = int(tap["tapNumber"])
                 
@@ -371,7 +371,7 @@ class PintDispatch(object):
                 con = self.connectDB()
                 cursor = con.cursor(mdb.cursors.DictCursor)
                 
-                sql = "SELECT id from taps WHERE tapNumber=" +  str(tapNumber)
+                sql = "SELECT id from taps WHERE tapNumber=" +  str(tapNumber) + " AND active=1"
                 cursor.execute(sql)
                 id = int(cursor.fetchall()[0]["id"])
 
@@ -379,7 +379,8 @@ class PintDispatch(object):
                 result = cursor.execute(sql)
                 con.commit()
                 
-                sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE id=" + str(id)
+                sql="UPDATE taps SET active=0 WHERE id=" + str(id)
+                debug(sql)
                 result = cursor.execute(sql)
                 con.commit()
                 
@@ -389,6 +390,8 @@ class PintDispatch(object):
                 
                 con.close()
                 # update browsers
+                # give it a small break, most likely a pour refresh is still going on, and this update will be missed
+                time.sleep(1)
                 self.sendvalveupdate(valvePin, 0)
     
     # update PI gpio pin (either turn on or off), this requires that this is run as root 

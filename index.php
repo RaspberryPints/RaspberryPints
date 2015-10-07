@@ -93,7 +93,7 @@
 					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
 						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="200" alt=""></a>
 					<?php } else { ?>
-						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="60" alt=""></a>
+						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="80" alt=""></a>
 					<?php } ?>
 				</div>
 				<div class="HeaderCenter">
@@ -111,7 +111,7 @@
 					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
 						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints-4k.png" height="200" alt=""></a>
 					<?php } else { ?>
-						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints.png" height="60" alt=""></a>
+						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints.png" height="80" alt=""></a>
 					<?php } ?>
 				</div>
 			</div>
@@ -157,7 +157,7 @@
 				</thead>
 				<tbody>
 					<?php for($i = 1; $i <= $numberOfTaps; $i++) {
-						if( isset($beers[$i]) ) {
+						if( isset($beers[$i]) && isset($taps[$i])) {
 							$beer = $beers[$i];
 							$tap = $taps[$i];
 					?>
@@ -389,8 +389,10 @@
 										<h3></h3>
 										<div class="keg-container">
 											<div class="keg-indicator"><div class="keg-full keg-empty" style="height:0%"></div>
-												<?php if($config[ConfigNames::UseTapValves]){ ?>
-													<div class="keg-enabled"></div>
+												<?php if($config[ConfigNames::UseTapValves]){ 
+													$kegOn ="";
+												?>
+													<div class="<?php echo $kegOn ?>"></div>
 												<?php } ?>
 											</div>
 										</div>
