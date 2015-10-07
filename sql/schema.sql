@@ -330,6 +330,18 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 	FOREIGN KEY (`kegTypeId`) REFERENCES kegTypes(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tapconfig`
+--
+
+CREATE TABLE IF NOT EXISTS `tapconfig` (
+  `tapNumber` int(11) DEFAULT NULL,
+  `flowPin` int(11) DEFAULT NULL,
+  `valvePin` int(11) DEFAULT NULL,
+  `valveOn` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
