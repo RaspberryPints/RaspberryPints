@@ -218,7 +218,7 @@ include 'header.php';
 											
 										</tr>
 								<?php } else { 
-										if(isset($tapsconfig[$tapNumber])) {
+										if(isset($tapsconfig[$c])) {
 									?>
 										<input type="hidden" name="tapNumber" value="<?php echo $c?>" />
 										<tr>
