@@ -173,7 +173,7 @@ class PintDispatch(object):
             return
         
         if self.fanTimer is not None:
-            debug( "starting fan timer - canceling running timer" )
+            debug( "starting fan timer - cancelling running timer" )
             self.fanTimer.cancel()
         
         #all times are in minutes
@@ -213,7 +213,7 @@ class PintDispatch(object):
             return
         
         if self.fanTimer is not None:
-            debug( "stopping fan timer - canceling running timer" )
+            debug( "stopping fan timer - cancelling running timer" )
             self.fanTimer.cancel()
         self.fanTimer = Timer((interval - time) * 60, self.fanStartTimer)
         self.fanTimer.daemon=True

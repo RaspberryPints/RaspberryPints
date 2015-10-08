@@ -48,11 +48,19 @@ class FlowMonitor(object):
         cmdline = "/usr/share/arduino/hardware/tools/avrdude -C/usr/share/arduino/hardware/tools/avrdude.conf -patmega328p -calamode -P/dev/ttyS0 -b115200 -D -Uflash:w:"
         cmdline = cmdline + hexfile
         cmdline = cmdline + ":i"
+        
+#        debug("resetting alamode to try to force it to listen to us...")
+        self.dispatch.resetAlaMode()
+        debug("giving it a short break to wake up again...")
+        time.sleep(2)
+        
         debug("reflashing alamode via:\n" + cmdline)
-
-        output = subprocess.check_output(cmdline, shell=True, stderr=subprocess.STDOUT,)
-        debug( output )
-                
+        try: 
+            output = subprocess.check_output(cmdline, shell=True, stderr=subprocess.STDOUT,)
+            debug( output )
+        except Exception as ex:
+            print 'RPINTS: reflashing alamode failed, moving on anyways, error was: ' + ex 
+                    
     def reconfigAlaMode(self):
         debug(  "getting config data for alamode" )
 
