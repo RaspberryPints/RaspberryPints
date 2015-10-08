@@ -242,18 +242,25 @@ class PintDispatch(object):
         if OPTION_RESTART_FANTIMER_AFTER_POUR:
             debug( "restarting fan timer after pour" )
             self.fanStartTimer()
-        self.mcast.sendto("RPU:FLOW:%s=%s\n" % (pin, count), (MCAST_GRP, MCAST_PORT))
+        msg = "RPU:FLOW:" + str(pin) + "=" + str(count)
+        debug("broadcast update: "  + msg.rstrip())
+        self.mcast.sendto(msg + "\n", (MCAST_GRP, MCAST_PORT))
         
     # send a mcast valve/pin update
     def sendvalveupdate(self, pin, value):
-        self.mcast.sendto("RPU:VALVE:%s=%s\n" % (pin, value), (MCAST_GRP, MCAST_PORT))
+        msg = "RPU:VALVE:" + str(pin) + "=" + str(value)
+        debug("broadcast update: "  + msg.rstrip())
+        self.mcast.sendto(msg + "\n", (MCAST_GRP, MCAST_PORT))
         
     # send a mcast fan update
     def sendfanupdate(self, pin, value):
-        self.mcast.sendto("RPU:FAN:%s=%s\n" % (pin, value), (MCAST_GRP, MCAST_PORT))
+        msg = "RPU:FAN:" + str(pin) + "=" + str(value)
+        debug("broadcast update: "  + msg.rstrip())
+        self.mcast.sendto(msg + "\n", (MCAST_GRP, MCAST_PORT))
         
     # send a mcast fan update
     def sendconfigupdate(self,):
+        debug("broadcast update: "  +  "RPU:CONFIG")
         self.mcast.sendto("RPU:CONFIG\n", (MCAST_GRP, MCAST_PORT))
         
     # start running the flow monitor in it's own thread

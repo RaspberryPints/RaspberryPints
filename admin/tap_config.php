@@ -119,6 +119,7 @@ $numberOfTaps = $tapManager->getTapNumber();
 	rel='stylesheet' type='text/css'>
 
 </head>
+<body>
 <!-- Start Header  -->
 <?php
 include 'header.php';

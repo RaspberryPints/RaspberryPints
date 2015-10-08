@@ -11,11 +11,11 @@ OPTION_DEBUG = True
 
 def debug(msg):
     if(OPTION_DEBUG):
-        print "RPINTS: " + msg
+        print "RPINTS: " + msg.rstrip()
         sys.stdout.flush()
                  
 def log(msg):
-    print "RPINTS: " + msg
+    print "RPINTS: " + msg.rstrip()
     sys.stdout.flush() 
     
 
@@ -49,17 +49,20 @@ class FlowMonitor(object):
         cmdline = cmdline + hexfile
         cmdline = cmdline + ":i"
         
-#        debug("resetting alamode to try to force it to listen to us...")
+        debug("resetting alamode to try to force it to listen to us...")
         self.dispatch.resetAlaMode()
         debug("giving it a short break to wake up again...")
         time.sleep(2)
         
+        
         debug("reflashing alamode via:\n" + cmdline)
+        output = ""
         try: 
             output = subprocess.check_output(cmdline, shell=True, stderr=subprocess.STDOUT,)
             debug( output )
         except Exception as ex:
-            print 'RPINTS: reflashing alamode failed, moving on anyways, error was: ' + ex 
+            print 'RPINTS: reflashing alamode failed, moving on anyways, error was: ', ex
+            print output 
                     
     def reconfigAlaMode(self):
         debug(  "getting config data for alamode" )

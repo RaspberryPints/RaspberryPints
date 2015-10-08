@@ -1,4 +1,4 @@
-var socket = null;
+var websocket = null;
 var scheme = window.location.protocol == 'https:' ? 'wss://' : 'ws://';
 var defaultAddress = scheme + window.location.host + ':8081/rpupdate';
 
@@ -19,27 +19,50 @@ function addToLog(log) {
 }
 
 function send(msg) {
-	if (!socket) {
+	if (!websocket) {
 		addToLog('Send: Not connected');
 		return;
 	}
 
-	socket.send(msg);
+	websocket.send(msg);
 	addToLog('> ' + msg);
+}
+
+// hack...
+function wsdelay(ms) {
+    var cur_d = new Date();
+    var cur_ticks = cur_d.getTime();
+    var ms_passed = 0;
+    while(ms_passed < ms) {
+        var d = new Date();  // Possible memory leak?
+        var ticks = d.getTime();
+        ms_passed = ticks - cur_ticks;
+        // d = null;  // Prevent memory leak?
+    }
+}
+
+function wsclose() {
+	if (!websocket) {
+		addToLog('Close: Not connected');
+		return;
+	}
+	send("RPK");
+	websocket.close();
 }
 
 function wsconnect() {
 	var url = defaultAddress;
-	window.onunload = wsclose;
+    window.addEventListener("unload", wsclose, false);
+    window.onbeforeunload = wsclose;
 	
-	socket = new WebSocket(url);
+	websocket = new WebSocket(url);
 
-	socket.onopen = function() {
+	websocket.onopen = function() {
 		var logMessage = 'Opened';
 		addToLog(logMessage);
 	};
 
-	socket.onmessage = function(event) {
+	websocket.onmessage = function(event) {
 		addToLog("received message: " + event.data);
 		parse = event.data.split(":");
 		if (parse[0] == "RPU") {
@@ -49,22 +72,15 @@ function wsconnect() {
 		}
 	};
 
-	socket.onerror = function() {
-		addToLog('Error');
+	websocket.onerror = function() {
+		var logMessage = 'Error';
+		addToLog(logMessage);
 	};
 
-	socket.onclose = function(event) {
+	websocket.onclose = function(event) {
 		var logMessage = 'Closed (';
 		addToLog(logMessage + ')');
-	};
-}
-
-function wsclose() {
-	if (!socket) {
-		addToLog('Close: Not connected');
-		return;
 	}
-	socket.close();
 }
 
 function wsinit() {
