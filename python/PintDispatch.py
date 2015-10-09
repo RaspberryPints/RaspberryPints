@@ -270,7 +270,7 @@ class PintDispatch(object):
            # time.sleep(1)
 
     def spawnWebSocketServer(self):
-        args = ["-p", "8080", "-d", "/var/www/python/ws"]
+        args = ["-p", "8081", "-d", "/var/www/python/ws"]
         options, args = _parse_args_and_config(args=args)
         options.cgi_directories = []
         options.is_executable_method = None

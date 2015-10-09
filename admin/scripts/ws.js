@@ -1,6 +1,6 @@
 var websocket;
 var scheme = window.location.protocol == 'https:' ? 'wss://' : 'ws://';
-var defaultAddress = scheme + window.location.host + ':8080/rpupdate';
+var defaultAddress = scheme + window.location.hostname + ':8081/rpupdate';
 
 var showTimeStamp = false;
 var thelog = [];
