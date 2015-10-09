@@ -18,9 +18,9 @@ from mod_pywebsocket.standalone import WebSocketServer
 from mod_pywebsocket.standalone import _parse_args_and_config
 from mod_pywebsocket.standalone import _configure_logging
 
+from Config import config
 
-# change as necessary if installed elsewhere
-PINTS_DIR               = "/var/www"
+PINTS_DIR               = config['pints.dir' ]
 INCLUDES_DIR            = PINTS_DIR + "/includes"
 PYTHON_DIR              = PINTS_DIR + "/python"
 PYTHON_WSH_DIR          = PYTHON_DIR + "/ws"
@@ -31,11 +31,10 @@ ADMIN_INCLUDES_DIR      = ADMIN_DIR + "/includes"
 MCAST_GRP = '224.1.1.1'
 MCAST_PORT = 0xBEE2
 
-OPTION_RESTART_FANTIMER_AFTER_POUR = False
-OPTION_DEBUG = True
+OPTION_RESTART_FANTIMER_AFTER_POUR = config['dispatch.restart_fan_after_pour']
 
 def debug(msg):
-    if(OPTION_DEBUG):
+    if(config['dispatch.debug']):
         print "RPINTS: " + msg
         sys.stdout.flush()
                  

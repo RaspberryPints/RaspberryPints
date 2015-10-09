@@ -1,4 +1,4 @@
-var websocket = null;
+var websocket;
 var scheme = window.location.protocol == 'https:' ? 'wss://' : 'ws://';
 var defaultAddress = scheme + window.location.host + ':8081/rpupdate';
 
@@ -28,19 +28,6 @@ function send(msg) {
 	addToLog('> ' + msg);
 }
 
-// hack...
-function wsdelay(ms) {
-    var cur_d = new Date();
-    var cur_ticks = cur_d.getTime();
-    var ms_passed = 0;
-    while(ms_passed < ms) {
-        var d = new Date();  // Possible memory leak?
-        var ticks = d.getTime();
-        ms_passed = ticks - cur_ticks;
-        // d = null;  // Prevent memory leak?
-    }
-}
-
 function wsclose() {
 	if (!websocket) {
 		addToLog('Close: Not connected');
@@ -56,7 +43,7 @@ function wsconnect() {
     window.onbeforeunload = wsclose;
 	
 	websocket = new WebSocket(url);
-
+		
 	websocket.onopen = function() {
 		var logMessage = 'Opened';
 		addToLog(logMessage);
