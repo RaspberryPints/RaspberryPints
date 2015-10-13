@@ -11,6 +11,8 @@ New features:
 * tap valve control: a tap can now have a valve associated, which shuts the tap off or turns it on. This is controlled from the admin panel. The hardware is controlled via the Raspberry Pi's GPIO, and can be configured in the admin panel
 * fan (line cooling) control: RPINTS can now control a fan (or line cooling) output. The pin is configured in the admin panel. Two times can be set: the trigger time is the interval when the fan is turned on, and the fan time is the time how long the fan is running after it has been turned on
 * New tap configuration panel: There is a new panel in the admin section that configures the taps and its associated hardware pins. If configured to use flow counters, the pin associated with each tap can be set here. If configured for tap valve control, the GPIO pin for the tap can be set here. This no longer makes it necessary to enter the flow pin in the tap list when tapping a keg. This panel also has the controls for the fan, if thats configured.
+* firmware is now automatically uploaded to Alamode on service start
+* tap configuration and flow monitoring parameters can be changed on the fly. No need to recompile alamode sketch when config changes
 * added ability to use FireFox on Amazon FireTV as a tap list display
 
 Requirements:
