@@ -14,4 +14,15 @@ abstract class ConfigNames
 	const HeaderTextTruncLen = 'headerTextTruncLen';
 	const NumberOfTaps = 'numberOfTaps';
 	const UseFlowMeter = 'useFlowMeter';
+	const UseTapValves = 'useTapValves';
+	const UseFanControl = 'useFanControl';
+	const UseFanPin = 'useFanPin';
+	const FanInterval = 'fanInterval';
+	const FanOnTime = 'fanOnTime';
+	const PourShutOffCount = 'pourShutOffCount';
+	const PourCountConversion = 'pourCountConversion';
+	const AlamodePourMessageDelay = 'alamodePourMessageDelay';
+	const AlamodePourTriggerCount = 'alamodePourTriggerCount';
+	const AlamodeKickTriggerCount = 'alamodeKickTriggerCount';
+	const AlamodeUpdateTriggerCount = 'alamodeUpdateTriggerCount';
 }

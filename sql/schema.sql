@@ -223,6 +223,19 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'useFlowMeter','0','Use Flow Monitoring', '1', NOW(),NOW() );
 
 
+INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
+('useTapValves', '0', 'Use Tap Valves', 1, NOW(), NOW() ),
+('useFanControl', '0', 'Use Fan Control', 1, NOW(), NOW() ),
+('useFanPin', '17', 'Use Fan I/O Pin', 0, NOW(), NOW() ),
+('fanInterval', '120', 'Fan Interval', 0, NOW(), NOW() ),
+('fanOnTime', '1', 'Fan On time', 0, NOW(), NOW() ),
+('pourShutOffCount', '0', 'pour shutoff amount in counts', 0, NOW(), NOW() ),
+('pourCountConversion', '1500', 'pour count conversion to gallons', 0, NOW(), NOW() ),
+('alamodePourMessageDelay', '300', 'Arduino Pour Message Delay', 0, NOW(), NOW() ),
+('alamodePourTriggerCount', '200', 'Alamode Pour Trigger Count', 0, NOW(), NOW() ),
+('alamodeKickTriggerCount', '30', 'Alamode Kick Trigger Count', 0, NOW(), NOW() ),
+('alamodeUpdateTriggerCount', '250', 'Alamode Update Trigger Count', 0, NOW(), NOW() );
+
 -- --------------------------------------------------------
 
 --
@@ -317,6 +330,18 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 	FOREIGN KEY (`kegTypeId`) REFERENCES kegTypes(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tapconfig`
+--
+
+CREATE TABLE IF NOT EXISTS `tapconfig` (
+  `tapNumber` int(11) DEFAULT NULL,
+  `flowPin` int(11) DEFAULT NULL,
+  `valvePin` int(11) DEFAULT NULL,
+  `valveOn` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -329,7 +354,6 @@ CREATE TABLE IF NOT EXISTS `taps` (
 	`beerId` int(11) NOT NULL,
 	`kegId` int(11) NOT NULL,
 	`tapNumber` int(11) NOT NULL,
-	`pinId` int(2) DEFAULT NULL,
 	`active` tinyint(1) NOT NULL,
 	`ogAct` decimal(4,3) NOT NULL,
 	`fgAct` decimal(4,3) NOT NULL,

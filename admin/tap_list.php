@@ -22,9 +22,7 @@ $tapManager = new TapManager();
 $beerManager = new BeerManager();
 $kegManager = new KegManager();
 
-if( isset($_POST['updateNumberOfTaps'])) {
-	$tapManager->updateTapNumber($_POST['numberOfTaps']);	
-}else if( isset($_POST['newTap'])){
+if( isset($_POST['newTap'])){
 	$tapNumber=$_POST['tapNumber'];
 	redirect("tap_form.php?tapNumber=$tapNumber");
 	
@@ -34,11 +32,35 @@ if( isset($_POST['updateNumberOfTaps'])) {
 	redirect("tap_form.php?tapNumber=$tapNumber&id=$id");
 
 }else if( isset($_POST['closeTap'])){
-	$tapManager->closeTap($_POST['id']);	
+	$tapManager->closeTap($_POST['id']);
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=config');
+	
+}else if( isset($_POST['enableTap'])){
+	$tapManager->enableTap($_POST['tapNumber']);
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
+
+}else if( isset($_POST['disableTap'])){
+	$tapManager->disableTap($_POST['tapNumber']);
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
 }
 
 $numberOfTaps = $tapManager->getTapNumber();
 $activeTaps = $tapManager->getActiveTaps();
+// Code to set config values
+$tapsconfig = array();
+$sql = "SELECT * FROM tapconfig";
+$qry = mysql_query($sql);
+while( $u = mysql_fetch_array($qry) ){
+	$tapsconfig[$u['tapNumber']] = $u;
+};
+
+$config = array();
+$sql = "SELECT * FROM config";
+$qry = mysql_query($sql);
+while($c = mysql_fetch_array($qry)){
+	$config[$c['configName']] = $c['configValue'];
+};
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -72,13 +94,6 @@ include 'header.php';
 	<!-- Right Side/Main Content Start -->
 	<div id="rightside">
 		<div class="contentcontainer med left">
-	<p>
-	<!-- Set Tap Number Form -->
-		<form method="POST" name="taplimit">
-			<b>Number Of Taps:</b> &nbsp <input type="text" name="numberOfTaps" class="smallbox" value="<?php echo $numberOfTaps ?>"> &nbsp <input type="submit" name="updateNumberOfTaps" class="btn" value="Update Number of Taps" />
-		</form>
-	</p>
-	<!-- End Tap Number Form -->
 <br />
 	<!-- Start On Tap Section -->
 	
@@ -117,7 +132,7 @@ include 'header.php';
 							<th>PIN</th>
 							<!-- <th>Start Amount</th> -->
 							<!-- <th>Current Amount</th> -->
-							<th colspan="3"></th>
+							<th colspan="4"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -173,7 +188,21 @@ include 'header.php';
 												<?php echo $tap->get_currentAmount() ?>
 											</td>
 											-->
-											
+											<?php if($config[ConfigNames::UseTapValves]) {
+												$kegOn = "";
+												$kegOnSay = "";
+												if ( $tap->get_valveOn() < 1 ) {
+													$kegOn = "enableTap";
+													$kegOnSay = "Let it flow";
+												} else {
+													$kegOn = "disableTap";
+													$kegOnSay = "Stop this";
+												}
+											?>
+											<td>
+												<input name="<?php echo $kegOn?>" type="submit" class="btn" value="<?php echo $kegOnSay?>" />
+											</td>
+											<?php } ?>
 											<td>
 												<input name="editTap" type="submit" class="btn" value="Update Tap Info" />
 												
@@ -188,7 +217,9 @@ include 'header.php';
 											</td>
 											
 										</tr>
-								<?php } else { ?>
+								<?php } else { 
+										if(isset($tapsconfig[$c])) {
+									?>
 										<input type="hidden" name="tapNumber" value="<?php echo $c?>" />
 										<tr>
 											<td>
@@ -198,7 +229,20 @@ include 'header.php';
 											<td colspan="99">
 												<input name="newTap" type="submit" class="btn" value="Tap a Keg" />
 											</td>
-										</tr>								
+										</tr>
+										<?php 
+										} else {
+										?>
+										<tr>
+											<td>
+												<?php echo $c ?>
+											</td>
+											<td colspan="99">
+												<b>Tap not configured.</b><br/>Hit 'Save Tap Config' for this entry in the 'My Tap Config' screen...
+											</td>
+										</tr>
+										<?php 
+										} ?>
 								<?php } ?>	
 							</form>						
 						<?php } ?>

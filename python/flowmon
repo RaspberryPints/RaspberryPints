@@ -1,23 +1,25 @@
-#!/bin/sh
+#!/bin/bash
+
 
 ### BEGIN INIT INFO
 # Provides:          RaspberryPints flow Monitoring
-# Required-Start:    $remote_fs $syslog
-# Required-Stop:     $remote_fs $syslog
+# Required-Start:    $remote_fs $syslog mysql apache2
+# Required-Stop:     $remote_fs $syslog mysql apache2
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Put a short description of the service here
 # Description:       Put a long description of the service here
 ### END INIT INFO
 
-# Change the next 3 lines to suit where you install your script and what you want to call it
 DIR=/var/www/python
-DAEMON=$DIR/flow_monitor.py
+DAEMON=/usr/bin/python
+DAEMON_ARGS=$DIR/PintDispatch.py
 DAEMON_NAME=RPFlowMon
+LOG_FILE=/var/log/rpints.log
 
 # This next line determines what user the script runs as.
 # Root generally not recommended but necessary if you are using the Raspberry Pi GPIO from Python.
-DAEMON_USER=pi
+DAEMON_USER=root
 
 # The process ID of the script when it runs is stored here:
 PIDFILE=/var/run/$DAEMON_NAME.pid
@@ -26,7 +28,8 @@ PIDFILE=/var/run/$DAEMON_NAME.pid
 
 do_start () {
     log_daemon_msg "Starting system $DAEMON_NAME daemon"
-    start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER --chuid $DAEMON_USER --startas $DAEMON
+    touch $LOG_FILE
+    start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER --chuid $DAEMON_USER --startas /bin/bash -- -c "exec $DAEMON $DAEMON_ARGS > $LOG_FILE 2>&1"
     log_end_msg $?
 }
 do_stop () {

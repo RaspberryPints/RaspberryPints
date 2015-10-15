@@ -53,6 +53,7 @@
 		
 		$tapManager = new TapManager();
 		$numberOfTaps = $tapManager->GetTapNumber();
+		$taps = $tapManager->getActiveTaps();
 	}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -62,26 +63,37 @@
 	<head>
 		<title>RaspberryPints</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
 		<!-- Set location of Cascading Style Sheet -->
 		<link rel="stylesheet" type="text/css" href="style.css">
 		
 		<?php if($config[ConfigNames::UseHighResolution]) { ?>
 			<link rel="stylesheet" type="text/css" href="high-res.css">
 		<?php } ?>
+			
+		<?php	
+		if(! empty($_SERVER['HTTP_USER_AGENT'])){
+    		$useragent = $_SERVER['HTTP_USER_AGENT'];
+    		if( preg_match('@(Android)@', $useragent) ){ ?>
+			<link rel="stylesheet" type="text/css" href="style-aftv.css">
+    	<?php	    
+    		}
+		} ?>
 		
 		<link rel="shortcut icon" href="img/pint.ico">
-	</head> 
+<!-- <meta name="viewport" content="initial-scale=0.7,width=device-width,height=device-height,target-densitydpi=device-dpi,user-scalable=yes" />  -->		
+		<script type="text/javascript" src="admin/scripts/ws.js"></script>	
+		</head> 
 
-	<body>
-		<div class="bodywrapper">
+<body onload="wsconnect(); ">
+<!--	<body> -->
+	<div class="bodywrapper">
 			<!-- Header with Brewery Logo and Project Name -->
 			<div class="header clearfix">
 				<div class="HeaderLeft">
 					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
 						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="200" alt=""></a>
 					<?php } else { ?>
-						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="100" alt=""></a>
+						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="80" alt=""></a>
 					<?php } ?>
 				</div>
 				<div class="HeaderCenter">
@@ -99,7 +111,7 @@
 					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
 						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints-4k.png" height="200" alt=""></a>
 					<?php } else { ?>
-						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints.png" height="100" alt=""></a>
+						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints.png" height="80" alt=""></a>
 					<?php } ?>
 				</div>
 			</div>
@@ -145,8 +157,9 @@
 				</thead>
 				<tbody>
 					<?php for($i = 1; $i <= $numberOfTaps; $i++) {
-						if( isset($beers[$i]) ) {
+						if( isset($beers[$i]) && isset($taps[$i])) {
 							$beer = $beers[$i];
+							$tap = $taps[$i];
 					?>
 							<tr class="<?php if($i%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beer['id']; ?>">
 								<?php if($config[ConfigNames::ShowTapNumCol]){ ?>
@@ -296,9 +309,22 @@
 												$kegImgClass = "keg-green";
 											else if( $percentRemaining >= 100 )
 												$kegImgClass = "keg-full";
+											
+											$kegOn ="";
+											if($config[ConfigNames::UseTapValves]){
+												if ( $tap->get_valveOn() > 0 ) 
+													$kegOn = "keg-enabled";
+												else
+													$kegOn = "keg-disabled";
+											}
 										?>
 										<div class="keg-container">
-											<div class="keg-indicator"><div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%"></div></div>
+											<div class="keg-indicator">
+												<div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%; width: 100%" ></div>
+												<?php if($config[ConfigNames::UseTapValves]){ ?>
+													<div class="<?php echo $kegOn ?>"></div>
+												<?php } ?>
+											</div>
 										</div>
 										<h2><?php echo number_format(($beer['remainAmount'] * 128)); ?> fl oz left</h2>
 									</td>
@@ -362,7 +388,13 @@
 									<td class="keg">
 										<h3></h3>
 										<div class="keg-container">
-											<div class="keg-indicator"><div class="keg-full keg-empty" style="height:0%"></div></div>
+											<div class="keg-indicator"><div class="keg-full keg-empty" style="height:0%"></div>
+												<?php if($config[ConfigNames::UseTapValves]){ 
+													$kegOn ="";
+												?>
+													<div class="<?php echo $kegOn ?>"></div>
+												<?php } ?>
+											</div>
 										</div>
 										<h2>0 fl oz left</h2>
 									</td>

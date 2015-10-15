@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$tap = new Tap();
 		$tap->setFromArray($_POST);
 		$tapManager->Save($tap);
+		file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=config');
 	}
 	redirect('tap_list.php');
 }
@@ -152,21 +153,6 @@ include 'header.php';
 					<?php echo $htmlHelper->ToSelectList("kegId", $kegList, "label", "id", $tap->get_kegId(), "Select One"); ?>
 				</td>
 			</tr>
-		<!-- If useFlowMeters is off this will not display -->
-		<?php 
-			if($config[ConfigNames::UseFlowMeter]) {
-				?>
-			<tr>
-				<td style="vertical-align:middle;">
-					<b>Pin Number: <font color="red">*</font></b>
-				</td>
-				<td>
-					<input type="text" id="pinId" class="mediumbox" name="pinId" value="<?php echo $tap->get_pinId() ?>" />
-				</td>
-			</tr>
-			<?php
-			}
-			?>
 			<tr>
 				<td style="vertical-align:middle;">
 					<b>Start Amount</b> (gal): <b><font color="red">*</font></b>
