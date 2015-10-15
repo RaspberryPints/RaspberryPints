@@ -1,11 +1,4 @@
 #!/usr/bin/python
-# ----------------------------------------------------------------------------
-# "THE BEER-WARE LICENSE" (Revision 42 3/4):
-# <thomas@hentschel.net> wrote this file. As long as you retain this notice you
-#  can do whatever you want with this stuff. If we meet some day, and you think
-#  this stuff is worth it, you can buy me a beer in return 
-# -Th
-#  ----------------------------------------------------------------------------
 
 import threading
 import time
@@ -20,6 +13,7 @@ from FlowMonitor import FlowMonitor
 from threading import Timer
 import SocketServer
 import pprint
+import serial
 from sys import stdin
 from mod_pywebsocket.standalone import WebSocketServer
 from mod_pywebsocket.standalone import _parse_args_and_config
@@ -272,9 +266,15 @@ class PintDispatch(object):
     # start running the flow monitor in it's own thread
     def spawn_flowmonitor(self):
         while True:
-            self.flowmonitor.monitor()
-            log("flowmonitor aborted, restarting...")
-           # time.sleep(1)
+            try:
+                self.flowmonitor.monitor()
+            except Exception, e:
+                log("serial connection stopped...")
+                debug( str(e) )
+            finally:
+                time.sleep(1)
+                log("flowmonitor aborted, restarting...")
+                
 
     def spawnWebSocketServer(self):
         args = ["-p", "8081", "-d", "/var/www/python/ws"]
