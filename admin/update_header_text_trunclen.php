@@ -15,7 +15,7 @@ $header_text_trunclen=$_POST['header_text_trunclen'];
 
 // update data in mysql database
 $sql="UPDATE config SET configValue='$header_text_trunclen' WHERE configName ='headerTextTruncLen'";
-$result=mysql_query($sql);
+$result=mysqli_query($con,$sql);
 
 // if successfully updated.
 if($result){

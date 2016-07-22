@@ -5,9 +5,10 @@
 <div id="welcome"> &nbsp; Logged in as: <br />
 	&nbsp;
 	<?php
+    require_once 'includes/functions.php';
 		$sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
-		$result=mysql_query($sql);
-		echo mysql_result($result, 0, 'name');
+		$result=mysqli_query($con,$sql);
+		echo mysqli_result($result, 0, 'name');
 	?>
 </div>
 

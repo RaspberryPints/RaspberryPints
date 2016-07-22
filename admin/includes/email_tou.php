@@ -9,8 +9,8 @@ $email=encode($_POST['email']);
 	
 // update data in mysql database
 $sql="SELECT username FROM users WHERE email='$email'";
-$result=mysql_query($sql);
-$username=mysql_fetch_row($result);
+$result=mysqli_query($con,$sql);
+$username=mysqli_fetch_row($result);
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

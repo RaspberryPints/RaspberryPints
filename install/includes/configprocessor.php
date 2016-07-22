@@ -175,7 +175,7 @@ require_once __DIR__.'/config_files.php';
 	$sql_query = split_sql_file($sql_query, ';');
 
 
-	mysql_connect($servername,'root',$rootpass) or die('error connection');
+	$con=mysqli_connect($servername,'root',$rootpass) or die('error connection');
 
 	$i=1;
 	foreach($sql_query as $sql){
@@ -183,7 +183,7 @@ require_once __DIR__.'/config_files.php';
 	//echo "	";
 	//echo $sql;
 	//echo "<br>";
-	mysql_query($sql) or die('error in query');
+	mysqli_query($con,$sql) or die('error in query');
 	}
 
 	echo "Success!<br>";
@@ -236,13 +236,13 @@ require_once __DIR__.'/config_files.php';
 			$sql_query = split_sql_file($sql_query, ';');
 
 
-			mysql_connect($servername,'root',$rootpass) or die('error connection');
+			$con=mysqli_connect($servername,'root',$rootpass) or die('error connection');
 
 			$i=1;
 			foreach($sql_query as $sql){
 			//echo $i++;
 			//echo "	";
-			mysql_query($sql) or die('error in query');
+			mysqli_query($con,$sql) or die('error in query');
 			}
 
 			
