@@ -81,3 +81,17 @@ blockquote:after {
 	margin-right: -8%;
 	height: 25px; 
 }
+
+/* Beer Style List switching */
+#style-select-div select {
+  display:none;
+}
+#style-select-div.beerStyleList2015 #beerStyleId2015.beerStyleList2015{
+  display:block;
+}
+#style-select-div.beerStyleListPre2015 #beerStyleIdPre2015.beerStyleListPre2015{
+  display:block;
+}
+#style-select-div.beerStyleListOther #beerStyleIdOther.beerStyleListOther{
+  display:block;
+}

@@ -11,8 +11,11 @@ class BeerStyleManager{
     $this->link = $con;
   }
 
-	function GetAll(){
-		$sql="SELECT * FROM beerStyles ORDER BY name";
+	function GetAll($beerStyleList=''){
+    if ($beerStyleList == '')
+      $sql="SELECT * FROM beerStyles ORDER BY id";
+    else
+      $sql="SELECT * FROM beerStyles WHERE beerStyleList='$beerStyleList' ORDER BY id";
 		$qry = mysqli_query($this->link,$sql);
 		
 		$beerStyles = array();

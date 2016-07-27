@@ -31,7 +31,6 @@ if( isset($_GET['id'])){
 	$beer = new Beer();
 }
 
-$beerStyleList = $beerStyleManager->GetAll();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -84,11 +83,57 @@ require __DIR__.'/header.php';
 				</td>
 			</tr>
 			<tr>
-				<td>
+				<td rowspan=2>
 					<b>Style:<font color="red">*</font></b>
 				</td>
 				<td>
-					<?php echo $htmlHelper->ToSelectList("beerStyleId", $beerStyleList, "name", "id", $beer->get_beerStyleId(), "Select One"); ?>
+          Beer style list: <br>
+          <?php 
+          if(empty($beer->get_beerStyleId())) 
+            $beerStyleList="bjcp2015"; 
+          else 
+          {
+            $beerStyle = $beerStyleManager->GetById($beer->get_beerStyleId());
+            if ($beerStyle->get_beerStyleList() == 'BJCP 2015')
+              $beerStyleList="bjcp2015"; 
+            elseif ($beerStyle->get_beerStyleList() == 'BJCP pre 2015')
+              $beerStyleList="bjcpPre2015"; 
+            elseif ($beerStyle->get_beerStyleList() == 'Other')
+              $beerStyleList="other"; 
+            else 
+              $beerStyleList=""; 
+          }
+          ?>
+          BJCP 2015<input type="radio" name="beerStyleList" id='styleListBtn2015'
+            <?php if (isset($beerStyleList) && $beerStyleList=="bjcp2015") echo "checked"; ?>
+            value="bjcp2015">&nbsp;
+					BJCP pre 2015<input type="radio" name="beerStyleList" id='styleListBtnPre2015'
+            <?php if (isset($beerStyleList) && $beerStyleList=="bjcpPre2015") echo "checked"; ?>
+            value="bjcpPre2015">&nbsp;
+					Other<input type="radio" name="beerStyleList" id='styleListBtnOther'
+            <?php if (isset($beerStyleList) && $beerStyleList=="other") echo "checked"; ?>
+            value="other">&nbsp;
+          
+				</td>
+			</tr>
+			<tr>
+				<td>
+          <?php echo "<div id='style-select-div' class='";
+            if ($beerStyleList == "bjcpPre2015") 
+              echo "beerStyleListPre2015";
+            elseif ($beerStyleList == "other") 
+              echo "beerStyleListOther";
+            else 
+              echo "beerStyleList2015";
+            echo "'>";
+          ?>
+            <?php $beerStyleList = $beerStyleManager->GetAll("BJCP 2015"); ?>
+            <?php echo $htmlHelper->ToCombinedSelectList("beerStyleId2015", $beerStyleList, "catNum", "name", "id", $beer->get_beerStyleId(), "Select One", "beerStyleList2015"); ?>
+            <?php $beerStyleList = $beerStyleManager->GetAll("BJCP pre 2015"); ?>
+            <?php echo $htmlHelper->ToCombinedSelectList("beerStyleIdPre2015", $beerStyleList, "catNum", "name", "id", $beer->get_beerStyleId(), "Select One", "beerStyleListPre2015"); ?>
+            <?php $beerStyleList = $beerStyleManager->GetAll("Other"); ?>
+            <?php echo $htmlHelper->ToCombinedSelectList("beerStyleIdOther", $beerStyleList, "catNum", "name", "id", $beer->get_beerStyleId(), "Select One", "beerStyleListOther"); ?>
+          </div>
 				</td>
 			</tr>
 			<tr>
@@ -181,6 +226,18 @@ require __DIR__.'/scripts.php';
 		});
 		
 	});
+</script>
+
+<script type='text/javascript'>
+  document.getElementById('styleListBtn2015').onclick = function() {
+    document.getElementById('style-select-div').className = 'beerStyleList2015';
+  }
+  document.getElementById('styleListBtnPre2015').onclick = function() {
+    document.getElementById('style-select-div').className = 'beerStyleListPre2015';
+  }
+  document.getElementById('styleListBtnOther').onclick = function() {
+    document.getElementById('style-select-div').className = 'beerStyleListOther';
+  }
 </script>
 
 	<!-- End Js -->

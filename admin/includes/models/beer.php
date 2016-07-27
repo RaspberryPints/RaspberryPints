@@ -62,11 +62,17 @@ class Beer
 		else
 			$this->set_name(null);
 			
-		if( isset($postArr['beerStyleId']) ){
+    if( $postArr['beerStyleList'] == 'bjcp2015' )
+			$this->set_beerStyleId($postArr['beerStyleId2015']);
+    else if( $postArr['beerStyleList'] == 'bjcpPre2015' )
+			$this->set_beerStyleId($postArr['beerStyleIdPre2015']);
+    else if( $postArr['beerStyleList'] == 'other' )
+			$this->set_beerStyleId($postArr['beerStyleIdOther']);
+    else if( isset($postArr['beerStyleId']) )
 			$this->set_beerStyleId($postArr['beerStyleId']);
-		}else{
+    else
 			$this->set_beerStyleId(null);
-		}
+
 			
 		if( isset($postArr['notes']) )
 			$this->set_notes($postArr['notes']);

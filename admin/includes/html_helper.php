@@ -30,6 +30,37 @@ class HtmlHelper{
 		
 		return $str;
 	}
+
+	function ToCombinedSelectList($selectName, $items, $name1Property, $name2Property, $valueProperty, $selectedValue, $defaultName = null, $cssClasses = ""){
+		
+		$str = "<select id='$selectName' name='$selectName' class='$cssClasses'>";
+		
+			if( $defaultName ){
+				$str .= "<option value=''>" . $defaultName . "</option>";
+			}
+		
+			foreach($items as $item){
+				$value = $item->{"get_$valueProperty"}();
+				$name1 = $item->{"get_$name1Property"}();
+				$name2 = $item->{"get_$name2Property"}();
+				
+				$str .= "<option value='$value' ";
+				
+				if( $selectedValue == $value ){
+					$str .= "selected ";
+				}
+				
+				$str .= ">(";
+				$str .= $name1;
+				$str .= ") ";
+				$str .= $name2;
+				$str .= "</option>";
+			}
+		
+		$str .= "</select>";
+		
+		return $str;
+	}
 	
 	function ShowMessage(){
 		$str = "";
