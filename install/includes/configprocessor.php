@@ -21,6 +21,8 @@ $adminuser = $_POST["adminuser"];
 $adminpass1 = $_POST["adminpass1"];
 $adminpass2 = $_POST["adminpass2"];
 $action = $_POST["selectaction"];
+$adminname = $_POST["adminname"];
+$adminemail = $_POST["adminemail"];
 
 //Create the MD5 hash value for the admin password
 $adminhash = md5($adminpass1);
@@ -50,9 +52,9 @@ flush();
 $con=mysqli_connect($servername,"root",$rootpass);
 
 if (mysqli_connect_errno())
-  {
-  $validerror .= "<br><strong>Cannot connect the the database using the supplied information.</strong>";
-  }
+{
+$validerror .= "<br><strong>Cannot connect the the database using the supplied information.</strong>";
+}
 echo "Success!<br>";
 flush();
 
@@ -61,7 +63,7 @@ echo "Checking config folder permissions...";
 flush();
 if (!is_writable(dirname('../../includes/functions.php')))
 {
-   $validerror .= "<br><strong>Cannot write the configuration files. Please check the /includes/ folder permissions. See the RPints Installation page on www.raspberrypints.com.</strong>";
+$validerror .= "<br><strong>Cannot write the configuration files. Please check the /includes/ folder permissions. See the RPints Installation page on www.raspberrypints.com.</strong>";
 }
 
 if (!is_writable(dirname('../../admin/includes/checklogin.php')))
@@ -71,7 +73,7 @@ $validerror .= "<br><strong>Cannot write the configuration files. Please check t
 echo "Success!<br>";
 flush();
 
-  //##TODO## Check if administrator account already exists
+//##TODO## Check if administrator account already exists
 
 
 
@@ -84,7 +86,7 @@ if ($validerror !='')
 		echo "</body></html>";
 		die();
 	}
-
+// CLEAR INSTALLATION DATA ROUTINES
 if ($action == 'remove')
 {
 	echo "Deleting raspberrypints database...";
@@ -93,9 +95,9 @@ if ($action == 'remove')
 	// Check connection
 
 	if (mysqli_connect_errno())
-	  {
-	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
-	  }
+	{
+	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	}
 
 	$sql = "DROP database raspberrypints;";
 	$result = mysqli_query($con,$sql);
@@ -105,9 +107,18 @@ if ($action == 'remove')
 	
 	echo "Removing configuration files...";
 	flush();
+	try {
 	unlink('../../includes/config.php');
 	unlink('../../admin/includes/conn.php');
 	unlink('../../admin/includes/configp.php');
+	} catch (Exception $e) {
+		echo 'Caught exception: ',  $e->getMessage(), "\n";
+	}
+	
+	//unlink('../../includes/config.php');
+	//unlink('../../admin/includes/conn.php');
+	//unlink('../../admin/includes/configp.php');
+
 	echo "Success!<br>";
 	flush();
 }
@@ -141,9 +152,9 @@ require_once __DIR__.'/config_files.php';
 	// Check connection
 
 	if (mysqli_connect_errno())
-	  {
-	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
-	  }
+	{
+	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	}
 
 	$sql = "GRANT ALL ON *.* TO '" . $dbuser . "'@'" . $servername . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
 	$result = mysqli_query($con,$sql);
@@ -185,15 +196,29 @@ require_once __DIR__.'/config_files.php';
 	// Check connection
 
 	if (mysqli_connect_errno())
-	  {
-	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
-	  }
+	{
+	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	}
 	$currentdate = Date('Y-m-d H:i:s');
-	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','name','email','" . $currentdate . "','" . $currentdate . "');";
+	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','" . $adminname . "','" . $adminemail . "','" . $currentdate . "','" . $currentdate . "');";
 	$result = mysqli_query($con,$sql);
 	mysqli_close($con);
 	echo "Success!<br>";
 	flush();
+	
+	//-----------------Delete the index.html page-----------------
+	echo "Deleting default index.html page...";
+	flush();
+	if (!unlink("../../index.html"))
+	  {
+	  echo ("File already deleted");
+	  }
+	else
+	  {
+	  echo ("Success!");
+	  }
+	flush();
+	
 	//-----------------Load the sample data if requested-----------
 
 		if(!empty($_POST['sampledata'])) 
@@ -231,8 +256,8 @@ if ($action != 'remove')
 {
 	##TODO## Add better error handling before showing the Success message
 	echo '<br /><br /><br /><h3> Congratulations! Your Raspberry Pints has been setup successfully.<br />';
-	echo 'Tap List - <a href="http://' . $_SERVER['HTTP_HOST'] . '/index.php">http://' . $_SERVER['HTTP_HOST'] . '/index.php</a><br />';
-	echo 'Administration - <a href="http://' . $_SERVER['HTTP_HOST'] . '/admin/index.php">http://' . $_SERVER['HTTP_HOST'] . '/admin/index.php</a><br />';
+	echo 'Click for - <a href="../../index.php">Tap List</a><br />';
+	echo 'Click for - <a href="../../admin/index.php">Administration </a><br />';
 }
 
 ?>

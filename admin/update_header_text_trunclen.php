@@ -5,16 +5,16 @@ header("location:index.php");
 }
 require 'includes/conn.php';
 require '../includes/config_names.php';
-require_once 'includes/functions.php';
+
 
 // Get values from form 
-$header_text=encode($_POST['header_text']);
+$header_text_trunclen=$_POST['header_text_trunclen'];
 
 
 
 
 // update data in mysql database
-$sql="UPDATE config SET configValue='$header_text' WHERE configName ='headerText'";
+$sql="UPDATE config SET configValue='$header_text_trunclen' WHERE configName ='headerTextTruncLen'";
 $result=mysql_query($sql);
 
 // if successfully updated.
