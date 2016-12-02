@@ -24,14 +24,14 @@
 		
 		$config = array();
 		$sql = "SELECT * FROM config";
-		$qry = mysql_query($sql);
-		while($c = mysql_fetch_array($qry)){
+		$qry = mysqli_query($link,$sql);
+		while($c = mysqli_fetch_array($qry)){
 			$config[$c['configName']] = $c['configValue'];
 		}
 		
 		$sql =  "SELECT * FROM vwGetActiveTaps";
-		$qry = mysql_query($sql);
-		while($b = mysql_fetch_array($qry))
+		$qry = mysqli_query($link,$sql);
+		while($b = mysqli_fetch_array($qry))
 		{
 			$beeritem = array(
 				"id" => $b['id'],
@@ -270,12 +270,12 @@
 											// Code for new kegs that are not full
                                                                                         $tid = $beer['id'];
                                                                                         $sql = "Select kegId from taps where id=".$tid." limit 1";
-                                                                                        $kegID = mysql_query($sql);
-                                                                                        $kegID = mysql_fetch_array($kegID);
+                                                                                        $kegID = mysqli_query($link,$sql);
+                                                                                        $kegID = mysqli_fetch_array($kegID);
                                                                                         //echo $kegID[0];
                                                                                         $sql = "SELECT `kegTypes`.`maxAmount` as kVolume FROM  `kegs`,`kegTypes` where  kegs.kegTypeId = kegTypes.id and kegs.id =".$kegID[0]."";
-                                                                                        $kvol = mysql_query($sql);
-                                                                                        $kvol = mysql_fetch_array($kvol);
+                                                                                        $kvol = mysqli_query($link,$sql);
+                                                                                        $kvol = mysqli_fetch_array($kvol);
                                                                                         $kvol = $kvol[0];
                                                                                         $kegImgClass = "";
                                                                                         if ($beer['startAmount']>=$kvol) {

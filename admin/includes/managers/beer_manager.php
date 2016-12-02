@@ -3,6 +3,14 @@ require_once __DIR__.'/../models/beer.php';
 
 class BeerManager{
 
+  public $link;
+
+  function __construct()
+  {
+    include __DIR__.'/../conn.php';
+    $this->link = $con;
+  }
+
 	function Save($beer){
 		$sql = "";
 		if($beer->get_id()){
@@ -33,15 +41,15 @@ class BeerManager{
 		
 		//echo $sql; exit();
 		
-		mysql_query($sql);
+		mysqli_query($this->link,$sql);
 	}
 	
 	function GetAll(){
 		$sql="SELECT * FROM beers ORDER BY name";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($this->link,$sql);
 		
 		$beers = array();
-		while($i = mysql_fetch_array($qry)){
+		while($i = mysqli_fetch_array($qry)){
 			$beer = new Beer();
 			$beer->setFromArray($i);
 			$beers[$beer->get_id()] = $beer;		
@@ -52,10 +60,10 @@ class BeerManager{
 	
 	function GetAllActive(){
 		$sql="SELECT * FROM beers WHERE active = 1 ORDER BY name";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($this->link,$sql);
 		
 		$beers = array();
-		while($i = mysql_fetch_array($qry)){
+		while($i = mysqli_fetch_array($qry)){
 			$beer = new Beer();
 			$beer->setFromArray($i);
 			$beers[$beer->get_id()] = $beer;	
@@ -66,9 +74,9 @@ class BeerManager{
 		
 	function GetById($id){
 		$sql="SELECT * FROM beers WHERE id = $id";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($this->link,$sql);
 		
-		if( $i = mysql_fetch_array($qry) ){		
+		if( $i = mysqli_fetch_array($qry) ){		
 			$beer = new Beer();
 			$beer->setFromArray($i);
 			return $beer;
@@ -79,16 +87,16 @@ class BeerManager{
 	
 	function Inactivate($id){
 		$sql = "SELECT * FROM taps WHERE beerId = $id AND active = 1";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($this->link,$sql);
 		
-		if( mysql_fetch_array($qry) ){		
+		if( mysqli_fetch_array($qry) ){		
 			$_SESSION['errorMessage'] = "Beer is associated with an active tap and could not be deleted.";
 			return;
 		}
 	
 		$sql="UPDATE beers SET active = 0 WHERE id = $id";
 		//echo $sql; exit();
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($this->link,$sql);
 		
 		$_SESSION['successMessage'] = "Beer successfully deleted.";
 	}

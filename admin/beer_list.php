@@ -97,7 +97,12 @@ include 'header.php';
 											if (strpos($beerStyle->get_catNum(),'N/A') !== false)
 												echo "&nbsp;";
 											else
-												echo "<br>BJCP Category: " , $beerStyle->get_catNum() , " - " , $beerStyle->get_category();
+                        if ($beerStyle->get_beerStyleList() == 'BJCP 2015')
+                          echo "<br>BJCP(2015):", $beerStyle->get_catNum() , " - " , $beerStyle->get_category();
+                        elseif ($beerStyle->get_beerStyleList() == 'BJCP pre 2015')
+                          echo "<br>BJCP:", $beerStyle->get_catNum() , " - " , $beerStyle->get_category();
+                        else
+                          echo "<br>Other:" , $beerStyle->get_beerStyleList() ;
 										?>
 									</th>
 									<th align="center" width="5%" style="text-align: center; vertical-align: middle; margin: 0; padding: 0;">
