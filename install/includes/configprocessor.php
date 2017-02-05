@@ -49,7 +49,7 @@ flush();
 //Validate DB connectivity
 echo "Checking DB connectivity...";
 flush();
-$con=mysqli_connect($servername,"root",$rootpass);
+$con=mysqli_connect($servername,"root",$rootpass, null);
 
 if (mysqli_connect_errno())
 {
@@ -91,7 +91,7 @@ if ($action == 'remove')
 {
 	echo "Deleting raspberrypints database...";
 	flush();
-	$con=mysqli_connect($servername,"root",$rootpass);
+	$con=mysqli_connect($servername,"root",$rootpass, null);
 	// Check connection
 
 	if (mysqli_connect_errno())
@@ -139,7 +139,7 @@ require_once __DIR__.'/config_files.php';
 	//-----------------Create RPints User--------------------------
 	echo "Creating RPints database user...";
 	flush();
-	$con=mysqli_connect($servername,"root",$rootpass);
+	$con=mysqli_connect($servername,"root",$rootpass, null);
 	// Check connection
 
 	if (mysqli_connect_errno())
@@ -166,7 +166,7 @@ require_once __DIR__.'/config_files.php';
 	$sql_query = split_sql_file($sql_query, ';');
 
 
-	mysqli_connect($servername,'root',$rootpass) or die('error connection');
+	mysqli_connect($servername,'root',$rootpass, null) or die('error connection');
 
 	$i=1;
 	foreach($sql_query as $sql){
@@ -213,7 +213,7 @@ require_once __DIR__.'/config_files.php';
 			$sql_query = split_sql_file($sql_query, ';');
 
 
-			mysqli_connect($servername,'root',$rootpass) or die('error connection');
+			mysqli_connect($servername,'root',$rootpass, null) or die('error connection');
 
 			$i=1;
 			foreach($sql_query as $sql){
