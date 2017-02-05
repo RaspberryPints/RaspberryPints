@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `beerStyles` (
 	`srmMax` decimal(2) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
@@ -171,8 +171,7 @@ CREATE TABLE IF NOT EXISTS `beers` (
 	`name` text NOT NULL,
 	`beerStyleId` int(11) NOT NULL,
 	`notes` text NOT NULL,
-	`ogEst` decimal(4,3) NOT NULL,
-	`fgEst` decimal(4,3) NOT NULL,
+	`abv` decimal(3,1) NOT NULL,
 	`srmEst` decimal(3,1) NOT NULL,
 	`ibuEst` int(4) NOT NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
@@ -234,7 +233,7 @@ CREATE TABLE IF NOT EXISTS `kegTypes` (
 	`maxAmount` decimal(6,2) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
@@ -270,7 +269,7 @@ CREATE TABLE IF NOT EXISTS `kegStatuses` (
 	`name` text NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`code`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
@@ -310,7 +309,7 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`kegStatusCode`) REFERENCES kegStatuses(`Code`) ON DELETE CASCADE,
 	FOREIGN KEY (`kegTypeId`) REFERENCES kegTypes(`id`) ON DELETE CASCADE
@@ -337,7 +336,7 @@ CREATE TABLE IF NOT EXISTS `taps` (
 	`currentAmount` decimal(6,1) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
 	FOREIGN KEY (`kegId`) REFERENCES kegs(`id`) ON DELETE CASCADE
@@ -355,7 +354,7 @@ CREATE TABLE IF NOT EXISTS `pours` (
 	`amountPoured` decimal(6,1) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (tapId) REFERENCES taps(id) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;

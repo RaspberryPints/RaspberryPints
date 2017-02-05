@@ -51,10 +51,10 @@ $beerStyleList = $beerStyleManager->GetAll();
 require __DIR__.'/header.php';
 ?>
 	<!-- End Header -->
-		
+
 	<!-- Top Breadcrumb Start -->
 	<div id="breadcrumb">
-		<ul>	
+		<ul>
 			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
 			<li><strong>Location:</strong></li>
 			<li><a href="beer_list.php">My Beers</a></li>
@@ -62,8 +62,8 @@ require __DIR__.'/header.php';
 			<li class="current">Beer Form</li>
 		</ul>
 	</div>
-	<!-- Top Breadcrumb End --> 
-	
+	<!-- Top Breadcrumb End -->
+
 	<!-- Right Side/Main Content Start -->
 	<div id="rightside">
 		<div class="contentcontainer med left">
@@ -112,15 +112,7 @@ require __DIR__.'/header.php';
 					<b>OG:<font color="red">*</font></b>
 				</td>
 				<td>
-					<input type="text" id="og" class="smallbox" name="og" value="<?php echo $beer->get_og() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<b>FG:<font color="red">*</font></b>
-				</td>
-				<td>
-					<input type="text" id="fg" class="smallbox" name="fg" value="<?php echo $beer->get_fg() ?>" />
+					<input type="text" id="og" class="smallbox" name="abv" value="<?php echo $beer->get_abv() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -136,50 +128,50 @@ require __DIR__.'/header.php';
 					<input name="save" type="submit" class="btn" value="Save" />
 					<input type="button" class="btn" value="Cancel" onclick="window.location='beer_list.php'" />
 				</td>
-			</tr>								
+			</tr>
 		</table>
 		<br />
-		<div align="right">			
-			&nbsp &nbsp 
+		<div align="right">
+			&nbsp &nbsp
 		</div>
 
 	</form>
 	</div>
 	<!-- End On Tap Section -->
 
-	<!-- Start Footer -->   
-<?php 
+	<!-- Start Footer -->
+<?php
 require __DIR__.'/footer.php';
 ?>
 
 	<!-- End Footer -->
-		
+
 	</div>
 	<!-- Right Side/Main Content End -->
-	<!-- Start Left Bar Menu -->   
-<?php 
+	<!-- Start Left Bar Menu -->
+<?php
 require __DIR__.'/left_bar.php';
 ?>
-	<!-- End Left Bar Menu -->  
+	<!-- End Left Bar Menu -->
 	<!-- Start Js  -->
 <?php
 require __DIR__.'/scripts.php';
 ?>
 
 <script>
-	$(function() {		
-		
+	$(function() {
+
 		$('#beer-form').validate({
 		rules: {
 			name: { required: true },
-			style: { required: true },			
+			style: { required: true },
 			srm: { required: true, number: true },
 			ibu: { required: true, number: true },
 			og: { required: true, number: true },
 			fg: { required: true, number: true }
 		}
 		});
-		
+
 	});
 </script>
 
@@ -189,7 +181,7 @@ require __DIR__.'/scripts.php';
 	<script type='text/javascript'>
 	DD_belatedPNG.fix('img, .notifycount, .selected');
 	</script>
-	<![endif]--> 
+	<![endif]-->
 
 </body>
 </html>
