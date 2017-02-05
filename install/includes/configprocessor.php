@@ -78,7 +78,7 @@ flush();
 
 
 //Display errors and die
-if ($validerror !='') 
+if ($validerror !='')
 	{
 		echo "<html><body>";
 		echo $validerror;
@@ -104,7 +104,7 @@ if ($action == 'remove')
 	mysqli_close($con);
 	echo "Success!<br>";
 	flush();
-	
+
 	echo "Removing configuration files...";
 	flush();
 	unlink('../../includes/config.php');
@@ -113,16 +113,16 @@ if ($action == 'remove')
 	echo "Success!<br>";
 	flush();
 }
-	
+
 if ($action == 'install')
 {
-	
+
 require_once __DIR__.'/config_files.php';
-	
+
 	//-----------------Create the main config file-----------------
 	echo "Update config files...";
 	flush();
-	
+
 	file_put_contents('../../includes/config.php', $mainconfigstring);
 
 	echo "Success!<br>";
@@ -133,7 +133,7 @@ require_once __DIR__.'/config_files.php';
 
 	file_put_contents('../../admin/includes/conn.php', $adminconfig1);
 	file_put_contents('../../admin/includes/configp.php', $adminconfig2);
-	
+
 	echo "Success!<br>";
 	flush();
 	//-----------------Create RPints User--------------------------
@@ -158,15 +158,15 @@ require_once __DIR__.'/config_files.php';
 	flush();
 	$dbms_schema = "../../sql/schema.sql";
 
-		
+
 	$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema)) or die('Cannot find SQL schema file. ');
-	
+
 	$sql_query = remove_remarks($sql_query);
 	$sql_query = remove_comments($sql_query);
 	$sql_query = split_sql_file($sql_query, ';');
 
 
-	mysql_connect($servername,'root',$rootpass) or die('error connection');
+	mysqli_connect($servername,'root',$rootpass) or die('error connection');
 
 	$i=1;
 	foreach($sql_query as $sql){
@@ -198,22 +198,22 @@ require_once __DIR__.'/config_files.php';
 	flush();
 	//-----------------Load the sample data if requested-----------
 
-		if(!empty($_POST['sampledata'])) 
+		if(!empty($_POST['sampledata']))
 		{
 			echo "Adding sample data...";
 			flush();
-			
+
 			$dbms_schema = "../../sql/test_data.sql";
 
-		
+
 			$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema)) or die('Cannot find SQL schema file. ');
-			
+
 			$sql_query = remove_remarks($sql_query);
 			$sql_query = remove_comments($sql_query);
 			$sql_query = split_sql_file($sql_query, ';');
 
 
-			mysql_connect($servername,'root',$rootpass) or die('error connection');
+			mysqli_connect($servername,'root',$rootpass) or die('error connection');
 
 			$i=1;
 			foreach($sql_query as $sql){
@@ -222,7 +222,7 @@ require_once __DIR__.'/config_files.php';
 			mysql_query($sql) or die('error in query');
 			}
 
-			
+
 			echo "Success!<br>";
 			flush();
 		}
