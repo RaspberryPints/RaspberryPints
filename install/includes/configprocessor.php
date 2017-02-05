@@ -49,9 +49,9 @@ flush();
 //Validate DB connectivity
 echo "Checking DB connectivity...";
 flush();
-$con=mysqli_connect($servername,"root",$rootpass, null);
+$con=mysql_connect($servername,"root",$rootpass, null);
 
-if (mysqli_connect_errno())
+if (mysql_connect_errno())
 {
 $validerror .= "<br><strong>Cannot connect the the database using the supplied information.</strong>";
 }
@@ -91,17 +91,17 @@ if ($action == 'remove')
 {
 	echo "Deleting raspberrypints database...";
 	flush();
-	$con=mysqli_connect($servername,"root",$rootpass, null);
+	$con=mysql_connect($servername,"root",$rootpass, null);
 	// Check connection
 
-	if (mysqli_connect_errno())
+	if (mysql_connect_errno())
 	{
-	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	echo "Failed to connect to MySQL: " . mysql_connect_error();
 	}
 
 	$sql = "DROP database raspberrypints;";
-	$result = mysqli_query($con,$sql);
-	mysqli_close($con);
+	$result = mysql_query($con,$sql);
+	mysql_close($con);
 	echo "Success!<br>";
 	flush();
 
@@ -139,17 +139,17 @@ require_once __DIR__.'/config_files.php';
 	//-----------------Create RPints User--------------------------
 	echo "Creating RPints database user...";
 	flush();
-	$con=mysqli_connect($servername,"root",$rootpass, null);
+	$con=mysql_connect($servername,"root",$rootpass, null);
 	// Check connection
 
-	if (mysqli_connect_errno())
+	if (mysql_connect_errno())
 	{
-	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	echo "Failed to connect to MySQL: " . mysql_connect_error();
 	}
 
 	$sql = "GRANT ALL ON *.* TO '" . $dbuser . "'@'" . $servername . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
-	$result = mysqli_query($con,$sql);
-	mysqli_close($con);
+	$result = mysql_query($con,$sql);
+	mysql_close($con);
 	echo "Success!<br>";
 	flush();
 
@@ -166,7 +166,7 @@ require_once __DIR__.'/config_files.php';
 	$sql_query = split_sql_file($sql_query, ';');
 
 
-	mysqli_connect($servername,'root',$rootpass, null) or die('error connection');
+	mysql_connect($servername,'root',$rootpass, null) or die('error connection');
 
 	$i=1;
 	foreach($sql_query as $sql){
@@ -183,17 +183,17 @@ require_once __DIR__.'/config_files.php';
 	//-----------------Add the admin user to the Users DB----------
 	echo "Adding new admin user...";
 	flush();
-	$con=mysqli_connect($servername,"root",$rootpass,"raspberrypints");
+	$con=mysql_connect($servername,"root",$rootpass,"raspberrypints");
 	// Check connection
 
-	if (mysqli_connect_errno())
+	if (mysql_connect_errno())
 	{
-	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	echo "Failed to connect to MySQL: " . mysql_connect_error();
 	}
 	$currentdate = Date('Y-m-d H:i:s');
 	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','" . $adminname . "','" . $adminemail . "','" . $currentdate . "','" . $currentdate . "');";
-	$result = mysqli_query($con,$sql);
-	mysqli_close($con);
+	$result = mysql_query($con,$sql);
+	mysql_close($con);
 	echo "Success!<br>";
 	flush();
 	//-----------------Load the sample data if requested-----------
@@ -213,7 +213,7 @@ require_once __DIR__.'/config_files.php';
 			$sql_query = split_sql_file($sql_query, ';');
 
 
-			mysqli_connect($servername,'root',$rootpass, null) or die('error connection');
+			mysql_connect($servername,'root',$rootpass, null) or die('error connection');
 
 			$i=1;
 			foreach($sql_query as $sql){
