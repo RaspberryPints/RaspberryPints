@@ -76,25 +76,6 @@ class Beer
 		else
 			$this->set_notes(null);
 
-
-		if( isset($postArr['ogAct']) )
-			$this->set_og($postArr['ogAct']);
-		else if( isset($postArr['ogEst']) )
-			$this->set_og($postArr['ogEst']);
-		else if( isset($postArr['og']) )
-			$this->set_og($postArr['og']);
-		else
-			$this->set_og(null);
-
-		if( isset($postArr['fgAct']) )
-			$this->set_fg($postArr['fgAct']);
-		else if( isset($postArr['fgEst']) )
-			$this->set_fg($postArr['fgEst']);
-		else if( isset($postArr['fg']) )
-			$this->set_fg($postArr['fg']);
-		else
-			$this->set_fg(null);
-
 		if( isset($postArr['abv']) )
 			$this->set_abv($postArr['abv']);
 		else

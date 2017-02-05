@@ -157,7 +157,7 @@
 
 								<?php if($config[ConfigNames::ShowSrmCol]){ ?>
 									<td class="srm">
-										<h3><?php echo $beer['og']; ?> OG</h3>
+										<h3>Unknown OG</h3>
 
 										<div class="srm-container">
 											<div class="srm-indicator" style="background-color: rgb(<?php echo $beer['srmRgb'] != "" ? $beer['srmRgb'] : "0,0,0" ?>)"></div>
@@ -165,6 +165,7 @@
 										</div>
 
 										<h2><?php echo $beer['srm']; ?> SRM</h2>
+
 									</td>
 								<?php } ?>
 
@@ -172,11 +173,7 @@
 									<td class="ibu">
 										<h3>
 											<?php
-												if( $beer['og'] > 1 ){
-													echo number_format((($beer['ibu'])/(($beer['og']-1)*1000)), 2, '.', '');
-												}else{
-													echo '0.00';
-												}
+												echo '0.00';
 											?>
 											BU:GU
 										</h3>
@@ -205,13 +202,7 @@
 								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3><?php
-											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
-											$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
-											if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
-												$calfromalc = 0;
-												$calfromcarbs = 0;
-												}
-											echo number_format($calfromalc + $calfromcarbs), " kCal";
+											echo number_format(0), " kCal";
 											?>
 										</h3>
 										<div class="abv-container">
@@ -243,13 +234,7 @@
 								<?php if(($config[ConfigNames::ShowAbvCol]) && ! ($config[ConfigNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3><?php
-											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
-											$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
-											if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
-												$calfromalc = 0;
-												$calfromcarbs = 0;
-												}
-											echo number_format($calfromalc + $calfromcarbs), " kCal";
+											echo number_format(0), " kCal";
 											?>
 										</h3>
 										<div class="abv">
