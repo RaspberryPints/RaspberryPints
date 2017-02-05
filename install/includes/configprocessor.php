@@ -51,10 +51,6 @@ echo "Checking DB connectivity...";
 flush();
 $con=mysql_connect($servername,"root",$rootpass);
 
-if (mysql_connect_errno())
-{
-$validerror .= "<br><strong>Cannot connect the the database using the supplied information.</strong>";
-}
 echo "Success!<br>";
 flush();
 
@@ -93,11 +89,6 @@ if ($action == 'remove')
 	flush();
 	$con=mysql_connect($servername,"root",$rootpass);
 	// Check connection
-
-	if (mysql_connect_errno())
-	{
-	echo "Failed to connect to MySQL: " . mysql_connect_error();
-	}
 
 	$sql = "DROP database raspberrypints;";
 	$result = mysql_query($con,$sql);
@@ -142,11 +133,6 @@ require_once __DIR__.'/config_files.php';
 	$con=mysql_connect($servername,"root",$rootpass);
 	// Check connection
 
-	if (mysql_connect_errno())
-	{
-	echo "Failed to connect to MySQL: " . mysql_connect_error();
-	}
-
 	$sql = "GRANT ALL ON *.* TO '" . $dbuser . "'@'" . $servername . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
 	$result = mysql_query($con,$sql);
 	mysql_close($con);
@@ -186,10 +172,6 @@ require_once __DIR__.'/config_files.php';
 	$con=mysql_connect($servername,"root",$rootpass,"raspberrypints");
 	// Check connection
 
-	if (mysql_connect_errno())
-	{
-	echo "Failed to connect to MySQL: " . mysql_connect_error();
-	}
 	$currentdate = Date('Y-m-d H:i:s');
 	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','" . $adminname . "','" . $adminemail . "','" . $currentdate . "','" . $currentdate . "');";
 	$result = mysql_query($con,$sql);
