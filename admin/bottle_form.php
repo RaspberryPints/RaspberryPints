@@ -8,35 +8,35 @@ require_once '../includes/config_names.php';
 require_once 'includes/html_helper.php';
 require_once 'includes/functions.php';
 
-require_once 'includes/models/keg.php';
-require_once 'includes/models/kegType.php';
+require_once 'includes/models/bottle.php';
+require_once 'includes/models/bottleType.php';
 require_once 'includes/models/kegStatus.php';
 
-require_once 'includes/managers/keg_manager.php';
+require_once 'includes/managers/bottle_manager.php';
 require_once 'includes/managers/kegStatus_manager.php';
-require_once 'includes/managers/kegType_manager.php';
+require_once 'includes/managers/bottleType_manager.php';
 
 $htmlHelper = new HtmlHelper();
-$kegManager = new KegManager();
+$bottleManager = new BottleManager();
 $kegStatusManager = new KegStatusManager();
-$kegTypeManager = new KegTypeManager();
+$bottleTypeManager = new BottleTypeManager();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$keg = new Keg();
-	$keg->setFromArray($_POST);
-	$kegManager->Save($keg);
-	redirect('keg_list.php');
+	$bottle = new Bottle();
+	$bottle->setFromArray($_POST);
+	$bottleManager->Save($bottle);
+	redirect('bottle_list.php');
 }
 
 if( isset($_GET['id'])){
-	$keg = $kegManager->GetById($_GET['id']);
+	$bottle = $bottleManager->GetById($_GET['id']);
 }else{
-	$keg = new Keg();
+	$bottle = new Bottle();
 }
 
 $kegStatusList = $kegStatusManager->GetAll();
-$kegTypeList = $kegTypeManager->GetAll();
+$bottleTypeList = $bottleTypeManager->GetAll();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -62,9 +62,9 @@ include 'header.php';
 		<ul>	
 			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
 			<li><strong>Location:</strong></li>
-			<li><a href="keg_list.php">Keg List</a></li>
+			<li><a href="keg_list.php">Bottle List</a></li>
 			<li>/</li>
-			<li class="current">Keg Form</li>
+			<li class="current">Bottle Form</li>
 		</ul>
 	</div>
 	<!-- Top Breadcrumb End --> 
@@ -76,7 +76,7 @@ include 'header.php';
 		fields marked with an * are required
 
 	<form id="keg-form" method="POST">
-		<input type="hidden" name="id" value="<?php echo $keg->get_id() ?>" />
+		<input type="hidden" name="id" value="<?php echo $bottle->get_id() ?>" />
 
 		<table width="950" border="0" cellspacing="0" cellpadding="0">
 			<tr>
@@ -84,7 +84,7 @@ include 'header.php';
 					Label: <b><font color="red">*</color></b>
 				</td>
 				<td>
-					<input type="text" id="label" class="mediumbox" name="label" value="<?php echo $keg->get_label() ?>" />
+					<input type="text" id="label" class="mediumbox" name="label" value="<?php echo $bottle->get_label() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -92,39 +92,15 @@ include 'header.php';
 					Type: <b><font color="red">*</color></b>
 				</td>
 				<td>
-					<?php echo $htmlHelper->ToSelectList("kegTypeId", $kegTypeList, "name", "id", $keg->get_kegTypeId(), "Select One"); ?>
+					<?php echo $htmlHelper->ToSelectList("bottleTypeId", $bottleTypeList, "name", "id", $bottle->get_bottleTypeId(), "Select One"); ?>
 				</td>
 			</tr>	
-			<tr>
-				<td>
-					Make:
-				</td>
-				<td>
-					<input type="text" id="make" class="mediumbox" name="make" value="<?php echo $keg->get_make() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Model:
-				</td>
-				<td>
-					<input type="text" id="model" class="mediumbox" name="model" value="<?php echo $keg->get_model() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Serial:
-				</td>
-				<td>
-					<input type="text" id="serial" class="mediumbox" name="serial" value="<?php echo $keg->get_serial() ?>" />
-				</td>
-			</tr>
 			<tr>
 				<td>
 					Stamped Owner:
 				</td>
 				<td>
-					<input type="text" id="stampedOwner" class="mediumbox" name="stampedOwner" value="<?php echo $keg->get_stampedOwner() ?>" />
+					<input type="text" id="stampedOwner" class="mediumbox" name="stampedOwner" value="<?php echo $bottle->get_stampedOwner() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -132,15 +108,7 @@ include 'header.php';
 					Stamped Location:
 				</td>
 				<td>
-					<input type="text" id="stampedLoc" class="mediumbox" name="stampedLoc" value="<?php echo $keg->get_stampedLoc() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Empty Weight:
-				</td>
-				<td>
-					<input type="text" id="weight" class="mediumbox" name="weight" value="<?php echo $keg->get_weight() ?>" />
+					<input type="text" id="stampedLoc" class="mediumbox" name="stampedLoc" value="<?php echo $bottle->get_stampedLoc() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -148,7 +116,7 @@ include 'header.php';
 					Notes:
 				</td>
 				<td>
-					<textarea id="notes" class="text-input textarea" name="notes" style="width:500px;height:100px"><?php echo $keg->get_stampedOwner() ?></textarea>
+					<textarea id="notes" class="text-input textarea" name="notes" style="width:500px;height:100px"><?php echo $bottle->get_stampedOwner() ?></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -156,7 +124,7 @@ include 'header.php';
 					Status: <b><font color="red">*</color></b>
 				</td>
 				<td>
-					<?php echo $htmlHelper->ToSelectList("kegStatusCode", $kegStatusList, "name", "code", $keg->get_kegStatusCode(), "Select One"); ?>
+					<?php echo $htmlHelper->ToSelectList("kegStatusCode", $kegStatusList, "name", "code", $bottle->get_kegStatusCode(), "Select One"); ?>
 				</td>
 			</tr>
 			<tr>
@@ -200,6 +168,7 @@ include 'scripts.php';
 		$('#keg-form').validate({
 		rules: {
 			label: { required: true, number: true },
+			weight: {required:true, number:true),
 			kegTypeId: { required: true },
 			kegStatusCode: { required: true }
 		}

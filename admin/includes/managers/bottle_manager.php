@@ -1,15 +1,15 @@
 <?php
-require_once __DIR__.'/../models/keg.php';
+require_once __DIR__.'/../models/bottle.php';
 
-class KegManager{
+class BottleManager{
 
 	function GetAll(){
-		$sql="SELECT * FROM kegs ORDER BY label";
+		$sql="SELECT * FROM bottles ORDER BY label";
 		$qry = mysql_query($sql);
 		
 		$kegs = array();
 		while($i = mysql_fetch_array($qry)){
-			$keg = new Keg();
+			$keg = new Shelf();
 			$keg->setFromArray($i);
 			$kegs[$keg->get_id()] = $keg;
 		}
@@ -18,46 +18,45 @@ class KegManager{
 	}
 	
 	function GetAllActive(){
-		$sql="SELECT * FROM kegs WHERE active = 1 ORDER BY label";
+		$sql="SELECT * FROM bottles WHERE active = 1 ORDER BY label";
 		$qry = mysql_query($sql);
 		
-		$kegs = array();
+		$bottles = array();
 		while($i = mysql_fetch_array($qry)){
-			$keg = new Keg();
-			$keg->setFromArray($i);
-			$kegs[$keg->get_id()] = $keg;
+			$bottle = new Bottle();
+			$bottle->setFromArray($i);
+			$bottles[$bottle->get_id()] = $bottle;
 		}
 		
-		return $kegs;
+		return $bottles;
 	}
 	
 	function GetAllAvailable(){
-		$sql="SELECT * FROM kegs WHERE active = 1
+		$sql="SELECT * FROM bottles WHERE active = 1
 			AND kegStatusCode != 'SERVING'
 			AND kegStatusCode != 'NEEDS_CLEANING'
 			AND kegStatusCode != 'NEEDS_PARTS'
 			AND kegStatusCode != 'NEEDS_REPAIRS'
 		ORDER BY label";
 		$qry = mysql_query($sql);
-		
-		$kegs = array();
+		$bottles = array();
 		while($i = mysql_fetch_array($qry)){
-			$keg = new Keg();
-			$keg->setFromArray($i);
-			$kegs[$keg->get_id()] = $keg;
+			$bottle = new Bottle();
+			$bottle->setFromArray($i);
+			$bottles[$bottle->get_id()] = $bottle;
 		}
 		
-		return $kegs;
+		return $bottles;
 	}
 			
 	function GetById($id){
-		$sql="SELECT * FROM kegs WHERE id = $id";
+		$sql="SELECT * FROM bottles WHERE id = $id";
 		$qry = mysql_query($sql);
 		
 		if( $i = mysql_fetch_array($qry) ){		
-			$keg = new Keg();
-			$keg->setFromArray($i);
-			return $keg;
+			$bottle = new Bottle();
+			$bottle->setFromArray($i);
+			return $bottle;
 		}
 
 		return null;
@@ -67,32 +66,24 @@ class KegManager{
 	function Save($keg){
 		$sql = "";
 		if($keg->get_id()){
-			$sql = 	"UPDATE kegs " .
+			$sql = 	"UPDATE bottles " .
 					"SET " .
 						"label = '" . $keg->get_label() . "', " .
-						"kegTypeId = " . $keg->get_kegTypeId() . ", " .
-						"make = '" . $keg->get_make() . "', " .
-						"model = '" . $keg->get_model() . "', " .
-						"serial = '" . $keg->get_serial() . "', " .
+						"bottleTypeId = " . $keg->get_bottleTypeId() . ", " .
 						"stampedOwner = '" . $keg->get_stampedOwner() . "', " .
 						"stampedLoc = '" . $keg->get_stampedLoc() . "', " .
-						"weight = '" . $keg->get_weight() . "', " .
 						"notes = '" . $keg->get_notes() . "', " .
 						"kegStatusCode = '" . $keg->get_kegStatusCode() . "', " .
 						"modifiedDate = NOW() ".
 					"WHERE id = " . $keg->get_id();
 					
 		}else{
-			$sql = 	"INSERT INTO kegs(label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, weight, notes, kegStatusCode, createdDate, modifiedDate ) " .
+			$sql = 	"INSERT INTO bottles(label, bottleTypeId, stampedOwner, stampedLoc,  notes, kegStatusCode, createdDate, modifiedDate ) " .
 					"VALUES(" . 
 						"'". $keg->get_label() . "', " . 
-						$keg->get_kegTypeId() . ", " . 
-						"'". $keg->get_make() . "', " . 
-						"'". $keg->get_model() . "', " . 
-						"'". $keg->get_serial() . "', " . 
+						$keg->get_bottleTypeId() . ", " .  
 						"'". $keg->get_stampedOwner() . "', " . 
 						"'". $keg->get_stampedLoc() . "', " . 
-						"'". $keg->get_weight() . "', " . 
 						"'". $keg->get_notes() . "', " . 
 						"'". $keg->get_kegStatusCode() . "', " . 
 						"NOW(), NOW())";
@@ -100,19 +91,22 @@ class KegManager{
 		
 		//echo $sql; exit();
 		
-		mysql_query($sql);
+		$result = mysql_query($sql);
+		if (!$result){
+			die('Invalid query: ' . mysql_error() . $sql);
+		}
 	}
 	
 	function Inactivate($id){
-		$sql = "SELECT * FROM taps WHERE kegId = $id AND active = 1";
+		$sql = "SELECT * FROM shelves WHERE bottleId = $id AND active = 1";
 		$qry = mysql_query($sql);
 		
 		if( mysql_fetch_array($qry) ){		
-			$_SESSION['errorMessage'] = "Keg is associated with an active tap and could not be deleted.";
+			$_SESSION['errorMessage'] = "Bottle is associated with an active tap and could not be deleted.";
 			return;
 		}
 	
-		$sql="UPDATE kegs SET active = 0 WHERE id = $id";
+		$sql="UPDATE bottles SET active = 0 WHERE id = $id";
 		//echo $sql; exit();
 		
 		$qry = mysql_query($sql);

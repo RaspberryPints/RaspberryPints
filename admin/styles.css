@@ -56,3 +56,28 @@
 	#welcome
 { font-family: 'Fredoka One', cursive; font-weight: 400; color: white; font-size:140% }		
 	
+
+blockquote { 
+	margin: 0 15% 0 15%;
+	color: #666; 
+}
+blockquote:before, blockquote:after { 
+	display: block; 
+	font-size: 500%; 
+	color: #000000;
+}
+blockquote:before {
+	float:left;
+	content: "\201C";
+	margin-left: -8%; 
+	margin-top: -12px;
+	height: 0; 
+}
+blockquote:after { 
+	float:right;
+	content: "\201D"; 
+	margin-left: 100%; 
+	margin-top: -25px; 
+	margin-right: -8%;
+	height: 25px; 
+}

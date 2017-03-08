@@ -8,37 +8,37 @@ require_once __DIR__.'/includes/conn.php';
 require_once __DIR__.'/includes/functions.php';
 require_once __DIR__.'/includes/html_helper.php';
 
-require_once __DIR__.'/includes/models/tap.php';
+require_once __DIR__.'/includes/models/shelf.php';
 require_once __DIR__.'/includes/models/beer.php';
-require_once __DIR__.'/includes/models/keg.php';
+require_once __DIR__.'/includes/models/bottle.php';
 
 require_once __DIR__.'/includes/managers/beer_manager.php';
-require_once __DIR__.'/includes/managers/keg_manager.php';
-require_once __DIR__.'/includes/managers/tap_manager.php';
+require_once __DIR__.'/includes/managers/bottle_manager.php';
+require_once __DIR__.'/includes/managers/shelf_manager.php';
 
 
 $htmlHelper = new HtmlHelper();
-$tapManager = new TapManager();
+$shelfManager = new ShelfManager();
 $beerManager = new BeerManager();
-$kegManager = new KegManager();
+$bottleManager = new BottleManager();
 
-if( isset($_POST['updateNumberOfTaps'])) {
-	$tapManager->updateTapNumber($_POST['numberOfTaps']);	
-}else if( isset($_POST['newTap'])){
-	$tapNumber=$_POST['tapNumber'];
-	redirect("tap_form.php?tapNumber=$tapNumber");
+if( isset($_POST['updateNumberOfShelves'])) {
+	$shelfManager->updateShelfNumber($_POST['numberOfShelves']);	
+}else if( isset($_POST['newShelf'])){
+	$shelfNumber=$_POST['shelfNumber'];
+	redirect("shelf_form.php?shelfNumber=$shelfNumber");
 	
 }else if( isset($_POST['editTap'])){
-	$tapNumber=$_POST['tapNumber'];
+	$shelfNumber=$_POST['shelfNumber'];
 	$id=$_POST['id'];
-	redirect("tap_form.php?tapNumber=$tapNumber&id=$id");
+	redirect("shelf_form.php?shelfNumber=$shefNumber&id=$id");
 
-}else if( isset($_POST['closeTap'])){
-	$tapManager->closeTap($_POST['id']);	
+}else if( isset($_POST['closeShelf'])){
+	$shelfManager->closeShelf($_POST['id']);	
 }
 
-$numberOfTaps = $tapManager->getTapNumber();
-$activeTaps = $tapManager->getActiveTaps();
+$numberOfShelves = $shelfManager->getShelfNumber();
+$activeShelves = $shelfManager->getActiveShelves();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -64,7 +64,7 @@ include 'header.php';
 		<ul>	
 			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
 			<li><strong>Location:</strong></li>
-			<li class="current">Tap List</li>            
+			<li class="current">Shelf List</li>            
 		</ul>
 	</div>
 	<!-- Top Breadcrumb End --> 
@@ -75,7 +75,7 @@ include 'header.php';
 	<p>
 	<!-- Set Tap Number Form -->
 		<form method="POST" name="taplimit">
-			<b>Number Of Taps:</b> &nbsp <input type="text" name="numberOfTaps" class="smallbox" value="<?php echo $numberOfTaps ?>"> &nbsp <input type="submit" name="updateNumberOfTaps" class="btn" value="Update Number of Taps" />
+			<b>Number Of Taps:</b> &nbsp <input type="text" name="numberOfShelves" class="smallbox" value="<?php echo $numberOfShelves ?>"> &nbsp <input type="submit" name="updateNumberOfShelves" class="btn" value="Update Number of Shelves" />
 		</form>
 	</p>
 	<!-- End Tap Number Form -->
@@ -85,13 +85,13 @@ include 'header.php';
 	<?php 
 		$tapsErrorMsg = "";
 		$beers = $beerManager->GetAll();
-		$kegs = $kegManager->GetAll();
+		$bottles = $bottleManager->GetAll();
 		
 		if( count($beers) == 0 ){
 			$tapsErrorMsg .= "At least 1 beer needs to be created, before you can assign a tap. <a href='beer_form.php'>Click here to create a beer</a><br/>";
 		}
 		
-		if( count($kegs) == 0 ){
+		if( count($bottles) == 0 ){
 			$tapsErrorMsg .= "At least 1 keg needs to be created, before you can assign a tap. <a href='keg_form.php'>Click here to create a keg</a><br/>";
 		}					
 		
@@ -102,7 +102,7 @@ include 'header.php';
 	?>	
 	
 			<form method="POST">
-				<input type="hidden" name="numberOfTaps" value="<?php echo $numberOfTaps ?>" />
+				<input type="hidden" name="numberOfShelf" value="<?php echo $numberOfShelves ?>" />
 				
 				<table width="800" border="0" cellspacing="0" cellpadding="0">
 					<thead>
@@ -113,21 +113,21 @@ include 'header.php';
 							<th>IBU</th>
 							<th>OG</th>
 							<th>FG</th>
-							<th>Keg</th>
+							<th>Bottle</th>
 							<!-- <th>Start Amount</th> -->
 							<!-- <th>Current Amount</th> -->
 							<th colspan="3"></th>
 						</tr>
 					</thead>
 					<tbody>
-						<?php for($c = 1; $c <= $numberOfTaps; $c++ ){ ?>
+						<?php for($c = 1; $c <= $numberOfShelves; $c++ ){ ?>
 							<form method="POST">
-								<?php if( array_key_exists($c, $activeTaps) ){
-										$tap = $activeTaps[$c];							
-										$beer = $beerManager->GetById($tap->get_beerId());
-										$keg = $kegManager->GetById($tap->get_kegId());
+								<?php if( array_key_exists($c, $activeShelves) ){
+										$shelf = $activeShelves[$c];							
+										$beer = $beerManager->GetById($shelf->get_beerId());
+										$bottle = $bottleManager->GetById($shelf->get_bottleId());
 								?>
-										<input type="hidden" name="id" value="<?php echo $tap->get_id()?>" />
+										<input type="hidden" name="id" value="<?php echo $shelf->get_id()?>" />
 										<input type="hidden" name="tapNumber" value="<?php echo $c?>" />
 										<tr>
 											<td>
@@ -139,34 +139,34 @@ include 'header.php';
 											</td>
 											
 											<td>
-												<?php echo $tap->get_srm() ?>
+												<?php echo $shelf->get_srm() ?>
 											</td>
 											
 											<td>							
-												<?php echo $tap->get_ibu() ?>
+												<?php echo $shelf->get_ibu() ?>
 											</td>
 											
 											<td>							
-												<?php echo $tap->get_og() ?>
+												<?php echo $shelf->get_og() ?>
 											</td>
 											
 											<td>
-												<?php echo $tap->get_fg() ?>
+												<?php echo $shelf->get_fg() ?>
 											</td>
 																		
 											<td>
-												<?php echo $keg->get_label() ?>
+												<?php echo $bottle->get_label() ?>
 											</td>
 											
 											<!--
 											<td>
-												<?php echo $tap->get_startAmount() ?>
+												<?php echo $shelf->get_startAmount() ?>
 											</td>
 											-->
 											
 											<!--
 											<td>
-												<?php echo $tap->get_currentAmount() ?>
+												<?php echo $shelf->get_currentAmount() ?>
 											</td>
 											-->
 											
@@ -185,14 +185,14 @@ include 'header.php';
 											
 										</tr>
 								<?php } else { ?>
-										<input type="hidden" name="tapNumber" value="<?php echo $c?>" />
+										<input type="hidden" name="shelfNumber" value="<?php echo $c?>" />
 										<tr>
 											<td>
 												<?php echo $c ?>
 											</td>
 											
 											<td colspan="99">
-												<input name="newTap" type="submit" class="btn" value="Tap a Keg" />
+												<input name="newShelf" type="submit" class="btn" value="Put Bottle on a Shelf" />
 											</td>
 										</tr>								
 								<?php } ?>	

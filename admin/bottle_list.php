@@ -13,22 +13,22 @@ require_once __DIR__.'/includes/models/keg.php';
 require_once __DIR__.'/includes/models/kegType.php';
 require_once __DIR__.'/includes/models/kegStatus.php';
 
-require_once __DIR__.'/includes/managers/keg_manager.php';
+require_once __DIR__.'/includes/managers/bottle_manager.php';
 require_once __DIR__.'/includes/managers/kegStatus_manager.php';
-require_once __DIR__.'/includes/managers/kegType_manager.php';
+require_once __DIR__.'/includes/managers/bottleType_manager.php';
 
 $htmlHelper = new HtmlHelper();
-$kegManager = new KegManager();
+$BottleManager = new BottleManager();
 $kegStatusManager = new KegStatusManager();
-$kegTypeManager = new KegTypeManager();
+$bottleTypeManager = new BottleTypeManager();
 
 
 
 if (isset($_POST['inactivateKeg'])) {
-	$kegManager->Inactivate($_POST['id']);		
+	$BottleManager->Inactivate($_POST['id']);		
 }
 
-$kegs = $kegManager->GetAllActive();
+$kegs = $BottleManager->GetAllActive();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -54,7 +54,7 @@ include 'header.php';
 		<ul>	
 			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
 			<li><strong>Location:</strong></li>
-			<li class="current">Keg List</li>            
+			<li class="current">Bottle List</li>            
 		</ul>
 	</div>
 	<!-- Top Breadcrumb End --> 
@@ -63,7 +63,7 @@ include 'header.php';
 	<div id="rightside">
 		<div class="contentcontainer lg left">
 			<div class="headings alt">
-				<h2>Keg List</h2>
+				<h2>Bottle Set List</h2>
 			</div>
 			<br><br>
 			<h3>Currently Serving:</h3>
@@ -75,9 +75,9 @@ include 'header.php';
 					<tr>
 						<th width="5%"><center>Label</center></th>
 						<th width="10%" colspan="2"><center>Status / Update</center></th>
-						<th width="28%"><center>Keg Type</center></th>
-						<th width="28%"><center>Make</center></th>
-						<th width="29%"><center>Model</center></th>
+						<th width="28%"><center>Bottle Type</center></th>
+						<th width="28%"><center></center></th>
+						<th width="29%"><center></center></th>
 					</tr>
 				</thead>
 
@@ -85,7 +85,7 @@ include 'header.php';
 					<?php 
 						if( count($kegs) == 0 ){  
 					?>
-					<tr><td class="no-results" colspan="99">No kegs :(<br>Perhaps you should add one?</td></tr>
+					<tr><td class="no-results" colspan="99">No bottle sets :(<br>Perhaps you should add one?</td></tr>
 					<?php 
 						}else{  
 							foreach ($kegs as $keg){
@@ -96,8 +96,8 @@ include 'header.php';
 									$kegStatus = new KegStatus();
 								}
 								
-								if( $keg->get_kegTypeId() != null ){
-									$kegType = $kegTypeManager->GetById($keg->get_kegTypeId());
+								if( $keg->get_bottleTypeId() != null ){
+									$kegType = $bottleTypeManager->GetById($keg->get_bottleTypeId());
 								}else{
 									$kegType = new KegType();
 								}
@@ -116,16 +116,16 @@ include 'header.php';
 						</td>
 						
 						<td style="vertical-align:middle; font-size:1.2em;">
-							<center><b><?php echo $keg->get_make() ?></b></center>
+							<center><b></b></center>
 						</td>
 						
 						<td class="rightborder thick"style="vertical-align:middle; font-size:1.2em;">
-							<center><b><?php echo $keg->get_model() ?></b></center>
+							<center><b></b></center>
 						</td>
 					</tr>
 					<tr class="intborder">
 						<td class="leftborder">
-							<center><input name="editTap" type="button" class="btn" value="Edit" onclick="window.location='keg_form.php?id=<?php echo $keg->get_id()?>'" /></center>
+							<center><input name="editBottle" type="button" class="btn" value="Edit" onclick="window.location='bottle_form.php?id=<?php echo $keg->get_id()?>'" /></center>
 						</td>
 						
 						<td class="rightborder">
@@ -137,8 +137,6 @@ include 'header.php';
 							</center>
 						</td>
 						<td colspan="3">
-							<b>Stamped Owner / Location:</b> &nbsp; <?php echo $keg->get_stampedOwner() ?> / <?php echo $keg->get_stampedLoc() ?><br>
-							<b>Serial Number:</b> &nbsp; <?php echo $keg->get_serial() ?> &nbsp; &nbsp; &nbsp; <b>Empty weight:</b> <?php echo $keg->get_weight() ?><br>
 							<b>Notes:</b> &nbsp; <?php echo $keg->get_notes() ?>
 						</td>
 					</tr>
@@ -151,7 +149,7 @@ include 'header.php';
 			
 			<?php $htmlHelper->ShowMessage(); ?>
 			<br/><br/>
-			<input type="submit" class="btn" value="Add a Keg" onclick="window.location='keg_form.php'" />
+			<input type="submit" class="btn" value="Add a Bottle Set" onclick="window.location='bottle_form.php'" />
 				<!-- Start Footer -->   
 <?php
 include 'footer.php';
