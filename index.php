@@ -118,13 +118,19 @@
 
 						<?php if($config[ConfigNames::ShowSrmCol]){ ?>
 							<th class="srm">
-								GRAVITY<hr>COLOR
+                <?php if($config[ConfigNames::ShowGravity]){ ?>
+								  GRAVITY<hr>
+                <?php } ?>
+                COLOR
 							</th>
 						<?php } ?>
 
 						<?php if($config[ConfigNames::ShowIbuCol]){ ?>
-							<th class="ibu">
-								BALANCE<hr>BITTERNESS
+              <th class="ibu">
+                <?php if($config[ConfigNames::ShowBalance]){ ?>
+                  BALANCE<hr>
+                <?php } ?>
+								BITTERNESS
 							</th>
 						<?php } ?>
 
@@ -134,7 +140,10 @@
 
 						<?php if($config[ConfigNames::ShowAbvCol]){ ?>
 							<th class="abv">
-								CALORIES<hr>ALCOHOL
+                <?php if($config[ConfigNames::ShowCalories]){ ?>
+                  CALORIES<hr>
+                <?php } ?>
+								ALCOHOL
 							</th>
 						<?php } ?>
 
@@ -159,7 +168,9 @@
 
 								<?php if($config[ConfigNames::ShowSrmCol]){ ?>
 									<td class="srm">
-										<h3>Unknown OG</h3>
+                    <?php if($config[ConfigNames::ShowGravity]){ ?>
+                      <h3>Unknown OG</h3>
+                    <?php } ?>
 
 										<div class="srm-container">
 											<div class="srm-indicator" style="background-color: rgb(<?php echo $beer['srmRgb'] != "" ? $beer['srmRgb'] : "0,0,0" ?>)"></div>
@@ -173,12 +184,9 @@
 
 								<?php if($config[ConfigNames::ShowIbuCol]){ ?>
 									<td class="ibu">
-										<h3>
-											<?php
-												echo '0.00';
-											?>
-											BU:GU
-										</h3>
+                    <?php if($config[ConfigNames::ShowBalance]){ ?>
+                      <h3>0.00 BU:GU</h3>
+                    <?php } ?>
 
 										<div class="ibu-container">
 											<div class="ibu-indicator"><div class="ibu-full" style="height:<?php echo $beer['ibu'] > 100 ? 100 : $beer['ibu']; ?>%"></div></div>
@@ -203,10 +211,13 @@
 
 								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::ShowAbvImg])){ ?>
 									<td class="abv">
-										<h3><?php
-											echo number_format(0), " kCal";
-											?>
-										</h3>
+                    <?php if($config[ConfigNames::ShowCalories]){ ?>
+                      <h3>
+                        <?php
+  											echo number_format(0), " kCal";
+  											?>
+                      </h3>
+                    <?php } ?>
 										<div class="abv-container">
 											<?php
 												$abv = $beer['abv'];
@@ -229,22 +240,25 @@
 												}
 											?>
 										</div>
-										<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?> ABV</h2>
+										<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?></h2>
 									</td>
 								<?php } ?>
 
 								<?php if(($config[ConfigNames::ShowAbvCol]) && ! ($config[ConfigNames::ShowAbvImg])){ ?>
 									<td class="abv">
-										<h3><?php
-											echo number_format(0), " kCal";
-											?>
-										</h3>
+                    <?php if($config[ConfigNames::ShowCalories]){ ?>
+                      <h3>
+                        <?php
+  											echo number_format(0), " kCal";
+  											?>
+                      </h3>
+                    <?php } ?>
 										<div class="abv">
 											<?php
 												$abv = $beer['abv'];
 											?>
 										</div>
-										<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?> ABV</h2>
+										<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?></h2>
 									</td>
 								<?php } ?>
 
