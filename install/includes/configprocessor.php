@@ -173,7 +173,7 @@ require_once __DIR__.'/config_files.php';
 	echo "Adding new admin user...";
 	flush();
 	$con=mysql_connect($servername,"root",$rootpass) or die('error in connection');
-	mysql_select_db("raspberrypints", $con) or die("Cannot select the database")
+	mysql_select_db("raspberrypints", $con) or die("Cannot select the database");
 	// Check connection
 
 	$currentdate = Date('Y-m-d H:i:s');
@@ -200,7 +200,7 @@ require_once __DIR__.'/config_files.php';
 			$sql_query = split_sql_file($sql_query, ';');
 
 			$con=mysql_connect($servername,'root',$rootpass) or die('error connection');
-			mysql_select_db("raspberrypints", $con) or die("Cannot select the database")
+			mysql_select_db("raspberrypints", $con) or die("Cannot select the database");
 
 			$i=1;
 			foreach($sql_query as $sql){
