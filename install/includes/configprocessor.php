@@ -133,8 +133,11 @@ require_once __DIR__.'/config_files.php';
 	echo "Creating Database...";
 	flush();
 	$con=mysql_connect($servername, "root", $rootpass) or die('error in connection');
-	// Check connection
-  mysql_create_db($databasename);
+
+	$sql = "CREATE DATABASE '" . $databasename . "' ;";
+	// $result = mysql_query($con,$sql);
+	mysql_query($sql, $con) or die(mysql_error());
+	# mysql_close($con);
 	echo "Success!<br>";
 	flush();
 
