@@ -124,7 +124,7 @@ class Beer
 			"beerStyleId: " . $this->get_beerStyleId() . ", " .
 			"notes: '" . encode($this->get_notes()) . "', " .
 			"srm: '" . $this->get_srm() . "', " .
-			"abv:'" / $this->get_abv() . "'," .
+			"abv: '" . $this->get_abv() . "'," .
 			"ibu: '" . $this->get_ibu() . "', " .
 			"active: '" . $this->get_active() . "', " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
