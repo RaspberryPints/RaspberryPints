@@ -12,10 +12,12 @@ require_once __DIR__.'/includes/models/beer.php';
 
 require_once __DIR__.'/includes/managers/beer_manager.php';
 require_once __DIR__.'/includes/managers/beerStyle_manager.php';
+require_once __DIR__.'/includes/managers/brewery_manager.php';
 
 $htmlHelper = new HtmlHelper();
 $beerManager = new BeerManager();
 $beerStyleManager = new BeerStyleManager();
+$breweryManager = new BreweryManager();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -32,6 +34,7 @@ if( isset($_GET['id'])){
 }
 
 $beerStyleList = $beerStyleManager->GetAll();
+$breweryList = $BreweryManager->GetAll();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -81,6 +84,14 @@ require __DIR__.'/header.php';
 				</td>
 				<td>
 					<input type="text" id="name" class="largebox" name="name" value="<?php echo $beer->get_name() ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>Brewery:<font color="red">*</font></b>
+				</td>
+				<td>
+					<?php echo $htmlHelper->ToSelectList("breweryId", $BreweryList, "name", "id", $beer->get_breweryId(), "Select One"); ?>
 				</td>
 			</tr>
 			<tr>

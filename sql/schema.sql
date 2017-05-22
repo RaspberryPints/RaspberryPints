@@ -24,6 +24,22 @@ USE `raspberrypints`;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `breweries`
+--
+
+CREATE TABLE IF NOT EXISTS `breweries` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` tinytext NOT NULL,
+	`imageUrl` varchar(2000),
+
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `beerStyles`
 --
 
@@ -170,6 +186,7 @@ CREATE TABLE IF NOT EXISTS `beers` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` text NOT NULL,
 	`beerStyleId` int(11) NOT NULL,
+	`breweryId` int(11),
 	`notes` text NOT NULL,
 	`abv` decimal(3,1) NOT NULL,
 	`srmEst` decimal(3,1) NOT NULL,
