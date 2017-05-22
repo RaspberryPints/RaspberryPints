@@ -13,8 +13,8 @@ class Brewery
 	public function get_name(){ return $this->_name; }
 	public function set_name($_name){ $this->_name = $_name; }
 
-	public function get_catNum(){ return $this->_imageUrl; }
-	public function set_catNum($_imageUrl){ $this->_imageUrl = $_imageUrl; }
+	public function get_imageUrl(){ return $this->_imageUrl; }
+	public function set_imageUrl($_imageUrl){ $this->_imageUrl = $_imageUrl; }
 
 	public function setFromArray($postArr)
 	{
