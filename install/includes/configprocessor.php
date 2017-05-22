@@ -161,7 +161,7 @@ require_once __DIR__.'/config_files.php';
 	$con=mysql_connect($servername,"root",$rootpass);
 	// Check connection
 
-	$sql = "GRANT ALL ON raspberrypints.* TO '" . $dbuser . "'@'" . "%" . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
+	$sql = "GRANT ALL ON raspberrypints.* TO '" . $dbuser . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
 	$result = mysql_query($con,$sql);
 	mysql_close($con);
 	echo "Success!<br>";
