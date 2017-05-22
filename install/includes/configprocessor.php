@@ -204,8 +204,8 @@ require_once __DIR__.'/config_files.php';
 			foreach($sql_query as $sql){
 			//echo $i++;
 			//echo "	";
-			$res = mysql_query($sql) or die("Error in SQL: " + $sql);
-			print $res;
+			print("SQL: " + $sql);
+			mysql_query($sql) or die("Error in SQL: " + $sql);
 			}
 
 			echo "Success!<br>";
