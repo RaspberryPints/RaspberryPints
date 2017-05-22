@@ -204,11 +204,10 @@ require_once __DIR__.'/config_files.php';
 			foreach($sql_query as $sql){
 			//echo $i++;
 			//echo "	";
-			echo "$sql";
-			mysql_query($sql);
+			mysql_query($sql) or die("Error inn SQL: " + $sql);
 			}
 
-			mysql_close($con)
+			mysql_close($con);
 			echo "Success!<br>";
 			flush();
 		}
