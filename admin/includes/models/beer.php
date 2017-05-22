@@ -123,7 +123,7 @@ class Beer
 		if( isset($postArr['breweryId']) ){
 				$this->set_breweryId($postArr['breweryId']);
 			}else{
-				$this->set_breweryId(null);
+				$this->set_breweryId(0);
 			}
 	}
 
@@ -137,9 +137,10 @@ class Beer
 			"abv: '" . $this->get_abv() . "'," .
 			"ibu: '" . $this->get_ibu() . "', " .
 			"active: '" . $this->get_active() . "', " .
+			"breweryId: " . $this->get_breweryId() . ", " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .
-			"breweryId: " . $this->get_breweryId() . ", " .
+
 		"}";
 	}
 }

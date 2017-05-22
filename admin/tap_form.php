@@ -17,6 +17,7 @@ require_once __DIR__.'/includes/managers/beer_manager.php';
 require_once __DIR__.'/includes/managers/keg_manager.php';
 require_once __DIR__.'/includes/managers/kegType_manager.php';
 require_once __DIR__.'/includes/managers/tap_manager.php';
+require_once __DIR__.'/includes/managers/brewery_manager.php';
 
 $htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
