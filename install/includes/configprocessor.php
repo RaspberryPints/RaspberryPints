@@ -127,17 +127,6 @@ require_once __DIR__.'/config_files.php';
 
 	echo "Success!<br>";
 	flush();
-	//-----------------Create RPints User--------------------------
-	echo "Creating RPints database user...";
-	flush();
-	$con=mysql_connect($servername,"root",$rootpass);
-	// Check connection
-
-	$sql = "GRANT ALL ON *.* TO '" . $dbuser . "'@'" . $servername . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
-	$result = mysql_query($con,$sql);
-	mysql_close($con);
-	echo "Success!<br>";
-	flush();
 
 	//-----------------Run The Schema File-------------------------
 	echo "Running Database Script...";
@@ -165,6 +154,19 @@ require_once __DIR__.'/config_files.php';
 
 	echo "Success!<br>";
 	flush();
+
+	//-----------------Create RPints User--------------------------
+	echo "Creating RPints database user...";
+	flush();
+	$con=mysql_connect($servername,"root",$rootpass);
+	// Check connection
+
+	$sql = "GRANT ALL ON raspberrypints.* TO '" . $dbuser . "'@'" . "%" . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
+	$result = mysql_query($con,$sql);
+	mysql_close($con);
+	echo "Success!<br>";
+	flush();
+
 
 	//-----------------Add the admin user to the Users DB----------
 	echo "Adding new admin user...";

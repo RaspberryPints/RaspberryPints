@@ -188,7 +188,7 @@ FOREIGN KEY (`beerStyleId`) REFERENCES beerStyles(`id`) ON DELETE CASCADE
 -- Table structure for table `config`
 --
 
-CREATE TABLE `config` (
+CREATE TABLE IF NOT EXISTS `config` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`configName` varchar(50) NOT NULL,
 	`configValue` longtext NOT NULL,
@@ -365,7 +365,7 @@ CREATE TABLE IF NOT EXISTS `pours` (
 -- Table structure for table `Users`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`username` varchar(65) CHARACTER SET utf8 NOT NULL,
 	`password` varchar(65) CHARACTER SET utf8 NOT NULL,
@@ -801,7 +801,7 @@ INSERT INTO srmRgb ( srm, rgb, createdDate, modifiedDate ) VALUES
 -- Create View `vwGetTapsAmountPoured`
 --
 
-CREATE VIEW vwGetTapsAmountPoured
+CREATE OR REPLACE VIEW vwGetTapsAmountPoured
 AS
 SELECT tapId, SUM(amountPoured) as amountPoured FROM pours GROUP BY tapId;
 
@@ -811,7 +811,7 @@ SELECT tapId, SUM(amountPoured) as amountPoured FROM pours GROUP BY tapId;
 -- Create View `vwGetActiveTaps`
 --
 
-CREATE VIEW vwGetActiveTaps
+CREATE OR REPLACE VIEW vwGetActiveTaps
 AS
 
 SELECT
