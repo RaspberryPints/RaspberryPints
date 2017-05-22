@@ -163,7 +163,7 @@ require_once __DIR__.'/config_files.php';
 
 	$sql = "GRANT ALL ON raspberrypints.* TO '" . $dbuser . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
 	// $result = mysql_query($con,$sql);
-	$result - mysql_query($sql)
+	$result = mysql_query($sql)
 	mysql_close($con);
 	echo "Success!<br>";
 	flush();
@@ -178,7 +178,7 @@ require_once __DIR__.'/config_files.php';
 	$currentdate = Date('Y-m-d H:i:s');
 	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','" . $adminname . "','" . $adminemail . "','" . $currentdate . "','" . $currentdate . "');";
 	//$result = mysql_query($con,$sql);
-	$result - mysql_query($sql)
+	$result = mysql_query($sql)
 	mysql_close($con);
 	echo "Success!<br>";
 	flush();
