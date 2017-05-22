@@ -135,7 +135,7 @@
 						<?php } ?>
 
 						<th class="name">
-							BEER NAME &nbsp; & &nbsp; STYLE<hr>TASTING NOTES
+							BEER<hr>INFORMATION
 						</th>
 
 						<?php if($config[ConfigNames::ShowAbvCol]){ ?>
