@@ -20,7 +20,7 @@ $beerid=$_POST['beerid'];
 
 
 // update data in mysql database
-$sql="UPDATE beers SET name='$name', style='$style', notes='$notes', og='$og', fg='$fg', srm='$srm',
+$sql="UPDATE beers SET name='$name', style='$style', notes='$notes', abv='$abv', srm='$srm',
 ibu='$ibu', active='$active', tapnumber='$tapnumber' WHERE beerid='$beerid'";
 $result=mysql_query($sql);
 
