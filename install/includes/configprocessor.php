@@ -164,7 +164,7 @@ require_once __DIR__.'/config_files.php';
 	$sql = "GRANT ALL ON *.* TO '" . $dbuser . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
 	// $result = mysql_query($con,$sql);
 	mysql_query($sql);
-	mysql_close($con);
+	# mysql_close($con);
 	echo "Success!<br>";
 	flush();
 
@@ -179,7 +179,7 @@ require_once __DIR__.'/config_files.php';
 	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','" . $adminname . "','" . $adminemail . "','" . $currentdate . "','" . $currentdate . "');";
 	//$result = mysql_query($con,$sql);
 	mysql_query($sql);
-	mysql_close($con);
+	# mysql_close($con);
 	echo "Success!<br>";
 	flush();
 	//-----------------Load the sample data if requested-----------
@@ -204,10 +204,10 @@ require_once __DIR__.'/config_files.php';
 			foreach($sql_query as $sql){
 			//echo $i++;
 			//echo "	";
-			mysql_query($sql) or die("Error inn SQL: " + $sql);
+			$res = mysql_query($sql) or die("Error in SQL: " + $sql);
+			print $res
 			}
 
-			mysql_close($con);
 			echo "Success!<br>";
 			flush();
 		}
