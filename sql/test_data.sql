@@ -78,7 +78,7 @@ INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampe
 -- Put all beers into the `taps` table
 --
 
-INSERT INTO taps(`beerId`, `kegId`, `tapNumber`, `active`, `ogAct`, `fgAct`, `srmAct`, `ibuAct`, `startAmount`, `currentAmount`, `createdDate`, `modifiedDate`)
+INSERT INTO taps(`beerId`, `kegId`, `tapNumber`, `active`, `abv`, `srmAct`, `ibuAct`, `startAmount`, `currentAmount`, `createdDate`, `modifiedDate`)
 SELECT b.id, keg.id as kegId, b.id as tapNumber, 1 as active, b.abv as abv, b.srmEst as srmAct, b.ibuEst as ibuAct, keg.startAmount as startAmount, keg.startAmount as currentAmount, NOW() as createdDate, NOW() as modifiedDate
 FROM `beers` as b, (SELECT k.*, kt.maxAmount as startAmount FROM kegs k LEFT JOIN kegTypes kt ON kt.id = k.kegTypeId ORDER BY Id LIMIT 1) as keg;
 
