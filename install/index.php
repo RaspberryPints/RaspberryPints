@@ -35,7 +35,7 @@
 	<link rel="stylesheet" type="text/css" href="styles.css" />
 	<link rel="shortcut icon" href="../img/pint.ico" />
 
-	<script type="text/javascript" src="includes/jquery-2.1.0.min.js"></script>	
+	<script type="text/javascript" src="includes/jquery-2.1.0.min.js"></script>
 	<script src="includes/jquery.validate.js"></script>
     <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 	<META HTTP-EQUIV="Expires" CONTENT="-1">
@@ -56,9 +56,9 @@
 			require '../includes/config.php';
 			db();
 			$sql = 'SELECT id,configName,configValue FROM config where configname = "version"';
-			$qry = mysql_query($sql);	
+			$qry = mysql_query($sql);
 			$dbversion = mysql_result($qry,0,2);
-		
+
 			echo '<br><select name="selectaction">';
 			if ($dbversion != $rpintsversion) {
 				echo '<option value="upgrade">Upgrade</option>';
@@ -70,7 +70,7 @@
 		} else {
 		echo '<input type="hidden" name="selectaction" value="install">';
 	}
-	?> 
+	?>
 	<h3>Step<span class="tapcircle">1</span></h3>
 In order to get started, we'll need a little information from you. When you installed mySQL, you were asked for a "root" password.
 You'll need to enter that here for us to configure RPints for you. You should leave the Database Server name as the default, unless
@@ -78,22 +78,30 @@ you are certain you need to change it.
 	<table>
 			<tr>
 				<td>
-					<label for="textfield"><strong>Database Server: (required)</strong></label> 
+					<label for="textfield"><strong>Database Server: (required)</strong></label>
 				</td>
 				<td>
-					<input minlength="2" required class="inputbox" value="localhost" type="text" name="servername" required>				
+					<input minlength="2" required class="inputbox" value="localhost" type="text" name="servername" required>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<label for="textfield"><strong>Root Password: (required)</strong></label> 
+					<label for="textfield"><strong>Database: (required)</strong></label> 
 				</td>
 				<td>
-					<input class="inputbox" required type="password" name="rootpass">			
+					<input class="inputbox" required class="inputbox" value="raspberrypints" type="text" name="database">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="textfield"><strong>Root Password: (required)</strong></label>
+				</td>
+				<td>
+					<input class="inputbox" required type="password" name="rootpass">
 				</td>
 			</tr>
 		</table>
-		<br />				
+		<br />
 		<br />
 	<br>
 	<div id="sectiondb"<?php if ($clear==1){echo "style='display:none'";};?>>
@@ -103,10 +111,10 @@ you are certain you need to change it.
 		<table>
 			<tr>
 				<td>
-					<label for="textfield"><strong>Database Username:</strong> 
+					<label for="textfield"><strong>Database Username:</strong>
 				</td>
 				<td>
-					</label> <input class="inputbox" value="beers" name="dbuser">				
+					</label> <input class="inputbox" value="beers" name="dbuser">
 				</td>
 			</tr>
 			<tr>
@@ -114,7 +122,7 @@ you are certain you need to change it.
 					<label for="textfield"><strong>Database Password:</strong></label>
 				</td>
 				<td>
-					<input class="inputbox" id="txtNewPassword" type="password" name="dbpass1">		
+					<input class="inputbox" id="txtNewPassword" type="password" name="dbpass1">
 				</td>
 			</tr>			<tr>
 				<td>
@@ -137,26 +145,26 @@ you are certain you need to change it.
 		<table>
 			<tr>
 				<td>
-					<label for="textfield"><strong>RPints Username:</strong> 
+					<label for="textfield"><strong>RPints Username:</strong>
 				</td>
 				<td>
-					</label> <input class="inputbox" value="admin" name="adminuser">				
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for="textfield"><strong>Email Address:</strong> 
-				</td>
-				<td>
-					</label> <input class="inputbox" name="adminemail">				
+					</label> <input class="inputbox" value="admin" name="adminuser">
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<label for="textfield"><strong>Your Name:</strong> 
+					<label for="textfield"><strong>Email Address:</strong>
 				</td>
 				<td>
-					</label> <input class="inputbox" name="adminname">				
+					</label> <input class="inputbox" name="adminemail">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="textfield"><strong>Your Name:</strong>
+				</td>
+				<td>
+					</label> <input class="inputbox" name="adminname">
 				</td>
 			</tr>
 			<tr>
@@ -164,7 +172,7 @@ you are certain you need to change it.
 					<label for="textfield"><strong>Admin Password:</strong></label>
 				</td>
 				<td>
-					<input class="inputbox" id="txtCheckAdminPassword" type="password" name="adminpass1">		
+					<input class="inputbox" id="txtCheckAdminPassword" type="password" name="adminpass1">
 				</td>
 			</tr>			<tr>
 				<td>

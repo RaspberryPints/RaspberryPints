@@ -25,8 +25,6 @@ class Brewery
 
 		if( isset($postArr['name']) )
 			$this->set_name($postArr['name']);
-		else if( isset($postArr['displayName']) )
-			$this->set_name($postArr['displayName']);
 		else
 			$this->set_name(null);
 
