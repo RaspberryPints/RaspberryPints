@@ -199,13 +199,15 @@ require_once __DIR__.'/config_files.php';
 			$sql_query = split_sql_file($sql_query, ';');
 
 
-			mysql_connect($servername,'root',$rootpass) or die('error connection');
+			$con=mysql_connect($servername,'root',$rootpass) or die('error connection');
 
 			$i=1;
 			foreach($sql_query as $sql){
 			//echo $i++;
 			//echo "	";
+			echo "$sql"
 			mysql_query($sql) or die('error in query');
+			mysql_close($con);
 			}
 
 
