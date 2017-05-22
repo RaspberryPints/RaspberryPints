@@ -21,7 +21,7 @@ $beerManager = new BeerManager();
 $beerStyleManager = new BeerStyleManager();
 
 if (isset($_POST['inactivateBeer'])) {
-	$beerManager->Inactivate($_POST['id']);		
+	$beerManager->Inactivate($_POST['id']);
 }
 
 $beers = $beerManager->GetAllActive();
@@ -44,17 +44,17 @@ $beers = $beerManager->GetAllActive();
 include 'header.php';
 ?>
 	<!-- End Header -->
-		
+
 	<!-- Top Breadcrumb Start -->
 	<div id="breadcrumb">
-		<ul>	
+		<ul>
 			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
 			<li><strong>Location:</strong></li>
-			<li class="current">My Beers</li>            
+			<li class="current">My Beers</li>
 		</ul>
 	</div>
-	<!-- Top Breadcrumb End --> 
-	
+	<!-- Top Breadcrumb End -->
+
 	<!-- Right Side/Main Content Start -->
 <div id="rightside">
 	<div class="contentcontainer lg left">
@@ -62,22 +62,22 @@ include 'header.php';
 			<h2>My Beers </h2>
 		</div>
 		<div class="contentbox">
-		
+
 			<!-- Start On Tap Section -->
-			
+
 			<?php $htmlHelper->ShowMessage(); ?>
-			
+
 			<input type="submit" class="btn" value="Add Beer" onclick="window.location='beer_form.php'" />
 			<br/><br/>
-			
+
 			<table width="770px" cellspacing="0" cellpadding="0" class="outerborder">
 
 				<tbody>
-					<?php 
-						if( count($beers) == 0 ){  
+					<?php
+						if( count($beers) == 0 ){
 					?>
 							<tr><td class="no-results" colspan="99">No beers :( Add some?</td></tr>
-					<?php 
+					<?php
 						}else{
 							foreach ($beers as $beer){
 					?>
@@ -86,7 +86,7 @@ include 'header.php';
 										<h3><?php echo $beer->get_name() ?></h3>
 									</th>
 									<th width="35%" style="vertical-align: middle;">
-										<b><?php 
+										<b><?php
 											$beerStyle = $beerStyleManager->GetById($beer->get_beerStyleId());
 											echo $beerStyle->get_name();
 										?></b><br>
@@ -136,18 +136,12 @@ include 'header.php';
 												echo "<b>IBU:</b> N/A<br>"
 										?>
 										<?php
-											if ( $beer->get_og() != 1 && $beer->get_og() != 0 )
-												echo "<b>OG:</b> " , $beer->get_og() , "<br>" ;
+											if ( $beer->get_abv() != 1 && $beer->get_abv() != 0 )
+												echo "<b>ABV:</b> " , $beer->get_abv() , "<br>" ;
 											else
-												echo "<b>OG:</b> N/A<br>"
-										?>
-										<?php
-											if ( $beer->get_fg() != 1 && $beer->get_fg() != 0 )
-												echo "<b>FG:</b> " , $beer->get_fg() , "<br>" ;
-											else
-												echo "<b>FG:</b> N/A"
+												echo "<b>ABV:</b> N/A<br>"
 										?></p>
-										
+
 										<p><b>Water:</b> <!-- Sacramento, CA --> <br>
 										<b>Salts:</b> <!-- Camden, pH 5.2 Stabilizer --> <br>
 										<b>Finings:</b> <!-- Whirfloc --> <br>
@@ -161,7 +155,7 @@ include 'header.php';
 										7.1% Crystal 15, 2-Row, (Great Western) (15.0 SRM)<br>
 										-->
 										</p>
-										
+
 										<p><b><u>Mash Profile:</u></b></p><p>
 										<!--
 										Step 1: Dough-in @ 70&deg;F (2 min)<br>
@@ -170,7 +164,7 @@ include 'header.php';
 										Step 4: Batch Sparge @ 168&deg;F (5 min)</p>
 										-->
 										</p>
-										
+
 										<p><b><u>Hop Schedule:</u></b></p><p>
 										<!--
 										0.90 oz Simcoe (13.00% AA) @ 90 min<br>
@@ -181,7 +175,7 @@ include 'header.php';
 										</p>
 									</td>
 								</tr>
-					<?php 
+					<?php
 							}
 						}
 					?>
@@ -190,7 +184,7 @@ include 'header.php';
 			<input type="submit" class="btn" value="Add Beer" onclick="window.location='beer_form.php'" />
 		</div>
 	</div>
-	<!-- Start Footer -->   
+	<!-- Start Footer -->
 	<?php
 	include 'footer.php';
 	?>
@@ -200,11 +194,11 @@ include 'header.php';
 	<!-- End On Tap Section -->
 	</div>
 	<!-- Right Side/Main Content End -->
-	<!-- Start Left Bar Menu -->   
+	<!-- Start Left Bar Menu -->
 <?php
 include 'left_bar.php';
 ?>
-	<!-- End Left Bar Menu -->  
+	<!-- End Left Bar Menu -->
 	<!-- Start Js  -->
 <?php
 include 'scripts.php';
@@ -225,6 +219,6 @@ include 'scripts.php';
 	<script type='text/javascript'>
 	DD_belatedPNG.fix('img, .notifycount, .selected');
 	</script>
-	<![endif]--> 
+	<![endif]-->
 </body>
 </html>

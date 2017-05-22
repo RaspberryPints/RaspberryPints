@@ -27,17 +27,17 @@ USE `raspberrypints`;
 -- Dumping data for table `beers`
 --
 
-INSERT INTO `beers` (`name`, `beerStyleId`, `ogEst`, `fgEst`, `srmEst`, `ibuEst`, `notes`, `createdDate`, `modifiedDate`) VALUES
-('Darth Vader', '80', '1.066', '1.016', '38.0', '66.0', 'Rich, toasty malt flavor. Generous amounts of pine, citrus and roasted coffee. Herbal aroma with a punch of IPA hops at the finish.', NOW(), NOW() ),
-('Row 2 Hill 56', '33', '1.055', '1.010', '5.1', '40', '100% Simcoe hops make up this beer from start to finish! It is named for the location in the experimental hop yard in Yakima, WA, where it was first created.', NOW(), NOW() ),
-('Loon Lake Porter', '78', '1.050', '1.012', '24', '24.6', 'With a low IBU and a mellow base recipe, this is a beer that can be turned from grain to glass quickly. The smoke aroma is prominent, but not at all overpowering. The sweetness of the malt really balances this beer well.', NOW(), NOW() ),
-('Reaper''s Mild', '36', '1.035', '1.012', '19.1', '20.4', 'A full flavored session beer that is both inexpensive to brew and quick to go from grain to glass. Ready to drink in a couple weeks, if you push it.', NOW(), NOW() ),
-('Deception Cream Stout', '43', '1.058', '1.020', '36', '27', 'Coffee and chocolate hit you up front intermingled with smooth caramel flavors that become noticeable mid-palate. Nice roasty finish rounds it out. Balanced and not cloying at all, but obviously leaning slightly to the sweeter side. Very smooth and creamy.', NOW(), NOW() ),
-('Haus Pale Ale', '33', '1.051', '1.011', '5.0', '39.0', 'Pale straw-gold color with two fingers of fluffy white head. Bread dough and cracker aromas up front, followed immediately by pine and grapefruit. Clean, crisp and dangerously sessionable.', NOW(), NOW() ),
-('Two Hearted Ale', '49', '1.055', '1.014', '5.6', '52.6', 'American malts and enormous hop additions give this beer a crisp finish and an incredibly floral aroma.', NOW(), NOW() ),
-('Skeeter Pee', '100', '1.070', '1.009', '0', '0', 'The original, easy to drink, naturally fermented lemon drink. Bitter, sweet, and a kick in the teeth. This hot-weather thirst quencher puts commercialized lemon-flavored malt beverages to shame.', NOW(), NOW() ),
-('Black Peach Tea', '102', '1.000', '1.000', '0', '0', 'Black tea infused with the unmistakable summertime flavor of juicy, orchard-fresh peaches and just the right amount of natural milled cane sugar.', NOW(), NOW() ),
-('Aloha Morning', '105', '1.000', '1.000', '0', '0', 'Children''s strawberry and citrus punch, thinned to suit an adult pallet using only the highest quality dihydrogen monoxide available.', NOW(), NOW() );
+INSERT INTO `beers` (`name`, `beerStyleId`, `abv`, `srmEst`, `ibuEst`, `notes`, `createdDate`, `modifiedDate`) VALUES
+('Darth Vader', '80', '6.6', '38.0', '66.0', 'Rich, toasty malt flavor. Generous amounts of pine, citrus and roasted coffee. Herbal aroma with a punch of IPA hops at the finish.', NOW(), NOW() ),
+('Row 2 Hill 56', '33', '5.9', '5.1', '40', '100% Simcoe hops make up this beer from start to finish! It is named for the location in the experimental hop yard in Yakima, WA, where it was first created.', NOW(), NOW() ),
+('Loon Lake Porter', '78', '5.0', '24', '24.6', 'With a low IBU and a mellow base recipe, this is a beer that can be turned from grain to glass quickly. The smoke aroma is prominent, but not at all overpowering. The sweetness of the malt really balances this beer well.', NOW(), NOW() ),
+('Reaper''s Mild', '36', '3.0', '19.1', '20.4', 'A full flavored session beer that is both inexpensive to brew and quick to go from grain to glass. Ready to drink in a couple weeks, if you push it.', NOW(), NOW() ),
+('Deception Cream Stout', '43', '5.0', '36', '27', 'Coffee and chocolate hit you up front intermingled with smooth caramel flavors that become noticeable mid-palate. Nice roasty finish rounds it out. Balanced and not cloying at all, but obviously leaning slightly to the sweeter side. Very smooth and creamy.', NOW(), NOW() ),
+('Haus Pale Ale', '33', '5.25', '5.0', '39.0', 'Pale straw-gold color with two fingers of fluffy white head. Bread dough and cracker aromas up front, followed immediately by pine and grapefruit. Clean, crisp and dangerously sessionable.', NOW(), NOW() ),
+('Two Hearted Ale', '49', '5.4', '5.6', '52.6', 'American malts and enormous hop additions give this beer a crisp finish and an incredibly floral aroma.', NOW(), NOW() ),
+('Skeeter Pee', '100', '8.0', '0', '0', 'The original, easy to drink, naturally fermented lemon drink. Bitter, sweet, and a kick in the teeth. This hot-weather thirst quencher puts commercialized lemon-flavored malt beverages to shame.', NOW(), NOW() ),
+('Black Peach Tea', '102', '0.0', '0', '0', 'Black tea infused with the unmistakable summertime flavor of juicy, orchard-fresh peaches and just the right amount of natural milled cane sugar.', NOW(), NOW() ),
+('Aloha Morning', '105', '0.0', '0', '0', 'Children''s strawberry and citrus punch, thinned to suit an adult pallet using only the highest quality dihydrogen monoxide available.', NOW(), NOW() );
 
 -- --------------------------------------------------------
 
@@ -78,8 +78,8 @@ INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampe
 -- Put all beers into the `taps` table
 --
 
-INSERT INTO taps(`beerId`, `kegId`, `tapNumber`, `active`, `ogAct`, `fgAct`, `srmAct`, `ibuAct`, `startAmount`, `currentAmount`, `createdDate`, `modifiedDate`)
-SELECT b.id, keg.id as kegId, b.id as tapNumber, 1 as active, b.ogEst as ogAct, b.fgEst as fgAct, b.srmEst as srmAct, b.ibuEst as ibuAct, keg.startAmount as startAmount, keg.startAmount as currentAmount, NOW() as createdDate, NOW() as modifiedDate
+INSERT INTO taps(`beerId`, `kegId`, `tapNumber`, `active`, `abv`, `srmAct`, `ibuAct`, `startAmount`, `currentAmount`, `createdDate`, `modifiedDate`)
+SELECT b.id, keg.id as kegId, b.id as tapNumber, 1 as active, b.abv as abv, b.srmEst as srmAct, b.ibuEst as ibuAct, keg.startAmount as startAmount, keg.startAmount as currentAmount, NOW() as createdDate, NOW() as modifiedDate
 FROM `beers` as b, (SELECT k.*, kt.maxAmount as startAmount FROM kegs k LEFT JOIN kegTypes kt ON kt.id = k.kegTypeId ORDER BY Id LIMIT 1) as keg;
 
 -- --------------------------------------------------------

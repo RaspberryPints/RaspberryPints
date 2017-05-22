@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `beerStyles` (
 	`srmMax` decimal(2) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
@@ -171,8 +171,7 @@ CREATE TABLE IF NOT EXISTS `beers` (
 	`name` text NOT NULL,
 	`beerStyleId` int(11) NOT NULL,
 	`notes` text NOT NULL,
-	`ogEst` decimal(4,3) NOT NULL,
-	`fgEst` decimal(4,3) NOT NULL,
+	`abv` decimal(3,1) NOT NULL,
 	`srmEst` decimal(3,1) NOT NULL,
 	`ibuEst` int(4) NOT NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
@@ -189,7 +188,7 @@ FOREIGN KEY (`beerStyleId`) REFERENCES beerStyles(`id`) ON DELETE CASCADE
 -- Table structure for table `config`
 --
 
-CREATE TABLE `config` (
+CREATE TABLE IF NOT EXISTS `config` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`configName` varchar(50) NOT NULL,
 	`configValue` longtext NOT NULL,
@@ -214,6 +213,10 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'showAbvImg', '1', 'ABV Images', '1', NOW(), NOW() ),
 ( 'showKegCol', '0', 'Keg Column (beta!)', '1', NOW(), NOW() ),
 ( 'useHighResolution', '0', '4k Monitor Support', '1', NOW(), NOW() ),
+( 'showRPLogo', '0', 'Show the RaspberryPints Logo', '1', NOW(), NOW() ),
+( 'showCalories', '0', 'Show the calories', '1', NOW(), NOW() ),
+( 'showGravity', '0', 'Show the Gravity numbers', '1', NOW(), NOW() ),
+( 'showBalance', '0', 'Show the Balance', '1', NOW(), NOW() ),
 ( 'logoUrl', 'img/logo.png', 'Logo Url', '0', NOW(), NOW() ),
 ( 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '0', NOW(), NOW() ),
 ( 'headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() ),
@@ -234,7 +237,7 @@ CREATE TABLE IF NOT EXISTS `kegTypes` (
 	`maxAmount` decimal(6,2) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
@@ -270,7 +273,7 @@ CREATE TABLE IF NOT EXISTS `kegStatuses` (
 	`name` text NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`code`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
@@ -310,7 +313,7 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`kegStatusCode`) REFERENCES kegStatuses(`Code`) ON DELETE CASCADE,
 	FOREIGN KEY (`kegTypeId`) REFERENCES kegTypes(`id`) ON DELETE CASCADE
@@ -329,15 +332,14 @@ CREATE TABLE IF NOT EXISTS `taps` (
 	`kegId` int(11) NOT NULL,
 	`tapNumber` int(11) NOT NULL,
 	`active` tinyint(1) NOT NULL,
-	`ogAct` decimal(4,3) NOT NULL,
-	`fgAct` decimal(4,3) NOT NULL,
+	`abv` decimal(4,3) NOT NULL,
 	`srmAct` decimal(3,1) NOT NULL,
 	`ibuAct` int(4) NOT NULL,
 	`startAmount` decimal(6,1) NOT NULL,
 	`currentAmount` decimal(6,1) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
 	FOREIGN KEY (`kegId`) REFERENCES kegs(`id`) ON DELETE CASCADE
@@ -355,7 +357,7 @@ CREATE TABLE IF NOT EXISTS `pours` (
 	`amountPoured` decimal(6,1) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (tapId) REFERENCES taps(id) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
@@ -366,7 +368,7 @@ CREATE TABLE IF NOT EXISTS `pours` (
 -- Table structure for table `Users`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`username` varchar(65) CHARACTER SET utf8 NOT NULL,
 	`password` varchar(65) CHARACTER SET utf8 NOT NULL,
@@ -802,7 +804,7 @@ INSERT INTO srmRgb ( srm, rgb, createdDate, modifiedDate ) VALUES
 -- Create View `vwGetTapsAmountPoured`
 --
 
-CREATE VIEW vwGetTapsAmountPoured
+CREATE OR REPLACE VIEW vwGetTapsAmountPoured
 AS
 SELECT tapId, SUM(amountPoured) as amountPoured FROM pours GROUP BY tapId;
 
@@ -812,7 +814,7 @@ SELECT tapId, SUM(amountPoured) as amountPoured FROM pours GROUP BY tapId;
 -- Create View `vwGetActiveTaps`
 --
 
-CREATE VIEW vwGetActiveTaps
+CREATE OR REPLACE VIEW vwGetActiveTaps
 AS
 
 SELECT
@@ -820,8 +822,7 @@ SELECT
 	b.name,
 	bs.name as 'style',
 	b.notes,
-	t.ogAct,
-	t.fgAct,
+	t.abv,
 	t.srmAct,
 	t.ibuAct,
 	t.startAmount,

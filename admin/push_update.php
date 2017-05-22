@@ -6,12 +6,11 @@ header("location:index.php");
 require 'includes/conn.php';
 
 
-// Get values from form 
+// Get values from form
 $name=$_POST['name'];
 $style=$_POST['style'];
 $notes=$_POST['notes'];
-$og=$_POST['og'];
-$fg=$_POST['fg'];
+$abv=$_POST['abv'];
 $srm=$_POST['srm'];
 $ibu=$_POST['ibu'];
 $active=$_POST['active'];
@@ -21,7 +20,7 @@ $beerid=$_POST['beerid'];
 
 
 // update data in mysql database
-$sql="UPDATE beers SET name='$name', style='$style', notes='$notes', og='$og', fg='$fg', srm='$srm', 
+$sql="UPDATE beers SET name='$name', style='$style', notes='$notes', abv='$abv', srm='$srm',
 ibu='$ibu', active='$active', tapnumber='$tapnumber' WHERE beerid='$beerid'";
 $result=mysql_query($sql);
 
@@ -36,4 +35,4 @@ else {
 echo "ERROR";
 }
 
-?> 
+?>

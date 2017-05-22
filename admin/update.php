@@ -41,9 +41,7 @@ $rows=mysql_fetch_array($result);
 <tr><td align="center"><strong>Notes</strong></td></tr>
 <tr><td align="center"><textarea class="inputbox" name="notes" rows="5" cols="50"><? echo $rows['notes']; ?></textarea></td></tr>
 <tr><td align="center"><strong>OG</strong></td> </tr>
-<tr><td align="center"><input class="smallbox" name="og" type="text" id="og" value="<? echo $rows['og']; ?>"</td></tr>
-<tr><td align="center"><strong>FG</strong></td></tr>
-<tr><td align="center"><input class="smallbox" name="fg" type="text" id="fg" value="<? echo $rows['fg']; ?>"</td></tr>
+<tr><td align="center"><input class="smallbox" name="abv" type="text" id="abv" value="<? echo $rows['abv']; ?>"</td></tr>
 <tr><td align="center"><strong>SRM</strong></td></tr>
 <tr><td align="center"><input class="smallbox" name="srm" type="text" id="srm" value="<? echo $rows['srm']; ?>"></td></tr>
 <tr><td align="center"><strong>IBU's</strong></td></tr>

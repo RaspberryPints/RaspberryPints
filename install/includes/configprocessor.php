@@ -49,12 +49,8 @@ flush();
 //Validate DB connectivity
 echo "Checking DB connectivity...";
 flush();
-$con=mysqli_connect($servername,"root",$rootpass);
+$con=mysql_connect($servername,"root",$rootpass);
 
-if (mysqli_connect_errno())
-{
-$validerror .= "<br><strong>Cannot connect the the database using the supplied information.</strong>";
-}
 echo "Success!<br>";
 flush();
 
@@ -78,7 +74,7 @@ flush();
 
 
 //Display errors and die
-if ($validerror !='') 
+if ($validerror !='')
 	{
 		echo "<html><body>";
 		echo $validerror;
@@ -91,20 +87,15 @@ if ($action == 'remove')
 {
 	echo "Deleting raspberrypints database...";
 	flush();
-	$con=mysqli_connect($servername,"root",$rootpass);
+	$con=mysql_connect($servername,"root",$rootpass);
 	// Check connection
 
-	if (mysqli_connect_errno())
-	{
-	echo "Failed to connect to MySQL: " . mysqli_connect_error();
-	}
-
 	$sql = "DROP database raspberrypints;";
-	$result = mysqli_query($con,$sql);
-	mysqli_close($con);
+	$result = mysql_query($con,$sql);
+	mysql_close($con);
 	echo "Success!<br>";
 	flush();
-	
+
 	echo "Removing configuration files...";
 	flush();
 	unlink('../../includes/config.php');
@@ -113,16 +104,16 @@ if ($action == 'remove')
 	echo "Success!<br>";
 	flush();
 }
-	
+
 if ($action == 'install')
 {
-	
+
 require_once __DIR__.'/config_files.php';
-	
+
 	//-----------------Create the main config file-----------------
 	echo "Update config files...";
 	flush();
-	
+
 	file_put_contents('../../includes/config.php', $mainconfigstring);
 
 	echo "Success!<br>";
@@ -133,23 +124,7 @@ require_once __DIR__.'/config_files.php';
 
 	file_put_contents('../../admin/includes/conn.php', $adminconfig1);
 	file_put_contents('../../admin/includes/configp.php', $adminconfig2);
-	
-	echo "Success!<br>";
-	flush();
-	//-----------------Create RPints User--------------------------
-	echo "Creating RPints database user...";
-	flush();
-	$con=mysqli_connect($servername,"root",$rootpass);
-	// Check connection
 
-	if (mysqli_connect_errno())
-	{
-	echo "Failed to connect to MySQL: " . mysqli_connect_error();
-	}
-
-	$sql = "GRANT ALL ON *.* TO '" . $dbuser . "'@'" . $servername . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
-	$result = mysqli_query($con,$sql);
-	mysqli_close($con);
 	echo "Success!<br>";
 	flush();
 
@@ -158,15 +133,15 @@ require_once __DIR__.'/config_files.php';
 	flush();
 	$dbms_schema = "../../sql/schema.sql";
 
-		
+
 	$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema)) or die('Cannot find SQL schema file. ');
-	
+
 	$sql_query = remove_remarks($sql_query);
 	$sql_query = remove_comments($sql_query);
 	$sql_query = split_sql_file($sql_query, ';');
 
 
-	mysql_connect($servername,'root',$rootpass) or die('error connection');
+	mysql_connect($servername,'root',$rootpass) or die('error in connection');
 
 	$i=1;
 	foreach($sql_query as $sql){
@@ -180,49 +155,61 @@ require_once __DIR__.'/config_files.php';
 	echo "Success!<br>";
 	flush();
 
+	//-----------------Create RPints User--------------------------
+	echo "Creating RPints database user...";
+	flush();
+	$con=mysql_connect($servername,"root",$rootpass) or die('error in connection');
+	// Check connection
+
+	$sql = "GRANT ALL ON *.* TO '" . $dbuser . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
+	// $result = mysql_query($con,$sql);
+	mysql_query($sql) or die(mysql_error());
+	# mysql_close($con);
+	echo "Success!<br>";
+	flush();
+
+
 	//-----------------Add the admin user to the Users DB----------
 	echo "Adding new admin user...";
 	flush();
-	$con=mysqli_connect($servername,"root",$rootpass,"raspberrypints");
+	$con=mysql_connect($servername,"root",$rootpass) or die('error in connection');
+	mysql_select_db("raspberrypints", $con) or die("Cannot select the database");
 	// Check connection
 
-	if (mysqli_connect_errno())
-	{
-	echo "Failed to connect to MySQL: " . mysqli_connect_error();
-	}
 	$currentdate = Date('Y-m-d H:i:s');
 	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','" . $adminname . "','" . $adminemail . "','" . $currentdate . "','" . $currentdate . "');";
-	$result = mysqli_query($con,$sql);
-	mysqli_close($con);
+	//$result = mysql_query($con,$sql);
+	mysql_query($sql) or die(mysql_error());
+	# mysql_close($con);
 	echo "Success!<br>";
 	flush();
 	//-----------------Load the sample data if requested-----------
 
-		if(!empty($_POST['sampledata'])) 
+		if(!empty($_POST['sampledata']))
 		{
 			echo "Adding sample data...";
 			flush();
-			
+
 			$dbms_schema = "../../sql/test_data.sql";
 
-		
+
 			$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema)) or die('Cannot find SQL schema file. ');
-			
+
 			$sql_query = remove_remarks($sql_query);
 			$sql_query = remove_comments($sql_query);
 			$sql_query = split_sql_file($sql_query, ';');
 
-
-			mysql_connect($servername,'root',$rootpass) or die('error connection');
+			$con=mysql_connect($servername,'root',$rootpass) or die('error connection');
+			mysql_select_db("raspberrypints", $con) or die("Cannot select the database");
 
 			$i=1;
 			foreach($sql_query as $sql){
 			//echo $i++;
 			//echo "	";
-			mysql_query($sql) or die('error in query');
+			print("SQL: " + $sql);
+			mysql_query($sql) or die(mysql_error());
 			}
 
-			
 			echo "Success!<br>";
 			flush();
 		}
