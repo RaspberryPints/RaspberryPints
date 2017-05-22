@@ -125,15 +125,7 @@ include 'header.php';
 					OG*
 				</td>
 				<td>
-					<input type="text" id="og" class="mediumbox" name="og" value="<?php echo $tap->get_og() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					FG*
-				</td>
-				<td>
-					<input type="text" id="fg" class="mediumbox" name="fg" value="<?php echo $tap->get_fg() ?>" />
+					<input type="text" id="og" class="mediumbox" name="og" value="<?php echo $tap->get_abv() ?>" />
 				</td>
 			</tr>
 			<tr>
