@@ -7,8 +7,7 @@ class Beer
 	private $_name;
 	private $_beerStyleId;
 	private $_notes;
-	private $_og;
-	private $_fg;
+	private $_abv;
 	private $_srm;
 	private $_ibu;
 	private $_active;
@@ -29,14 +28,8 @@ class Beer
 	public function get_notes(){ return $this->_notes; }
 	public function set_notes($_notes){ $this->_notes = $_notes; }
 
-	public function get_og(){ return $this->_og; }
-	public function set_og($_og){ $this->_og = $_og; }
-
 	public function get_abv(){ return $this->_abv; }
 	public function set_abv($_abv){ $this->_abv = $_abv; }
-
-	public function get_fg(){ return $this->_fg; }
-	public function set_fg($_fg){ $this->_fg = $_fg;}
 
 	public function get_srm(){ return $this->_srm; }
 	public function set_srm($_srm){ $this->_srm = $_srm; }
@@ -131,8 +124,6 @@ class Beer
 			"beerStyleId: " . $this->get_beerStyleId() . ", " .
 			"notes: '" . encode($this->get_notes()) . "', " .
 			"srm: '" . $this->get_srm() . "', " .
-			"og: '" . $this->get_og() . "', " .
-			"fg: '" . $this->get_fg() . "', " .
 			"abv:'" / $this->get_abv() . "'," .
 			"ibu: '" . $this->get_ibu() . "', " .
 			"active: '" . $this->get_active() . "', " .

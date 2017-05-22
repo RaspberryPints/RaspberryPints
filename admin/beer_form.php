@@ -109,10 +109,10 @@ require __DIR__.'/header.php';
 			</tr>
 			<tr>
 				<td>
-					<b>OG:<font color="red">*</font></b>
+					<b>ABV:<font color="red">*</font></b>
 				</td>
 				<td>
-					<input type="text" id="og" class="smallbox" name="abv" value="<?php echo $beer->get_abv() ?>" />
+					<input type="text" id="abv" class="smallbox" name="abv" value="<?php echo $beer->get_abv() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -167,8 +167,7 @@ require __DIR__.'/scripts.php';
 			style: { required: true },
 			srm: { required: true, number: true },
 			ibu: { required: true, number: true },
-			og: { required: true, number: true },
-			fg: { required: true, number: true }
+			abv: { required: true, number: true }
 		}
 		});
 

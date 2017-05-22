@@ -5,8 +5,7 @@ class Tap
 	private $_beerId;
 	private $_kegId;
 	private $_tapNumber;
-	private $_og;
-	private $_fg;
+	private $_avc;
 	private $_srm;
 	private $_ibu;
 	private $_startAmount;
@@ -29,11 +28,8 @@ class Tap
 	public function get_tapNumber(){ return $this->_tapNumber; }
 	public function set_tapNumber($_tapNumber){ $this->_tapNumber = $_tapNumber; }
 
-	public function get_og(){ return $this->_og; }
-	public function set_og($_og){ $this->_og = $_og; }
-
-	public function get_fg(){ return $this->_fg; }
-	public function set_fg($_fg){ $this->_fg = $_fg;}
+	public function get_abv(){ return $this->_abv; }
+	public function set_abv($_abv){ $this->_abv = $_abv; }
 
 	public function get_srm(){ return $this->_srm; }
 	public function set_srm($_srm){ $this->_srm = $_srm; }
