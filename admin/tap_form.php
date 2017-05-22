@@ -125,7 +125,7 @@ include 'header.php';
 					OG*
 				</td>
 				<td>
-					<input type="text" id="og" class="mediumbox" name="og" value="<?php echo $tap->get_abv() ?>" />
+					<input type="text" id="og" class="mediumbox" name="abv" value="<?php echo $tap->get_abv() ?>" />
 				</td>
 			</tr>
 			<tr>
