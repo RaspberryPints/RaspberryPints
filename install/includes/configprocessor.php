@@ -198,7 +198,6 @@ require_once __DIR__.'/config_files.php';
 			$sql_query = remove_comments($sql_query);
 			$sql_query = split_sql_file($sql_query, ';');
 
-
 			$con=mysql_connect($servername,'root',$rootpass) or die('error connection');
 
 			$i=1;
@@ -206,11 +205,10 @@ require_once __DIR__.'/config_files.php';
 			//echo $i++;
 			//echo "	";
 			echo "$sql";
-			mysql_query($sql) or die('error in query');
-			mysql_close($con);
+			mysql_query($sql);
 			}
 
-
+			mysql_close($con)
 			echo "Success!<br>";
 			flush();
 		}
