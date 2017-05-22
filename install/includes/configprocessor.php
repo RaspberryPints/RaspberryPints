@@ -141,7 +141,7 @@ require_once __DIR__.'/config_files.php';
 	$sql_query = split_sql_file($sql_query, ';');
 
 
-	mysql_connect($servername,'root',$rootpass) or die('error connection');
+	mysql_connect($servername,'root',$rootpass) or die('error in connection');
 
 	$i=1;
 	foreach($sql_query as $sql){
@@ -158,12 +158,12 @@ require_once __DIR__.'/config_files.php';
 	//-----------------Create RPints User--------------------------
 	echo "Creating RPints database user...";
 	flush();
-	$con=mysql_connect($servername,"root",$rootpass);
+	$con=mysql_connect($servername,"root",$rootpass) or die('error in connection');
 	// Check connection
 
 	$sql = "GRANT ALL ON raspberrypints.* TO '" . $dbuser . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
 	// $result = mysql_query($con,$sql);
-	$result = mysql_query($sql)
+	mysql_query($sql)
 	mysql_close($con);
 	echo "Success!<br>";
 	flush();
@@ -172,13 +172,13 @@ require_once __DIR__.'/config_files.php';
 	//-----------------Add the admin user to the Users DB----------
 	echo "Adding new admin user...";
 	flush();
-	$con=mysql_connect($servername,"root",$rootpass,"raspberrypints");
+	$con=mysql_connect($servername,"root",$rootpass,"raspberrypints") or die('error in connection');
 	// Check connection
 
 	$currentdate = Date('Y-m-d H:i:s');
 	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','" . $adminname . "','" . $adminemail . "','" . $currentdate . "','" . $currentdate . "');";
 	//$result = mysql_query($con,$sql);
-	$result = mysql_query($sql)
+	mysql_query($sql)
 	mysql_close($con);
 	echo "Success!<br>";
 	flush();
