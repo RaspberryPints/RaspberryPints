@@ -34,7 +34,7 @@ if( isset($_GET['id'])){
 }
 
 $beerStyleList = $beerStyleManager->GetAll();
-$breweryList = $BreweryManager->GetAll();
+$breweryList = $breweryManager->GetAll();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -91,7 +91,7 @@ require __DIR__.'/header.php';
 					<b>Brewery:<font color="red">*</font></b>
 				</td>
 				<td>
-					<?php echo $htmlHelper->ToSelectList("breweryId", $BreweryList, "name", "id", $beer->get_breweryId(), "Select One"); ?>
+					<?php echo $htmlHelper->ToSelectList("breweryId", $breweryList, "name", "id", $beer->get_breweryId(), "Select One"); ?>
 				</td>
 			</tr>
 			<tr>
