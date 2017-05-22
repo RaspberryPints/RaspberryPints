@@ -125,7 +125,7 @@ include 'header.php';
 					OG*
 				</td>
 				<td>
-					<input type="text" id="og" class="mediumbox" name="abv" value="<?php echo $tap->get_abv() ?>" />
+					<input type="text" id="abv" class="mediumbox" name="abv" value="<?php echo $tap->get_abv() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -237,8 +237,7 @@ include 'scripts.php';
 			beerId: { required: true },
 			srm: { required: true, number: true },
 			ibu: { required: true, number: true },
-			og: { required: true, number: true },
-			fg: { required: true, number: true },
+			abv: { required: true, number: true },
 			kegId: { required: true },
 			startAmount: { required: true, number: true }
 		}
