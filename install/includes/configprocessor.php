@@ -134,7 +134,7 @@ require_once __DIR__.'/config_files.php';
 	flush();
 	$con=mysql_connect($servername, "root", $rootpass) or die('error in connection');
 
-	$sql = "CREATE DATABASE '" . $databasename . "' ;";
+	$sql = "CREATE DATABASE eric";
 	// $result = mysql_query($con,$sql);
 	mysql_query($sql, $con) or die(mysql_error());
 	# mysql_close($con);
