@@ -14,7 +14,7 @@ require_once __DIR__.'/sql_parse.php';
 //Process and load form data
 $servername = $_POST["servername"];
 $rootpass = $_POST["rootpass"];
-$databasename = $_POST["database"]
+$databasename = $_POST["database"];
 $dbuser = $_POST["dbuser"];
 $dbpass1 = $_POST["dbpass1"];
 $dbpass2 = $_POST["dbpass2"];
@@ -91,7 +91,7 @@ if ($action == 'remove')
 	$con=mysql_connect($servername,"root",$rootpass);
 	// Check connection
 
-	$sql = "DROP database " + . $databasename . ";";
+	$sql = "DROP database " . $databasename . ";";
 	$result = mysql_query($con,$sql);
 	mysql_close($con);
 	echo "Success!<br>";
