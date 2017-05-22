@@ -9,6 +9,7 @@ abstract class ConfigNames
 	const ShowAbvImg = 'showAbvImg';
 	const ShowKegCol = 'showKegCol';
 	const UseHighResolution = 'useHighResolution';
+	const ShowRPLogo = 'showRPLogo';
 	const LogoUrl = 'logoUrl';
 	const HeaderText = 'headerText';
 	const HeaderTextTruncLen = 'headerTextTruncLen';

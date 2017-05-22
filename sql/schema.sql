@@ -213,6 +213,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'showAbvImg', '1', 'ABV Images', '1', NOW(), NOW() ),
 ( 'showKegCol', '0', 'Keg Column (beta!)', '1', NOW(), NOW() ),
 ( 'useHighResolution', '0', '4k Monitor Support', '1', NOW(), NOW() ),
+( 'showRPLogo', '0', 'Display the RaspberryPints Logo', '1', NOW(), NOW() ),
 ( 'logoUrl', 'img/logo.png', 'Logo Url', '0', NOW(), NOW() ),
 ( 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '0', NOW(), NOW() ),
 ( 'headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() ),

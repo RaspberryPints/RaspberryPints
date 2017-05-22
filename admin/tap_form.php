@@ -122,7 +122,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					OG*
+					ABV*
 				</td>
 				<td>
 					<input type="text" id="abv" class="mediumbox" name="abv" value="<?php echo $tap->get_abv() ?>" />

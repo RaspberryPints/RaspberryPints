@@ -96,11 +96,13 @@
 					</h1>
 				</div>
 				<div class="HeaderRight">
-					<?php if($config[ConfigNames::UseHighResolution]) { ?>
-						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints-4k.png" height="200" alt=""></a>
-					<?php } else { ?>
-						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints.png" height="100" alt=""></a>
-					<?php } ?>
+          <?php if($config[ConfigNames::ShowRPLogo]) { ?>
+					  <?php if($config[ConfigNames::UseHighResolution]) { ?>
+						  <a href="http://www.raspberrypints.com"><img src="img/RaspberryPints-4k.png" height="200" alt=""></a>
+					  <?php } else { ?>
+						  <a href="http://www.raspberrypints.com"><img src="img/RaspberryPints.png" height="100" alt=""></a>
+					  <?php } ?>
+				  <?php } ?>
 				</div>
 			</div>
 			<!-- End Header Bar -->
