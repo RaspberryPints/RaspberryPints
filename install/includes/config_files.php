@@ -8,7 +8,7 @@
 	$mainconfigstring .= "    function db() {\n";
 	$mainconfigstring .= '        $link = ';
 	$mainconfigstring .= "mysql_connect('" . $servername . "', '" . $dbuser . "', '" . $dbpass1 . "');\n";
-	$mainconfigstring .= "        mysql_select_db($databasename);\n";
+	$mainconfigstring .= "        mysql_select_db('" . $databasename . "');\n";
 	$mainconfigstring .= "	}\n";
 	$mainconfigstring .= '    $rpintsversion="1.0.0.369";' . "\n";
 	$mainconfigstring .= "?>";
