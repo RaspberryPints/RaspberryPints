@@ -129,6 +129,19 @@ require_once __DIR__.'/config_files.php';
 	echo "Success!<br>";
 	flush();
 
+	//-----------------Create DB if it does not exist--------------------------
+	echo "Creating Database...";
+	flush();
+	$con=mysql_connect($servername, "root", $rootpass) or die('error in connection');
+	// Check connection
+
+	$sql = "CREATE DATABASE IF NOT EXISTS '" . $databasename . "' DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;";
+	// $result = mysql_query($con,$sql);
+	mysql_query($sql) or die(mysql_error());
+	# mysql_close($con);
+	echo "Success!<br>";
+	flush();
+
 	//-----------------Run The Schema File-------------------------
 	echo "Running Database Script...";
 	flush();
@@ -143,6 +156,7 @@ require_once __DIR__.'/config_files.php';
 
 
 	mysql_connect($servername,'root',$rootpass) or die('error in connection');
+	mysql_select_db($databasename, $con) or die("Cannot select the database");
 
 	$i=1;
 	foreach($sql_query as $sql){
