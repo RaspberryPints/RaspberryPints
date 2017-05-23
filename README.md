@@ -4,6 +4,7 @@ Changes include:
 
 0.3.0
 * Made sure that application logos are stored in data directory
+* Downloads brewery images and stores locally if possible
 
 0.2.0
 * User can specify the database to use at configuration time
