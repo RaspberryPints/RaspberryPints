@@ -38,6 +38,8 @@
 				"id" => $b['id'],
 				"beername" => $b['name'],
 				"style" => $b['style'],
+        "brewery" => $b['breweryName'],
+        "breweryImage" => $b['breweryImageUrl'],
 				"notes" => $b['notes'],
 				"abv" => $b['abv'],
 				"srm" => $b['srmAct'],
@@ -205,6 +207,7 @@
 
 								<td class="name">
 									<h1><?php echo $beer['beername']; ?></h1>
+                  <h2 class="subhead"><?php echo $beer['brewery']; ?></h2>
 									<h2 class="subhead"><?php echo $beer['style']; ?></h2>
 									<p><?php echo $beer['notes']; ?></p>
 								</td>
