@@ -16,8 +16,11 @@ require_once __DIR__.'/includes/managers/brewery_manager.php';
 $htmlHelper = new HtmlHelper();
 $breweryManager = new BreweryManager();
 
+if (isset($_POST['inactivateBrewery'])) {
+	$breweryManager->Inactivate($_POST['id']);
+}
 
-$breweries = $breweryManager->GetAll();
+$breweries = $breweryManager->GetAllActive();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -87,7 +90,7 @@ include 'header.php';
 									<th align="center" width="10%" style="text-align: center; vertical-align: middle; margin: 0; padding: 0">
 										<form method="POST">
 											<input type='hidden' name='id' value='<?php echo $brewery->get_id()?> '/>
-											<input class="inactivateBeer btn" style="text-align: center; margin: 0;" name="inactivateBrewery" type="submit" value="Delete" />
+											<input class="inactivateBrewery btn" style="text-align: center; margin: 0;" name="inactivateBrewery" type="submit" value="Delete" />
 										</form>
 									</th>
 								</tr>

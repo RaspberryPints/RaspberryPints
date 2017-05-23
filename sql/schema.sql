@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `breweries` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` tinytext NOT NULL,
 	`imageUrl` varchar(2000),
+	`active` tinyint(1) NOT NULL DEFAULT 1,	
 
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;

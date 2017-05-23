@@ -6,11 +6,11 @@ class BreweryManager{
 	function Save($brewery){
 		$sql = "";
 		if($brewery->get_id()){
-			$sql = 	"UPDATE beers " .
+			$sql = 	"UPDATE breweries " .
 					"SET " .
 						"name = '" . encode($brewery->get_name()) . "', " .
-						"imageUrl = '" . encode($brewery->get_imageUrl()) .
-					" WHERE id = " . $brewery->get_id();
+						"imageUrl = '" . encode($brewery->get_imageUrl()) . "' " .
+					"WHERE id = " . $brewery->get_id();
 
 		}else{
 			$sql = 	"INSERT INTO breweries(name, imageUrl ) " .
@@ -18,6 +18,9 @@ class BreweryManager{
 					"'" . encode($brewery->get_name()) . "', " .
 					"'" . encode($brewery->get_imageUrl()) . "')";
 		}
+
+    mysql_query($sql);
+	}
 
 	function GetAll(){
 		$sql="SELECT * FROM breweries ORDER BY name";
@@ -33,7 +36,19 @@ class BreweryManager{
 		return $breweries;
 	}
 
+	function GetAllActive(){
+		$sql="SELECT * FROM breweries WHERE active = 1 ORDER BY name";
+		$qry = mysql_query($sql);
 
+		$beers = array();
+		while($i = mysql_fetch_array($qry)){
+			$beer = new Brewery();
+			$beer->setFromArray($i);
+			$beers[$beer->get_id()] = $beer;
+		}
+
+		return $beers;
+	}
 
 	function GetById($id){
 		$sql="SELECT * FROM breweries WHERE id = $id";
@@ -46,5 +61,14 @@ class BreweryManager{
 		}
 
 		return null;
+	}
+
+	function Inactivate($id){
+
+		$sql="UPDATE breweries SET active = 0 WHERE id = $id";
+		//echo $sql; exit();
+		$qry = mysql_query($sql);
+
+		$_SESSION['successMessage'] = "Brewery successfully deleted.";
 	}
 }
