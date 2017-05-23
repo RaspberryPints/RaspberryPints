@@ -15,6 +15,11 @@ Changes include:
 * Use absolute ABV numbers instead of OG/FG numbers
 * Ability to hide some data that is not calculated/supported/used
 
+Screenshot:
+
+![Screenshot](pints-screenshot.png)
+
+
 -----------------------------------------------------------
 RaspberryPints (RPints) is a digital upgrade to the conventional chalkboard taplist, created just for the home brewer. Display your current beers on tap with a sleek, digital presentation. Manage your beers, recipes, kegs, and taps with our built-in tracking system.
 
