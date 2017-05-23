@@ -136,7 +136,11 @@
 							</th>
 						<?php } ?>
 
-						<th class="name">
+            <?php if($config[ConfigNames::ShowBreweryImages]){ ?>
+              <th colspan="2" class="name">
+            <?php } else { ?>}
+						  <th class="name">
+						<?php } ?>
 							BEER<hr>INFORMATION
 						</th>
 
@@ -205,7 +209,15 @@
 									</td>
 								<?php } ?>
 
-								<td class="name">
+                <?php if($config[ConfigNames::ShowBreweryImages]){ ?>
+                  <td>
+    								<img style="display:block;" width="100%" height="100%" src="<?php echo $beer['breweryImage']; ?>"" />
+    							</td>
+                  <td class="name" style="border-left: none;" >
+                <?php } else { ?>}
+                	<td class="name" >
+    						<?php } ?>
+
 									<h1><?php echo $beer['beername']; ?></h1>
                   <h2 class="subhead"><?php echo $beer['brewery']; ?></h2>
 									<h2 class="subhead"><?php echo $beer['style']; ?></h2>
