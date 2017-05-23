@@ -833,6 +833,8 @@ SELECT
 	t.id,
 	b.name,
 	bs.name as 'style',
+	br.name as 'breweryName',
+	br.imageUrl as 'breweryImageUrl',
 	b.notes,
 	t.abv,
 	t.srmAct,
@@ -845,6 +847,7 @@ SELECT
 FROM taps t
 	LEFT JOIN beers b ON b.id = t.beerId
 	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
+	LEFT JOIN breweries br ON br.id = b.breweryId
 	LEFT JOIN srmRgb s ON s.srm = t.srmAct
 	LEFT JOIN vwGetTapsAmountPoured as p ON p.tapId = t.Id
 WHERE t.active = true

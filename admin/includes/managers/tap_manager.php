@@ -28,7 +28,7 @@ class TapManager{
 					"WHERE id = " . $tap->get_id();
 
 		}else{
-			$sql = 	"INSERT INTO taps(beerId, kegId, breweryId, tapNumber, abv, srmAct, ibuAct, startAmount, currentAmount, active, createdDate, modifiedDate ) " .
+			$sql = 	"INSERT INTO taps(beerId, kegId, tapNumber, abv, srmAct, ibuAct, startAmount, currentAmount, active, createdDate, modifiedDate ) " .
 					"VALUES(" . $tap->get_beerId() . ", " . $tap->get_kegId() . ", " .  $tap->get_tapNumber() . ", " . $tap->get_abv() . ", " . $tap->get_srm() . ", " . $tap->get_ibu() . ", " . $tap->get_startAmount() . ", " . $tap->get_startAmount() . ", " . $tap->get_active	() . ", NOW(), NOW())";
 		}
 

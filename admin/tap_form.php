@@ -17,14 +17,12 @@ require_once __DIR__.'/includes/managers/beer_manager.php';
 require_once __DIR__.'/includes/managers/keg_manager.php';
 require_once __DIR__.'/includes/managers/kegType_manager.php';
 require_once __DIR__.'/includes/managers/tap_manager.php';
-require_once __DIR__.'/includes/managers/brewery_manager.php';
 
 $htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
 $beerManager = new BeerManager();
 $kegManager = new KegManager();
 $kegTypeManager = new KegTypeManager();
-$breweryManager = new BreweryManager();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -39,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $beerList = $beerManager->GetAllActive();
 $kegList = $kegManager->GetAllAvailable();
-$breweryList = $breweryManager->GetAll();
 
 $tapNumber = $_GET['tapNumber'];
 if( isset($_GET['id'])){
@@ -105,14 +102,6 @@ include 'header.php';
 				</td>
 				<td>
 					<?php echo $htmlHelper->ToSelectList("beerId", $beerList, "name", "id", $tap->get_beerId(), "Select One"); ?>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Brewery*
-				</td>
-				<td>
-					<input type="text" id="brewery" class="mediumbox" name="brewery" value="<?php echo $tap->get_breweryId() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -209,12 +198,6 @@ include 'scripts.php';
 			} ?>
 		};
 
-		var breweryList = {
-			<?php foreach($breweryList as $brewery){
-				echo $brewery->get_id() . ": " . $brewery->toJson() . ", ";
-			} ?>
-		};
-
 		var kegList = {
 			<?php foreach($kegList as $keg){
 				echo $keg->get_id() . ": { " .
@@ -230,13 +213,10 @@ include 'scripts.php';
 				if( $this.val() ){
 					var $form = $('#tap-form'),
 						beer = beerList[$this.val()];
-						breweryId = beer['breweryId'];
-						brewery =  breweryList[breweryId];
 
 					$form
 						.find('#srm').val(beer['srm']).end()
 						.find('#ibu').val(beer['ibu']).end()
-						.find('#brewery').val(brewery['name']).end()
 						.find('#abv').val(beer['abv']).end();
 				}
 			})
