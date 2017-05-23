@@ -210,8 +210,8 @@
 								<?php } ?>
 
                 <?php if($config[ConfigNames::ShowBreweryImages]){ ?>
-                  <td>
-    								<img style="display:block;" width="100%" height="100%" src="<?php echo $beer['breweryImage']; ?>"" />
+                  <td width=150px>
+    								<img style="display:block; max-width:150px; max-height:150px; width: auto; height:auto;" src="<?php echo $beer['breweryImage']; ?>" />
     							</td>
                   <td class="name" style="border-left: none;" >
                 <?php } else { ?>}
@@ -334,7 +334,14 @@
 									</td>
 								<?php } ?>
 
-								<td class="name">
+                <?php if($config[ConfigNames::ShowBreweryImages]){ ?>
+                  <td width=150px>
+
+    							</td>
+                  <td class="name" style="border-left: none;" >
+                <?php } else { ?>}
+                	<td class="name" >
+    						<?php } ?>
 									<h1>Nothing on tap</h1>
 									<h2 class="subhead"></h2>
 									<p></p>
