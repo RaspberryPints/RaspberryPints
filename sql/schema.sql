@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `breweries` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` tinytext NOT NULL,
 	`imageUrl` varchar(2000),
-	`active` tinyint(1) NOT NULL DEFAULT 1,	
+	`active` tinyint(1) NOT NULL DEFAULT 1,
 
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
@@ -235,7 +235,8 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() ),
 ( 'numberOfTaps', '0', 'Number of Taps', '0', NOW(), NOW() ),
 ( 'version', '1.0.0.369', 'Version', '0', NOW(), NOW() ),
-( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() );
+( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() ),
+( 'showBreweryImages', '0', 'Show Brewery Images', '1', NOW(), NOW() );
 
 
 -- --------------------------------------------------------

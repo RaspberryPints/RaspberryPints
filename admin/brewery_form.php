@@ -82,7 +82,7 @@ require __DIR__.'/header.php';
 
 			<tr>
 				<td>
-					<b>SRM:<font color="red">*</font></b>
+					<b>Image URL:<font color="red">*</font></b>
 				</td>
 				<td>
 					<input type="text" id="imageUrl" class="largebox" name="imageUrl" value="<?php echo $brewery->get_imageUrl() ?>" />

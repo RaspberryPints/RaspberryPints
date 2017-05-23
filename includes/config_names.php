@@ -17,4 +17,5 @@ abstract class ConfigNames
 	const HeaderText = 'headerText';
 	const HeaderTextTruncLen = 'headerTextTruncLen';
 	const NumberOfTaps = 'numberOfTaps';
+	const ShowBreweryImages = 'showBreweryImages';
 }
