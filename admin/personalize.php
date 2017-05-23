@@ -87,7 +87,7 @@ include 'header.php';
 		<h2>Taplist Logo</h2>
 		<p>This logo appears on the taplist.</p>
 			<b>Current image:</b><br /><br />
-				<img src="../img/logo.png" height="100" alt="Brewery Logo" style="border-style: solid; border-width: 2px; border-color: #d6264f;" />
+				<img src="../data/images/logo.png" height="100" alt="Brewery Logo" style="border-style: solid; border-width: 2px; border-color: #d6264f;" />
 			<form enctype="multipart/form-data" action="update_logo.php" method="POST"><br />
 				<input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/>
 				<input type="submit" class="btn" value="Upload" />
@@ -97,7 +97,7 @@ include 'header.php';
 		<h2>Admin Logo</h2>
 		<p>This logo appears on the admin panel.</p>
 			<b>Current image:</b><br /><br />
-				<img src="img/logo.png" height="100" alt="Brewery Logo" style="border-style: solid; border-width: 2px; border-color: #d6264f;" />
+				<img src="../data/images/adminlogo.png" height="100" alt="Brewery Logo" style="border-style: solid; border-width: 2px; border-color: #d6264f;" />
 			<form enctype="multipart/form-data" action="updateAdminLogo.php" method="POST"><br />
 				<input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/>
 				<input type="submit" class="btn" value="Upload" />
