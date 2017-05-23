@@ -111,6 +111,21 @@ if ($action == 'install')
 
 require_once __DIR__.'/config_files.php';
 
+
+	$ddd = '../../data';
+	if (!file_exists($ddd) && !is_dir($ddd)) {
+		mkdir($ddd);
+	}
+	$ddd = '../../data/config';
+	if (!file_exists($ddd) && !is_dir($ddd)) {
+		mkdir($ddd);
+	}
+	$ddd = '../../data/images';
+	if (!file_exists($ddd) && !is_dir($ddd)) {
+		mkdir($ddd);
+	}
+
+
 	//-----------------Create the main config file-----------------
 	echo "Update config files...";
 	flush();

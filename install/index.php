@@ -1,17 +1,4 @@
-<?php
-	$ddd = __DIR__.'/../data';
-	if (!file_exists($ddd) && !is_dir($ddd)) {
-		mkdir($dd);
-	}
-	$ddd = __DIR__.'/../data/config';
-	if (!file_exists($ddd) && !is_dir($ddd)) {
-		mkdir($dd);
-	}
-	$ddd = __DIR__.'/../data/images';
-	if (!file_exists($ddd) && !is_dir($ddd)) {
-		mkdir($dd);
-	}
-?>
+
 
 <html>
 	<script>
