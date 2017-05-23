@@ -3,7 +3,7 @@ session_start();
 if(!isset( $_SESSION['myusername'] )){
 header("location:index.php");
 }
-require 'includes/conn.php';
+require '../data/config/conn.php';
 
 // get value of id that sent from address bar
 $beerid=$_GET['beerid'];

@@ -1,11 +1,11 @@
 <?php
 session_start();
-require 'conn.php';
+require '../../data/config/conn.php';
 
-// Get values from form 
+// Get values from form
 $password=md5($_POST['password']);
 $email=($_POST['email']);
-	
+
 // update data in mysql database
 $sql="UPDATE users SET password='$password' WHERE email='$email'";
 $result=mysql_query($sql);
@@ -21,4 +21,4 @@ else {
 echo "ERROR";
 }
 
-?> 
+?>

@@ -4,7 +4,7 @@ if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
 
-require_once __DIR__.'/includes/conn.php';
+require_once __DIR__.'/../data/config/conn.php';
 require_once __DIR__.'/../includes/config_names.php';
 require_once __DIR__.'/includes/html_helper.php';
 require_once __DIR__.'/includes/functions.php';

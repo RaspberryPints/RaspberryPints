@@ -1,3 +1,18 @@
+<?php
+	$ddd = __DIR__.'/../data';
+	if (!file_exists($ddd) && !is_dir($ddd)) {
+		mkdir($dd);
+	}
+	$ddd = __DIR__.'/../data/config';
+	if (!file_exists($ddd) && !is_dir($ddd)) {
+		mkdir($dd);
+	}
+	$ddd = __DIR__.'/../data/images';
+	if (!file_exists($ddd) && !is_dir($ddd)) {
+		mkdir($dd);
+	}
+?>
+
 <html>
 	<script>
 		//http://jsfiddle.net/rpP4K/
@@ -41,8 +56,6 @@
 	<META HTTP-EQUIV="Expires" CONTENT="-1">
   </head>
   <body>
-
-
 <h1>Welcome to Raspberry Pints!</h1>
 
 	<form action="includes/configprocessor.php" method="post">
@@ -50,10 +63,10 @@
 	<?php
 		$upgrade=0;
 		$clear=0;
-		if (file_exists("../includes/config.php")) {
+		if (file_exists("../data/config/config.php")) {
 		echo 'We noticed that you already have installed RPints. Please select an option from the menu below';
 			//Check versions
-			require '../includes/config.php';
+			require '../data/config/config.php';
 			db();
 			$sql = 'SELECT id,configName,configValue FROM config where configname = "version"';
 			$qry = mysql_query($sql);
@@ -86,7 +99,7 @@ you are certain you need to change it.
 			</tr>
 			<tr>
 				<td>
-					<label for="textfield"><strong>Database: (required)</strong></label> 
+					<label for="textfield"><strong>Database: (required)</strong></label>
 				</td>
 				<td>
 					<input class="inputbox" required class="inputbox" value="raspberrypints" type="text" name="database">

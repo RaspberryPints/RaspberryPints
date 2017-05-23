@@ -1,10 +1,11 @@
 This is a fork of the RaspberryPints project
 
-Change here, include:
+Changes include:
 
 0.2.0 (WIP)
 * User can specify the database to use at configuration time
-* Initial support for adding Breweries (helpful for commercial kegs)
+* Initial support for adding Breweries
+* all configuration data now saved in <root>/data which can be mapped for persistent storage
 
 0.1.0:
 * Use absolute ABV numbers instead of OG/FG numbers

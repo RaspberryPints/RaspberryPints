@@ -4,7 +4,7 @@ $session=session_id();
 $time=time();
 $time_check=$time-1800; //SET TIME 10 Minute
 
-require 'conn.php';
+require '../../data/config/conn.php';
 
 // username and password sent from form
 $myusername=$_POST['myusername'];

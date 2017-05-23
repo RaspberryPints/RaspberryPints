@@ -99,9 +99,9 @@ if ($action == 'remove')
 
 	echo "Removing configuration files...";
 	flush();
-	unlink('../../includes/config.php');
-	unlink('../../admin/includes/conn.php');
-	unlink('../../admin/includes/configp.php');
+	unlink('../../data/config/config.php');
+	unlink('../../data/config/conn.php');
+	unlink('../../data/config/configp.php');
 	echo "Success!<br>";
 	flush();
 }
@@ -115,7 +115,7 @@ require_once __DIR__.'/config_files.php';
 	echo "Update config files...";
 	flush();
 
-	file_put_contents('../../includes/config.php', $mainconfigstring);
+	file_put_contents('../../data/config/config.php', $mainconfigstring);
 
 	echo "Success!<br>";
 	flush();
@@ -123,8 +123,8 @@ require_once __DIR__.'/config_files.php';
 	echo "Update admin config files...";
 	flush();
 
-	file_put_contents('../../admin/includes/conn.php', $adminconfig1);
-	file_put_contents('../../admin/includes/configp.php', $adminconfig2);
+	file_put_contents('../../data/config/conn.php', $adminconfig1);
+	file_put_contents('../../data/config/configp.php', $adminconfig2);
 
 	echo "Success!<br>";
 	flush();

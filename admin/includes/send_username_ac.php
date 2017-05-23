@@ -1,5 +1,5 @@
 <?
-require("../includes/conn.php");
+require("../../data/config/conn.php");
 
 // value sent from form
 $email_to=$_POST['email_tou'];

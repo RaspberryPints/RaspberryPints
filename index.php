@@ -1,5 +1,5 @@
 <?php
-        if (!file_exists(__DIR__.'/includes/config.php')) {
+        if (!file_exists(__DIR__.'/data/config/config.php')) {
            header('Location: /install', true, 303);
            die();
         }
@@ -8,7 +8,7 @@
 <?php
 	require_once __DIR__.'/includes/config_names.php';
 
-	require_once __DIR__.'/includes/config.php';
+	require_once __DIR__.'/data/config/config.php';
 
 	require_once __DIR__.'/admin/includes/managers/tap_manager.php';
 

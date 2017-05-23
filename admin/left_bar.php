@@ -41,6 +41,7 @@
 			<li><a href="personalize.php#background">Background Image</a></li>
 		</ul>
 	</li>
+	<!--
 	<li>
 		<a class="expanded heading">Help!</a>
 		<ul class="navigation">
@@ -58,6 +59,7 @@
 			<li><a href="http://www.raspberrypints.com/licensing" target="_blank">Licensing</a></li>
 		</ul>
 	</li>
+-->
 </ul>
 
 <!-- End Navagation -->

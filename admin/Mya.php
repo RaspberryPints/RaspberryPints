@@ -4,7 +4,7 @@ if(!isset( $_SESSION['myusername'] )){
 header("location:index.php");
 }
 
-require 'includes/conn.php';
+require '../data/config/conn.php';
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -24,21 +24,21 @@ require 'includes/conn.php';
 include 'header.php';
 ?>
 	<!-- End Header -->
-		
+
 	<!-- Top Breadcrumb Start -->
 	<div id="breadcrumb">
-		<ul>	
+		<ul>
 			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
 			<li><strong>Location:</strong></li>
 			<li class="current">My Account</li>
 		</ul>
 	</div>
-	<!-- Top Breadcrumb End --> 
-	
+	<!-- Top Breadcrumb End -->
+
 	<!-- Right Side/Main Content Start -->
 	<div id="rightside">
 
-	
+
 		<div class="contentcontainer med left">
 			<div class="headings alt">
 				<h2>Account Info</h2>
@@ -76,8 +76,8 @@ echo mysql_result($result, 0, 'email');
 
 	</div>
 
-	<!-- Start Footer -->   
-<?php 
+	<!-- Start Footer -->
+<?php
 include 'footer.php';
 ?>
 
@@ -85,12 +85,12 @@ include 'footer.php';
 		</div>
 	</div>
 	<!-- Right Side/Main Content End -->
-	
-	<!-- Start Left Bar Menu -->   
-<?php 
+
+	<!-- Start Left Bar Menu -->
+<?php
 include 'left_bar.php';
 ?>
-	<!-- End Left Bar Menu -->  
+	<!-- End Left Bar Menu -->
 	<!-- Start Js  -->
 <?php
 include 'scripts.php';
@@ -101,6 +101,6 @@ include 'scripts.php';
 	<script type='text/javascript'>
 	DD_belatedPNG.fix('img, .notifycount, .selected');
 	</script>
-	<![endif]--> 
+	<![endif]-->
 </body>
 </html>
