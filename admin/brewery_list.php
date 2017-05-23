@@ -75,16 +75,16 @@ include 'header.php';
 							foreach ($breweries as $brewery){
 					?>
 								<tr class="intborder">
-									<th width="35%" style="vertical-align: middle;">
+									<th width="40%" style="vertical-align: middle;">
 										<h3><?php echo $brewery->get_name() ?></h3>
 									</th>
-									<th width="35%" style="vertical-align: middle;">
-										<h3><?php echo $brewery->get_imageUrl() ?></h3>
+									<th width="40%" style="vertical-align: middle;">
+										<?php echo $brewery->get_imageUrl() ?>
 									</th>
-									<th align="center" width="5%" style="text-align: center; vertical-align: middle; margin: 0; padding: 0;">
+									<th align="center" width="10%" style="text-align: center; vertical-align: middle; margin: 0; padding: 0;">
 										<input name="editBrewery" type="button" class="btn" value="Edit" style="text-align: center; margin: 0;" onclick="window.location='brewery_form.php?id=<?php echo $brewery->get_id()?>'" />
 									</th>
-									<th align="center" width="5%" style="text-align: center; vertical-align: middle; margin: 0; padding: 0">
+									<th align="center" width="10%" style="text-align: center; vertical-align: middle; margin: 0; padding: 0">
 										<form method="POST">
 											<input type='hidden' name='id' value='<?php echo $brewery->get_id()?> '/>
 											<input class="inactivateBeer btn" style="text-align: center; margin: 0;" name="inactivateBrewery" type="submit" value="Delete" />
