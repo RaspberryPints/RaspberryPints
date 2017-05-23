@@ -4,6 +4,17 @@ require_once __DIR__.'/../models/brewery.php';
 class BreweryManager{
 
 	function Save($brewery){
+
+		// download the image so we have it locally
+		if ($brewery->get_imageUrl()) {
+			$uniquename = uniqid("brewery-") .  ".png";
+			$imagepath = "../data/images/" . $uniquename;
+			copy($brewery->get_imageUrl(), $imagepath);
+				if (file_exists($imagepath)) {
+ 				  $brewery->set_imageUrl("/data/images/" . $uniquename);
+  			}
+		}
+
 		$sql = "";
 		if($brewery->get_id()){
 			$sql = 	"UPDATE breweries " .

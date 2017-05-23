@@ -111,7 +111,7 @@ if ($action == 'install')
 
 require_once __DIR__.'/config_files.php';
 
-
+	// make sure the data directories exist
 	$ddd = '../../data';
 	if (!file_exists($ddd) && !is_dir($ddd)) {
 		mkdir($ddd);
@@ -125,7 +125,13 @@ require_once __DIR__.'/config_files.php';
 		mkdir($ddd);
 	}
 
-
+  // copy in the logos if necessary
+	if (!file_exists('../../data/images/logo.png')) {
+		 copy('../../img/logo.png', '../../data/images/logo.png');
+	}
+	if (!file_exists('../../data/images/adminlogo.png')) {
+		 copy('../../img/logo.png', '../../data/images/adminlogo.png');
+	}
 	//-----------------Create the main config file-----------------
 	echo "Update config files...";
 	flush();
