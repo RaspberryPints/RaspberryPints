@@ -112,7 +112,7 @@ include 'header.php';
 					Brewery*
 				</td>
 				<td>
-					<input type="text" id="srm" class="mediumbox" name="brewery" value="<?php echo $tap->get_brewery() ?>" />
+					<input type="text" id="brewery" class="mediumbox" name="brewery" value="<?php echo $tap->get_breweryId() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -206,6 +206,12 @@ include 'scripts.php';
 		var beerList = {
 			<?php foreach($beerList as $beerItem){
 				echo $beerItem->get_id() . ": " . $beerItem->toJson() . ", ";
+			} ?>
+		};
+
+		var breweryList = {
+			<?php foreach($breweryList as $brewery){
+				echo $brewery->get_id() . ": " . $brewery->toJson() . ", ";
 			} ?>
 		};
 

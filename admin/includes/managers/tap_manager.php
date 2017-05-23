@@ -18,7 +18,6 @@ class TapManager{
 					"SET " .
 						"beerId = " . $tap->get_beerId() . ", " .
 						"kegId = " . $tap->get_kegId() . ", " .
-						"breweryId = " . $tap->get_breweryId() . ", " .
 						"tapNumber = " . $tap->get_tapNumber() . ", " .
 						"abv = " . $tap->get_abv() . ", " .
 						"srmAct = " . $tap->get_srm() . ", " .
@@ -30,7 +29,7 @@ class TapManager{
 
 		}else{
 			$sql = 	"INSERT INTO taps(beerId, kegId, breweryId, tapNumber, abv, srmAct, ibuAct, startAmount, currentAmount, active, createdDate, modifiedDate ) " .
-					"VALUES(" . $tap->get_beerId() . ", " . $tap->get_kegId() . ", " .  $tap->get_breweryId() . ", " . $tap->get_tapNumber() . ", " . $tap->get_abv() . ", " . $tap->get_srm() . ", " . $tap->get_ibu() . ", " . $tap->get_startAmount() . ", " . $tap->get_startAmount() . ", " . $tap->get_active	() . ", NOW(), NOW())";
+					"VALUES(" . $tap->get_beerId() . ", " . $tap->get_kegId() . ", " .  $tap->get_tapNumber() . ", " . $tap->get_abv() . ", " . $tap->get_srm() . ", " . $tap->get_ibu() . ", " . $tap->get_startAmount() . ", " . $tap->get_startAmount() . ", " . $tap->get_active	() . ", NOW(), NOW())";
 		}
 
 		//echo $sql; exit();
