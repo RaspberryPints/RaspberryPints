@@ -3,13 +3,13 @@ session_start();
 if(!isset( $_SESSION['myusername'] )){
 header("location:index.php");
 }
-require 'includes/conn.php';
+require '../data/config/conn.php';
 require '../includes/config_names.php';
-require 'includes/configp.php';
+require '../data/config/configp.php';
 
 
 
-// Get values from form 
+// Get values from form
 $name=$_POST['id'];
 $config_Value=$_POST['configValue'];
 
@@ -28,4 +28,4 @@ echo "<script>location.href='personalize.php';</script>";
 
 
 
-?> 
+?>

@@ -16,10 +16,15 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
+-- --------------------------------------------------------
+
 --
--- Database: `raspberrypints`
+-- Dumping data for table `breweries`
 --
-USE `raspberrypints`;
+
+INSERT INTO `breweries` (`name`, `imageUrl`) VALUES
+('Fair Winds Brewing Company', 'https://fairwindsbrewing.com/images/fairwindslogo.png' ),
+('SweetWater Brewing Company', 'http://sweetwaterbrew.com/wp-content/themes/SWB_2015/images/b61381bdc3dd915d2cdc2f48ba67d56b_SweetWater_logo_200px.png');
 
 -- --------------------------------------------------------
 

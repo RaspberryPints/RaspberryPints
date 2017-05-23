@@ -15,11 +15,23 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
+
+-- --------------------------------------------------------
+
 --
--- Database: `raspberrypints`
+-- Table structure for table `breweries`
 --
-CREATE DATABASE IF NOT EXISTS `raspberrypints` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `raspberrypints`;
+
+CREATE TABLE IF NOT EXISTS `breweries` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` tinytext NOT NULL,
+	`imageUrl` varchar(2000),
+	`active` tinyint(1) NOT NULL DEFAULT 1,	
+
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+
 
 -- --------------------------------------------------------
 
@@ -170,6 +182,7 @@ CREATE TABLE IF NOT EXISTS `beers` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` text NOT NULL,
 	`beerStyleId` int(11) NOT NULL,
+	`breweryId` int(11),
 	`notes` text NOT NULL,
 	`abv` decimal(3,1) NOT NULL,
 	`srmEst` decimal(3,1) NOT NULL,
@@ -821,6 +834,8 @@ SELECT
 	t.id,
 	b.name,
 	bs.name as 'style',
+	br.name as 'breweryName',
+	br.imageUrl as 'breweryImageUrl',
 	b.notes,
 	t.abv,
 	t.srmAct,
@@ -833,6 +848,7 @@ SELECT
 FROM taps t
 	LEFT JOIN beers b ON b.id = t.beerId
 	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
+	LEFT JOIN breweries br ON br.id = b.breweryId
 	LEFT JOIN srmRgb s ON s.srm = t.srmAct
 	LEFT JOIN vwGetTapsAmountPoured as p ON p.tapId = t.Id
 WHERE t.active = true

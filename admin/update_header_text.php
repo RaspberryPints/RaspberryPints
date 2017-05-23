@@ -3,11 +3,11 @@ session_start();
 if(!isset( $_SESSION['myusername'] )){
 header("location:index.php");
 }
-require 'includes/conn.php';
+require '../data/config/conn.php';
 require '../includes/config_names.php';
 require_once 'includes/functions.php';
 
-// Get values from form 
+// Get values from form
 $header_text=encode($_POST['header_text']);
 
 
@@ -28,4 +28,4 @@ else {
 echo "ERROR";
 }
 
-?> 
+?>

@@ -14,6 +14,7 @@ require_once __DIR__.'/sql_parse.php';
 //Process and load form data
 $servername = $_POST["servername"];
 $rootpass = $_POST["rootpass"];
+$databasename = $_POST["database"];
 $dbuser = $_POST["dbuser"];
 $dbpass1 = $_POST["dbpass1"];
 $dbpass2 = $_POST["dbpass2"];
@@ -85,12 +86,12 @@ if ($validerror !='')
 
 if ($action == 'remove')
 {
-	echo "Deleting raspberrypints database...";
+	echo "Deleting " + $databasename + " database...";
 	flush();
 	$con=mysql_connect($servername,"root",$rootpass);
 	// Check connection
 
-	$sql = "DROP database raspberrypints;";
+	$sql = "DROP database " . $databasename . ";";
 	$result = mysql_query($con,$sql);
 	mysql_close($con);
 	echo "Success!<br>";
@@ -98,9 +99,9 @@ if ($action == 'remove')
 
 	echo "Removing configuration files...";
 	flush();
-	unlink('../../includes/config.php');
-	unlink('../../admin/includes/conn.php');
-	unlink('../../admin/includes/configp.php');
+	unlink('../../data/config/config.php');
+	unlink('../../data/config/conn.php');
+	unlink('../../data/config/configp.php');
 	echo "Success!<br>";
 	flush();
 }
@@ -110,11 +111,26 @@ if ($action == 'install')
 
 require_once __DIR__.'/config_files.php';
 
+
+	$ddd = '../../data';
+	if (!file_exists($ddd) && !is_dir($ddd)) {
+		mkdir($ddd);
+	}
+	$ddd = '../../data/config';
+	if (!file_exists($ddd) && !is_dir($ddd)) {
+		mkdir($ddd);
+	}
+	$ddd = '../../data/images';
+	if (!file_exists($ddd) && !is_dir($ddd)) {
+		mkdir($ddd);
+	}
+
+
 	//-----------------Create the main config file-----------------
 	echo "Update config files...";
 	flush();
 
-	file_put_contents('../../includes/config.php', $mainconfigstring);
+	file_put_contents('../../data/config/config.php', $mainconfigstring);
 
 	echo "Success!<br>";
 	flush();
@@ -122,9 +138,21 @@ require_once __DIR__.'/config_files.php';
 	echo "Update admin config files...";
 	flush();
 
-	file_put_contents('../../admin/includes/conn.php', $adminconfig1);
-	file_put_contents('../../admin/includes/configp.php', $adminconfig2);
+	file_put_contents('../../data/config/conn.php', $adminconfig1);
+	file_put_contents('../../data/config/configp.php', $adminconfig2);
 
+	echo "Success!<br>";
+	flush();
+
+	//-----------------Create DB if it does not exist--------------------------
+	echo "Creating Database...";
+	flush();
+	$con=mysql_connect($servername, "root", $rootpass) or die('error in connection');
+
+	$sql = "CREATE DATABASE " . $databasename;
+	// $result = mysql_query($con,$sql);
+	mysql_query($sql, $con) or die(mysql_error());
+	# mysql_close($con);
 	echo "Success!<br>";
 	flush();
 
@@ -142,6 +170,7 @@ require_once __DIR__.'/config_files.php';
 
 
 	mysql_connect($servername,'root',$rootpass) or die('error in connection');
+	mysql_select_db($databasename, $con) or die("Cannot select the database");
 
 	$i=1;
 	foreach($sql_query as $sql){
@@ -173,7 +202,7 @@ require_once __DIR__.'/config_files.php';
 	echo "Adding new admin user...";
 	flush();
 	$con=mysql_connect($servername,"root",$rootpass) or die('error in connection');
-	mysql_select_db("raspberrypints", $con) or die("Cannot select the database");
+	mysql_select_db($databasename, $con) or die("Cannot select the database");
 	// Check connection
 
 	$currentdate = Date('Y-m-d H:i:s');
@@ -200,7 +229,7 @@ require_once __DIR__.'/config_files.php';
 			$sql_query = split_sql_file($sql_query, ';');
 
 			$con=mysql_connect($servername,'root',$rootpass) or die('error connection');
-			mysql_select_db("raspberrypints", $con) or die("Cannot select the database");
+			mysql_select_db($databasename, $con) or die("Cannot select the database");
 
 			$i=1;
 			foreach($sql_query as $sql){

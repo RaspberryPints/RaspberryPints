@@ -1,7 +1,7 @@
 <?php
 session_start();
-require 'conn.php';
-?> 
+require '../../data/config/conn.php';
+?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -28,7 +28,7 @@ require 'conn.php';
 					<input type="password" class="logininput" name="password" id="password" required /><br />
 					<input type="submit" class="loginbtn" value="Submit" name="submit" /><br />
 				</form>
-<a href="../index.php" style="text-decoration:none;"><font color="grey">Go Back To Login</font></a> 
+<a href="../index.php" style="text-decoration:none;"><font color="grey">Go Back To Login</font></a>
 			</div>
 		</div>
 	</div>

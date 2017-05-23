@@ -4,7 +4,7 @@ if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
 
-require_once __DIR__.'/includes/conn.php';
+require_once __DIR__.'/../data/config/conn.php';
 require_once __DIR__.'/../includes/config_names.php';
 require_once __DIR__.'/includes/html_helper.php';
 require_once __DIR__.'/includes/functions.php';
@@ -25,7 +25,7 @@ $kegTypeManager = new KegTypeManager();
 
 
 if (isset($_POST['inactivateKeg'])) {
-	$kegManager->Inactivate($_POST['id']);		
+	$kegManager->Inactivate($_POST['id']);
 }
 
 $kegs = $kegManager->GetAllActive();
@@ -48,17 +48,17 @@ $kegs = $kegManager->GetAllActive();
 include 'header.php';
 ?>
 	<!-- End Header -->
-		
+
 	<!-- Top Breadcrumb Start -->
 	<div id="breadcrumb">
-		<ul>	
+		<ul>
 			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
 			<li><strong>Location:</strong></li>
-			<li class="current">Keg List</li>            
+			<li class="current">Keg List</li>
 		</ul>
 	</div>
-	<!-- Top Breadcrumb End --> 
-	
+	<!-- Top Breadcrumb End -->
+
 	<!-- Right Side/Main Content Start -->
 	<div id="rightside">
 		<div class="contentcontainer lg left">
@@ -69,7 +69,7 @@ include 'header.php';
 			<h3>Currently Serving:</h3>
 			<br>
 			<!-- Start On Tap Section -->
-			
+
 			<table width="800px" border="0" cellspacing="0" cellpadding="0" class="keglist outerborder">
 				<thead class="intborder thick">
 					<tr>
@@ -82,20 +82,20 @@ include 'header.php';
 				</thead>
 
 				<tbody>
-					<?php 
-						if( count($kegs) == 0 ){  
+					<?php
+						if( count($kegs) == 0 ){
 					?>
 					<tr><td class="no-results" colspan="99">No kegs :(<br>Perhaps you should add one?</td></tr>
-					<?php 
-						}else{  
+					<?php
+						}else{
 							foreach ($kegs as $keg){
-								
+
 								if( $keg->get_kegStatusCode() != null ){
 									$kegStatus = $kegStatusManager->GetByCode($keg->get_kegStatusCode());
 								}else{
 									$kegStatus = new KegStatus();
 								}
-								
+
 								if( $keg->get_kegTypeId() != null ){
 									$kegType = $kegTypeManager->GetById($keg->get_kegTypeId());
 								}else{
@@ -106,19 +106,19 @@ include 'header.php';
 						<td rowspan="2" class="intborder">
 							<center><span class="kegsquare"><?php echo $keg->get_label() ?></span></center>
 						</td>
-						
+
 						<td colspan="2" class="leftborder rightborder" style="vertical-align:middle; font-size:1.2em;">
 							<center><b><?php echo $kegStatus->get_name() ?></b></center>
 						</td>
-						
+
 						<td style="vertical-align:middle; font-size:1.2em;">
 							<center><b><?php echo $kegType->get_name() ?></b></center>
 						</td>
-						
+
 						<td style="vertical-align:middle; font-size:1.2em;">
 							<center><b><?php echo $keg->get_make() ?></b></center>
 						</td>
-						
+
 						<td class="rightborder thick"style="vertical-align:middle; font-size:1.2em;">
 							<center><b><?php echo $keg->get_model() ?></b></center>
 						</td>
@@ -127,7 +127,7 @@ include 'header.php';
 						<td class="leftborder">
 							<center><input name="editTap" type="button" class="btn" value="Edit" onclick="window.location='keg_form.php?id=<?php echo $keg->get_id()?>'" /></center>
 						</td>
-						
+
 						<td class="rightborder">
 							<center>
 							<form method="POST">
@@ -142,35 +142,35 @@ include 'header.php';
 							<b>Notes:</b> &nbsp; <?php echo $keg->get_notes() ?>
 						</td>
 					</tr>
-		<?php 
+		<?php
 				}
 			}
 		?>
 				</tbody>
 			</table>
-			
+
 			<?php $htmlHelper->ShowMessage(); ?>
 			<br/><br/>
 			<input type="submit" class="btn" value="Add a Keg" onclick="window.location='keg_form.php'" />
-				<!-- Start Footer -->   
+				<!-- Start Footer -->
 <?php
 include 'footer.php';
 ?>
 	<!-- End Footer -->
 		</div>
 	</div>
-	
+
 	<!-- End On Tap Section -->
 
 
-		
+
 	</div>
 	<!-- Right Side/Main Content End -->
-	<!-- Start Left Bar Menu -->   
+	<!-- Start Left Bar Menu -->
 <?php
 include 'left_bar.php';
 ?>
-	<!-- End Left Bar Menu -->  
+	<!-- End Left Bar Menu -->
 	<!-- Start Js  -->
 <?php
 include 'scripts.php';
@@ -191,6 +191,6 @@ include 'scripts.php';
 	<script type='text/javascript'>
 	DD_belatedPNG.fix('img, .notifycount, .selected');
 	</script>
-	<![endif]--> 
+	<![endif]-->
 </body>
 </html>

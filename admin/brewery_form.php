@@ -8,33 +8,27 @@ require_once __DIR__.'/../includes/config_names.php';
 require_once __DIR__.'/includes/html_helper.php';
 require_once __DIR__.'/includes/functions.php';
 
-require_once __DIR__.'/includes/models/beer.php';
+require_once __DIR__.'/includes/models/brewery.php';
 
-require_once __DIR__.'/includes/managers/beer_manager.php';
-require_once __DIR__.'/includes/managers/beerStyle_manager.php';
 require_once __DIR__.'/includes/managers/brewery_manager.php';
 
 $htmlHelper = new HtmlHelper();
-$beerManager = new BeerManager();
-$beerStyleManager = new BeerStyleManager();
 $breweryManager = new BreweryManager();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$beer = new Beer();
-	$beer->setFromArray($_POST);
-	$beerManager->Save($beer);
-	redirect('beer_list.php');
+	$brewery = new Brewery();
+	$brewery->setFromArray($_POST);
+	$breweryManager->Save($brewery);
+	redirect('brewery_list.php');
 }
 
 if( isset($_GET['id'])){
-	$beer = $beerManager->GetById($_GET['id']);
+	$brewery = $breweryManager->GetById($_GET['id']);
 }else{
-	$beer = new Beer();
+	$brewery = new Brewery();
 }
 
-$beerStyleList = $beerStyleManager->GetAll();
-$breweryList = $breweryManager->GetAllActive();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -60,9 +54,9 @@ require __DIR__.'/header.php';
 		<ul>
 			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
 			<li><strong>Location:</strong></li>
-			<li><a href="beer_list.php">My Beers</a></li>
+			<li><a href="brewery_list.php">My Beers</a></li>
 			<li>/</li>
-			<li class="current">Beer Form</li>
+			<li class="current">Brewery Form</li>
 		</ul>
 	</div>
 	<!-- Top Breadcrumb End -->
@@ -73,9 +67,8 @@ require __DIR__.'/header.php';
 	<p>
 		Fields marked with <b><font color="red">*</font></b> are required.<br><br>
 
-	<form id="beer-form" method="POST">
-		<input type="hidden" name="id" value="<?php echo $beer->get_id() ?>" />
-		<input type="hidden" name="active" value="<?php echo $beer->get_active() ?>" />
+	<form id="brewery-form" method="POST">
+		<input type="hidden" name="id" value="<?php echo $brewery->get_id() ?>" />
 
 		<table width="800" border="0" cellspacing="0" cellpadding="0">
 			<tr>
@@ -83,61 +76,22 @@ require __DIR__.'/header.php';
 					<b>Name:<font color="red">*</font></b>
 				</td>
 				<td>
-					<input type="text" id="name" class="largebox" name="name" value="<?php echo $beer->get_name() ?>" />
+					<input type="text" id="name" class="largebox" name="name" value="<?php echo $brewery->get_name() ?>" />
 				</td>
 			</tr>
-			<tr>
-				<td>
-					<b>Brewery:<font color="red">*</font></b>
-				</td>
-				<td>
-					<?php echo $htmlHelper->ToSelectList("breweryId", $breweryList, "name", "id", $beer->get_breweryId(), "Select One"); ?>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<b>Style:<font color="red">*</font></b>
-				</td>
-				<td>
-					<?php echo $htmlHelper->ToSelectList("beerStyleId", $beerStyleList, "name", "id", $beer->get_beerStyleId(), "Select One"); ?>
-				</td>
-			</tr>
+
 			<tr>
 				<td>
 					<b>SRM:<font color="red">*</font></b>
 				</td>
 				<td>
-					<input type="text" id="srm" class="xsmallbox" name="srm" value="<?php echo $beer->get_srm() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<b>IBU:<font color="red">*</font></b>
-				</td>
-				<td>
-					<input type="text" id="ibu" class="xsmallbox" name="ibu" value="<?php echo $beer->get_ibu() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<b>ABV:<font color="red">*</font></b>
-				</td>
-				<td>
-					<input type="text" id="abv" class="smallbox" name="abv" value="<?php echo $beer->get_abv() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<b>Tasting<br>Notes:</b>
-				</td>
-				<td>
-					<textarea type="text" id="notes" class="text-input textarea" style="width:320px;height:80px" name="notes"><?php echo $beer->get_notes() ?></textarea>
+					<input type="text" id="imageUrl" class="largebox" name="imageUrl" value="<?php echo $brewery->get_imageUrl() ?>" />
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2">
 					<input name="save" type="submit" class="btn" value="Save" />
-					<input type="button" class="btn" value="Cancel" onclick="window.location='beer_list.php'" />
+					<input type="button" class="btn" value="Cancel" onclick="window.location='brewery_list.php'" />
 				</td>
 			</tr>
 		</table>
@@ -172,13 +126,10 @@ require __DIR__.'/scripts.php';
 <script>
 	$(function() {
 
-		$('#beer-form').validate({
+		$('#brewery-form').validate({
 		rules: {
 			name: { required: true },
-			style: { required: true },
-			srm: { required: true, number: true },
-			ibu: { required: true, number: true },
-			abv: { required: true, number: true }
+			imageUrl: { required: true }
 		}
 		});
 

@@ -13,6 +13,7 @@ class Beer
 	private $_active;
 	private $_createdDate;
 	private $_modifiedDate;
+	private $_breweryId;
 
 	public function __construct(){}
 
@@ -45,6 +46,9 @@ class Beer
 
 	public function get_modifiedDate(){ return $this->_modifiedDate; }
 	public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
+
+	public function get_breweryId(){ return $this->_breweryId; }
+	public function set_breweryId($_breweryId){ $this->_breweryId = $_breweryId; }
 
 	public function setFromArray($postArr)
 	{
@@ -115,6 +119,12 @@ class Beer
 			$this->set_modifiedDate($postArr['modifiedDate']);
 		else
 			$this->set_modifiedDate(null);
+
+		if( isset($postArr['breweryId']) ){
+				$this->set_breweryId($postArr['breweryId']);
+			}else{
+				$this->set_breweryId(0);
+			}
 	}
 
 	function toJson(){
@@ -127,8 +137,10 @@ class Beer
 			"abv: '" . $this->get_abv() . "'," .
 			"ibu: '" . $this->get_ibu() . "', " .
 			"active: '" . $this->get_active() . "', " .
+			"breweryId: " . $this->get_breweryId() . ", " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .
+
 		"}";
 	}
 }
