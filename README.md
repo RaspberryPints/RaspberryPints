@@ -2,7 +2,10 @@ This is a fork of the RaspberryPints project
 
 Changes include:
 
-0.2.0 (WIP)
+0.3.0
+* Made sure that application logos are stored in data directory
+
+0.2.0
 * User can specify the database to use at configuration time
 * Initial support for adding Breweries
 * all configuration data now saved in <root>/data which can be mapped for persistent storage
