@@ -13,7 +13,7 @@
 
 <!-- End User Echo -->
 <div class="user">
-	<a href="../index.php"><img src="data/images/logo.png" width="120" height="120" class="hoverimg" alt="Avatar" /></a>
+	<a href="../index.php"><img src="../data/images/adminlogo.png" width="120" height="120" class="hoverimg" alt="Avatar" /></a>
 </div>
 
 <!-- Start Navagation -->

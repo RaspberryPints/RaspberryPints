@@ -128,11 +128,9 @@ require_once __DIR__.'/config_files.php';
   // copy in the logos if necessary
 	if (!file_exists('../../data/images/logo.png')) {
 		 copy('../../img/logo.png', '../../data/images/logo.png');
-		 die();
 	}
 	if (!file_exists('../../data/images/adminlogo.png')) {
 		 copy('../../img/logo.png', '../../data/images/adminlogo.png');
-		 die();
 	}
 	//-----------------Create the main config file-----------------
 	echo "Update config files...";
