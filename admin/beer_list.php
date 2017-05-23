@@ -50,7 +50,7 @@ include 'header.php';
 		<ul>
 			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
 			<li><strong>Location:</strong></li>
-			<li class="current">My Beers</li>
+			<li class="current">Beers</li>
 		</ul>
 	</div>
 	<!-- Top Breadcrumb End -->
@@ -59,7 +59,7 @@ include 'header.php';
 <div id="rightside">
 	<div class="contentcontainer lg left">
 		<div class="headings alt">
-			<h2>My Beers </h2>
+			<h2>Beers </h2>
 		</div>
 		<div class="contentbox">
 

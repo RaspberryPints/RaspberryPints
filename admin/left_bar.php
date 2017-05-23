@@ -26,9 +26,10 @@
 	<li>
 		<a class="expanded heading">Basic Setup</a>
 		<ul class="navigation">
-			<li><a href="beer_list.php">My Beers</a></li>
-			<li><a href="keg_list.php">My Kegs</a></li>
-			<li><a href="tap_list.php">My Taps</a></li>
+			<li><a href="beer_list.php">Beers</a></li>
+			<li><a href="brewery_list.php">Breweries</a></li>
+			<li><a href="keg_list.php">Kegs</a></li>
+			<li><a href="tap_list.php">Taps</a></li>
 		</ul>
 	</li>
 		<li>
@@ -45,7 +46,7 @@
 		<ul class="navigation">
 			<li><a href="http://raspberrypints.com/report-bug-make-a-suggestion/" target="_blank">Report a Bug</a></li>
 			<li><a href="http://raspberrypints.com/report-bug-make-a-suggestion/" target="_blank">Request a Feature</a></li>
-		</ul>	
+		</ul>
 	</li>
 	<li>
 		<a class="expanded heading">External Links</a>
@@ -60,4 +61,4 @@
 </ul>
 
 <!-- End Navagation -->
-<!-- Left Dark Bar End --> 
+<!-- Left Dark Bar End -->
