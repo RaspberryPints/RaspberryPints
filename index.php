@@ -141,7 +141,7 @@
             <?php } else { ?>}
 						  <th class="headername">
 						<?php } ?>
-							BEER<hr>INFORMATION
+							BEER
 						</th>
 
 						<?php if($config[ConfigNames::ShowAbvCol]){ ?>
