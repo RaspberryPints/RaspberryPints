@@ -137,9 +137,9 @@
 						<?php } ?>
 
             <?php if($config[ConfigNames::ShowBreweryImages]){ ?>
-              <th colspan="2" class="name">
+              <th colspan="2" class="headername">
             <?php } else { ?>}
-						  <th class="name">
+						  <th class="headername">
 						<?php } ?>
 							BEER<hr>INFORMATION
 						</th>

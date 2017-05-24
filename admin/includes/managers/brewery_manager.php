@@ -6,7 +6,7 @@ class BreweryManager{
 	function Save($brewery){
 
 		// download the image so we have it locally
-		if ($brewery->get_imageUrl()) {
+		if ($brewery->get_imageUrl() && filter_var($brewery->get_imageUrl(), FILTER_VALIDATE_URL) ) {
 			$uniquename = uniqid("brewery-") .  ".png";
 			$imagepath = "../data/images/" . $uniquename;
 			copy($brewery->get_imageUrl(), $imagepath);

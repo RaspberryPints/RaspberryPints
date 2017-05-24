@@ -111,8 +111,14 @@ table .ibu{
 	text-align: center;
 	vertical-align: middle;	
 }
-table td.name{
+table .headername{
+	text-align: center;
+	vertical-align: middle;	
+	padding: 5px;
+}
+table .name{
 	text-align: left;
+	vertical-align: middle;	
 	padding: 5px;
 }
 table .abv{
