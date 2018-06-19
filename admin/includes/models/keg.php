@@ -1,8 +1,8 @@
 <?php
 class Keg
 {  
-    private $_id;  
-    private $_label;
+	private $_id;  
+	private $_label;
 	private $_kegTypeId;
 	private $_make; 
 	private $_model; 
@@ -12,12 +12,14 @@ class Keg
 	private $_weight; 
 	private $_notes; 
 	private $_kegStatusCode;
+	private $_beerId;
 	private $_active;
+	private $_onTapId;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
 	public function __construct(){}
-  
+
 	public function get_id(){ return $this->_id; }
 	public function set_id($_id){ $this->_id = $_id; }
 
@@ -51,8 +53,14 @@ class Keg
 	public function get_kegStatusCode(){ return $this->_kegStatusCode; }
 	public function set_kegStatusCode($_kegStatusCode){ $this->_kegStatusCode = $_kegStatusCode; }
 	
+	public function get_beerId(){ return $this->_beerId; }
+	public function set_beerId($_beerId){ $this->_beerId = $_beerId; }
+	
 	public function get_active(){ return $this->_active; }
 	public function set_active($_active){ $this->_active = $_active; }
+	
+	public function get_onTapId(){ return $this->_onTapId; }
+	public function set_onTapId($_onTapId){ $this->_onTapId = $_onTapId; }
 	
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -60,8 +68,8 @@ class Keg
 	public function get_modifiedDate(){ return $this->_modifiedDate; }
 	public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
 	
-    public function setFromArray($postArr)  
-    {  	
+	public function setFromArray($postArr)  
+	{  	
 		if( isset($postArr['id']) )
 			$this->set_id($postArr['id']);
 		else
@@ -117,11 +125,21 @@ class Keg
 		else
 			$this->set_kegStatusCode(null);
 		
+		if( isset($postArr['beerId']) )
+			$this->set_beerId($postArr['beerId']);
+		else
+			$this->set_beerId(null);
+		
 		if( isset($postArr['active']) )
 			$this->set_active($postArr['active']);
 		else
 			$this->set_active(null);
 			
+		if( isset($postArr['onTapId']) )
+			$this->set_onTapId($postArr['onTapId']);
+		else
+			$this->set_onTapId($this->get_onTapId());
+		
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);
 		else
@@ -131,14 +149,14 @@ class Keg
 			$this->set_modifiedDate($postArr['modifiedDate']);
 		else
 			$this->set_modifiedDate(null);
-    }  
+	}  
 	
 	function toJson(){
 		return "{" . 
 			"id: " . $this->get_id() . ", " .
 			"label: " . $this->get_label() . ", " .
 			"kegTypeId: " . $this->get_kegTypeId() . ", " .
-			"make: " . $this->get_maked() . ", " .
+			"make: " . $this->get_make() . ", " .
 			"model: " . $this->get_model() . ", " .
 			"serial: " . $this->get_serial() . ", " .
 			"stampedOwner: " . $this->get_stampedOwner() . ", " .
@@ -146,6 +164,8 @@ class Keg
 			"weight: " . $this->get_weight() . ", " .
 			"notes: " . $this->get_notes() . ", " .
 			"kegStatusCode: " . $this->get_kegStatusCode() . ", " .
+			"onTapId: " . $this->get_onTapId() . ", " .
+			"beerId: " . $this->get_beerId() . ", " .
 			"active: '" . $this->get_active() . "', " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  

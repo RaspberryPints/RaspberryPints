@@ -1,96 +1,138 @@
 <?php
-require_once __DIR__.'/../../../includes/config_names.php';
+require_once __DIR__.'/manager.php';
 require_once __DIR__.'/../models/tap.php';
 
-class TapManager{
+class TapManager extends Manager{
 	
-	function Save($tap){
-		$sql = "";
-		
-		$sql="UPDATE kegs k SET k.kegStatusCode = 'SERVING' WHERE id = " . $tap->get_kegId();
-		mysql_query($sql);
-	
-		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE active = 1 AND tapNumber = " . $tap->get_tapNumber();
-		mysql_query($sql);		
-		
-		if($tap->get_id()){
-			$sql = 	"UPDATE taps " .
-					"SET " .
-						"beerId = " . $tap->get_beerId() . ", " .
-						"kegId = " . $tap->get_kegId() . ", " .
-						"tapNumber = " . $tap->get_tapNumber() . ", " .
-						"ogAct = " . $tap->get_og() . ", " .
-						"fgAct = " . $tap->get_fg() . ", " .
-						"srmAct = " . $tap->get_srm() . ", " .
-						"ibuAct = " . $tap->get_ibu() . ", " .
-						"startAmount = " . $tap->get_startAmount() . ", " .
-						"active = " . $tap->get_active() . ", " .
-						"modifiedDate = NOW() ".
-					"WHERE id = " . $tap->get_id();
-					
-		}else{
-			$sql = 	"INSERT INTO taps(beerId, kegId, tapNumber, ogAct, fgAct, srmAct, ibuAct, startAmount, currentAmount, active, createdDate, modifiedDate ) " .
-					"VALUES(" . $tap->get_beerId() . ", " . $tap->get_kegId() . ", " . $tap->get_tapNumber() . ", " . $tap->get_og() . ", " . $tap->get_fg() . ", " . $tap->get_srm() . ", " . $tap->get_ibu() . ", " . $tap->get_startAmount() . ", " . $tap->get_startAmount() . ", " . $tap->get_active	() . ", NOW(), NOW())";
-		}		
-		
-		//echo $sql; exit();
-		
-		mysql_query($sql);
+	protected function getPrimaryKeys(){
+		return ["id"];
+	}
+	protected function getColumns(){
+		return ["tapNumber", "kegId", "tapRgba", "startAmount", "currentAmount", "active"];
+	}
+	protected function getTableName(){
+		return "taps";
+	}
+	protected function getDBObject(){
+		return new Tap();
+	}	
+	protected function getActiveColumnName(){
+		return "active";
+	}		
+	function GetByID($id){
+		$id = (int) preg_replace('/\D/', '', $id);	
+		$sql="SELECT * FROM taps t left join tapconfig tc on (t.id = tc.tapId) WHERE t.id = $id";
+		return $this->executeQueryWithSingleResult($sql);
+	}
+
+	function GetByNumber($number){
+		$number = (int) preg_replace('/\D/', '', $number);	
+		$sql="SELECT * FROM taps t left join tapconfig tc on (t.id = tc.tapId) WHERE t.id = $number";
+		return $this->executeQueryWithSingleResult($sql);
+	}
+
+	function GetByKegId($id){
+		$id = (int) preg_replace('/\D/', '', $id);	
+		$sql="SELECT * FROM taps t left join tapconfig tc on (t.id = tc.tapId) WHERE t.kegId = $id AND t.active = 1";
+		return $this->executeQueryWithSingleResult($sql);
 	}
 	
-	function GetById($id){
-		$id = (int) preg_replace('/\D/', '', $id);
+	function GetByFlowPin($pin){
+		$id = (int) preg_replace('/\D/', '', $pin);	
+		$sql="SELECT * FROM taps t left join tapconfig tc on (t.id = tc.tapId) WHERE tc.flowPin = $pin";
+		return $this->executeQueryWithSingleResult($sql);
+	}
 	
-		$sql="SELECT * FROM taps WHERE id = $id";
-		$qry = mysql_query($sql);
-		
-		if( $i = mysql_fetch_array($qry) ){
-			$tap = new Tap();
-			$tap->setFromArray($i);
-			return $tap;
+	function GetByBeerId($id){
+		$id = (int) preg_replace('/\D/', '', $id);	
+		$sql="SELECT * FROM taps t left join tapconfig tc on (t.id = tc.tapId) WHERE t.beerId = $id AND t.active = 1";
+		return $this->executeQueryWithSingleResult($sql);
+	}
+	
+	function updateNumberOfTaps($newTapNumber){
+		saveConfigValue(ConfigNames::NumberOfTaps, $newTapNumber);
+				
+		$currCount = $this->getTotalTaps();
+		while($currCount < $newTapNumber)
+		{
+			$currCount++;
+			$sql = 	"INSERT INTO taps( tapNumber, createdDate, modifiedDate ) " .
+					"VALUES( ".$currCount.", NOW(), NOW())";
+			$ret = $this->executeQueryNoResults($sql);
 		}
 		
-		return null;
+		$sql="UPDATE taps SET active = CASE WHEN id <= $newTapNumber THEN 1 ELSE 0 END, modifiedDate = NOW() WHERE id > 0";
+		$ret = $ret && $this->executeQueryNoResults($sql);
+		return $ret;
+	}
+	function getNumberOfTaps(){
+		return getConfigValue(ConfigNames::NumberOfTaps);
 	}
 
-	function updateTapNumber($newTapNumber){
-		$sql="UPDATE config SET configValue = $newTapNumber WHERE configName = '".ConfigNames::NumberOfTaps."'";
-		mysql_query($sql);
-		
-		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE active = 1 AND tapNumber > $newTapNumber";
-		mysql_query($sql);
+	function GetAll(){
+		$sql="SELECT * FROM taps t LEFT JOIN tapconfig tc ON t.id=tc.tapId WHERE t.active = 1 ORDER BY id";
+		return $this->executeQueryWithResults($sql);
 	}
-
-	function getTapNumber(){
-		$sql="SELECT configValue FROM config WHERE configName = '".ConfigNames::NumberOfTaps."'";
-
-		$qry = mysql_query($sql);
-		$config = mysql_fetch_array($qry);
+	
+	function tapKeg($tap, $kegId, $beerId){
+		$tap->set_kegId($kegId);
+		$sql="UPDATE taps SET kegId = $kegId, modifiedDate = NOW() WHERE id = ".$tap->get_id();
+		$ret = $this->executeQueryNoResult($sql);
+		if(!$ret)return false;
 		
-		if( $config != false ){
-			return $config['configValue'];
-		}
-	}
-
-	function getActiveTaps(){
-		$sql="SELECT * FROM taps WHERE active = 1";
-		$qry = mysql_query($sql);
+		$kegManager = new KegManager();
+		if(!$kegManager->Tap($tap->get_id(), $kegId, $beerId)) return false;
 		
-		$taps = array();
-		while($i = mysql_fetch_array($qry)){
-			$tap = new Tap();
-			$tap->setFromArray($i);
-			$taps[$tap->get_tapNumber()] = $tap;
-		}
-		
-		return $taps;
+		return true;
 	}
 	
 	function closeTap($id){
-		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE id = $id";
-		mysql_query($sql);
+		$sql="UPDATE taps SET kegId = NULL, modifiedDate = NOW() WHERE id = $id";
+		$ret = $this->executeQueryNoResults($sql);
 		
-		$sql="UPDATE kegs k, taps t SET k.kegStatusCode = 'NEEDS_CLEANING' WHERE t.kegId = k.id AND t.Id = $id";
-		mysql_query($sql);
+		$sql="UPDATE kegs k, taps t SET k.kegStatusCode = 'NEEDS_CLEANING', k.onTapId = NULL WHERE t.kegId = k.id AND t.Id = $id";
+		$ret = $ret && $this->executeQueryNoResults($sql);
+
+		$tap = $this->GetById($id);
+		if($tap) {
+			$sql="UPDATE tapconfig SET valveOn = 0 WHERE tapId = ".$tap->get_id();
+			$ret = $ret && $this->executeQueryNoResult($sql);
+		}
+		return $ret;
+	}
+
+	function enableTap($id){
+		$sql="UPDATE tapconfig SET valveOn = 1 WHERE tapId = $id";
+		return $this->executeQueryNoResult($sql);
+	}
+	
+	function disableTap($id){
+		$sql="UPDATE tapconfig SET valveOn = 0 WHERE tapId = $id";
+		return $this->executeQueryNoResult($sql);
+	}
+	
+	function saveTapConfig($id, $tapNumber, $flowPin, $valvePin, $valveOn, $countpergallon) {
+		$ret = true;
+		if(isset($tapNumber) && $tapNumber != "")
+		{
+			$sql = "UPDATE taps SET tapNumber = $tapNumber WHERE id = ".$id;
+			$ret = $this->executeQueryNoResult($sql);
+		}
+		$sql="SELECT * FROM tapconfig where tapId = $id";
+		$taps = $this->executeQueryWithResults($sql);
+		unset($sql);
+		$updateSql = "";
+		if( $taps && count($taps) > 0 ){
+			if($flowPin <> "") 			$updateSql .= ($updateSql!=""?",":"")."flowPin = " . $flowPin ;
+			if($valvePin <> "") 		$updateSql .= ($updateSql!=""?",":"")."valvePin = " . $valvePin ; 
+			if($valveOn <> "") 			$updateSql .= ($updateSql!=""?",":"")."valveOn = " . $valveOn ; 
+			if($countpergallon <> "") 	$updateSql .= ($updateSql!=""?",":"")."count = " . $countpergallon ;
+			if($updateSql != "")$sql = "UPDATE tapconfig SET ".$updateSql." WHERE tapId = " . $id;
+		} else {
+			$sql = "INSERT INTO tapconfig (tapId, flowPin, valvePin, valveOn, count) VALUES(" . 
+				$id.", ".$flowPin.", ".$valvePin. ", ".$valveOn.", ".$countpergallon.")";
+		}
+		if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
+		return $ret;
 	}
 }

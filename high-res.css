@@ -94,3 +94,30 @@ span.tapcircle {
 .keg-indicator .keg-green{
 	background-image: url(img/keg/green-4k.png);
 }
+
+.bottle-container{
+	height: 200px;
+	width: 90px;
+}
+
+.bottle-indicator{
+	background-image: url(img/bottle/stroke-4k.png);	
+}
+.bottle-indicator .bottle-full{
+	background-image: url(img/bottle/green-4k.png);
+}
+.bottle-indicator .bottle-empty{
+	background-image: url(img/bottle/stroke-4k.png);
+}
+.bottle-indicator .bottle-red{
+	background-image: url(img/bottle/red-4k.png);
+}
+.bottle-indicator .bottle-orange{
+	background-image: url(img/bottle/orange-4k.png);
+}
+.bottle-indicator .bottle-yellow{
+	background-image: url(img/bottle/yellow-4k.png);
+}
+.bottle-indicator .bottle-green{
+	background-image: url(img/bottle/green-4k.png);
+}

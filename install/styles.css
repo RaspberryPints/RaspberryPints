@@ -67,4 +67,9 @@ span.tapcircle {
   text-align: center;
   width: 2em; 
 }	
-	
+
+registrationFormAlert {
+  color: #FF0000;
+  text-align: left
+ }
+

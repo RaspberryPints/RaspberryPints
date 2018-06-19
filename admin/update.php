@@ -10,9 +10,9 @@ $beerid=$_GET['beerid'];
 
 // Retrieve data from database
 $sql="SELECT * FROM $tbl_name WHERE beerid='$beerid'";
-$result=mysql_query($sql);
+$result=$mysqli->query($sql);
 
-$rows=mysql_fetch_array($result);
+$rows=$result->fetch_array();
 ?>
 
 <head>
@@ -40,6 +40,8 @@ $rows=mysql_fetch_array($result);
 <tr><td align="center"><input class="mediumbox" name="style" type="text" id="style" value="<? echo $rows['style']; ?>"></td></tr>
 <tr><td align="center"><strong>Notes</strong></td></tr>
 <tr><td align="center"><textarea class="inputbox" name="notes" rows="5" cols="50"><? echo $rows['notes']; ?></textarea></td></tr>
+<tr><td align="center"><strong>ABV</strong></td> </tr>
+<tr><td align="center"><input class="smallbox" name="abv" type="text" id="abv" value="<? echo $rows['abv']; ?>"</td></tr>
 <tr><td align="center"><strong>OG</strong></td> </tr>
 <tr><td align="center"><input class="smallbox" name="og" type="text" id="og" value="<? echo $rows['og']; ?>"</td></tr>
 <tr><td align="center"><strong>FG</strong></td></tr>
@@ -67,5 +69,5 @@ $rows=mysql_fetch_array($result);
 
 <?php
 // close connection
-mysql_close();
+$mysqli->close();
 ?>

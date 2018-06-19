@@ -1,22 +1,5 @@
 <?php
-session_start();
-if(!isset( $_SESSION['myusername'] )){
-	header("location:index.php");
-}
-require_once __DIR__.'/includes/conn.php';
-require_once __DIR__.'/../includes/config_names.php';
-require_once __DIR__.'/includes/html_helper.php';
-require_once __DIR__.'/includes/functions.php';
-
-require_once __DIR__.'/includes/models/tap.php';
-require_once __DIR__.'/includes/models/beer.php';
-require_once __DIR__.'/includes/models/keg.php';
-require_once __DIR__.'/includes/models/kegType.php';
-
-require_once __DIR__.'/includes/managers/beer_manager.php';
-require_once __DIR__.'/includes/managers/keg_manager.php';
-require_once __DIR__.'/includes/managers/kegType_manager.php';
-require_once __DIR__.'/includes/managers/tap_manager.php';
+require_once __DIR__.'/header.php';
 
 $htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
@@ -24,23 +7,40 @@ $beerManager = new BeerManager();
 $kegManager = new KegManager();
 $kegTypeManager = new KegTypeManager();
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if( isset($_POST['saveTap']) ){
-		$tap = new Tap();
-		$tap->setFromArray($_POST);
+		$tap = $tapManager->GetById($_POST['tapId']);
+		$arr = explode("~", $_POST['kegId']);
+		if(isset($arr[0]))
+		{ 
+			$kegId = $arr[0];
+		}
+		$tap->set_kegId($kegId);
+		$tap->set_startAmount($_POST['startAmount']);
+		$tap->set_currentAmount($_POST['currentAmount']);
 		$tapManager->Save($tap);
+		//if(!isset($keg) || $keg == null) echo 'No Keg Found for id '.$kegId;
+		$keg = $kegManager->getById($kegId);
+		$keg->set_onTapId($tap->get_id());
+		if( (isset($arr[1]) && $arr[1] != "") ||
+		    (isset($arr[2]) && $arr[2] != "") )
+		{
+			$keg->set_beerId( $_POST['beerId']);
+		}
+		$kegManager->Save($keg);
+		
+		file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=config');
 	}
 	redirect('tap_list.php');
 }
 
 
 $beerList = $beerManager->GetAllActive();
-$kegList = $kegManager->GetAllAvailable();
+$kegList = $kegManager->GetAllActive();
 
-$tapNumber = $_GET['tapNumber'];
-if( isset($_GET['id'])){
-	$tap = $tapManager->GetById($_GET['id']);
+$tapId = $_GET['tapId'];
+if( isset($tapId) ){
+	$tap = $tapManager->GetById($tapId);
 	
 	if( !array_key_exists($tap->get_kegId(), $kegList) ){
 		$kegList[$tap->get_kegId()] = $kegManager->GetById($tap->get_kegId());
@@ -48,27 +48,17 @@ if( isset($_GET['id'])){
 	
 }else{
 	$tap = new Tap();
-	$tap->set_tapNumber($tapNumber);
+	$tap->set_id($tapId);
 	$tap->set_active(true);
 }
 
-?>
+// Code to set config values
+$config = getAllConfigs();
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>RaspberryPints</title>
-<link href="styles/layout.css" rel="stylesheet" type="text/css" />
-<link href="styles/wysiwyg.css" rel="stylesheet" type="text/css" />
-	<!-- Theme Start -->
-<link href="styles.css" rel="stylesheet" type="text/css" />
-	<!-- Theme End -->
-<link href='http://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
-</head>
+?>
 	<!-- Start Header  -->
 <?php
-include 'header.php';
+include 'top_menu.php';
 ?>
 	<!-- End Header -->
 		
@@ -88,68 +78,65 @@ include 'header.php';
 	<div id="rightside">
 		<div class="contentcontainer med left">
 	<p>
-		fields marked with an * are required
-
+		Fields marked with <b><font color="red">*</font></b> are required.<br><br>
+	
+    <div id="messageDiv" class="error status" style="display:none;"><span id="messageSpan"></span></div>
 	<form id="tap-form" method="POST">
-		<input type="hidden" name="id" value="<?php echo $tap->get_id() ?>" />
-		<input type="hidden" name="tapNumber" value="<?php echo $tap->get_tapNumber() ?>" />
+		<input type="hidden" name="tapId" value="<?php echo $tap->get_id() ?>" />
 		<input type="hidden" name="active" value="<?php echo $tap->get_active() ?>" />
 		
-		<table width="950" border="0" cellspacing="0" cellpadding="0">
+		<table width="800" border="0" cellspacing="0" cellpadding="0">
 			<tr>
-				<td>
-					Beer*
+				<td width="25%" style="vertical-align:middle;">
+					<b>Keg Number: <font color="red">*</font></b>
 				</td>
 				<td>
-					<?php echo $htmlHelper->ToSelectList("beerId", $beerList, "name", "id", $tap->get_beerId(), "Select One"); ?>
+					<?php 					
+						$str = "<select id='kegId' name='kegId' class='' onChange='toggleDisplay(this, \"BeerListRow\", \"beerId\")'>\n";
+						$str .= "<option value=''>Select One</option>\n";
+						foreach($kegList as $item){
+							if( !$item ) continue;
+							$sel = "";
+							if( $tap && $tap->get_kegId() == $item->get_id() ) $sel .= "selected ";
+							$desc = $item->get_id();
+							if($item->get_label() && $item->get_label() != "" && $item->get_label() != $item->get_id())$desc.="-".$item->get_label();
+							$str .= "<option value='".$item->get_id()."~".$item->get_beerId()."~".$item->get_ontapId()."' ".$sel.">".$desc."</option>\n";
+						}					
+						$str .= "</select>\n";
+												
+						echo $str;
+					?>
+				</td>
+			</tr>
+			<?php 
+                $selectedBeer = "";
+                if($tap->get_kegId() && array_key_exists($tap->get_kegId(), $kegList))$selectedBeer = $kegList[$tap->get_kegId()]->get_beerId();
+			?>
+			<tr id="BeerListRow" <?php if($selectedBeer == ""){?>style="display:none;"<?php } ?>>
+			
+				<td width="25%" style="vertical-align:middle;">
+					<b>Beer Name: <font color="red">*</font></b>
+				</td>
+				<td>
+					<?php 
+						echo $htmlHelper->ToSelectList("beerId", $beerList, "name", "id", $selectedBeer, "Select One"); 
+					?>
 				</td>
 			</tr>
 			<tr>
-				<td>
-					SRM*
-				</td>
-				<td>
-					<input type="text" id="srm" class="mediumbox" name="srm" value="<?php echo $tap->get_srm() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					IBU*
-				</td>
-				<td>
-					<input type="text" id="ibu" class="mediumbox" name="ibu" value="<?php echo $tap->get_ibu() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					OG*
-				</td>
-				<td>
-					<input type="text" id="og" class="mediumbox" name="og" value="<?php echo $tap->get_og() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					FG*
-				</td>
-				<td>
-					<input type="text" id="fg" class="mediumbox" name="fg" value="<?php echo $tap->get_fg() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Keg*
-				</td>
-				<td>
-					<?php echo $htmlHelper->ToSelectList("kegId", $kegList, "label", "id", $tap->get_kegId(), "Select One"); ?>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Start Amount*
+				<td width="25%" style="vertical-align:middle;">
+					<b>Start Amount</b> (gal): <b><font color="red">*</font></b>
 				</td>
 				<td>
 					<input type="text" id="startAmount" class="mediumbox" name="startAmount" value="<?php echo $tap->get_startAmount() ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td width="25%" style="vertical-align:middle;">
+					<b>Current Amount</b> (gal): <b><font color="red">*</font></b>
+				</td>
+				<td>
+					<input type="text" id="currentAmount" class="mediumbox" name="currentAmount" value="<?php echo $tap->get_currentAmount() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -163,7 +150,7 @@ include 'header.php';
 		</table>
 		<br />
 		<div align="right">			
-			&nbsp &nbsp 
+			&nbsp; &nbsp; 
 		</div>
 	
 	</form>
@@ -200,60 +187,58 @@ include 'scripts.php';
 	
 <script>
 	$(function() {
-		var beerList = { 
-			<?php foreach($beerList as $beerItem){ 
-				echo $beerItem->get_id() . ": " . $beerItem->toJson() . ", "; 
-			} ?>
-		};
 		
-		var kegList = { 
-			<?php foreach($kegList as $keg){ 
-				echo $keg->get_id() . ": { " . 
-					"maxAmount: '" . $kegTypeManager->GetById($keg->get_kegTypeId())->get_maxAmount() , "'" .
-				"}, "; 
-			} ?>
-		};
-		
-		$('#tap-form')	
-			.on('change', '#beerId', function(){
-				var $this = $(this);
-				
-				if( $this.val() ){
-					var $form = $('#tap-form'),
-						beer = beerList[$this.val()];
-						
-					$form
-						.find('#srm').val(beer['srm']).end()
-						.find('#ibu').val(beer['ibu']).end()
-						.find('#og').val(beer['og']).end()
-						.find('#fg').val(beer['fg']).end();
-				}
-			})
-			.on('change', '#kegId', function(){
-				var $this = $(this);
-				
-				if( $this.val() ){
-					var $form = $('#tap-form'),
-						keg = kegList[$this.val()];
-						
-					$form
-						.find('#startAmount').val(keg['maxAmount']).end();
-				}
-			});
 		
 		$('#tap-form').validate({
 		rules: {
-			beerId: { required: true },
-			srm: { required: true, number: true },
-			ibu: { required: true, number: true },
-			og: { required: true, number: true },
-			fg: { required: true, number: true },
 			kegId: { required: true },
-			startAmount: { required: true, number: true }
+			startAmount: { required: true, number: false },
+			currentAmount: { required: true, number: false }
 		}
 		});
 		
 	});
+	
+	function toggleDisplay(selectObject, divId, secSelectId) {
+		var x = document.getElementById(divId);
+		var msgDiv = document.getElementById("messageDiv");
+		if(msgDiv != null) msgDiv.style.display = "none"
+		var display = true;
+		var arr = selectObject.value.split("~");
+		var beerId = null;
+		if(arr.length > 1 && arr[1] != "")
+		{
+			beerId = arr[1];
+		}
+		else
+		{
+			var secSelect = document.getElementById(secSelectId);
+			secSelect.selectedIndex = 0;
+		}
+		if(arr.length > 2 && arr[2] != "") 
+		{
+			if(msgDiv != null)msgDiv.style.display = "";
+			var msgSpan = document.getElementById("messageSpan");
+			if(msgSpan != null) msgDiv.innerHTML = "Keg currently on Tap "+arr[2]+" and will be moved to tap <?php echo $tap->get_id()?> and update to contain selected beer"
+		}
+		if (display) {
+			x.style.display = "";
+		} else {
+			x.style.display = "none";
+		}
+		if(beerId != null)
+		{
+			var secSelect = document.getElementById(secSelectId);
+			var secSelectOptions = secSelect.options;
+			for (var i = 0; i < secSelectOptions.length; i++) 
+			{
+				if (secSelectOptions[i].value == beerId) {
+					secSelect.selectedIndex = i;
+					break;
+				}
+			}
+		}
+	}
 </script>
 
 </body>

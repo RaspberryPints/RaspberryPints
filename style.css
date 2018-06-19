@@ -1,23 +1,63 @@
+
+.poursbeername{
+	width: 800px;
+	text-align: center;
+	vertical-align: middle;	
+}
+.poursbeerimg{
+	position: relative;
+	float: right
+}
+.poursbreweryimg{
+	display:block; 
+	max-width:150px; 
+	max-height:150px; 
+	width: auto; 
+	height:auto;
+}
+.poursdate{
+	width: 300px;
+	text-align: center;
+	vertical-align: middle;	
+}
+
+.poursamount{
+	width: 100px;
+	text-align: center;
+	vertical-align: middle;	
+}
+.poursuser{
+	width: 200px;
+	text-align: center;
+	vertical-align: middle;	
+}
+
+.pourstap-num{
+	width: 25px;
+	text-align: center;
+	vertical-align: middle;	
+}
 body {
 	background-image: url(img/background.jpg);
 	background-color: #000000;
 	background-size: cover;
 	background-repeat:no-repeat;
-	/*overflow: hidden;*/
-	font: 1.5em Gerorgia, arial, verdana, sans-serif;
+	overflow: hidden;
+	color: #FFFFFF;
+	font: 1em Georgia, arial, verdana, sans-serif;
 	margin:5px;
 }
 hr {
-    border: 0;
-    height: 1px;
+	border: 0;
+	height: 1px;
 	-webkit-margin-before: 2px;
 	-webkit-margin-after: 2px;
-    background-image: -webkit-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
-    background-image:    -moz-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
-    background-image:     -ms-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
-    background-image:      -o-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
+	background-image: -webkit-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
+	background-image:    -moz-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
+	background-image:     -ms-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
+	background-image:      -o-linear-gradient(left, rgba(255,255,255,255), rgba(255,255,255,0.75), rgba(255,255,255,255)); 
 }
-h1{
+h1 {
 	margin: 0;
 	font: Georgia;
 	color: #FFFFFF;
@@ -70,61 +110,46 @@ img {
 	font-weight: bold;
 	text-align: right;
 }
-table{
-	width: 100%;
-	border-collapse: collapse;
+
+.rating.small {
+  height: 24px;
+  width: 137px;
+  display: inline-block;
+  background: transparent url(img/ratings_small_v3.png) center center no-repeat; }
+  
+.altrow{
+	background-color: rgba(153,153,153,.23);
 }
-table th,
-table td{
-	border-left: 1px white dashed;
-	padding: 1px 5px;
+
+.tap-num{
+}
+.ibu{
+	width: 125px;
 	text-align: center;
-	vertical-align: top;
-	color: white;
+	vertical-align: middle;	
 }
-table th:first-child,
-table td:first-child{
-	border-left: none;
-}
-table thead{
-	background-color: rgba(153,153,153,.3);
-	padding: 0px;
-	margin: auto;
-}
-table thead th{
-	min-height:35px;
-	font: .65em Georgia;
-	color: white;
-	font-weight: bold;
-	vertical-align: top;
-}
-table .tap-num{
-	width: 50px;
-}
-table .srm{
-	width: 125px;
-}
-table .ibu{
-	width: 125px;
-}
-table td.name{
-	text-align: left;
-	padding: 5px;
-}
-table .abv{
+.cal{
 	width: 125px;
 	text-align: center;
 	vertical-align: middle;
 }
-table .keg{
+.abv{
+	width: 75px;
+	text-align: center;
+	vertical-align: middle;
+}
+.keg{
 	width: 150px;
+	height: 75px;
+	text-align: center;
+	vertical-align: middle;	
 }
 
-table td.tap-num{
+.tap-num{
 	vertical-align: middle;
 }
 
-span.tapcircle {
+.tapcircle {
   background-color: rgba(153,153,153,.3);
   border-radius: 1em;
   -moz-border-radius: 1em;
@@ -133,43 +158,30 @@ span.tapcircle {
   display: inline-block;
   font-weight: bold;
   line-height: 2em;
+  margin-left: 5px;
   margin-right: 5px;
   text-align: center;
   width: 2em; 
 }
-table h3{
-	font: .8em Georgia;
-	-webkit-margin-before: 5px;
-	-webkit-margin-after: 5px;
-	text-align:center;
+.bottlecircle {
+  /* background-color: rgba(153,153,153,.3); */
+  border-radius: 1em;
+  border-style: dashed;
+  border-color: rgba(200,200,200,0.75);
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 2em;
+  margin-right: 5px;
+  text-align: center;
+  width: 2em; 
 }
-table h2{
-	font: 1em Georgia;
-	-webkit-margin-before: 0px;
-	-webkit-margin-after: 0px;
-	text-align:center;
+.srm{
+	width: 125px;
+	text-align: center;
+	vertical-align: middle;
 }
-table h1{
-	color: white;
-	opacity:1;
-	display:block;
-	font: 1.5em Georgia;
-	font-weight: bold;
-}
-table .subhead{
-	width:100%;
-	font: .9em Georgia;
-	text-align:left;
-}
-table p{
-	font: .8em Georgia;
-	color: #A0A0A0;
-	margin-top:20px;
-}
-.altrow{
-	background-color: rgba(153,153,153,.23);
-}
-
 .srm-container{
 	position: relative;
 	height: 100px;
@@ -187,8 +199,7 @@ table p{
 	
 	-webkit-mask-image: url(img/srm/pint-mask.png);
 	-o-mask-image: url(img/srm/pint-mask.png);
-	-moz-mask-image: url(img/srm/pint-mask.png);
-	mask-image: url(img/srm/pint-mask.png);
+	mask: url(img/srm/pint-mask.svg#maskid);
 }
 
 .srm-stroke{
@@ -266,6 +277,24 @@ table p{
 	margin: 8px auto;
 }
 
+.keg-disabled{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: url(img/keg/disabled.png) no-repeat bottom right;	
+}
+
+.keg-enabled{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: url(img/keg/enabled.png) no-repeat bottom right;	
+}
+
 .keg-indicator{
 	position: absolute;
 	bottom: 0;
@@ -295,4 +324,152 @@ table p{
 }
 .keg-indicator .keg-green{
 	background-image: url(img/keg/green.png);
+}
+.bottle-container{
+	position: relative;
+	height: 100px;
+	width: 45px;
+	margin: 8px auto;
+.bottle-indicator{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: url(img/bottle/stroke.png) no-repeat bottom left;	
+}
+.bottle-indicator .bottle-full{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background: url(img/bottle/green.png) no-repeat bottom left;
+}
+.bottle-indicator .bottle-empty{
+	background-image: url(img/bottle/stroke.png);
+}
+.bottle-indicator .bottle-red{
+	background-image: url(img/bottle/red.png);
+}
+.bottle-indicator .bottle-orange{
+	background-image: url(img/bottle/orange.png);
+}
+.bottle-indicator .bottle-yellow{
+	background-image: url(img/bottle/yellow.png);
+}
+.bottle-indicator .bottle-green{
+	background-image: url(img/bottle/green.png);
+}
+
+.copyright {
+color:#666 ;
+font-size: 12px;
+align: right;
+
+}
+
+.beerfeed {
+color: #ccc;
+font-size: 12px;
+
+}
+
+.beerimg{
+position: relative;
+float: right
+}
+.breweryimg{
+	display:block; 
+	max-width:150px; 
+	max-height:150px; 
+	width: auto; 
+	height:auto;
+}
+
+table{
+	width: 100%;
+	border-collapse: collapse;
+}
+table th,
+table td{
+	border-left: 1px white dashed;
+	padding: 1px 5px;
+	text-align: center;
+	vertical-align: top;
+	color: white;
+}
+table th:first-child,
+table td:first-child{
+	border-left: none;
+}
+table thead{
+	background-color: rgba(153,153,153,.3);
+	padding: 0px;
+	margin: auto;
+}
+table thead th{
+	min-height:35px;
+	font: .65em Georgia;
+	color: white;
+	font-weight: bold;
+	vertical-align: top;
+}
+table .beername{
+	width: 350px;
+	text-align: center;
+	vertical-align: middle;	
+	padding: 5px;
+}
+table .name{
+	text-align: left;
+	vertical-align: middle;	
+	padding: 5px;
+}
+table td.name{
+	text-align: left;
+	padding: 5px;
+}
+table h3 {
+	font: .8em Georgia;
+	-webkit-margin-before: 5px;
+	-webkit-margin-after: 5px;
+	text-align: center;
+}
+table h2 {
+	font: 1em Georgia;
+	-webkit-margin-before: 0px;
+	-webkit-margin-after: 0px;
+	text-align: center;
+}
+table h1{
+	color: white;
+	opacity:1;
+	display:block;
+	font: 1em Georgia;
+	font-weight: bold;
+}
+table .subhead{
+	width:100%;
+	font: .9em Georgia;
+	text-align:left;
+}
+p.rating .num {
+display: inline-block;
+padding-top: 4px;
+position: relative;
+top: -24px;
+}
+p.rating {
+	width:40%;
+	padding: 0px 0 0px;
+	display: inline-block;
+	color: #ccc;
+	text-align: center;
+	font-size: 12px;
+	margin: 0px;
+}
+table p{
+	font: .8em Georgia;
+	color: #A0A0A0;
+	margin-top:20px; 
 }

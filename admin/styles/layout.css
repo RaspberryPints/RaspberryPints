@@ -27,8 +27,7 @@ body {height: 100%; font-family: Arial, Helvetica, sans-serif; font-size: 13px; 
 				.searchbtn:hover {background: url(../img/bg_btn_grey_lrg.png) 0 -50px; cursor: pointer;}
 		
 	/* Top Breadcrumb */	
-	
-	#breadcrumb {height: 21px; background: #C7C7C7 url(../img/bg_breadcrumb.png) repeat-x top; margin: 0 0 0 226px; border-top: 1px solid #fff; border-bottom: 1px solid #fff; padding: 12px 0 8px 35px; text-shadow: 1px 1px 1px #e4e4e4;}
+#breadcrumb {height: 21px; background: #C7C7C7 url(../img/bg_breadcrumb.png) repeat-x top; margin: 0 0 0 226px; border-top: 1px solid #fff; border-bottom: 1px solid #fff; padding: 12px 0 8px 35px; text-shadow: 1px 1px 1px #e4e4e4;}
 			#breadcrumb li {float: left; padding-right: 5px;}
 			#breadcrumb li.current {font-weight: 700; font-size: 14px;}
 				#breadcrumb a {color: #666; text-decoration: none;}
@@ -126,7 +125,7 @@ body {height: 100%; font-family: Arial, Helvetica, sans-serif; font-size: 13px; 
 	table {border-collapse: collapse;}
 		thead th{ white-space: nowrap; }
 		th,td {text-align: left; padding: 8px; vertical-align: top;}
-		th {background: #E0E0E0 url(../img/bg_th.png) repeat-x top; text-shadow: 1px 1px 1px #fff; font-size: 14px; text-decoration: underline;}
+		th {background-color: #E0E0E0; text-shadow: 1px 1px 1px #fff; font-size: 14px;}
 		tr.alt td{background: #F2F2F2 url(../img/bg_td_alt.png) repeat-x top; text-shadow: 1px 1px 1px #fff;}
 	
 	.extrabottom {padding: 15px; height: 40px; background: url(../img/bg_fade_sml.png) repeat-x top; border-radius: 10px; -moz-border-radius: 10px; margin-top: 10px;}
@@ -135,23 +134,21 @@ body {height: 100%; font-family: Arial, Helvetica, sans-serif; font-size: 13px; 
 				.extrabottom li img {float: left; padding: 0 5px 0 0;}
 		.bulkactions {float: right;}
 	
-	.intborder {border-bottom: solid 2px black;}
-	.intborder td tr{border-bottom: solid 2px black;}
-	.intborder th {border-right: solid 1px black;}
+	.intborder {border-bottom: solid 1px black;}
+	.intborder td tr{border-bottom: solid 1px black;}
+	.intborder th {border-bottom: solid 1px black;}
 	.outerborder {border: solid 2px black;}
 	.leftborder {border-left: solid 1px black;}
 	.rightborder {border-right: solid 1px black;}
 	.thick {border-width: 2px;}
 	
 	span.kegsquare {
-		background-color: rgba(0,0,0,0.25);
 		color: #000000;
 		display: inline-block;
 		font-weight: bold;
 		font-size: 1.5em;
 		line-height: 1.75em;
 		text-align: center;
-		width: 1.75em;
 	}
 	
 	/* Input/Form Styles */
@@ -288,3 +285,4 @@ position:fixed;
 top:115px;
 right:800px;
 }*/
+
