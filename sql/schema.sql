@@ -1267,10 +1267,8 @@ AS
 CREATE OR REPLACE VIEW `vwKegs` 
 AS
  SELECT 
-	k.*, 
-	t.tapNumber
- FROM kegs k 
- LEFT JOIN taps t ON (t.kegId = k.id);
+	k.*
+ FROM kegs k;
 
 CREATE OR REPLACE VIEW `vwPours`
 AS
