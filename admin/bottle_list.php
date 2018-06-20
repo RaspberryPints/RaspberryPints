@@ -20,12 +20,14 @@ if (isset ( $_POST ['saveBottles'] ) ) {
 	$ii = 0;
 	while(isset($_POST ['capNumber'][$ii]))
 	{
+	    $newBottle = false;
 		if(isset($_POST ['id'][$ii]) && $_POST ['id'][$ii] != "")
 		{
 			$id = $_POST ['id'][$ii];
 			$bottle = $bottleManager->GetById($id);		
 		}else{
-			$bottle = new Bottle();
+		    $bottle = new Bottle();
+		    $newBottle = true;
 		}
 		$bottle->set_capNumber($_POST['capNumber'][$ii]);
 		$bottle->set_capRgba($_POST['capRgba'][$ii]);
@@ -33,7 +35,7 @@ if (isset ( $_POST ['saveBottles'] ) ) {
 		$bottle->set_beerId($_POST['beerId'][$ii]);
 		$bottle->set_startAmount($_POST['startAmount'][$ii]);
 		$bottle->set_currentAmount($_POST['currentAmount'][$ii]);
-		if(!$bottleManager->save ($bottle))$error = true;
+		if(!$newBottle || ($newBottle && $bottle->get_capNumber() != ''))if(!$bottleManager->save ($bottle))$error = true;
 		$ii++;
 	}
 	if(!$error){
@@ -157,8 +159,7 @@ include 'footer.php';
 ?>
 
 	<!-- End Footer -->
-		</div><
-	</div>
+		</div>
 	<!-- Right Side/Main Content End -->
 	<!-- Start Left Bar Menu -->   
 <?php

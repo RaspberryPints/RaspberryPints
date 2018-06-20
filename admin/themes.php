@@ -22,8 +22,9 @@ require_once __DIR__.'/includes/managers/config_manager.php';
 <!-- Style Sheet -->
 <link href="<?php echo $stylesheet?>" rel="stylesheet" type="text/css" />
 
-<link href='http://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'/>
 </head>
+<body>
 <!-- Start Header -->
 <?php
 include 'top_menu.php';

@@ -56,7 +56,7 @@
 		<a class="collapsed heading">Analytics</a>
 		<ul class="navigation">
 			<li><a href="#" title="temperature-vs-time">Temperature vs Time <small>(coming v2.0.0)</small></a></li>
-			<li><a href="#" title="pour-history">Pour history <small>(coming v2.0.0)</small></a></li>
+			<li><a href="pour_list.php" title="pour-history">Pour history</a></li>
 			<li><a href="#" title="tap-history">Tap history <small>(coming v2.0.0)</small></a></li>
 			<li><a href="#" title="rank">Beer statistics <small>(coming v2.0.0)</small></a></li>
 			<li><a href="#" title="drinker-stats">Drinker statistics <small>(coming v2.0.0)</small></a></li>

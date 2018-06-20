@@ -6,8 +6,6 @@ require_once __DIR__.'/user_manager.php';
 require_once __DIR__.'/manager.php';
 require_once __DIR__.'/../models/pour.php';
 
-$masterSql = "SELECT p.*, t.tapNumber, t.tapRgba, b.name AS beerName, b.untID AS beerUntID, br.imageUrl AS breweryImageUrl, COALESCE(u.userName, '') FROM pours p LEFT JOIN taps t ON (p.tapId = t.id) LEFT JOIN kegs k ON (t.kegId = k.id) LEFT JOIN beers b ON (k.beerId = b.id) LEFT JOIN breweries br ON (b.breweryId = br.id) LEFT JOIN users u ON (p.userId = u.id)";
-
 class PourManager extends Manager{
 	
 	protected function getPrimaryKeys(){
@@ -19,20 +17,28 @@ class PourManager extends Manager{
 	protected function getTableName(){
 		return "pours";
 	}
+	protected function getViewName(){
+		return "vwPours";
+	}
 	protected function getDBObject(){
 		return new Pour();
 	}
 		
-	function GetById($id){
-		global $masterSql;
-		$id = (int) preg_replace('/\D/', '', $id);	
-		$sql= $masterSql." WHERE p.id = $id";
-		return $this->executeQueryWithResults($sql);
+	function getLastPours($count){
+		return $this->getLastPoursFiltered($count, null, null, null, null, null);
 	}
 
-	function getLastPours($count){
-		global $masterSql;
-		$sql= $masterSql." ORDER BY p.createdDate DESC LIMIT $count";
+	function getLastPoursFiltered($count, $startTime, $endTime, $tapId, $beerId, $userId){
+		$sql="SELECT * FROM ".$this->getViewName()." ";
+		$where = "";
+		if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '$startTime' ";
+		if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."endTime < '$endTime' ";
+		if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
+		if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
+		if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
+		if($where != "") $sql = $sql."WHERE $where ";
+		$sql = $sql."ORDER BY createdDate DESC ";
+		if($count && $count > 0) $sql = $sql."LIMIT $count ";
 		return $this->executeQueryWithResults($sql);
 	}
 	
@@ -47,14 +53,14 @@ class PourManager extends Manager{
 		return number_format($ret, 1);
 	}
 	
-	function pour($RFID, $PIN, $PULSE_COUNT){
+	function pour($USERID, $PIN, $PULSE_COUNT){
 		$config = getAllConfigs();	
 		$tapManager = new TapManager();
 		$kegManager = new KegManager();
 		$userManager = new UserManager();
 		$user = null;
-		if ($RFID > 0) {
-			$user = $userManger->getByRFID($RFID);
+		if ($USERID > 0) {
+			$user = $userManager->GetByID($USERID);
 		}
 		
 		$tap = $tapManager->GetByFlowPin($PIN);
@@ -71,7 +77,9 @@ class PourManager extends Manager{
 		// Sets the amount to be a fraction of a gallon
 		$amount = $PULSE_COUNT / $pourCountConversion;
 		
-		echo "pours.php:Pour: pour on pin: " . $PIN . ", count: " . $PULSE_COUNT . ", conversion: " . $pourCountConversion . ", amount: " . $amount . "\n" ;
+		echo "pours.php:Pour: pour on pin: " . $PIN . ", count: " . $PULSE_COUNT . 
+			", conversion: " . $pourCountConversion . ", amount: " . $amount . 
+			", user: " . ($user?$user->get_id():'N/A') . "\n" ;
 		// Inserts in to the pours table 
 		$pour = new Pour();
 		$pour->set_tapId($tapId);

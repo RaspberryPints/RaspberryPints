@@ -1,5 +1,4 @@
-<head></head>
-<html>
++<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Installation Processor</title>
@@ -34,7 +33,8 @@ $adminuser = $_POST["adminuser"];
 $adminpass1 = $_POST["adminpass1"];
 $adminpass2 = $_POST["adminpass2"];
 $action = $_POST["selectaction"];
-$adminname = $_POST["adminname"];
+$adminnamefirst = $_POST["adminnamefirst"];
+$adminnamelast = $_POST["adminnamelast"];
 $adminemail = $_POST["adminemail"];
 
 //Create the MD5 hash value for the admin password
@@ -103,7 +103,7 @@ if ($validerror !='')
 // CLEAR INSTALLATION DATA ROUTINES
 if ($action == 'remove')
 {
-	echo "Deleting " + $databasename + " database...";
+	echo "Deleting " . $databasename . " database...";
 	flush();
 	//$mysqli = new mysqli($servername,$rootuser,$rootpass);
 	// Check connection
@@ -122,10 +122,9 @@ if ($action == 'remove')
 	echo "Removing configuration files...";
 	flush();
 	try {
-	
-	if (file_exists('../../includes/config.php')) unlink('../../includes/config.php');
-	if (file_exists('../../includes/conn.php'))   unlink('../../admin/includes/conn.php');
-	//if (file_exists('../../includes/configp.php'))unlink('../../admin/includes/configp.php');
+    	if (file_exists('../../includes/config.php'))      unlink('../../includes/config.php');
+    	if (file_exists('../../admin/includes/conn.php'))  unlink('../../admin/includes/conn.php');
+    	//if (file_exists('../../includes/configp.php'))   unlink('../../admin/includes/configp.php');
 	} catch (Exception $e) {
 		echo 'Caught exception: ',  $e->getMessage(), "\n";
 	}
@@ -233,7 +232,7 @@ require_once __DIR__.'/config_files.php';
 	echo "Failed to connect to MySQL: " . $mysqli->connect_error();
 	}
 	$currentdate = Date('Y-m-d H:i:s');
-	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','" . $adminname . "','" . $adminemail . "','" . $currentdate . "','" . $currentdate . "');";
+	$sql = "INSERT INTO users (username, password, nameFirst, nameLast, email, active, isAdmin, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','" . $adminnamefirst . "','" . $adminnamelast . "','" . $adminemail . "', 1, 1,'" . $currentdate . "','" . $currentdate . "');";
 	$result = $mysqli->query($sql);
 	//$mysqli->close();
 	echo "Success!<br>";

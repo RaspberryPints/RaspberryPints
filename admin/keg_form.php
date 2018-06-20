@@ -8,35 +8,38 @@ $kegTypeManager = new KegTypeManager();
 $beerManager = new BeerManager();
 $tapManager = new TapManager();
 
-
-if( isset($_GET['id'])){
-	$keg = $kegManager->GetById($_GET['id']);
-}else if( isset($_POST['id'])){
-	$keg = $kegManager->GetById($_POST['id']);
-}else{
-	$keg = new Keg();
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$keg->setFromArray($_POST);
-	if( isset($_POST['kickKeg'])){
-		if($tapManager->closeTap($keg->get_onTapId())){
-			$kegManager->KickKeg($keg);
-		}
-	}
-	$kegManager->Save($keg);
-	redirect('keg_list.php');
+    $keg = new Keg();
+    $keg->setFromArray($_POST);
+    if( isset($_POST['kickKeg'])){
+        if($tapManager->closeTapById($keg->get_onTapId())){
+            $kegManager->KickKeg($keg);
+        }
+    }
+    if($kegManager->Save($keg))
+        redirect('keg_list.php');
 }
 
+$keg = null;
+if( isset($_GET['id'])){
+    $keg = $kegManager->GetById($_GET['id']);
+}else if( isset($_POST['id'])){
+    $keg = $kegManager->GetById($_POST['id']);
+}
+
+if($keg == null){
+    $keg = new Keg();
+    $keg->setFromArray($_POST);
+}
 
 $kegStatusList = $kegStatusManager->GetAll();
 $kegTypeList = $kegTypeManager->GetAll();
 $beerList = $beerManager->GetAllActive();
 
 if( isset($_GET['beerId'])){
-	$beer = $beerManager->GetById($_GET['beerId']);
+    $beer = $beerManager->GetById($_GET['beerId']);
 }else{
-	$beer = new Beer();
+    $beer = new Beer();
 }
 ?>
 	<!-- Start Header  -->
@@ -62,11 +65,12 @@ include 'top_menu.php';
 		<div class="contentcontainer med left">
 	<p>
 		fields marked with an * are required
+		<?php $htmlHelper->ShowMessage(); ?>
 
 	<form id="keg-form" method="POST">
 		<input type="hidden" name="id" value="<?php echo $keg->get_id() ?>" />
 
-		<table width="950" border="0" cellspacing="0" cellpadding="0">
+		<table style="width:950;border:0;cellspacing:1;cellpadding:0;">
 			<tr>
 				<td>
 					Label: <b><font color="red">*</font></b>
@@ -179,7 +183,7 @@ include 'top_menu.php';
 		</table>
 		<br />
 		<div align="right">			
-			&nbsp &nbsp 
+			&nbsp; &nbsp; 
 		</div>
 
 	</form>

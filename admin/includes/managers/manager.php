@@ -11,6 +11,7 @@ abstract class Manager {
 	protected function getActiveColumnName(){return null;}
 	protected function hasModifiedColumn(){return true;}
 	protected function hasCreatedColumn(){return true;}
+	protected function getViewName(){return $this->getTableName();}
 	
 	function Save($dbObject){
 		$sql = "";
@@ -42,7 +43,9 @@ abstract class Manager {
 			foreach($this->getColumns() as $col){
 				if(strlen($values) > 0) $values.= ', ';
 				$value = $dbObject->{'get_'.$col}();
-				if(is_string($value)){
+				if($col == $this->getActiveColumnName()){
+					$values.= "1";				
+				}else if(is_string($value)){
 					$values.= "NULLIF('$value','')";
 				}else{
 					$values.= ($value?$value:"null");				
@@ -142,20 +145,20 @@ abstract class Manager {
 	}
 	
 	function GetByPk($dbObject){
-		$sql="SELECT * FROM ".$this->getTableName()." ".$this->getWhereClause($dbObject)." ".$this->getOrderByClause();
+		$sql="SELECT * FROM ".$this->getViewName()." ".$this->getWhereClause($dbObject)." ".$this->getOrderByClause();
 		$results = $this->executeQueryWithResults($sql);
 		if( $results && count($results) > 0 ) return array_values($results)[0];
 		return null;
 	}
 	
 	function GetAll(){
-		$sql="SELECT * FROM ".$this->getTableName()." ".$this->getOrderByClause();
+		$sql="SELECT * FROM ".$this->getViewName()." ".$this->getOrderByClause();
 		return $this->executeQueryWithResults($sql);
 	}
 	
 	function GetAllActive(){
 		if($this->getActiveColumnName()){
-			$sql="SELECT * FROM ".$this->getTableName()." WHERE ".$this->getActiveColumnName()." = 1 ".$this->getOrderByClause();
+			$sql="SELECT * FROM ".$this->getViewName()." WHERE ".$this->getActiveColumnName()." = 1 ".$this->getOrderByClause();
 			return $this->executeQueryWithResults($sql);
 		}
 		return $this->GetAll();
@@ -164,14 +167,14 @@ abstract class Manager {
 	function GetAllActiveIDs(){
 		$where = "";
 		if($this->getActiveColumnName()) $where = "WHERE ".$this->getActiveColumnName()." = 1 ";
-		$sql="SELECT ".$this->getPrimaryKeys()[0]." FROM ".$this->getTableName()." $where ".$this->getOrderByClause();
+		$sql="SELECT ".$this->getPrimaryKeys()[0]." FROM ".$this->getViewName()." $where ".$this->getOrderByClause();
 		return $this->executeNonObjectQueryWithSingleResults($sql);
 	}
 	
 	function GetCount(){
 		$where = "";
 		if($this->getActiveColumnName()) $where = "WHERE ".$this->getActiveColumnName()." = 1 ";
-		$sql="SELECT COUNT(*) FROM ".$this->getTableName()." ".$where;
+		$sql="SELECT COUNT(*) FROM ".$this->getViewName()." ".$where;
 		$count = $this->executeNonObjectQueryWithSingleResults($sql);			
    		return $count[0];
 	}

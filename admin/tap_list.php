@@ -28,15 +28,21 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 		$tap = $tapManager->GetById($id);		
 		$tap->set_startAmount($_POST['startAmount'][$ii]);
 		$tap->set_currentAmount($_POST['currentAmount'][$ii]);
+		if (isset ( $_POST ['tapNumber'][$ii] )) {
+			$tap->set_tapNumber($_POST ['tapNumber'][$ii]);
+		}
 		$kegSelArr = explode("~", $_POST['kegId'][$ii]);
 		//Select array is kegid~beerid(in keg)~tapId(keg is on)
 		$kegId = null;
 		if(count($kegSelArr) > 0 && isset($kegSelArr[0]))$kegId = $kegSelArr[0];
 		if($kegId){			
+			if( ( !isset($kegSelArr[1]) || !$kegSelArr[1] || $tap->get_beerId() != $_POST['beerId'][$ii] ) ||
+			    ( !isset($kegSelArr[2]) || !$kegSelArr[2] || $tap->get_kegId() != $kegId ) ){
 			$tapManager->tapKeg($tap, $kegId, $_POST['beerId'][$ii]);		
+			}
 		}else if($tap->get_kegId()){
 			//User indicated the tap was untapped
-			$tapManager->closeTap($tap->get_id());	
+			$tapManager->closeTap($tap, false);	
 		}
 		$tapManager->Save($tap);
 		
@@ -45,32 +51,24 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 		$valveon = 0;
 		$valvepin = 0;
 		$countpergallon = 0;
-		if (isset ( $_POST ['tapNumber'][$ii] )) {
-			$tapNumber = $_POST ['tapNumber'][$ii];
-		}
 	
 		if (isset ( $_POST ['flowpin'][$ii] )) {
 			$flowpin = $_POST ['flowpin'][$ii];
 		}
 	
 		if (isset ( $_POST ['valvepin'][$ii] )) {
-			$valvepin = $_POST ['valvepin'][$ii];
+			$valvepin = $_POST ['valvepin'][$ii] * ($_POST ['valvepinPi'][$id]?-1:1);
 		}
 	
 		if (isset ( $_POST ['countpergallon'][$ii] )) {
 			$countpergallon = $_POST ['countpergallon'][$ii];
 		}
 	
-		$tapManager->saveTapConfig ( $id, $tapNumber, $flowpin, $valvepin, $valveon, $countpergallon );
+		$tapManager->saveTapConfig ( $id, $flowpin, $valvepin, $valveon, $countpergallon );
 		$ii++;
 	}
 	$reconfig = true;
 } 
-
-if (isset ( $_POST ['saveSettings'] ) || isset ( $_POST ['configuration'] )) {
-	setConfigurationsFromArray($_POST, $config);
-	if (isset ( $_POST ['saveSettings'] ) )$reconfig = true;
-}
 if (isset ( $_POST ['saveSettings'] )) {
 	if (isset ( $_POST ['numberOfTaps'] )) {
 		$oldTapNumber = $tapManager->getNumberOfTaps();
@@ -78,14 +76,19 @@ if (isset ( $_POST ['saveSettings'] )) {
 		if( !isset($oldTapNumber) || $newTapNumber != $oldTapNumber) {
 			$tapManager->updateNumberOfTaps ( $newTapNumber );
 		}
+		unset($_POST ['numberOfTaps']);
 	} 
+	} 
+if (isset ( $_POST ['saveSettings'] ) || isset ( $_POST ['configuration'] )) {
+	setConfigurationsFromArray($_POST, $config);
+	if (isset ( $_POST ['saveSettings'] ) )$reconfig = true;
 }
 
 if($reconfig){
 	file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=all' );
 }
 
-$activeTaps = $tapManager->GetAll();
+$activeTaps = $tapManager->GetAllActive();
 $numberOfTaps = count($activeTaps);
 $beerList = $beerManager->GetAllActive();
 $kegList = $kegManager->GetAllActive();
@@ -109,6 +112,7 @@ include 'top_menu.php';
 	<!-- Right Side/Main Content Start -->
 	<div id="rightside">
 		<div class="contentcontainer med left" >
+		<?php $htmlHelper->ShowMessage(); ?>
               
         <a onClick="toggleSettings(this, 'settingsDiv')" class="collapsed heading">Settings</a>
 		
@@ -177,7 +181,7 @@ include 'top_menu.php';
 		<?php if($config[ConfigNames::UseFanControl]) { ?>
 					<tr>
 						<td><b>Fan Setup:</b></td>
-						<td><b>Fan Pin (GPIO):</b><br>The pin that powers the fan</td></td>
+						<td><b>Fan Pin (GPIO):</b><br>The pin that powers the fan</td>
 						<td><input type="text" name="useFanPin" class="smallbox" value="<?php echo $config[ConfigNames::UseFanPin] ?>" /></td>
 					</tr>
 					<tr>
@@ -254,8 +258,8 @@ include 'top_menu.php';
             <thead>
                 <tr>
                     <th>Tap<br>Description</th>
-                    <th>Keg</th>
-                    <th style="width:25%">Beer</th>
+                    <th>Keg<br>(OnTap Number)</th>
+                    <th style="width:10%">Beer</th>
                     <th>Start<br>Amount (Gal)</th>
                     <th>Current<br>Amount(Gal)</th>
                     <?php if($config[ConfigNames::UseFlowMeter]) { ?>
@@ -264,6 +268,7 @@ include 'top_menu.php';
                     <?php } ?>
                     <?php if($config[ConfigNames::UseTapValves]) { ?>
                         <th>Valve Pin</th>
+                        <th> PI<br>Pin?</th>
                     	<th></th>
                     <?php } ?>
                 </tr>
@@ -295,6 +300,7 @@ include 'top_menu.php';
                                     if( $tap && $tap->get_kegId() == $item->get_id() ) $sel .= "selected ";
                                     $desc = $item->get_id();
                                     if($item->get_label() && $item->get_label() != "" && $item->get_label() != $item->get_id())$desc.="-".$item->get_label();
+									if($item->get_onTapId() && $item->get_onTapId() != "")$desc.="(".$item->get_tapNumber().")";
                                     $str .= "<option value='".$item->get_id()."~".$item->get_beerId()."~".$item->get_ontapId()."' ".$sel.">".$desc."</option>\n";
                                 }					
                                 $str .= "</select>\n";
@@ -302,7 +308,7 @@ include 'top_menu.php';
                                 echo $str;
                             ?>
                         </td> 
-                        <td style="width:10%">	
+                        <td style="width:5%">	
                             <?php 
 								$selectedBeer = "";
 								if( isset($tap) && isset($beer) ) $selectedBeer = $beer->get_id() ;
@@ -330,7 +336,12 @@ include 'top_menu.php';
                         <?php if($config[ConfigNames::UseTapValves]) { ?>
                             <td>
                                 <?php if( isset($tap) ) { ?>
-                                    <input type="text" id="valvepin<?php echo $tap->get_id();?>" class="smallbox" name="valvepin[]" value="<?php echo $tap->get_valvePinId(); ?>" />
+                                    <input type="text" id="valvepin<?php echo $tap->get_id();?>" class="smallbox" name="valvepin[]" value="<?php echo abs($tap->get_valvePinId()); ?>" />
+                                <?php } ?>
+                            </td>
+                            <td>
+                                <?php if( isset($tap) ) { ?>
+                                	<input type="checkbox" id="valvepinPi<?php echo $tap->get_id();?>" class="xsmallbox" name="valvepinPi[<?php echo $tap->get_id();?>]" value="1" <?php if($tap->get_valvePinId() < 0)echo "checked" ?>  />
                                 <?php } ?>
                             </td>
                         <?php } ?>
@@ -478,7 +489,7 @@ include 'scripts.php';
 				var secOtherTapBeerSelect = document.getElementById(secSelectBeerStart+onOtherTap);
 				if(msgDiv != null)msgDiv.style.display = "";
 				var msgSpan = document.getElementById("messageSpan");
-				if(msgSpan != null) msgSpan.innerHTML = "Keg "+kegSelArr[0]+" currently on Tap "+kegSelArr[2]+" and will be moved to tap <?php echo $tap->get_id()?> and updated to current selected beer"
+				if(msgSpan != null) msgSpan.innerHTML = "Keg "+kegSelArr[0]+" currently on Tap "+kegSelArr[2]+" and will be moved to tap <?php echo ($tap?$tap->get_id():'');?> and updated to current selected beer"
 				if(secOtherTapBeerSelect != null)secOtherTapBeerSelect.selectedIndex = 0;
 				if(secOtherTapKegSelect != null)secOtherTapKegSelect.selectedIndex = 0;		
 			}	

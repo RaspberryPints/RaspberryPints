@@ -133,7 +133,7 @@
 
 <!--<body> -->
 <body onload="wsconnect(); ">
-		<div class="bodywrapper">
+		<div class="bodywrapper" id="mainTable">
 			<!-- Header with Brewery Logo and Project Name -->
 			<div class="header clearfix">
 				<div class="HeaderLeft">

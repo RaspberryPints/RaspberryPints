@@ -3,6 +3,7 @@ class Tap
 {  
 	private $_id;  
 	private $_kegId;
+	private $_beerId;
 	private $_tapNumber;
 	private $_tapRgba;
 	private $_flowPinId;
@@ -23,6 +24,9 @@ class Tap
 	public function get_kegId(){ return $this->_kegId; }
 	public function set_kegId($_kegId){ $this->_kegId = $_kegId; }
 
+	public function get_beerId(){ return $this->_beerId; }
+	public function set_beerId($_beerId){ $this->_beerId = $_beerId; }
+	
 	public function get_tapNumber(){ return $this->_tapNumber; }
 	public function set_tapNumber($_tapNumber){ $this->_tapNumber = $_tapNumber; }
 	
@@ -67,6 +71,11 @@ class Tap
 			$this->set_kegId($postArr['kegId']);
 		else
 			$this->set_kegId(null);
+			
+		if( isset($postArr['beerId']) )
+			$this->set_beerId($postArr['beerId']);
+		else
+			$this->set_beerId(null);
 			
 		if( isset($postArr['tapNumber']) )
 			$this->set_tapNumber($postArr['tapNumber']);

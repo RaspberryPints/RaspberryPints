@@ -24,6 +24,7 @@ abstract class ConfigNames
 	const NumberOfTaps = 'numberOfTaps';
 	const NumberOfDisplayPours = 'numberOfDisplayPours';
 	const PourShutOffCount = 'pourShutOffCount';
+	const SaveNonUserRfids = 'saveNonUserRfids';
 	const ShowAbvCol = 'showAbvCol';
 	const ShowAbvImg = 'showAbvImg';
 	const ShowAbvValue = 'showAbvValue';

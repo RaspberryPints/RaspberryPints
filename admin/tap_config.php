@@ -37,20 +37,20 @@ if (isset ( $_POST ['updateNumberOfTaps'] )) {
 	file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=alamode' );
 	
 } else if (isset ( $_POST ['flowMeterConfig'] )) {
-	saveConfigValue(ConfigNames::PourShutOffCount, $_POST ['pourShutOffCount');
+	saveConfigValue(ConfigNames::PourShutOffCount, $_POST ['pourShutOffCount']);
 	file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=flow' );
 	
 } else if (isset ( $_POST ['alamodeConfig'] )) {
-	saveConfigValue(ConfigNames::AlamodePourMessageDelay, $_POST ['alamodePourMessageDelay');
-	saveConfigValue(ConfigNames::AlamodePourTriggerCount, $_POST ['alamodePourTriggerCount');
-	saveConfigValue(ConfigNames::AlamodeKickTriggerCount, $_POST ['alamodeKickTriggerCount');
-	saveConfigValue(ConfigNames::AlamodeUpdateTriggerCount, $_POST ['alamodeUpdateTriggerCount');
+	saveConfigValue(ConfigNames::AlamodePourMessageDelay, $_POST ['alamodePourMessageDelay']);
+	saveConfigValue(ConfigNames::AlamodePourTriggerCount, $_POST ['alamodePourTriggerCount']);
+	saveConfigValue(ConfigNames::AlamodeKickTriggerCount, $_POST ['alamodeKickTriggerCount']);
+	saveConfigValue(ConfigNames::AlamodeUpdateTriggerCount, $_POST ['alamodeUpdateTriggerCount']);
 	file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=alamode' );
 	
 } else if (isset ( $_POST ['fanConfig'] )) {
-	saveConfigValue(ConfigNames::UseFanPin, $_POST ['useFanPin');
-	saveConfigValue(ConfigNames::FanInterval, $_POST ['fanInterval');
-	saveConfigValue(ConfigNames::FanOnTime, $_POST ['fanOnTime');
+	saveConfigValue(ConfigNames::UseFanPin, $_POST ['useFanPin']);
+	saveConfigValue(ConfigNames::FanInterval, $_POST ['fanInterval']);
+	saveConfigValue(ConfigNames::FanOnTime, $_POST ['fanOnTime']);
 	file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=fan' );
 	
 } else if (isset ( $_POST ['enableTap'] )) {
@@ -86,7 +86,7 @@ $numberOfTaps = $tapManager->getNumberOfTaps();
 <link href="styles.css" rel="stylesheet" type="text/css" />
 <!-- Theme End -->
 <link href='http://fonts.googleapis.com/css?family=Fredoka+One'
-	rel='stylesheet' type='text/css'>
+	rel='stylesheet' type='text/css'/>
 
 </head>
 <body>
@@ -112,7 +112,7 @@ include 'header.php';
 		<!-- Set Tap Number Form -->
 		<!-- <p>
 			<form method="POST" name="taplimit">
-				<b>Number Of Taps:</b> &nbsp 
+				<b>Number Of Taps:</b> &nbsp; 
 				    <input type="text" name="numberOfTaps"
 					class="smallbox" value="<?php echo $numberOfTaps ?>"> &nbsp; 
 					<input type="submit" name="updateNumberOfTaps" class="btn"
@@ -126,74 +126,70 @@ include 'header.php';
 	?>	
 	
 	<?php if($config[ConfigNames::UseFlowMeter]) { ?>
-		<p>
-			<form method="POST" name="flowMeterConfig">
-				<table width="300" border="0" cellspacing="0" cellpadding="0">
-					<thead>
-						<tr>
-							<th colspan="99"><b>Flow Meters Setup:</b></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><b>Pour Shutoff Count:</b><br/>The flow meter count in one pour after which a tap is shutoff<br/>(only with solenoids installed) </td>
-							<td><input type="text" name="pourShutOffCount" class="smallbox"
-								value="<?php echo ($config[ConfigNames::PourShutOffCount]) ?>"></td>
-						</tr>
-						<tr>
-							<td><input type="submit" name="flowMeterConfig" class="btn"
-								value="Update Flow Meter Config" /></td>
-						</tr>
-					</tbody>
-				</table>
-			</form>
-		</p>
-		<br>
-		<p>
-			<form method="POST" name="alamodeConfig">
-				<table width="300" border="0" cellspacing="0" cellpadding="0">
-					<thead>
-						<tr>
-							<th colspan="99"><b>Alamode Setup:</b></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><b>Pour Message Delay:</b></td>
-							<td><input type="text" name="alamodePourMessageDelay"
-								class="smallbox"
-								value="<?php echo ($config[ConfigNames::AlamodePourMessageDelay]) ?>"></td>
-						</tr>
-						<tr>
-							<td><b>Pour Trigger Count:</b><br/> The minimum flow meter count to start a pour</td>
-							<td><input type="text" name="alamodePourTriggerCount" class="smallbox"
-								value="<?php echo ($config[ConfigNames::AlamodePourTriggerCount]) ?>"></td>
-						</tr>
-						<tr>
-							<td><b>Kick Trigger Count:</b><br/> The flow meter count within one millisecond that indicates a kick</td>
-							<td><input type="text" name="alamodeKickTriggerCount"
-								class="smallbox"
-								value="<?php echo ($config[ConfigNames::AlamodeKickTriggerCount]) ?>"></td>
-						</tr>
-						<tr>
-							<td><b>Update Trigger Count:</b><br/>The flow meter count after which a internal update is reported</td>
-							<td><input type="text" name="alamodeUpdateTriggerCount" class="smallbox"
-								value="<?php echo ($config[ConfigNames::AlamodeUpdateTriggerCount]) ?>"></td>
-						</tr>
-						<tr>
-							<td><input type="submit" name="alamodeConfig" class="btn"
-								value="Update Alamode Config" /></td>
-						</tr>
-					</tbody>
-				</table>
-			</form>
-		</p>
+	
+		<form method="post" name="flowMeterConfig">
+			<table width="300" border="0" cellspacing="0" cellpadding="0">
+				<thead>
+					<tr>
+						<th colspan="99"><b>Flow Meters Setup:</b></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><b>Pour Shutoff Count:</b><br/>The flow meter count in one pour after which a tap is shutoff<br/>(only with solenoids installed) </td>
+						<td><input type="text" name="pourShutOffCount" class="smallbox"
+							value="<?php echo ($config[ConfigNames::PourShutOffCount]) ?>"/></td>
+					</tr>
+					<tr>
+						<td><input type="submit" name="flowMeterConfig" class="btn"
+							value="Update Flow Meter Config" /></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+		<br/>
+		<form method="post" name="alamodeConfig">
+			<table width="300" border="0" cellspacing="0" cellpadding="0">
+				<thead>
+					<tr>
+						<th colspan="99"><b>Alamode Setup:</b></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><b>Pour Message Delay:</b></td>
+						<td><input type="text" name="alamodePourMessageDelay"
+							class="smallbox"
+							value="<?php echo ($config[ConfigNames::AlamodePourMessageDelay]) ?>"/></td>
+					</tr>
+					<tr>
+						<td><b>Pour Trigger Count:</b><br/> The minimum flow meter count to start a pour</td>
+						<td><input type="text" name="alamodePourTriggerCount" class="smallbox"
+							value="<?php echo ($config[ConfigNames::AlamodePourTriggerCount]) ?>"/></td>
+					</tr>
+					<tr>
+						<td><b>Kick Trigger Count:</b><br/> The flow meter count within one millisecond that indicates a kick</td>
+						<td><input type="text" name="alamodeKickTriggerCount"
+							class="smallbox"
+							value="<?php echo ($config[ConfigNames::AlamodeKickTriggerCount]) ?>"/></td>
+					</tr>
+					<tr>
+						<td><b>Update Trigger Count:</b><br/>The flow meter count after which a internal update is reported</td>
+						<td><input type="text" name="alamodeUpdateTriggerCount" class="smallbox"
+							value="<?php echo ($config[ConfigNames::AlamodeUpdateTriggerCount]) ?>"/></td>
+					</tr>
+					<tr>
+						<td><input type="submit" name="alamodeConfig" class="btn"
+							value="Update Alamode Config" /></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
 		<?php } ?>
 			
-			<?php if($config[ConfigNames::UseFanControl]) { ?>
-			<br />
-		<p>
-			<form method="POST">
+		<?php if($config[ConfigNames::UseFanControl]) { ?>
+			<br/>
+			<form method="post">
 				<table width="300" border="0" cellspacing="0" cellpadding="0">
 					<thead>
 						<tr>
@@ -226,7 +222,6 @@ include 'header.php';
 					</tbody>
 				</table>
 			</form>
-		</p>
 	<?php } ?>
 	</div>
 	<!-- Start Footer -->   

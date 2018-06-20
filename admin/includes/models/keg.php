@@ -15,6 +15,7 @@ class Keg
 	private $_beerId;
 	private $_active;
 	private $_onTapId;
+	private $_tapNumber;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
@@ -61,6 +62,9 @@ class Keg
 	
 	public function get_onTapId(){ return $this->_onTapId; }
 	public function set_onTapId($_onTapId){ $this->_onTapId = $_onTapId; }
+	
+	public function get_tapNumber(){ return $this->_tapNumber; }
+	public function set_tapNumber($_tapNumber){ $this->_tapNumber = $_tapNumber; }
 	
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -139,6 +143,11 @@ class Keg
 			$this->set_onTapId($postArr['onTapId']);
 		else
 			$this->set_onTapId($this->get_onTapId());
+		
+		if( isset($postArr['tapNumber']) )
+			$this->set_tapNumber($postArr['tapNumber']);
+		else
+			$this->set_tapNumber($this->get_tapNumber());
 		
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);

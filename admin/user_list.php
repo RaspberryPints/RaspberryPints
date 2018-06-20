@@ -46,7 +46,7 @@ include 'top_menu.php';
 
 			<?php $htmlHelper->ShowMessage(); ?>
 			<form method="get" action="user_list.php">
-            	<input type="checkbox" name="showAll" onClick="submit();" value="yes" <?php if($showAll)echo "checked" ?>>Show All (Includes Inactive) </input>
+            	<input type="checkbox" name="showAll" onClick="submit();" value="yes" <?php if($showAll)echo "checked" ?>/>Show All (Includes Inactive)
             </form>
 			<br/>
 			<input type="submit" class="btn" value="Add User" onClick="window.location='user_form.php'" />
@@ -83,7 +83,7 @@ include 'top_menu.php';
 							foreach ($users as $user){
 					?>
 								<tr class="intborder">
-									<td vertical-align: middle;">
+									<td style="vertical-align: middle;">
 										<h3><?php echo $user->get_username() ?></h3>
 									</td>
 									<td style="vertical-align: middle;">
@@ -143,8 +143,6 @@ include 'top_menu.php';
 	?>
 	<!-- End Footer -->
 </div>
-</div>
-	</div>
 	<!-- Right Side/Main Content End -->
 	<!-- Start Left Bar Menu -->
 <?php

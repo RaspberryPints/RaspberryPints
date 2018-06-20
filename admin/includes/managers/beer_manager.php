@@ -34,6 +34,10 @@ class BeerManager extends Manager{
 		parent::Inactivate($id);
 	}
 
+	protected function getOrderByClause(){
+		return "ORDER BY name";
+	}
+
   function GetFermentables($id){
 	$manager = new FermentableManager();
 	return $manager->GetAllForBeer($id);

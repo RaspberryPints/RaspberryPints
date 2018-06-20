@@ -49,7 +49,7 @@
 		$upgrade=0;
 		$clear=0;
 		if (file_exists("../admin/includes/conn.php")) {
-			require_once '../admin/includes/config_manager.php';
+			require_once '../admin/includes/managers/config_manager.php';
 			echo 'We noticed that you already have installed RPints. Please select an option from the menu below';	
 			$dbversion = getConfigValue(ConfigNames::Version);
 		
@@ -75,7 +75,7 @@ you are certain you need to change it.
 					<label for="textfield"><strong>Database Server: (required)</strong></label> 
 				</td>
 				<td>
-					<input minlength="2" required class="inputbox" value="localhost" type="text" name="servername" required>				
+					<input pattern=".{2,}" required class="inputbox" value="localhost" type="text" name="servername" required />				
 				</td>
 			</tr>
 			<tr>
@@ -149,31 +149,39 @@ you are certain you need to change it.
 		<table>
 			<tr>
 				<td>
-					<label for="textfield"><strong>RPints Username:</strong> 
+					<label for="textfield"><strong>Username:</strong></label> 
 				</td>
 				<td>
-					</label> <input class="inputbox" value="admin" name="adminuser">				
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for="textfield"><strong>Email Address:</strong> 
-				</td>
-				<td>
-					</label> <input class="inputbox" name="adminemail">				
+					<label> <input class="inputbox" value="admin" name="adminuser"></label>	
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<label for="textfield"><strong>Your Name:</strong> 
+					<label for="textfield"><strong>Email Address:</strong> </label>
 				</td>
 				<td>
-					</label> <input class="inputbox" name="adminname">				
+					<label> <input class="inputbox" name="adminemail"></label>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<label for="textfield"><strong>Admin Password:</strong></label>
+					<label for="textfield"><strong>First Name:</strong></label>
+				</td>
+				<td>
+					<label> <input class="inputbox" name="adminnamefirst"></label>	
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="textfield"><strong>Last Name:</strong></label>
+				</td>
+				<td>
+					<label> <input class="inputbox" name="adminnamelast"></label>	
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="textfield"><strong>Password:</strong></label>
 				</td>
 				<td>
 					<input class="inputbox" id="txtCheckAdminPassword" type="password" name="adminpass1">		
@@ -183,7 +191,7 @@ you are certain you need to change it.
 					<label for="textfield"><strong>Confirm Password:</strong></label>
 				</td>
 				<td>
-					<input class="inputbox" id="txtConfirmAdminPassword" type="password" name="adminpass2" onChange="checkAdminPasswordMatch()";>
+					<input class="inputbox" id="txtConfirmAdminPassword" type="password" name="adminpass2" onChange="checkAdminPasswordMatch()"/>
 				</td>
 				<td>
 					<div class="registrationFormAlert" id="divCheckAdminPasswordMatch"></div>

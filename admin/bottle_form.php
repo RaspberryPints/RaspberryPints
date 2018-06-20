@@ -49,7 +49,7 @@ $colorList = $bottleManager->getCapColors();
 	<form id="bottle-form" method="POST">
 		<input type="hidden" name="id" value="<?php echo $bottle->get_id() ?>" />
 		
-		<table width="800" border="0" cellspacing="0" cellpadding="0">
+		<table style="width:800;border:0;cellspacing:1;cellpadding:0;">
 			<tr>
 				<td style="vertical-align:middle;">
 					<b>Bottle type: <font color="red">*</font></b>

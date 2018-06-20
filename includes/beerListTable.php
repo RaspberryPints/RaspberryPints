@@ -40,9 +40,9 @@
 				<th <?php if($beerColSpan > 1){ echo 'colspan="$beerColSpan"';}?> class="beername">
 					<?php if($config[ConfigNames::ShowBeerName]){ ?>
 						BEER NAME 
-						<?php if($config[ConfigNames::ShowBeerStyle]){ ?>&nbsp; & &nbsp; STYLE<hr><?php } ?>
-						<?php if($config[ConfigNames::ShowBeerNotes]){ ?>&nbsp; & &nbsp; TASTING NOTES<?php } ?>
-						<?php if($config[ConfigNames::ShowBeerRating]){?>&nbsp; & &nbsp; RATING<hr><?php } ?>
+						<?php if($config[ConfigNames::ShowBeerStyle]){ ?>&nbsp; &nbsp; STYLE<hr><?php } ?>
+						<?php if($config[ConfigNames::ShowBeerNotes]){ ?>&nbsp; &nbsp; TASTING NOTES<?php } ?>
+						<?php if($config[ConfigNames::ShowBeerRating]){?>&nbsp; &nbsp; RATING<hr><?php } ?>
 					<?php } ?>
 				</th>
 			<?php } ?>

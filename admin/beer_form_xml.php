@@ -28,7 +28,7 @@ include 'top_menu.php';
   <br><br>
 
         <form enctype="multipart/form-data" action="includes/upload_beer.php" method="POST"><br />
-		<table width="400" border="0" cellspacing="0" cellpadding="0">
+		<table style="width:400;border:0;cellspacing:1;cellpadding:0;">
 			<tr>
 				<td colspan="2">
           		<input name="uploaded" type="file" accept="text/xml"/>
@@ -83,7 +83,7 @@ include 'top_menu.php';
 ?>
         </div>
 		<div align="right">			
-			&nbsp &nbsp 
+			&nbsp; &nbsp; 
 		</div>
 
 	</div>

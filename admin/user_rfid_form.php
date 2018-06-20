@@ -6,17 +6,30 @@ $userManager = new UserManager();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$redirect = false;
+	$operation = "Unknown";
 	if(isset($_POST['deleteRFID']))
 	{
 		$redirect = $userManager->deleteRFID($_POST['userId'], $_POST['rfid']);
+		$operation = "deleted";
+	}
+	if(isset($_POST['saveRFID']))
+	{
+		$redirect = $userManager->saveRFID($_POST['userId'], $_POST['rfid'], $_POST['description']);
+		$operation = "saved";
 	}
 	if(isset($_POST['addRFID']))
 	{
 		$redirect = $userManager->addRFID($_POST['userId'], $_POST['rfid'], $_POST['description']);
+		$operation = "added";
+	}
+	if(isset($_POST['assignRFID']))
+	{
+		$redirect = $userManager->saveRFID($_POST['userId'], $_POST['rfid'], $_POST['description']);
+		$operation = "assigned";
 	}
 	if($redirect)
 	{
-		$_SESSION['successMessage'] = "Successfully ".(isset($_POST['deleteRFID'])?"deleted":"added")." RFID [".$_POST['rfid']."]";
+		$_SESSION['successMessage'] = "Successfully ".$operation." RFID [".$_POST['rfid']."]";
 		redirect($_SERVER['HTTP_REFERER']);
 	}
 }

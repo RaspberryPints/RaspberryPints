@@ -16,7 +16,7 @@
 	height:auto;
 }
 .poursdate{
-	width: 300px;
+	width: 310px;
 	text-align: center;
 	vertical-align: middle;	
 }
@@ -37,7 +37,7 @@
 	text-align: center;
 	vertical-align: middle;	
 }
-body {
+html, body {
 	background-image: url(img/background.jpg);
 	background-color: #000000;
 	background-size: cover;
@@ -46,6 +46,7 @@ body {
 	color: #FFFFFF;
 	font: 1em Georgia, arial, verdana, sans-serif;
 	margin:5px;
+	height:99%;
 }
 hr {
 	border: 0;
@@ -73,8 +74,10 @@ img {
 }
 .bodywrapper
 {
-	width: 100%;
-	height: 100%;
+	width: 101%;
+	height: 99%;
+	overflow: auto;
+	
 }
 /* Header Styles */
 .header {

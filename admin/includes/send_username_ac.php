@@ -45,7 +45,7 @@ echo "Error ";
 
 // if your email succesfully sent
 {
-echo "An email has been sent including the info you have requested.";?><a href="../index.php">Click Here<a/> to go back to the login.
+echo "An email has been sent including the info you have requested.";?><a href="../index.php">Click Here</a> to go back to the login.
 <?php
 }
 ?>

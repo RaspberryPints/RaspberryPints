@@ -50,31 +50,31 @@ INSERT INTO `beers` (`name`, `beerStyleId`, `abv`, `ogEst`, `fgEst`, `srmEst`, `
 -- Dumping data for table `kegTypes`
 --
 
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, beerId, createdDate, modifiedDate ) VALUES
-( '1', '1', 'Cornelius', 'Super Champion', '16530387', 'Johnstown Production Center', '(Unknown)', 'One hanndle cracked', 'SERVING', '1', NOW(), NOW() ),
-( '2', '1', 'Spartanburg', 'Challenger VI', '81175979', 'Joyce Bev', 'Washington D.C.', 'Green handles', 'SERVING', '2', NOW(), NOW() ),
-( '3', '1', 'Cornelius', 'Super Champion', '75162875', 'Pepi Cola Btlg Co', 'Oskaloosa, IA', '', 'SERVING', '3', NOW(), NOW() ),
-( '4', '1', 'Cornelius', 'Super Champion', '77320513', 'Binghamton Btlg Co', '(Unknown)', '', 'SERVING', '4', NOW(), NOW() ),
-( '5', '1', 'Cornelius', 'Super Champion', '80224203', 'Pepsi Btlg Co', 'Southern CA', 'Green handles', 'SERVING', '5', NOW(), NOW() ),
-( '6', '1', 'Spartanburg', 'Challenger VI', '290880483', 'Pepsi Cola Btlg Co', 'San Diego', '', 'SERVING', '6', NOW(), NOW() ),
-( '7', '1', 'Cornelius', 'Super Champion', '83129068', 'Pepsi Cola Btlg Co', '(Unknown)', '', 'SERVING', '7', NOW(), NOW() ),
-( '8', '1', 'Cornelius', 'Super Champion', '78143233', 'Pepsi Cola Btlg Co', 'Parkersburg WVA', '', 'SERVING', '8', NOW(), NOW() ),
-( '9', '1', 'Spantanburg', 'Challenger VI', '112620585', 'Pepsi Cola Btlg Co', 'Aleghany, NY', 'Blue handles', 'SERVING', '9', NOW(), NOW() ),
-( '10', '1', 'Cornelius', 'Super Champion', '82217553', 'Pepsi Cola Seven Up', 'Mpls St Paul', '', 'SERVING', '10', NOW(), NOW() ),
-( '11', '1', 'Cornelius', 'Super Champion', '77143229', 'So Conn Seven Up', 'S Norwalk Conn', 'Green handles', 'SECONDARY', '1', NOW(), NOW() ),
-( '12', '1', 'Cornelius', 'Super Champion', '86018983', 'Seltzer Rydholm', 'Aub Port Aug', '', 'SECONDARY', '2', NOW(), NOW() ),
-( '13', '1', 'Cornelius', 'Super Champion', '84405189', 'Pepsi Cola Btlg Co', 'Williamsport, PA', '', 'DRY_HOPPING', '3', NOW(), NOW() ),
-( '14', '1', 'Cornelius', 'Super Champion', '80273216', 'Pepsi Cola Btlg Co', 'Waterloo, IA', '', 'DRY_HOPPING', '4', NOW(), NOW() ),
-( '15', '1', 'Cornelius', 'Super Champion', '78225083', 'Pepsi Cola Btlg Co', 'San Diego', '', 'CONDITIONING', '5', NOW(), NOW() ),
-( '16', '1', 'Firestone', 'Challenger VI', '103760380', 'Pepsi Cola Btlg Co', 'San Diego', '', 'CONDITIONING', '6', NOW(), NOW() ),
-( '17', '1', 'Cornelius', 'Super Champion', '85017588', 'Pepsi Cola Btlg Co', 'Fresno, CA', '', 'CLEAN', NULL, NOW(), NOW() ),
-( '18', '1', 'Firestone', 'Challenger VI', '214311080', 'Dr Pepper Company', 'Dallas Texas 75265', '', 'CLEAN', NULL, NOW(), NOW() ),
-( '19', '1', 'Cornelius', 'Super Champion', '79282429', 'Pepsi Cola Btlg Co', 'San Francisco CA 2 79', '', 'CLEAN', NULL, NOW(), NOW() ),
-( '20', '1', 'Cornelius', 'Super Champion', '79629286', 'Pepsi Cola Btlg Co', 'Vickers Rock PA', '', 'CLEAN', NULL, NOW(), NOW() ),
-( '21', '1', 'Cornelius', 'Super Champion', '83127465', 'Pepsi Cola Btlg Co', 'Mpls and St Paul', '', 'CLEAN', NULL, NOW(), NOW() ),
-( '22', '1', 'Firestone', 'Challenger VI', '071410882', 'Pepsi PBG', '(Unknown)', '', 'NEEDS_CLEANING', '2', NOW(), NOW() ),
-( '23', '1', 'Cornelius', 'Super Champion', '83114663', 'Pepsi Cola Seven Up', 'Mpls and St Paul', 'Leaks at pressure relief valve', 'NEEDS_PARTS', NULL, NOW(), NOW() ),
-( '24', '1', 'Cornelius', 'Super Champion', '83295909', 'PBG', '(Unknown)', 'Leaks at lid/body interface when < 15 PSI', 'NEEDS_REPAIRS', NULL, NOW(), NOW() );
+INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, onTapId, beerId, createdDate, modifiedDate ) VALUES
+( '1', '1', 'Cornelius', 'Super Champion', '16530387', 'Johnstown Production Center', '(Unknown)', 'One hanndle cracked', 'SERVING', 1, '1', NOW(), NOW() ),
+( '2', '1', 'Spartanburg', 'Challenger VI', '81175979', 'Joyce Bev', 'Washington D.C.', 'Green handles', 'SERVING', 2, '2', NOW(), NOW() ),
+( '3', '1', 'Cornelius', 'Super Champion', '75162875', 'Pepi Cola Btlg Co', 'Oskaloosa, IA', '', 'SERVING', 3, '3', NOW(), NOW() ),
+( '4', '1', 'Cornelius', 'Super Champion', '77320513', 'Binghamton Btlg Co', '(Unknown)', '', 'SERVING', 4, '4', NOW(), NOW() ),
+( '5', '1', 'Cornelius', 'Super Champion', '80224203', 'Pepsi Btlg Co', 'Southern CA', 'Green handles', 'SERVING', 5, '5', NOW(), NOW() ),
+( '6', '1', 'Spartanburg', 'Challenger VI', '290880483', 'Pepsi Cola Btlg Co', 'San Diego', '', 'SERVING', 6, '6', NOW(), NOW() ),
+( '7', '1', 'Cornelius', 'Super Champion', '83129068', 'Pepsi Cola Btlg Co', '(Unknown)', '', 'SERVING', 7, '7', NOW(), NOW() ),
+( '8', '1', 'Cornelius', 'Super Champion', '78143233', 'Pepsi Cola Btlg Co', 'Parkersburg WVA', '', 'SERVING', 8, '8', NOW(), NOW() ),
+( '9', '1', 'Spantanburg', 'Challenger VI', '112620585', 'Pepsi Cola Btlg Co', 'Aleghany, NY', 'Blue handles', 'SERVING', 9, '9', NOW(), NOW() ),
+( '10', '1', 'Cornelius', 'Super Champion', '82217553', 'Pepsi Cola Seven Up', 'Mpls St Paul', '', 'SERVING', 10, '10', NOW(), NOW() ),
+( '11', '1', 'Cornelius', 'Super Champion', '77143229', 'So Conn Seven Up', 'S Norwalk Conn', 'Green handles', 'SECONDARY', NULL,  '1', NOW(), NOW() ),
+( '12', '1', 'Cornelius', 'Super Champion', '86018983', 'Seltzer Rydholm', 'Aub Port Aug', '', 'SECONDARY', NULL, '2', NOW(), NOW() ),
+( '13', '1', 'Cornelius', 'Super Champion', '84405189', 'Pepsi Cola Btlg Co', 'Williamsport, PA', '', 'DRY_HOPPING', NULL, '3', NOW(), NOW() ),
+( '14', '1', 'Cornelius', 'Super Champion', '80273216', 'Pepsi Cola Btlg Co', 'Waterloo, IA', '', 'DRY_HOPPING', NULL, '4', NOW(), NOW() ),
+( '15', '1', 'Cornelius', 'Super Champion', '78225083', 'Pepsi Cola Btlg Co', 'San Diego', '', 'CONDITIONING', NULL, '5', NOW(), NOW() ),
+( '16', '1', 'Firestone', 'Challenger VI', '103760380', 'Pepsi Cola Btlg Co', 'San Diego', '', 'CONDITIONING', NULL, '6', NOW(), NOW() ),
+( '17', '1', 'Cornelius', 'Super Champion', '85017588', 'Pepsi Cola Btlg Co', 'Fresno, CA', '', 'CLEAN', NULL, NULL, NOW(), NOW() ),
+( '18', '1', 'Firestone', 'Challenger VI', '214311080', 'Dr Pepper Company', 'Dallas Texas 75265', '', 'CLEAN', NULL, NULL, NOW(), NOW() ),
+( '19', '1', 'Cornelius', 'Super Champion', '79282429', 'Pepsi Cola Btlg Co', 'San Francisco CA 2 79', '', 'CLEAN', NULL, NULL, NOW(), NOW() ),
+( '20', '1', 'Cornelius', 'Super Champion', '79629286', 'Pepsi Cola Btlg Co', 'Vickers Rock PA', '', 'CLEAN', NULL, NULL, NOW(), NOW() ),
+( '21', '1', 'Cornelius', 'Super Champion', '83127465', 'Pepsi Cola Btlg Co', 'Mpls and St Paul', '', 'CLEAN', NULL, NULL, NOW(), NOW() ),
+( '22', '1', 'Firestone', 'Challenger VI', '071410882', 'Pepsi PBG', '(Unknown)', '', 'NEEDS_CLEANING', NULL, NULL, NOW(), NOW() ),
+( '23', '1', 'Cornelius', 'Super Champion', '83114663', 'Pepsi Cola Seven Up', 'Mpls and St Paul', 'Leaks at pressure relief valve', 'NEEDS_PARTS', NULL, NULL, NOW(), NOW() ),
+( '24', '1', 'Cornelius', 'Super Champion', '83295909', 'PBG', '(Unknown)', 'Leaks at lid/body interface when < 15 PSI', 'NEEDS_REPAIRS', NULL, NULL, NOW(), NOW() );
 
 
 -- --------------------------------------------------------
@@ -84,8 +84,8 @@ INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampe
 --
 
 INSERT INTO taps(`kegId`, `tapNumber`, `active`, `startAmount`, `currentAmount`, `createdDate`, `modifiedDate`)
-SELECT kegs.id as kegId, kegs.id as tapNumber, 1 as active, kegs.startAmount as startAmount, kegs.startAmount as currentAmount, NOW() as createdDate, NOW() as modifiedDate
-FROM (SELECT k.*, kt.maxAmount as startAmount FROM kegs k LEFT JOIN kegTypes kt ON kt.id = k.kegTypeId ORDER BY Id) as kegs;
+SELECT kegs.id as kegId, kegs.onTapId as tapNumber, 1 as active, kegs.startAmount as startAmount, kegs.startAmount as currentAmount, NOW() as createdDate, NOW() as modifiedDate
+FROM (SELECT k.*, kt.maxAmount as startAmount FROM kegs k LEFT JOIN kegTypes kt ON kt.id = k.kegTypeId WHERE k.beerId IS NOT NULL AND k.onTapId IS NOT NULL ORDER BY Id) as kegs;
 
 -- --------------------------------------------------------
 

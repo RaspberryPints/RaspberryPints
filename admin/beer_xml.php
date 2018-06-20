@@ -27,5 +27,6 @@ foreach ($xml->RECIPE->YEASTS->YEAST as $yeast) {
 }
 echo '<br>';
 ?> 
-</HTML>
+</table>
 </BODY>
+</HTML>

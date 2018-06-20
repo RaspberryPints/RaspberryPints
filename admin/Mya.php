@@ -27,7 +27,7 @@ include 'top_menu.php';
 			</div>
 			<div class="contentbox">
 			<p style="padding:0px;margin:0px">
-<font size="2" Color="Black" font-family="Impact">Name:</font>
+<font size="2" Color="Black" style="font-family:Impact">Name:</font>
 <?php
 
 $sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
@@ -35,7 +35,7 @@ $result=$mysqli->query($sql);
 
 echo $result->fetch_field()->name;
 ?><br />
-<font size="2" Color="Black" font-family="Impact">Username:</font>
+<font size="2" Color="Black" style="font-family:Impact">Username:</font>
 <?php
 
 $sql="SELECT `name` FROM `users` WHERE username='".$_SESSION['myusername']."'";
@@ -46,7 +46,7 @@ else
 	echo $_SESSION['myusername'];
 
 ?><br />
-<font size="2" Color="Black" font-family="Impact"> Email:</font>
+<font size="2" Color="Black" style="font-family:Impact"> Email:</font>
 <?php
 
 $sql="SELECT `email` FROM `users` WHERE username='$_SESSION[myusername]'";

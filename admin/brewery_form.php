@@ -46,7 +46,7 @@ require 'top_menu.php';
 	<form id="brewery-form" method="POST">
 		<input type="hidden" name="id" value="<?php echo $brewery->get_id() ?>" />
 
-		<table width="800" border="0" cellspacing="0" cellpadding="0">
+		<table style="width:800;border:0;cellspacing:1;cellpadding:0;">
 			<tr>
 				<td width="100">
 					<b>Name:<font color="red">*</font></b>
@@ -73,7 +73,7 @@ require 'top_menu.php';
 		</table>
 		<br />
 		<div align="right">
-			&nbsp &nbsp
+			&nbsp; &nbsp;
 		</div>
 
 	</form>

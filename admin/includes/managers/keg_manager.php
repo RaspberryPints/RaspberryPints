@@ -8,10 +8,13 @@ class KegManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["label", "kegTypeId", "make", "model", "serial", "stampedOwner", "stampedLoc", "notes", "kegStatusCode", "weight", "beerId", "onTapId", "active"];
+		return ["label", "kegTypeId", "make", "model", "serial", "stampedOwner", "stampedLoc", "notes", "kegStatusCode", "weight", "beerId", "onTapId", "tapNumber", "active"];
 	}
 	protected function getTableName(){
 		return "kegs";
+	}
+	protected function getViewName(){
+		return "vwKegs";
 	}
 	protected function getDBObject(){
 		return new Keg();
@@ -22,10 +25,14 @@ class KegManager extends Manager{
 	function Tap($tapId, $kegId, $beerId = null){
 		$sql="UPDATE kegs k SET k.onTapId = NULL, k.kegStatusCode = 'NEEDS_CLEANING', modifiedDate = NOW() WHERE onTapId = $tapId";
 		$ret = $this->executeQueryNoResult($sql);
-		$sql="UPDATE kegs k SET k.onTapId = $kegId, k.kegStatusCode = 'SERVING'".($beerId?", k.beerId=$beerId":"").", modifiedDate = NOW() WHERE id = $kegId";
+		$sql="UPDATE kegs k SET k.onTapId = $tapId, k.kegStatusCode = 'SERVING'".($beerId?", k.beerId=$beerId":"").", modifiedDate = NOW() WHERE id = $kegId";
 		$ret = $ret && $this->executeQueryNoResult($sql);
 		return $ret;
 	}	
+	function Kick($id){
+		$sql = "UPDATE kegs k SET k.kegStatusCode = 'NEEDS_CLEANING', k.onTapId = NULL WHERE id = $id";
+		return $this->executeQueryNoResult($sql);
+	}
 	function Inactivate($id){
 		$tapManager = new TapManager();
 		$taps = $tapManager->GetByKegId($id);	

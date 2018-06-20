@@ -54,7 +54,7 @@ include 'top_menu.php';
 		<input type="hidden" name="id" value="<?php echo $beer->get_id() ?>" />
 		<input type="hidden" name="active" value="<?php echo $beer->get_active() ?>" />
 
-		<table width="800" border="0" cellspacing="0" cellpadding="0">
+		<table style="width:800;border:0;cellspacing:1;cellpadding:0;">
 			<tr>
 				<td width="100">
 					<b>Name:<font color="red">*</font></b>
@@ -184,18 +184,18 @@ include 'top_menu.php';
 					<b>Tasting<br>Notes:</b>
 				</td>
 				<td>
-					<textarea type="text" id="notes" class="text-input textarea" style="width:320px;height:80px" name="notes"><?php echo $beer->get_notes() ?></textarea>
+					<textarea id="notes" class="text-input textarea" style="width:320px;height:80px" name="notes"><?php echo $beer->get_notes() ?></textarea>
 				</td>
 			</tr>
 			<tr>
 				<td colspan="4">
-					<h3><center>Fermentables</center></h3>
+					<h3 style="align-content:center">Fermentables</h3>
 				</td>
 			</tr>
 			<tr>
 				<td colspan="4">
-					<table width = "100%">
-						<tr width="100%">
+					<table style="width:100%">
+						<tr style="width:100%">
 							<td><strong>Name</strong></td>
 							<td><strong>Type</strong></td>
 							<td><strong>Amount</strong></td>
@@ -209,7 +209,7 @@ include 'top_menu.php';
 						}else{
 							foreach ($beerFermentables as $beerFermentable){
 							?>
-							<tr width="100%">
+							<tr style="width:100%">
 							<td><?php echo $beerFermentable->get_name() ?></td>
 							<td><?php echo $beerFermentable->get_type() ?></td>
 							<td><?php echo $beerFermentable->get_amount() ?></td>
@@ -224,13 +224,13 @@ include 'top_menu.php';
 			</tr>
 			<tr>
 				<td colspan="4">
-					<h3><center>Hops</center></h3>
+					<h3 style="align-content:center">Hops</h3>
 				</td>
 			</tr>
 			<tr>
 				<td colspan="4">
-					<table width="100%">
-						<tr width="100%">
+					<table style="width:100%">
+						<tr style="width:100%">
 							<td><strong>Name</strong></td>
 							<td><strong>Alpha</strong></td>
 							<td><strong>Amount</strong></td>
@@ -244,7 +244,7 @@ include 'top_menu.php';
 						}else{
 							foreach ($beerHops as $beerHop){
 							?>
-							<tr width="100%">
+							<tr style="width:100%">
 							<td><?php echo $beerHop->get_name() ?></td>
 							<td><?php echo $beerHop->get_alpha() ?></td>
 							<td><?php echo $beerHop->get_amount() ?></td>
@@ -259,13 +259,13 @@ include 'top_menu.php';
 			</tr>
 			<tr>
 				<td colspan="4">
-					<h3><center>Misc</center></h3>
+					<h3 style="align-content:center">Misc</h3>
 				</td>
 			</tr>
 			<tr>
 				<td colspan="4">
 					<table>
-						<tr width="100%">
+						<tr style="width:100%">
 							<td><strong>Name</strong></td>
 							<td><strong>Type</strong></td>
 							<td><strong>Use</strong></td>
@@ -279,7 +279,7 @@ include 'top_menu.php';
 						}else{
 							foreach ($beerMiscs as $beerMisc){
 							?>
-							<tr width="100%">
+							<tr style="width:100%">
 							<td><?php echo $beerMisc->get_name() ?></td>
 							<td><?php echo $beerMisc->get_type() ?></td>
 							<td><?php echo $beerMisc->get_use() ?></td>
@@ -294,13 +294,13 @@ include 'top_menu.php';
 			</tr>
 			<tr>
 				<td colspan="4">
-					<h3><center>Yeast</center></h3>
+					<h3 style="align-content:center">Yeast</h3>
 				</td>
 			</tr>
 			<tr>
 				<td colspan="4">
 					<table>
-						<tr width="100%">
+						<tr style="width:100%">
 							<td><strong>Name</strong></td>
 							<td><strong>Type</strong></td>
 							<td><strong>Form</strong></td>
@@ -314,7 +314,7 @@ include 'top_menu.php';
 						}else{
 							foreach ($beerYeasts as $beerYeast){
 							?>
-							<tr width="100%">
+							<tr style="width:100%">
 							<td><?php echo $beerYeast->get_name() ?></td>
 							<td><?php echo $beerYeast->get_type() ?></td>
 							<td><?php echo $beerYeast->get_form() ?></td>

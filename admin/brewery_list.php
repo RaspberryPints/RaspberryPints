@@ -7,24 +7,26 @@ $activeBreweryIds = $breweryManager->GetAllActiveIDs();
 if (isset ( $_POST ['saveBreweries'] )) {
 	$error = false;
 	foreach($activeBreweryIds as $id){
-		if(!in_array($id, $_POST ['id'])){
+		if(!isset($_POST ['id']) || !in_array($id, $_POST ['id'])){
 			if(!$breweryManager->Inactivate($id))$error=true;
 		}
 	}
 	$ii = 0;
 	while(isset($_POST ['name'][$ii]))
 	{
-		if(isset($_POST ['id'][$ii]) && $_POST ['id'][$ii] != "")
-		{
-			$id = $_POST ['id'][$ii];
-			$brewery = $breweryManager->GetById($id);		
-		}else{
-			$brewery = new Brewery();
-		}
-		$brewery->set_name($_POST['name'][$ii]);
-		$brewery->set_imageUrl($_POST['imageUrl'][$ii]);
-		if(!$breweryManager->save($brewery))$error=true;
-		$ii++;
+	    $newBrewery = false;
+	    if(isset($_POST ['id'][$ii]) && $_POST ['id'][$ii] != "")
+	    {
+	        $id = $_POST ['id'][$ii];
+	        $brewery = $breweryManager->GetById($id);
+	    }else{
+	        $brewery = new Brewery();
+	        $newBrewery = true;
+	    }
+	    $brewery->set_name($_POST['name'][$ii]);
+	    $brewery->set_imageUrl($_POST['imageUrl'][$ii]);
+	    if(!$newBrewery || ($newBrewery && $brewery->get_name() != '')) if(!$breweryManager->save($brewery))$error=true;
+	    $ii++;
 	}
 	if(!$error){
 		$_SESSION['successMessage'] = "Success";
@@ -124,9 +126,7 @@ include 'top_menu.php';
 	?>
 	<!-- End Footer -->
 </div>
-</div>
 	<!-- End On Tap Section -->
-	</div>
 	<!-- Right Side/Main Content End -->
 	<!-- Start Left Bar Menu -->
 <?php

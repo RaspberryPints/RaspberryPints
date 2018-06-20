@@ -85,7 +85,7 @@ include 'top_menu.php';
 		<input type="hidden" name="tapId" value="<?php echo $tap->get_id() ?>" />
 		<input type="hidden" name="active" value="<?php echo $tap->get_active() ?>" />
 		
-		<table width="800" border="0" cellspacing="0" cellpadding="0">
+		<table style="width:800;border:0;cellspacing:1;cellpadding:0;">
 			<tr>
 				<td width="25%" style="vertical-align:middle;">
 					<b>Keg Number: <font color="red">*</font></b>

@@ -19,7 +19,9 @@ class UserManager extends Manager{
 	protected function getActiveColumnName(){
 		return "active";
 	}
-
+	function getUnknownUserId(){
+		return -1;
+	}
 	function Save($user){		
 		if(!$user->get_id() && ($existingUser = $this->GetByUserName($user->get_username())) != null){
 			if($existingUser->get_active() == 0) {
@@ -59,7 +61,7 @@ class UserManager extends Manager{
 		
 		if( $this->GetCount() == 1 ){
 			$sql="UPDATE users SET isAdmin = 1 WHERE active <> 0";
-			$ret = $ret && $this->executeQueryNoResults($sql);
+			$ret = $ret && $this->executeQueryNoResult($sql);
 		}
 		$_SESSION['successMessage'] = "user successfully deactivated.";
 		return $ret;
@@ -101,9 +103,17 @@ class UserManager extends Manager{
 		return $this->executeQueryNoResult($sql);
 	}
 	
+	function saveRFID($userId, $rfid, $desc){
+		$sql = 	"UPDATE userRfids SET userId = '" . $userId . "', description = '" . $desc . "' " .
+					"WHERE " .
+					"RFID = '" . $rfid . "'";
+				
+		return $this->executeQueryNoResult($sql);
+	}
+	
 	function getByRFID($rfid){
-		$rfid = (int) preg_replace('/\D/', '', $rfid);
-		$sql="SELECT users.* FROM users u left join userRfid rfid ON (u.id = rfid.userid) WHERE rfid = $rfid";
+		$rfid = preg_replace('/\D/', '', $rfid);
+		$sql="SELECT u.* FROM users u left join userRfids rfid ON (u.id = rfid.userid) WHERE rfid = $rfid";
 		return $this->executeQueryWithSingleResult($sql);
 	}
 	

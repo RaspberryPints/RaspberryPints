@@ -14,7 +14,7 @@
 	<div id="logincontainer">
 		<div id="loginbox">
 			<div id="loginheader">
-				<a href="../" style="text-decoration:none;"><h1><font color="#00CCFF">RaspberryPints Login</h1></font></a>
+				<h1><a href="../" style="text-decoration:none;"><font color="#00CCFF">RaspberryPints Login</font></a></h1>
 			</div>
 			<div id="innerlogin">
 				<form name="??" action="" method="POST">

@@ -31,6 +31,10 @@ ISR(PCINT3_vect, ISR_ALIASOF(PCINT0_vect));//Handle PCINT3 as if its PCINT0
 #define INVALID_USER_ID -1
 #define SERIAL_TIMEOUT 100
 
+#define CMD_READ_PINS      "RP"
+#define CMD_WRITE_PINS     "WP"
+#define CMD_SET_PINS_MODE  "SM"
+
 #define LED_PIN 13
 const int maxpins = 50;
 //This is the number of flow sensors connected.
@@ -136,6 +140,7 @@ void setup() {
   pourTriggerValue = getSerialInteger(&configDone);
   kickTriggerValue = getSerialInteger(&configDone);
   updateTriggerValue = getSerialInteger(&configDone);
+  pourShutOffCount = getSerialInteger(&configDone);
   useRFID = getSerialInteger(&configDone);
   if(configDone != true) Serial.println("Missing Configuration End");
 
@@ -164,6 +169,8 @@ void setup() {
   Serial.print(kickTriggerValue);
   Serial.print(":");
   Serial.print(updateTriggerValue);
+  Serial.print(":");
+  Serial.print(pourShutOffCount);
   Serial.print(":");
   Serial.print(useRFID);
   Serial.println("|");
@@ -204,7 +211,8 @@ void loop() {
         if( useValves ) shutNonPouring = true;
       }
       //If we have enough pulses for a pour and no new pulses have come in we have a complete pour
-      if ( (pulseCount[i] > pourTriggerValue && (nowTime - lastPourTime[i]) > pourMsgDelay) )
+      if ( (pulseCount[i] > pourTriggerValue && 
+           (nowTime - lastPourTime[i]) > pourMsgDelay) )
       {
         //filter out tiny bursts
         sendPulseCount(userIdForPin[i], pulsePin[i], pulseCount[i]);
@@ -212,7 +220,9 @@ void loop() {
         if( useValves ) shutNonPouring = true;
       }
       //If we have too many pulses for the valve to be open shut off the tap which will trigger a pour eventually
-      else if ( useValves > 0 && pulseCount[i] >= pourShutOffCount )
+      else if ( useValves > 0 && 
+              pourShutOffCount > 0 && 
+              pulseCount[i] >= pourShutOffCount )
       {
         shutDownTap(i);
       }
@@ -478,7 +488,7 @@ void setPinsMode(int count, int pins[], uint8_t state) {
       else 
       {
         //Not enough space in the string to write send what we have and retry pin
-        sendPins("SETPINSMODE", pinCount, msg, state);
+        sendPins(CMD_SET_PINS_MODE, pinCount, msg, state);
         pinCount = 0;
         msg[0] = 0;
         ii--;
@@ -487,7 +497,7 @@ void setPinsMode(int count, int pins[], uint8_t state) {
   }
   if ( msg [0] != 0 )
   {
-    sendPins("SETPINSMODE", pinCount, msg, state);
+    sendPins(CMD_SET_PINS_MODE, pinCount, msg, state);
   }
 } // End setPinMode()
 /**
@@ -500,7 +510,7 @@ unsigned char readPin(int pin) {
     return digitalRead(pin);		
   }
   else if(pin < 0){
-    Serial.print("READPIN;");
+    Serial.print(CMD_READ_PINS";");
     Serial.print(pin*-1);
     Serial.println("");
     while(!Serial.available()) ;
@@ -574,8 +584,8 @@ void writePins(int count, int pins[], uint8_t state) {
       } 
       else 
       {
-        //Not enough space in the string to write send what we have and retry pin
-        sendPins("WRITEPINS", pinCount, msg, state);
+        //Not enouspace in the string to write send what we have and retry pin
+        sendPins(CMD_WRITE_PINS, pinCount, msg, state);
         pinCount = 0;
         msg[0] = 0;
         ii--;
@@ -584,12 +594,13 @@ void writePins(int count, int pins[], uint8_t state) {
   }
   if ( msg [0] != 0 )
   {
-    sendPins("WRITEPINS", pinCount, msg, state);
+    sendPins(CMD_WRITE_PINS, pinCount, msg, state);
   }
 } // End writePin()
 
 void sendPins(char *cmd, int count, char *msg, uint8_t state){
   unsigned long sendTime = millis();
+
   Serial.print(cmd);
   Serial.print(";");
   Serial.print(state);
@@ -604,7 +615,11 @@ void sendPins(char *cmd, int count, char *msg, uint8_t state){
   //Serial.flush();
   
   while(getsc_timeout(SERIAL_TIMEOUT) != '|' && sendTime+SERIAL_TIMEOUT > millis());
+
 }
+
+
+
 
 
 

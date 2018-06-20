@@ -30,9 +30,11 @@ def debug(msg):
         log(msg)
                  
 def log(msg):
-    print datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S') + " RPINTS: " + msg.rstrip()
-    sys.stdout.flush() 
-    
+    if msg != "RFIDCheck" or log.lastMsg != msg:
+        print datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S') + " RPINTS: " + msg.rstrip()
+        sys.stdout.flush()
+        log.lastMsg = msg
+log.lastMsg = ""
 
 class FlowMonitor(object):
     
@@ -97,6 +99,8 @@ class FlowMonitor(object):
                     alamodePourTriggerCount = item["configValue"]
             if (item["configName"] == 'alamodeKickTriggerCount'):
                     alamodeKickTriggerCount = item["configValue"]
+            if (item["configName"] == 'pourShutOffCount'):
+                    alamodePourShutOffCount = item["configValue"]
             if (item["configName"] == 'alamodeUpdateTriggerCount'):
                     alamodeUpdateTriggerCount = item["configValue"]
             if (item["configName"] == 'useRFID'):
@@ -131,6 +135,7 @@ class FlowMonitor(object):
             cfgmsg = cfgmsg + "~"
         cfgmsg = cfgmsg + alamodeKickTriggerCount + ":"
         cfgmsg = cfgmsg + alamodeUpdateTriggerCount + ":"
+        cfgmsg = cfgmsg + alamodePourShutOffCount + ":"
         cfgmsg = cfgmsg + alamodeUseRFID + "|"
         return cfgmsg
                             
@@ -141,7 +146,7 @@ class FlowMonitor(object):
         # wait for arduiono to come alive, it sens out a stream of 'a' once it's ready
         msg = self.readline_notimeout()
         while (b"alive" != msg):
-            debug("["+str(msg)+"]")
+            #debug("["+str(msg)+"]")
             msg = self.readline_notimeout()
         self.arduino.reset_input_buffer()
         
@@ -191,6 +196,7 @@ class FlowMonitor(object):
                 
                 reading = msg.split(";")
                 if reading[0] == "alive" :
+                    debug(msg)
                     debug( "alamode was restarted, restart flowmonitor")
                     self.alaKeepAlive = True
                     return # arduino was restarted, get out and let the caller restart us
@@ -221,7 +227,7 @@ class FlowMonitor(object):
                     MCP_PIN = str(reading[2])
                     subprocess.call(["php", self.poursdir, "Kick", MCP_PIN])
                     self.dispatch.sendkickupdate(MCP_PIN)
-                elif ( reading[0] == "SETPINSMODE" and len(reading) >= 3 ):
+                elif ( reading[0] == "SM" and len(reading) >= 3 ):
                     #debug( "got a Pin Mode Request: "+ msg )
                     part = 1
                     MODE = int(reading[part])
@@ -234,14 +240,14 @@ class FlowMonitor(object):
                     msg = "DONE;%d;%d|" % (COUNT, MODE)
                     #debug( "Sending "+ msg )
                     self.arduino.write(msg)
-                elif ( reading[0] == "READPIN" and len(reading) >= 2 ):
+                elif ( reading[0] == "RP" and len(reading) >= 2 ):
                     #debug( "got a Read Pin Request: "+ msg )
                     MCP_PIN = int(reading[1])
                     pinState = self.dispatch.readpin(MCP_PIN) 
                     msg = "PINREAD;%s;%s|" % (MCP_PIN, pinState)
                     #debug( "Sending "+ msg )
                     self.arduino.write(msg)
-                elif ( reading[0] == "WRITEPINS" and len(reading) >= 3 ):
+                elif ( reading[0] == "WP" and len(reading) >= 3 ):
                     #debug( "got a Write Pins Request: "+ msg )
 		    part = 1
                     MODE = int(reading[part])
@@ -255,7 +261,7 @@ class FlowMonitor(object):
                     #debug( "Sending "+ msg )
                     self.arduino.write(msg)
                 elif ( reading[0] == "RFIDCheck" ):
-                    #debug("RFID Check")
+                    #debug("RFIDCheck")
                     RFIDState = "NOTOK"
                     proc = -1
                     # Scan for cards    

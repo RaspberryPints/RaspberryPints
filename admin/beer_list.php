@@ -110,7 +110,7 @@ include 'top_menu.php';
 								</tr>
 								<tr class="intborder thick">
 									<td>
-										<p><b><u>Vitals</u></b></p>
+										<p><b style="text-decoration: underline;">Vitals</b></p>
 										<p>
                                         <b>Untappd:</b>
 										<?php
@@ -164,7 +164,7 @@ include 'top_menu.php';
 										
 									</td>
 									<td colspan="3">
-										<p><b><u>Fermentables:</u></b></p><p>
+										<p><b  style="text-decoration: underline;">Fermentables:</b></p><p>
 						                    <?php
 						                      $fermentables = $beerManager->GetFermentables($beer->get_id());
 						                      foreach($fermentables as $fermentable){
@@ -173,7 +173,7 @@ include 'top_menu.php';
 						                    ?>
 										</p>
 										
-										<p><b><u>Hops:</u></b></p><p>
+										<p><b style="text-decoration: underline;">Hops:</b></p><p>
 						                    <?php
 						                      $hops = $beerManager->GetHops($beer->get_id());
 						                      foreach($hops as $hop){
@@ -181,7 +181,7 @@ include 'top_menu.php';
 						                      }
 						                    ?>
 										</p>
-										<p><b><u>Yeast:</u></b></p><p>
+										<p><b style="text-decoration: underline;">Yeast:</b></p><p>
 						                    <?php 
 						                      $yeasts = $beerManager->GetYeasts($beer->get_id());
 						                      foreach($yeasts as $yeast){

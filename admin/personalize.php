@@ -25,7 +25,7 @@ include 'top_menu.php';
 			<h2>Personalize </h2>
 		</div>
 		<div class="contentbox">
-		<a name="columns"></a> 
+		<a id="columns"></a> 
 		<h2>Show/Hide Columns</h2><br /> 
 		<form method="post" action="includes/update_columnConfig.php">
 			<?php
@@ -48,48 +48,48 @@ include 'top_menu.php';
 		$Client_Secret=$configs[ConfigNames::ClientSecret];
 		$BreweryID=$configs[ConfigNames::BreweryID];
 	?>
-	<a name="header"></a> 
+	<a id="header"></a> 
 		<h2>Taplist Header</h2><br><br>
 		<p><b>Text to Display:</b></p>
 			<form method="post" action="includes/config_update.php">
-				<input type="text" class="largebox" value="<?php echo $headerText; ?>" name="configValue"> &nbsp 
+				<input type="text" class="largebox" value="<?php echo $headerText; ?>" name="configValue"> &nbsp; 
 				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::HeaderText.'"/>'; ?>
 				<?php echo '<input type="hidden" name="jumpto" value="#header"/>'; ?>
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form><br><br>
 		<p><b>Truncate To:</b> (# characters)</p>
 			<form method="post" action="includes/config_update.php">
-				<input type="text" class="smallbox" value="<?php echo $headerTextTruncLen; ?>" name="configValue"> &nbsp 
+				<input type="text" class="smallbox" value="<?php echo $headerTextTruncLen; ?>" name="configValue"> &nbsp; 
 				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::HeaderTextTruncLen.'"/>'; ?>
 				<?php echo '<input type="hidden" name="jumpto" value="#header"/>'; ?>
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
 			<hr />
-		<a name="untappd"></a>
+		<a id="untappd"></a>
 		<h2>Untappd Settings</h2>
 		<p><b>Untappd ClientID:</b> </p>
 		<form method="post" action="includes/config_update.php">
-			<input type="text" class="largebox" value="<?php echo $Client_ID; ?>" name="configValue"> &nbsp 
+			<input type="text" class="largebox" value="<?php echo $Client_ID; ?>" name="configValue"> &nbsp; 
 				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::ClientID.'"/>'; ?>
 				<?php echo '<input type="hidden" name="jumpto" value="#untappd"/>'; ?>
 			<input type="submit" class="btn" name="Submit" value="Submit">
 		</form>
 		<p><b>Untappd Client Secret:</b> </p>
 		<form method="post" action="includes/config_update.php">
-			<input type="text" class="largebox" value="<?php echo $Client_Secret; ?>" name="configValue"> &nbsp 
+			<input type="text" class="largebox" value="<?php echo $Client_Secret; ?>" name="configValue"> &nbsp; 
 				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::ClientSecret.'"/>'; ?>
 				<?php echo '<input type="hidden" name="jumpto" value="#untappd"/>'; ?>
 			<input type="submit" class="btn" name="Submit" value="Submit">
 		</form>
 		<p><b>Untappd Brewery ID:</b> </p>
 			<form method="post" action="includes/config_update.php">
-				<input type="text" class="largebox" value="<?php echo $BreweryID; ?>" name="configValue"> &nbsp 
+				<input type="text" class="largebox" value="<?php echo $BreweryID; ?>" name="configValue"> &nbsp; 
 				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::BreweryID.'"/>'; ?>
 				<?php echo '<input type="hidden" name="jumpto" value="#untappd"/>'; ?>
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
 		<hr />
-	<a name="tapListLogo"></a> 
+	<a id="tapListLogo"></a> 
 		<h2>Taplist Logo</h2>
 		<p>This logo appears on the taplist.</p>
 			<b>Current image:</b><br /><br />
@@ -102,7 +102,7 @@ include 'top_menu.php';
 				<input type="submit" class="btn" value="Upload" />
 			</form> 
 			<hr />
-	<a name="adminLogo"></a> 
+	<a id="adminLogo"></a> 
 		<h2>Admin Logo</h2>
 		<p>This logo appears on the admin panel.</p>
 			<b>Current image:</b><br /><br />
@@ -115,7 +115,7 @@ include 'top_menu.php';
 			</form> 
 
 		<hr />
-	<a name="tapListBackground"></a> 
+	<a id="tapListBackground"></a> 
 		<h2>Background Image</h2>
 		<p>This background appears on the taplist.</p>
 			<b>Current image:</b><br /><br />

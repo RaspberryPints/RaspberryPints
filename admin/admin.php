@@ -52,14 +52,14 @@ include 'top_menu.php';
 	
 	<!-- Right Side/Main Content Start -->
 	<div id="rightside">
-	<p><h1>Welcome To The RaspberryPints Management Portal</h1></p>
+	<h1>Welcome To The RaspberryPints Management Portal</h1>
 	<p> Feel free to explore around and see what all we provide through your admin. Here in the admin you will be able <br/>to do a list of useful things, which include
 	Adding and the removal of beer along with checking the stats on the<br/> activity of your tap.</p>
 		
 				<br/>
 				<br/>
 			<form method="POST">
-				<table width="300" border="0" cellspacing="0" cellpadding="0">
+				<table style="width:300;border:0;cellspacing:1;cellpadding:0;">
 					<thead>
 						<tr>
 							<th colspan="99"><b>Reboot / Shutdown:</b></th>

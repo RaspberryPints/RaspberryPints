@@ -81,7 +81,7 @@ include 'top_menu.php';
 			
 			<form method="POST">
 			<input type="submit" class="btn" value="Save All" name="saveAll" />
-			<input type="submit" class="btn" value="Add a Keg" onClick="window.location='keg_form.php'" />
+			<input type="button" class="btn" value="Add a Keg" onClick="window.location='keg_form.php'" />
 			<?php 
             	foreach ($kegs as $keg){
 			?>
@@ -89,15 +89,15 @@ include 'top_menu.php';
 			<?php
 				}		
 			?>
-			<table border="0" cellspacing="0" cellpadding="0" class="keglist outerborder">
+			<table style="border:0;cellspacing:1;cellpadding:0;" class="keglist outerborder">
 				<thead class="intborder thick">
 					<tr>
-						<th ><center>Label</center></th>
-						<th width="10%" colspan="2"><center>Status / Update</center></th>
-						<th width="28%"><center>Beer Name</center></th>
-						<th width="28%"><center>Keg Type</center></th>
-						<th width="28%"><center>Make</center></th>
-						<th width="29%"><center>Model</center></th>
+						<th style="align-content:center">Label</th>
+						<th style="width:10%;colspan=2;align-content:center">Status / Update</th>
+						<th style="width:28%;align-content:center">Beer Name</th>
+						<th style="width:28%;align-content:center">Keg Type</th>
+						<th style="width:28%;align-content:center">Make</th>
+						<th style="width:29%;align-content:center">Model</th>
                         <th></th>
 					</tr>
 				</thead>
@@ -125,39 +125,33 @@ include 'top_menu.php';
 					?>
 					<tr>
 						<td rowspan="2" class="intborder">
-							<center><span class="kegsquare"> 
+							<span class="kegsquare" style="align-content:center"> 
 								<input type="text" id="label" class="smallbox" name="label[]" value="<?php echo $keg->get_label() ?>" />
-                            </span></center>
+                            </span>
 						</td>
 						
-						<td colspan="2" class="leftborder rightborder" style="vertical-align:middle; font-size:1.2em;">
-							<center>
+						<td colspan="2" class="leftborder rightborder" style="vertical-align:middle; font-size:1.2em; align-content:center">
 							<?php 
 								echo $htmlHelper->ToSelectList("kegStatusCode[]", "kegStatusCode", $kegStatusList, "name", "code", $keg->get_kegStatusCode(), "Select One"); 
 							?>
-                            </center>
 						</td>
-						<td style="vertical-align:middle; font-size:1.2em;">
-							<center>
+						<td style="vertical-align:middle; font-size:1.2em; align-content:center">
 							<?php 
 								echo $htmlHelper->ToSelectList("beerId[]", "beerId", $beerList, "name", "id", $keg->get_beerId(), ($keg->get_onTapId()?null:"Select One"));
 							?>
-                            </center>
 						</td>						
-						<td style="vertical-align:middle; font-size:1.2em;">
-							<center><b><?php echo $kegType->get_name() ?></b></center>
+						<td style="vertical-align:middle; font-size:1.2em; align-content:center">
+							<b><?php echo $kegType->get_name() ?></b>
 						</td>
-						<td style="vertical-align:middle; font-size:1.2em;">
-							<center><b><?php echo $keg->get_make() ?></b></center>
+						<td style="vertical-align:middle; font-size:1.2em; align-content:center">
+							<b><?php echo $keg->get_make() ?></b>
 						</td>
 						
-						<td style="vertical-align:middle; font-size:1.2em;">
-							<center><b><?php echo $keg->get_model() ?></b></center>
+						<td style="vertical-align:middle; font-size:1.2em; align-content:center">
+							<b><?php echo $keg->get_model() ?></b>
 						</td>
-						<td class="rightborder thick" style="vertical-align:middle; font-size:1.2em;">
-							<center>
-                            	<button class="btn" name="editKeg" type="submit" value="<?php echo $keg->get_id()?>" >Edit</button>
-                            </center>
+						<td class="rightborder thick" style="vertical-align:middle; font-size:1.2em; align-content:center">
+							<button class="btn" name="editKeg" type="submit" value="<?php echo $keg->get_id()?>" >Edit</button>
                         </td>
 					</tr>
 					<tr class="intborder">
@@ -170,10 +164,8 @@ include 'top_menu.php';
 							<b>Serial Number:</b> &nbsp; <?php echo $keg->get_serial() ?> &nbsp; &nbsp; &nbsp; <b>Empty weight:</b> <?php echo $keg->get_weight() ?><br>
 							<b>Notes:</b> &nbsp; <?php echo htmlentities($keg->get_notes()) ?>
 						</td>
-						<td class="rightborder thick" style="vertical-align:middle; font-size:1.2em;">
-							<center>
-								<button class="inactivateKeg btn" name="inactivateKeg" type="submit" value="<?php echo $keg->get_id()?>" >Delete</button>
-							</center>
+						<td class="rightborder thick" style="vertical-align:middle; font-size:1.2em; align-content:center">
+							<button class="inactivateKeg btn" name="inactivateKeg" type="submit" value="<?php echo $keg->get_id()?>" >Delete</button>
 						</td>
 					</tr>
 		<?php 
@@ -183,7 +175,7 @@ include 'top_menu.php';
 				</tbody>
 			</table>
 			<input type="submit" class="btn" value="Save All" name="saveAll" />
-			<input type="submit" class="btn" value="Add a Keg" onClick="window.location='keg_form.php'" />
+			<input type="button" class="btn" value="Add a Keg" onClick="window.location='keg_form.php'" />
 			</form>
 			<!-- Start Footer -->   
 			<?php

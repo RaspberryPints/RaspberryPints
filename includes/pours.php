@@ -48,7 +48,7 @@ if( isset($_GET['tapId'])){
 					echo "pours.php:Kick: No Active Tap Config for pin " .$PIN. "\n";
 					exit();
 				}
-				if($tapManager->closeTap($tap->get_id())){
+				if($tapManager->closeTapById($tap->get_id())){
 					echo "Successfully Kicked Keg from ".$tap->get_tapNumber(). "\n";
 				}else{
 					echo "Could not Kick Keg from ".$tap->get_tapNumber(). "\n";
