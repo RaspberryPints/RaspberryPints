@@ -328,21 +328,20 @@ CREATE TABLE IF NOT EXISTS `beers` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` text NOT NULL,
 	`untID` int(10) NULL,
-	`beerStyleId` int(11) NOT NULL,
+	`beerStyleId` int(11) NULL,
 	`breweryId` int(11),
-	`notes` text NOT NULL,
-	`abv` decimal(3,1) NOT NULL,
-	`ogEst` decimal(4,3) NOT NULL,
-	`fgEst` decimal(4,3) NOT NULL,
-	`srmEst` decimal(3,1) NOT NULL,
-	`ibuEst` int(4) NOT NULL,
-	`rating` decimal(3,1) NOT NULL,
-	`active` tinyint(1) NOT NULL DEFAULT 1,
+	`notes` text NULL,
+	`abv` decimal(3,1) NULL,
+	`og` decimal(4,3) NULL,
+	`fg` decimal(4,3) NULL,
+	`srm` decimal(3,1) NULL,
+	`ibu` int(4) NULL,
+	`rating` decimal(3,1) NULL,
+	`active` tinyint(1) NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 
-PRIMARY KEY (`id`),
-FOREIGN KEY (`beerStyleId`) REFERENCES beerStyles(`id`) ON DELETE CASCADE
+PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -407,14 +406,19 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'ClientSecret','','Client Secret','0',NOW(),NOW() ),
 ( 'BreweryID', '','Brewery ID','0',NOW(),NOW() ),
 ( 'adminThemeColor', 'styles.css', 'Admin Color', '0', NOW(), NOW() ),
-( 'useHighResolution', '0', '4k Monitor Support', '1', NOW(), NOW() );
+( 'useHighResolution', '0', '4k Monitor Support', '1', NOW(), NOW() ),
+( 'autoRefreshLocal', '1', 'refresh listeners automatically', '1', NOW(), NOW() );
 
 INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
+('autoKickKegs', '1', 'Kick Kegs from Tap when kill is detected', 1, NOW(), NOW() ),
 ('useTapValves', '0', 'Use Tap Valves', 1, NOW(), NOW() ),
+('useValvesPowerPin', '19', 'Use Valves I/O Pin', 0, NOW(), NOW() ),
+('valvesOnTime', '8', 'Time to keep Valves on', 0, NOW(), NOW() ),
 ('useFanControl', '0', 'Use Fan Control', 1, NOW(), NOW() ),
 ('useFanPin', '17', 'Use Fan I/O Pin', 0, NOW(), NOW() ),
 ('fanInterval', '120', 'Fan Interval', 0, NOW(), NOW() ),
 ('fanOnTime', '1', 'Fan On time', 0, NOW(), NOW() ),
+('useRFID', '1', 'Use RFID', 1, NOW(), NOW() ),
 ('pourShutOffCount', '0', 'pour shutoff amount in counts', 0, NOW(), NOW() ),
 ('pourCountConversion', '1500', 'pour count conversion to gallons', 0, NOW(), NOW() ),
 ('alamodePourMessageDelay', '300', 'Arduino Pour Message Delay', 0, NOW(), NOW() ),
@@ -422,6 +426,16 @@ INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`,
 ('alamodeKickTriggerCount', '30', 'Alamode Kick Trigger Count', 0, NOW(), NOW() ),
 ('alamodeUpdateTriggerCount', '250', 'Alamode Update Trigger Count', 0, NOW(), NOW() );
 
+INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
+( 'numberOfDisplayPours', '10', 'Pours to display at one time (0 dont show pours)', 0, NOW(), NOW() ),
+( 'showPourTapNumCol', '1', 'Pours Show Tap Column', '1', NOW(), NOW() ),
+( 'showPourBeerImages', '0', 'Pours Show Beer Images', '1', NOW(), NOW() ),
+( 'showPourBreweryImages', '0', 'Pours Show Brewery Images', '1', NOW(), NOW() ),
+( 'showPourBeerName', '1', 'Pours Show Beer Name', '1', NOW(), NOW() ),
+( 'showPourAmount', '1', 'Pours Show Amount Poured', '1', NOW(), NOW() ),
+( 'showPourUserName', '1', 'Pours Show User Name', '1', NOW(), NOW() ),
+( 'showPourDate', '1', 'Pours Show Date', '0', NOW(), NOW() ),
+( 'displayUnits', 'oz', 'Units to display on the Beer List', '0', NOW(), NOW() );
 -- --------------------------------------------------------
 
 --
@@ -500,7 +514,7 @@ INSERT INTO `kegStatuses` ( code, name, createdDate, modifiedDate ) VALUES
 
 CREATE TABLE IF NOT EXISTS `kegs` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`label` int(11) NOT NULL,
+	`label` varchar(40) NOT NULL,
 	`kegTypeId` int(11) NOT NULL,
 	`make` text NOT NULL,
 	`model` text NOT NULL,
@@ -510,6 +524,7 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 	`notes` text NOT NULL,
 	`kegStatusCode` varchar(20) NOT NULL,
 	`weight` decimal(11,4) NOT NULL,
+	`onTapId` int(11),
 	`beerId` int(11) ,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
@@ -528,11 +543,12 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 --
 
 CREATE TABLE IF NOT EXISTS `tapconfig` (
-  `tapNumber` int(11) DEFAULT NULL,
+  `tapId` int(11) DEFAULT NULL,
   `flowPin` int(11) DEFAULT NULL,
   `valvePin` int(11) DEFAULT NULL,
   `valveOn` int(11) DEFAULT NULL,
-  `count` float NOT NULL DEFAULT '1500'
+  `count` float NOT NULL DEFAULT '1500',
+	PRIMARY KEY (`tapId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -543,17 +559,16 @@ CREATE TABLE IF NOT EXISTS `tapconfig` (
 
 CREATE TABLE IF NOT EXISTS `taps` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`kegId` int(11) NOT NULL,
+	`kegId` int(11) NULL,
 	`tapNumber` int(11) NOT NULL,
-	`tapRgba` varchar(16) NOT NULL,
+	`tapRgba` varchar(16) NULL,
 	`active` tinyint(1) NOT NULL,
-	`startAmount` decimal(6,1) NOT NULL,
-	`currentAmount` decimal(6,1) NOT NULL,
+	`startAmount` decimal(6,5) NULL,
+	`currentAmount` decimal(6,5) NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
-	PRIMARY KEY (`id`),
-	FOREIGN KEY (`kegId`) REFERENCES kegs(`id`) ON DELETE CASCADE
+	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -565,7 +580,12 @@ CREATE TABLE IF NOT EXISTS `taps` (
 CREATE TABLE IF NOT EXISTS `pours` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`tapId` int(11) NOT NULL,
+	`beerId` int(11) NOT NULL,
+	`pinId` int(11) NOT NULL,
 	`amountPoured` decimal(6,5) NOT NULL,
+	`pulses` int(11) NOT NULL,
+	`conversion` int(11) NOT NULL,    
+	`userId` int(11) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
@@ -582,14 +602,23 @@ CREATE TABLE IF NOT EXISTS `pours` (
 CREATE TABLE IF NOT EXISTS `fermentables` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` tinytext NOT NULL,
-	`beerId` int(11) ,
+	`type` tinytext NULL,
+	`srm` decimal(3,1) NULL,
+	`notes` text NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
-	PRIMARY KEY (`id`),
-	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE
+	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
-
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beerFermentables` (
+	`beerId` int(11) NOT NULL,
+    `fermentablesId`int(11) NOT NULL,
+	
+	PRIMARY KEY (`beerId`, `fermentablesId`),
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
+	FOREIGN KEY (`fermentablesId`) REFERENCES fermentables(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 -- --------------------------------------------------------
 
 --
@@ -599,15 +628,23 @@ CREATE TABLE IF NOT EXISTS `fermentables` (
 CREATE TABLE IF NOT EXISTS `hops` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` tinytext NOT NULL,
-	`beerId` int(11) ,
+	`alpha` decimal(6,2),
+	`beta` decimal(6,2),
+	`notes` text NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
-	PRIMARY KEY (`id`),
-	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE
+	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 -- --------------------------------------------------------
-
+CREATE TABLE IF NOT EXISTS `beerHops` (
+	`beerId` int(11) NOT NULL,
+    `hopsId`  int(11) NOT NULL,
+	
+	PRIMARY KEY (`beerId`, `hopsId`),
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
+	FOREIGN KEY (`hopsId`) REFERENCES hops(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 --
 -- Table structure for table `yeasts`
 --
@@ -615,16 +652,28 @@ CREATE TABLE IF NOT EXISTS `hops` (
 CREATE TABLE IF NOT EXISTS `yeasts` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` tinytext NOT NULL,
-	`beerId` int(11) ,
+	`strand` tinytext NULL,
+	`format` tinytext NULL,
+	`minTemp` int(6) ,
+	`maxTemp` int(6) ,
+	`minAttenuation` decimal(6,2) ,
+	`maxAttenuation` decimal(6,2) ,
+	`flocculation` decimal(6,2) ,
+	`notes` text NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
-	PRIMARY KEY (`id`),
-	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE
+	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
-
 -- --------------------------------------------------------
-
+CREATE TABLE IF NOT EXISTS `beerYeasts` (
+	`beerId` int(11) NOT NULL,
+    `yeastsId`int(11) NOT NULL,
+	
+	PRIMARY KEY (`beerId`, `yeastsId`),
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
+	FOREIGN KEY (`yeastsId`) REFERENCES yeasts(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 --
 -- Table structure for table `bottleTypes`
 --
@@ -659,12 +708,11 @@ CREATE TABLE IF NOT EXISTS `bottles` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`bottleTypeId` int(11) NOT NULL,
 	`beerId` int(11) NOT NULL,
-	`capRgba` varchar(16) NOT NULL,
+	`capRgba` varchar(16) NULL,
 	`capNumber` int(11) NULL,
-	`pinId` int(2) DEFAULT NULL,
-	`startAmount` int(11) NOT NULL,
-	`currentAmount` int(11) NOT NULL,
-	`active` tinyint(1) NOT NULL,
+	`startAmount` int(11) NULL DEFAULT 0,
+	`currentAmount` int(11) NULL DEFAULT 0,
+	`active` tinyint(1) NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
@@ -683,8 +731,13 @@ CREATE TABLE `users` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`username` varchar(65) CHARACTER SET utf8 NOT NULL,
 	`password` varchar(65) CHARACTER SET utf8 NOT NULL,
-	`name` varchar(65) CHARACTER SET utf8 NOT NULL,
-	`email` varchar(65) CHARACTER SET utf8 NOT NULL,
+	`active` tinyint(1) NOT NULL,
+	`nameFirst` varchar(65) CHARACTER SET utf8 NULL,
+	`nameLast` varchar(65) CHARACTER SET utf8 NULL,
+	`mugId` int(11) NULL,
+	`email` varchar(65) CHARACTER SET utf8 NULL,
+	`unTapAccessToken` text NULL,
+	`isAdmin` tinyint(1) NOT NULL DEFAULT 0,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 
@@ -692,7 +745,16 @@ CREATE TABLE `users` (
 	UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Table structure for table `Users`
+--
 
+CREATE TABLE `userRfids` (
+	`userId` int(11) NOT NULL,
+	`RFID` varchar(128) CHARACTER SET utf8 NOT NULL,
+	`description` varchar(65) CHARACTER SET utf8 NULL,
+	PRIMARY KEY (`userId`, `RFID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS `srmRgb` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1112,16 +1174,6 @@ INSERT INTO srmRgb ( srm, rgb, createdDate, modifiedDate ) VALUES
 -- --------------------------------------------------------
 
 --
--- Create View `vwGetTapsAmountPoured`
---
-
-CREATE OR REPLACE VIEW vwGetTapsAmountPoured
-AS
-SELECT tapId, SUM(amountPoured) as amountPoured FROM pours GROUP BY tapId;
-
--- --------------------------------------------------------
-
---
 -- Create View `vwGetActiveTaps`
 --
 
@@ -1138,27 +1190,27 @@ SELECT
 	b.rating,
 	b.notes,
 	b.abv,
-	b.ogEst as og,
-	b.fgEst as fg,
-	b.srmEst as srm,
-	b.ibuEst as ibu,
+	b.og as og,
+	b.fg as fg,
+	b.srm as srm,
+	b.ibu as ibu,
 	t.startAmount,
-	IFNULL(p.amountPoured, 0) as amountPoured,
-	t.startAmount - IFNULL(p.amountPoured, 0) as remainAmount,
+	(IFNULL(t.startAmount,0) - IFNULL(t.currentAmount,0)) as amountPoured,
+    IFNULL(t.currentAmount , 0)as remainAmount,
 	t.tapNumber,
 	t.tapRgba,
+    tc.flowPin as pinId,
 	s.rgb as srmRgb,
 	tc.valveOn
 FROM taps t
-	LEFT JOIN tapconfig tc ON t.tapNumber = tc.tapNumber
+	LEFT JOIN tapconfig tc ON t.id = tc.tapId
 	LEFT JOIN kegs k ON k.id = t.kegId
 	LEFT JOIN beers b ON b.id = k.beerId
 	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
 	LEFT JOIN breweries br ON br.id = b.breweryId
-	LEFT JOIN srmRgb s ON s.srm = b.srmEst
-	LEFT JOIN vwGetTapsAmountPoured as p ON p.tapId = t.Id
+	LEFT JOIN srmRgb s ON s.srm = b.srm
 WHERE t.active = true
-ORDER BY t.tapNumber;
+ORDER BY t.id;
 
 -- --------------------------------------------------------
 
@@ -1179,16 +1231,17 @@ SELECT
 	b.rating,
 	b.notes,
 	b.abv,
-	b.ogEst as og,
-	b.fgEst as fg,
-	b.srmEst as srm,
-	b.ibuEst as ibu,
+	b.og as og,
+	b.fg as fg,
+	b.srm as srm,
+	b.ibu as ibu,
 	bt.volume,
 	t.startAmount,
 	IFNULL(null, 0) as amountPoured,
 	t.currentAmount as remainAmount,
 	t.capNumber,
 	t.capRgba,
+    NULL as pinId,
 	s.rgb as srmRgb,
 	1 as valveOn
 FROM bottles t
@@ -1196,10 +1249,43 @@ FROM bottles t
 	LEFT JOIN bottleTypes bt ON bt.id = t.bottleTypeId
 	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
 	LEFT JOIN breweries br ON br.id = b.breweryId
-	LEFT JOIN srmRgb s ON s.srm = b.srmEst
+	LEFT JOIN srmRgb s ON s.srm = b.srm
 WHERE t.active = true
 ORDER BY t.id;
 
+CREATE OR REPLACE VIEW `vwTaps` 
+AS
+ SELECT 
+	t.*, 
+	tc.*, 
+	k.beerId 
+ FROM taps t 
+ LEFT JOIN tapconfig tc ON (t.id = tc.tapId) 
+ LEFT JOIN kegs k ON (t.kegId = k.id);
+
+CREATE OR REPLACE VIEW `vwKegs` 
+AS
+ SELECT 
+	k.*, 
+	t.tapNumber
+ FROM kegs k 
+ LEFT JOIN taps t ON (t.kegId = k.id);
+
+CREATE OR REPLACE VIEW `vwPours`
+AS
+SELECT 
+	p.*, 
+	t.tapNumber, 
+	t.tapRgba,
+	b.name AS beerName, 
+	b.untID AS beerUntID, 
+	br.imageUrl AS breweryImageUrl, 
+	COALESCE(u.userName, '') as userName
+FROM pours p 
+	LEFT JOIN taps t ON (p.tapId = t.id) 
+	LEFT JOIN beers b ON (p.beerId = b.id) 
+	LEFT JOIN breweries br ON (b.breweryId = br.id) 
+	LEFT JOIN users u ON (p.userId = u.id);
 -- --------------------------------------------------------
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
