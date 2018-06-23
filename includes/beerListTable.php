@@ -49,11 +49,12 @@
 			
 			<?php if($config[ConfigNames::ShowAbvCol]){ ?>
 				<th class="abv">
+					ABV
 					<?php if($config[ConfigNames::ShowCalories]){ ?>
-					  CALORIES<hr>
+					  	<hr>CALORIES
 					<?php } ?>
 					<?php if($config[ConfigNames::ShowGravity]){ ?>
-						GRAVITY<hr>
+						<hr>GRAVITY
 					<?php } ?>
 				</th>
 			<?php } ?>

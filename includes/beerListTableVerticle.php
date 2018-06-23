@@ -169,12 +169,12 @@
 		<?php if($config[ConfigNames::ShowAbvCol]){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			<td class="abv">
-				ABV<hr>
+				ABV
 				<?php if($config[ConfigNames::ShowCalories]){ ?>
-				  CALORIES<hr>
+				  	<hr>CALORIES
 				<?php } ?>
 				<?php if($config[ConfigNames::ShowGravity]){ ?>
-					GRAVITY<hr>
+					<hr>GRAVITY
 				<?php } ?>
 			</td>
 			
