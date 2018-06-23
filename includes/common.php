@@ -10,7 +10,12 @@
 		$beers = $beerList;
 		$numberOfBeers = $beerListSize;
 		$tapOrBottle = $containerType;
-		include "beerListTable.php";
+		$config = getAllConfigs();
+		if($config[ConfigNames::ShowVerticalTapList]){
+		  include "beerListTableVerticle.php";
+		} else {
+		    include "beerListTable.php";		
+		}
 	}
 	
 	$pours;

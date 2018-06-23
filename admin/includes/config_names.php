@@ -28,6 +28,7 @@ abstract class ConfigNames
 	const ShowAbvCol = 'showAbvCol';
 	const ShowAbvImg = 'showAbvImg';
 	const ShowAbvValue = 'showAbvValue';
+	const ShowBalance = 'showBalance';
 	const ShowBeerImages = 'showBeerImages';
 	const ShowBeerName = 'showBeerName';
 	const ShowBeerNotes = 'showBeerRating';
@@ -54,6 +55,7 @@ abstract class ConfigNames
 	const ShowPourUserName = 'showPourUserName';
 	const ShowPouredValue = 'showPouredValue';
 	const ShowRemainValue = 'showRemainValue';
+	const ShowVerticalTapList = 'showVerticleTapList';
 	const ShowRPLogo = 'showRPLogo';
 	const ShowSrmCol = 'showSrmCol';
 	const ShowSrmImg = 'showSrmImg';

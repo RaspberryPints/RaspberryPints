@@ -395,6 +395,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'showCalories', '0', 'Show the calories', '1', NOW(), NOW() ),
 ( 'showGravity', '0', 'Show the Gravity numbers', '1', NOW(), NOW() ),
 ( 'showBalance', '0', 'Show the Balance', '1', NOW(), NOW() ),
+( 'showVerticleTapList', '0', 'Show the Tap List Vertically (ON = YES)', '1', NOW(), NOW() ),
 ( 'logoUrl', 'img/logo.png', 'Logo Url', '0', NOW(), NOW() ),
 ( 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '0', NOW(), NOW() ),
 ( 'headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() ),
