@@ -160,11 +160,11 @@ img {
   color: #ffffff;
   display: inline-block;
   font-weight: bold;
-  line-height: 2em;
   margin-left: 5px;
   margin-right: 5px;
   text-align: center;
-  width: 2em; 
+  line-height: 33px;
+  width: 33px; 
 }
 .bottlecircle {
   /* background-color: rgba(153,153,153,.3); */
