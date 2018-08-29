@@ -324,8 +324,8 @@ void readRFIDMfrc522(){
     activeUserDate = millis();
     if(tagValue && activeUserId != atol(tagValue)){
       activeUserId = atol(tagValue);
-      Serial.print("RFID:");
-      Serial.println(activeUserId);
+      //Serial.print("RFID:");
+      //Serial.println(activeUserId);
       if(useValves > 0){
         writePins( numSensors, valvesPin, relayTrigger );
       }
@@ -443,7 +443,7 @@ int getsc_timeout(long timeout) {
   while(Serial.available() <= 0 )
   {
     if( timeout > -1 && startTime + timeout < millis() ){
-     return 0;
+      return 0;
     } 
   }
   return Serial.read();
@@ -584,7 +584,7 @@ void writePins(int count, int pins[], uint8_t state) {
       } 
       else 
       {
-        //Not enouspace in the string to write send what we have and retry pin
+        //Not enough space in the string to write send what we have and retry pin
         sendPins(CMD_WRITE_PINS, pinCount, msg, state);
         pinCount = 0;
         msg[0] = 0;
@@ -612,11 +612,10 @@ void sendPins(char *cmd, int count, char *msg, uint8_t state){
   }
   Serial.print(msg);
   Serial.println("");
-  //Serial.flush();
+  Serial.flush();
   
   while(getsc_timeout(SERIAL_TIMEOUT) != '|' && sendTime+SERIAL_TIMEOUT > millis());
-
-}
+}//End sendPins
 
 
 

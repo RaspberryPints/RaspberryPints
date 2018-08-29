@@ -21,10 +21,9 @@ import traceback
 
 from Config import config
 
-MIFAREReader = MFRC522.MFRC522()
 alamodeRelayTrigger = 0
 rfidSPISSPin = 24
-
+                    
 def debug(msg):
     if(config['flowmon.debug']):
         log(msg)
@@ -117,7 +116,7 @@ class FlowMonitor(object):
         
         #'C:<numSensors>:<sensor pin>:<...>:<pourMsgDelay>:<pourTriggerValue>:<kickTriggerValue>:<updateTriggerValue>':<useRFID>|
         cfgmsg = "C:" 
-	cfgmsg = cfgmsg + str(numberOfTaps) + ":"
+        cfgmsg = cfgmsg + str(numberOfTaps) + ":"
         for pin in pins:
             cfgmsg = cfgmsg + str(pin) + ":"
         if len(cfgmsg) > 50:
@@ -167,7 +166,6 @@ class FlowMonitor(object):
                 time.sleep(.005)
         reply = self.arduino.readline()
         debug( "alamode says: " + reply )
-        MIFAREReader = MFRC522.MFRC522(pin=rfidSPISSPin)
         
     # 'C:<numSensors>:<sensor pin>:<...>:<pourTriggerValue>:<kickTriggerValue>:<updateTriggerValue>'    
     def monitor(self):
@@ -249,14 +247,15 @@ class FlowMonitor(object):
                     self.arduino.write(msg)
                 elif ( reading[0] == "WP" and len(reading) >= 3 ):
                     #debug( "got a Write Pins Request: "+ msg )
-		    part = 1
+                    part = 1
                     MODE = int(reading[part])
                     part += 1
                     COUNT = int(reading[part])
                     part += 1
-		    while ( part-2 <= COUNT ):
+                    while ( part-2 <= COUNT ):
                         self.dispatch.updatepin(int(reading[part]), MODE)
                         part += 1
+                        time.sleep(.005)  
                     msg = "DONE;%d;%d|" % (COUNT, MODE)
                     #debug( "Sending "+ msg )
                     self.arduino.write(msg)
@@ -264,10 +263,12 @@ class FlowMonitor(object):
                     #debug("RFIDCheck")
                     RFIDState = "NOTOK"
                     proc = -1
+                    
+                    MIFAREReader = MFRC522.MFRC522(pin=rfidSPISSPin)
                     # Scan for cards    
                     (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
                     #debug("status %s; tagtype %d;" % (status, TagType ))
-                    status = status #IDK rfid doesnt work without this
+                    
                     # If a card is found
                     if status == MIFAREReader.MI_OK:
                         #debug("Card detected")
@@ -285,7 +286,21 @@ class FlowMonitor(object):
                             if int(proc) > -1:
                                 debug("RFID "+rfidTag+" User Id "+ proc)
                                 RFIDState = "OK"
-						   
+
+                            # This is the default key for authentication
+                            #key = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
+                            
+                            # Select the scanned tag
+                            #MIFAREReader.MFRC522_SelectTag(uid)
+
+                            # Authenticate
+                            #status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
+
+                            # Check if authenticated                           
+                            #if status == MIFAREReader.MI_OK:
+                            #    MIFAREReader.MFRC522_Read(8)
+                            #    MIFAREReader.MFRC522_StopCrypto1()
+	   
                     msg = "RFID;%s;%s;" % (RFIDState, proc)
                     #debug( "Sending "+ msg )
                     self.arduino.write(msg)
