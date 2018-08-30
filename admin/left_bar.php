@@ -63,6 +63,14 @@
 			<li><a href="#" title="GPT">Tap statistics <small>(coming v2.0.0+)</small></a></li>
 		</ul>
 	</li>
+	<?php if($_SESSION['showadmin']){?>
+    	<li>
+    		<a class="expanded heading">Install</a>
+    		<ul class="navigation">
+    			<li><a href="manage_install.php" title="install">Install Page</a></li>
+    		</ul>	
+    	</li>
+	<?php }?>
 	<li>
 		<a class="expanded heading">Help!</a>
 		<ul class="navigation">

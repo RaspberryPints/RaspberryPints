@@ -31,7 +31,7 @@
 		$qry=$mysqli->query($sql);
 		if($c = $qry->fetch_array()){
 			$ret = $c['configValue'];
-		}	
+		}
 		return $ret;
 	}
 	function getTapConfigurableConfigs()
@@ -43,12 +43,17 @@
 		return $mysqli->query($sql);
 	}
 
-	function saveConfigValue($configName, $configValue)
+	function saveConfigValue($configName, $configValue, $insert = false)
 	{
-		global $mysqli;
-		$sql="UPDATE config set configValue='".$configValue."', modifiedDate = NOW() WHERE configName ='".$configName."'";
-		//echo $sql; exit;
-		return $mysqli->query($sql);	
+	    global $mysqli;
+	    $sql="UPDATE config set configValue='".$configValue."', modifiedDate = NOW() WHERE configName ='".$configName."'";
+	    if($insert){
+	        $existVal = getConfigValue(ConfigNames::UpdateDate);
+	        if(!$existVal || $existVal === null){
+	            $sql="INSERT INTO config (configName, configValue, displayName, showOnPanel, createdDate, modifiedDate) VALUES('".$configName."', '".$configValue."', '".$configName."', 0, NOW(), NOW())";
+	        }
+	    }
+	    return $mysqli->query($sql);
 	}
 	
 	function setConfigurationsFromArray($newValues, &$oldValues)

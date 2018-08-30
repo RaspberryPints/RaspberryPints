@@ -41,41 +41,51 @@
 	<META HTTP-EQUIV="Expires" CONTENT="-1">
   </head>
   <body>
-<h1>Welcome to Raspberry Pints!</h1>
+	<h1>Welcome to Raspberry Pints!</h1>
 
-	<form action="includes/configprocessor.php" method="post">
+	<form action="../install/includes/configprocessor.php" method="post">
 
 	<?php
-		$upgrade=0;
-		$clear=0;
-		if (file_exists("../admin/includes/conn.php")) {
-			require_once '../admin/includes/managers/config_manager.php';
-			echo 'We noticed that you already have installed RPints. Please select an option from the menu below';	
-			$dbversion = getConfigValue(ConfigNames::Version);
-		
-			echo '<br><select name="selectaction">';
-			if ($dbversion != $rpintsversion) {
-				echo '<option value="upgrade">Upgrade</option>';
-				$upgrade=1;
-			}
-			echo '<option value="remove">Clear Data</option>';
-				$clear=1;
-		echo '</select>';
-		} else {
-		echo '<input type="hidden" name="selectaction" value="install">';
-	}
-	?> 
-	<h3>Step<span class="tapcircle">1</span></h3>
+        $host = "localhost";
+        $username = "";
+        $password = "";
+        $db_name = "raspberrypints";
+        $tbl_name = "";
+    ?>
+	<?php
+        $upgrade = 0;
+        $clear = 0;
+        if (file_exists("../admin/includes/conn.php")) {
+            include '../admin/includes/conn.php';
+            require_once '../admin/includes/managers/config_manager.php';
+            $config = getAllConfigs();
+            echo 'We noticed that you already have installed RPints. Please select an option from the menu below';
+            
+            echo '<br><select name="selectaction">';
+            
+            
+            echo '<option value="upgrade">Upgrade - last:'.($config[ConfigNames::UpdateDate]?$config[ConfigNames::UpdateDate]:'never').'</option>';
+            $upgrade = 1;
+            
+            echo '<option value="remove">Start Over</option>';
+            $clear = 1;
+            echo '</select>';
+        } else {
+            echo '<input type="hidden" name="selectaction" value="install">';
+        }
+    ?> 
+	<div id="sectiondb" <?php if ($clear==1 || $upgrade==1){echo "style='display:none'";}?>>
+		<h3>Step<span class="tapcircle" >1</span></h3>
 In order to get started, we'll need a little information from you. When you installed mySQL, you were asked for a "root" password.
 You'll need to enter that here for us to configure RPints for you. You should leave the Database Server name as the default, unless
 you are certain you need to change it.
-	<table>
+		<table>
 			<tr>
 				<td>
 					<label for="textfield"><strong>Database Server: (required)</strong></label> 
 				</td>
 				<td>
-					<input pattern=".{2,}" required class="inputbox" value="localhost" type="text" name="servername" required />				
+					<input pattern=".{2,}" required class="inputbox" value="<?php echo $host; ?>" type="text" name="servername" required />				
 				</td>
 			</tr>
 			<tr>
@@ -83,7 +93,7 @@ you are certain you need to change it.
 					<label for="textfield"><strong>Database: (required)</strong></label>
 				</td>
 				<td>
-					<input class="inputbox" required class="inputbox" value="raspberrypints" type="text" name="database">
+					<input class="inputbox" required class="inputbox" value="<?php echo $db_name; ?>" type="text" name="database">
 				</td>
 			</tr>
 			<tr>
@@ -91,7 +101,7 @@ you are certain you need to change it.
 					<label for="textfield"><strong>Root User: (required)</strong></label> 
 				</td>
 				<td>
-					<input class="inputbox" required type="text" name="rootuser">			
+					<input class="inputbox" required type="text" value="<?php echo $username; ?>" name="rootuser">			
 				</td>
 			</tr>
 			<tr>
@@ -99,117 +109,118 @@ you are certain you need to change it.
 					<label for="textfield"><strong>Root Password: (required)</strong></label> 
 				</td>
 				<td>
-					<input class="inputbox" required type="password" name="rootpass">			
+					<input class="inputbox" required type="password" value="<?php echo $password; ?>" name="rootpass">			
 				</td>
 			</tr>
 		</table>
 		<br />				
 		<br />
-	<br>
+		<br />
+	</div>
 	<!--
 	<div id="sectiondb"<?php if ($clear==1){echo "style='display:none'";};?>>
-	<h3>Step<span class="tapcircle">2</span></h3>
-		Now it's time to create the database user for Raspberry Pints to use. The default is "beers" and you can keep the default if you would like.
-		This database account is just used by the software to access the database. This is not your administration account.
-		<table>
-			<tr>
-				<td>
-					<label for="textfield"><strong>Database Username:</strong> 
-				</td>
-				<td>
-					</label> <input class="inputbox" value="beers" name="dbuser">				
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for="textfield"><strong>Database Password:</strong></label>
-				</td>
-				<td>
-					<input class="inputbox" id="txtNewPassword" type="password" name="dbpass1">		
-				</td>
-			</tr>			<tr>
-				<td>
-					<label for="textfield"><strong>Confirm Password:</strong></label>
-				</td>
-				<td>
-					<input class="inputbox" id="txtConfirmPassword" type="password" name="dbpass2" onChange="checkPasswordMatch()";>
-				</td>
-				<td>
-					<div class="registrationFormAlert" id="divCheckPasswordMatch"></div>
-				</td>
-			</tr>
-		</table>
-		<br />
-		<br />
+    	<h3>Step<span class="tapcircle">2</span></h3>
+    		Now it's time to create the database user for Raspberry Pints to use. The default is "beers" and you can keep the default if you would like.
+    		This database account is just used by the software to access the database. This is not your administration account.
+    		<table>
+    			<tr>
+    				<td>
+    					<label for="textfield"><strong>Database Username:</strong> 
+    				</td>
+    				<td>
+    					</label> <input class="inputbox" value="beers" name="dbuser">				
+    				</td>
+    			</tr>
+    			<tr>
+    				<td>
+    					<label for="textfield"><strong>Database Password:</strong></label>
+    				</td>
+    				<td>
+    					<input class="inputbox" id="txtNewPassword" type="password" name="dbpass1">		
+    				</td>
+    			</tr>			<tr>
+    				<td>
+    					<label for="textfield"><strong>Confirm Password:</strong></label>
+    				</td>
+    				<td>
+    					<input class="inputbox" id="txtConfirmPassword" type="password" name="dbpass2" onChange="checkPasswordMatch()";>
+    				</td>
+    				<td>
+    					<div class="registrationFormAlert" id="divCheckPasswordMatch"></div>
+    				</td>
+    			</tr>
+    		</table>
+    		<br />
+    		<br />
 		</div>
 -->
 		<div id="sectionrpints"<?php if ($clear==1){echo "style='display:none'";};?>>
-		<h3>Step<span class="tapcircle">2</span></h3>
-				And at last, we'll need to create a management account. this account is used for adding / removing beers, etc.
-		<table>
-			<tr>
-				<td>
-					<label for="textfield"><strong>Username:</strong></label> 
-				</td>
-				<td>
-					<label> <input class="inputbox" value="admin" name="adminuser"></label>	
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for="textfield"><strong>Email Address:</strong> </label>
-				</td>
-				<td>
-					<label> <input class="inputbox" name="adminemail"></label>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for="textfield"><strong>First Name:</strong></label>
-				</td>
-				<td>
-					<label> <input class="inputbox" name="adminnamefirst"></label>	
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for="textfield"><strong>Last Name:</strong></label>
-				</td>
-				<td>
-					<label> <input class="inputbox" name="adminnamelast"></label>	
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for="textfield"><strong>Password:</strong></label>
-				</td>
-				<td>
-					<input class="inputbox" id="txtCheckAdminPassword" type="password" name="adminpass1">		
-				</td>
-			</tr>			<tr>
-				<td>
-					<label for="textfield"><strong>Confirm Password:</strong></label>
-				</td>
-				<td>
-					<input class="inputbox" id="txtConfirmAdminPassword" type="password" name="adminpass2" onChange="checkAdminPasswordMatch()"/>
-				</td>
-				<td>
-					<div class="registrationFormAlert" id="divCheckAdminPasswordMatch"></div>
-				</td>
-			</tr>
-		</table>
-		<br />
-		<br />
-		If you would like to load sample data, please check the box below. This will allow you to see what the system does without having to
-		type in all your beers. It's not that difficult to add your beers, so the default is not to load.
-		<br />
-		<br />
-		<input type="checkbox" name="sampledata" value="Yes"><strong>Load sample data?</strong>
-		<br />
-		<br />
-		<br />
+    		<h3>Step<span class="tapcircle">2</span></h3>
+    				And at last, we'll need to create a management account. this account is used for adding / removing beers, etc.
+    		<table>
+    			<tr>
+    				<td>
+    					<label for="textfield"><strong>Username:</strong></label> 
+    				</td>
+    				<td>
+    					<label> <input class="inputbox" value="admin" name="adminuser"></label>	
+    				</td>
+    			</tr>
+    			<tr>
+    				<td>
+    					<label for="textfield"><strong>Email Address:</strong> </label>
+    				</td>
+    				<td>
+    					<label> <input class="inputbox" name="adminemail"></label>
+    				</td>
+    			</tr>
+    			<tr>
+    				<td>
+    					<label for="textfield"><strong>First Name:</strong></label>
+    				</td>
+    				<td>
+    					<label> <input class="inputbox" name="adminnamefirst"></label>	
+    				</td>
+    			</tr>
+    			<tr>
+    				<td>
+    					<label for="textfield"><strong>Last Name:</strong></label>
+    				</td>
+    				<td>
+    					<label> <input class="inputbox" name="adminnamelast"></label>	
+    				</td>
+    			</tr>
+    			<tr>
+    				<td>
+    					<label for="textfield"><strong>Password:</strong></label>
+    				</td>
+    				<td>
+    					<input class="inputbox" id="txtCheckAdminPassword" type="password" name="adminpass1">		
+    				</td>
+    			</tr>			<tr>
+    				<td>
+    					<label for="textfield"><strong>Confirm Password:</strong></label>
+    				</td>
+    				<td>
+    					<input class="inputbox" id="txtConfirmAdminPassword" type="password" name="adminpass2" onChange="checkAdminPasswordMatch()"/>
+    				</td>
+    				<td>
+    					<div class="registrationFormAlert" id="divCheckAdminPasswordMatch"></div>
+    				</td>
+    			</tr>
+    		</table>
+    		<br />
+    		<br />
+    		If you would like to load sample data, please check the box below. This will allow you to see what the system does without having to
+    		type in all your beers. It's not that difficult to add your beers, so the default is not to load.
+    		<br />
+    		<br />
+    		<input type="checkbox" name="sampledata" value="Yes"><strong>Load sample data?</strong>
+    		<br />
+    		<br />
+    		<br />
 		</div>
-		<input class="btn" type="submit" value="Setup!">
+		<input class="btn" type="submit" value="<?php echo ($clear==1 || $upgrade==1? 'Go':'Setup!');?>">
 
 	</form>
 </body>
