@@ -375,6 +375,8 @@ class RFIDCheckThread (threading.Thread):
                 #if status == MIFAREReader.MI_OK:
                 #    MIFAREReader.MFRC522_Read(8)
                 #    MIFAREReader.MFRC522_StopCrypto1()
+        MIFAREReader.Close_MFRC522()
+                
     def getLastUserId(self):
         ret = self.userId
         if ret <> -1:

@@ -122,6 +122,9 @@ class MFRC522:
   def Write_MFRC522(self, addr, val):
     spi.transfer(((addr<<1)&0x7E,val))
   
+  def Close_MFRC522(self):
+    spi.closeSPI()
+    
   def Read_MFRC522(self, addr):
     val = spi.transfer((((addr<<1)&0x7E) | 0x80,0))
     return val[1]
