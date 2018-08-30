@@ -71,5 +71,6 @@ abstract class ConfigNames
 	const ValvesPowerPin = 'valvesPowerPin';
 	const ValvesOnTime = 'valvesOnTime';
 	const Version = 'version';
+	const UpdateDate = 'updateDate';
 }
 ?>
