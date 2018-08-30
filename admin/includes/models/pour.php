@@ -12,7 +12,7 @@ class Pour
 	private $_amountPoured;
 	private $_userName;
 	private $_tapId;
-	private $_pinId;
+	private $_flowPinId;
 	private $_pulses;
 	private $_beerId;
 	private $_conversion;
@@ -49,8 +49,8 @@ class Pour
 	public function get_tapId(){ return $this->_tapId; } 
 	public function set_tapId($_tapId){ $this->_tapId = $_tapId; }
 	
-	public function get_pinId(){ return $this->_pinId; } 
-	public function set_pinId($_pinId){ $this->_pinId= $_pinId; }
+	public function get_pinId(){ return $this->_flowPinId; } 
+	public function set_pinId($_flowPinId){ $this->_flowPinId= $_flowPinId; }
 	
 	public function get_pulses(){ return $this->_pulses; } 
 	public function set_pulses($_pulses){ $this->_pulses = $_pulses; }
@@ -149,14 +149,21 @@ class Pour
 		return "{" . 
 			"id: " . $this->get_id() . ", " .
 			"tapNumber: '" . encode($this->get_tapNumber()) . "', " .
-			"tapTgba: '" . encode($this->get_tapRgba()) . "', " .
+			"tapRgba: '" . encode($this->get_tapRgba()) . "', " .
 			"beerName: '" . encode($this->get_beerName()) . "', " .
 			"beerUntID: " . $this->get_beerUntID() . ", " .
 			"breweryImageUrl: " . $this->get_breweryImageUrl() . ", " .
 			"amountPoured: '" . encode($this->get_amountPoured()) . "', " .
 			"userName: '" . $this->get_userName() . "', " .
+			"tapId: '" . encode($this->get_tapId()) . "', " .
+			"flowPinId: '" . encode($this->get_pinId()) . "', " .
+			"pulses: '" . encode($this->get_pulses()) . "', " .
+			"beerId: '" . encode($this->get_beerId()) . "', " .
+			"conversion: '" . encode($this->get_conversion()) . "', " .
+			"userId: '" . encode($this->get_userId()) . "', " .
 			"createdDate: '" . $this->get_createdDate() . "' " .
 
 		"}";
+		
 	}
 }

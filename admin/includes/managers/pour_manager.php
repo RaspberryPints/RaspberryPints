@@ -83,7 +83,7 @@ class PourManager extends Manager{
 		// Inserts in to the pours table 
 		$pour = new Pour();
 		$pour->set_tapId($tapId);
-		$pour->set_pinId($PIN);
+		$pour->set_flowPinId($PIN);
 		$pour->set_amountPoured($amount);
 		$pour->set_pulses($PULSE_COUNT);
 		$pour->set_conversion($pourCountConversion);
@@ -135,17 +135,18 @@ class PourManager extends Manager{
 		$pourCountConversion = $tap->get_count();
 		
 		// Sets the amount to be a fraction of a gallon
-		$amount = .125;
+		$amount = .00125;
 		
-		echo "pours.php:Pour: pour on pin: " . $PIN . ", count: " . $PULSE_COUNT . ", conversion: " . $pourCountConversion . ", amount: " . $amount . "\n" ;
+		echo "pours.php:Pour: pour on tap: " . $tap->get_tapNumber() . ", count: " . 'Sample' . ", conversion: " . $pourCountConversion . ", amount: " . $amount . "\n" ;
 		// Inserts in to the pours table 
 		$pour = new Pour();
 		$pour->set_tapId($tapId);
-		$pour->set_pinId($tap->get_pinId());
+		$pour->set_pinId($tap->get_flowPinId());
 		$pour->set_amountPoured($amount);
-		$pour->set_pulses(0);
+		$pour->set_pulses(-1);
 		$pour->set_conversion($pourCountConversion);
 		$pour->set_beerId($beerId);
+		$pour->set_userId((new UserManager)->getUnknownUserId());
 		$this->save($pour);
 	
 		$tap->set_currentAmount($tap->get_currentAmount() - $amount);

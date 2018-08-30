@@ -1,21 +1,25 @@
 <?php
 
 //Includes the Database and config information
-require_once '../../admin/includes/managers/config_manager.php';
-require_once '../../admin/includes/managers/tap_manager.php';
-require_once '../../admin/includes/managers/pour_manager.php';
+require_once __DIR__.'/../admin/includes/managers/config_manager.php';
+require_once __DIR__.'/../admin/includes/managers/tap_manager.php';
+require_once __DIR__.'/../admin/includes/managers/pour_manager.php';
 require_once __DIR__.'/config.php';
 $tapManager = new TapManager();
 $pourManager = new PourManager();
 
 if( isset($_GET['tapId'])){
-	echo 'Sample';
+	echo 'Sample:';
 	$pourManager->pourSample($_GET["tapId"]);
+	unset($_GET['tapId']);
+	redirect('../../index.php');
 } else if( isset($_GET['bottleId'])){
   echo 'Drank';
   $bottleId = $_GET["bottleId"];
   $sql = "UPDATE bottles SET currentAmount = currentAmount-1  where id=" . $bottleId . ";";
   $mysqli->query($sql);
+  unset($_GET['bottleId']);
+  redirect('../../index.php');
 } else{
 	echo 'Pour';
 //Unused at the moment will call untappdPHP library to post to Untappd
