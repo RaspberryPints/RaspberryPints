@@ -916,9 +916,9 @@ class Pintlabs_Service_Untappd
     }
 
     /**
-     * Gets the last raw response from the service
+     * Gets the last raw response (json) from the service
      *
-     * @return null|json string
+     * @return null|string
      */
     public function getLastRawResponse()
     {
