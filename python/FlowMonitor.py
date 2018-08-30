@@ -23,7 +23,7 @@ from Config import config
 
 alamodeRelayTrigger = 0
 rfidSPISSPin = 24
-                    
+
 def debug(msg):
     if(config['flowmon.debug']):
         log(msg)
@@ -180,6 +180,7 @@ class FlowMonitor(object):
 
         self.reconfigAlaMode()
         debug( "listening to alamode" )
+        rfidThread = RFIDCheckThread("RFID", self.rfiddir, rfidSPISSPin=rfidSPISSPin)
         
         try:
             while running:   
@@ -247,61 +248,21 @@ class FlowMonitor(object):
                     self.arduino.write(msg)
                 elif ( reading[0] == "WP" and len(reading) >= 3 ):
                     #debug( "got a Write Pins Request: "+ msg )
-                    part = 1
-                    MODE = int(reading[part])
-                    part += 1
-                    COUNT = int(reading[part])
-                    part += 1
-                    while ( part-2 <= COUNT ):
-                        self.dispatch.updatepin(int(reading[part]), MODE)
-                        part += 1
-                        time.sleep(.005)  
+                    WritePinsThread("WP", reading, self.dispatch).start()
                     msg = "DONE;%d;%d|" % (COUNT, MODE)
                     #debug( "Sending "+ msg )
                     self.arduino.write(msg)
                 elif ( reading[0] == "RFIDCheck" ):
                     #debug("RFIDCheck")
                     RFIDState = "NOTOK"
-                    proc = -1
-                    
-                    MIFAREReader = MFRC522.MFRC522(pin=rfidSPISSPin)
-                    # Scan for cards    
-                    (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
-                    #debug("status %s; tagtype %d;" % (status, TagType ))
-                    
-                    # If a card is found
-                    if status == MIFAREReader.MI_OK:
-                        #debug("Card detected")
-                        (status,uid) = MIFAREReader.MFRC522_Anticoll()
-                        #debug(str(status))
-                        if status == MIFAREReader.MI_OK:
-                            #debug(str(uid))
-                            rfidTag = ""
-                            i = 0
-                            while i<len(uid):
-                                rfidTag = rfidTag + str(uid[i])
-                                i = i + 1
-                            #debug(rfidTag)
-                            proc = subprocess.check_output(["php", self.rfiddir, rfidTag])
-                            if int(proc) > -1:
-                                debug("RFID "+rfidTag+" User Id "+ proc)
-                                RFIDState = "OK"
+                    if not rfidThread.isAlive():
+                        rfidThread.start() 
 
-                            # This is the default key for authentication
-                            #key = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
-                            
-                            # Select the scanned tag
-                            #MIFAREReader.MFRC522_SelectTag(uid)
-
-                            # Authenticate
-                            #status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
-
-                            # Check if authenticated                           
-                            #if status == MIFAREReader.MI_OK:
-                            #    MIFAREReader.MFRC522_Read(8)
-                            #    MIFAREReader.MFRC522_StopCrypto1()
-	   
-                    msg = "RFID;%s;%s;" % (RFIDState, proc)
+                    userId = rfidThread.getLastUserId() 
+                    if userId > -1:
+                        RFIDState = "OK"
+                        
+                    msg = "RFID;%s;%s;" % (RFIDState, userId)
                     #debug( "Sending "+ msg )
                     self.arduino.write(msg)
                 else:
@@ -313,6 +274,8 @@ class FlowMonitor(object):
             if self.alaKeepAlive is False :
                 debug( "closing serial connection to alamode..." )
                 self.arduino.close()
+            if rfidThread.isAlive():
+                rfidThread.exit()
 
     def fakemonitor(self):
         running = True
@@ -355,5 +318,88 @@ class FlowMonitor(object):
             debug( "Closing serial connection to alamode..." )
             debug( "Exiting" )
 
+class RFIDCheckThread (threading.Thread):
+    userId = -1
+    shutdown = False
+    def __init__(self, threadID, rfiddir, delay=.250, rfidSPISSPin=24):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.delay = delay
+        self.rfidSPISSPin = rfidSPISSPin
+        self.rfiddir = rfiddir
+        self.lastUserId = -1
+        
+    def run(self):
+        while not self.shutdown:
+            self.checkRFID(self.rfidSPISSPin)
+            time.sleep(self.delay)
 
-
+    def checkRFID(self, rfidSPISSPin):
+        MIFAREReader = MFRC522.MFRC522(pin=rfidSPISSPin)
+        # Scan for cards    
+        (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
+        #debug("status %s; tagtype %d;" % (status, TagType ))
+        
+        # If a card is found
+        if status == MIFAREReader.MI_OK:
+            #debug("Card detected")
+            (status,uid) = MIFAREReader.MFRC522_Anticoll()
+            #debug(str(status))
+            if status == MIFAREReader.MI_OK:
+                #debug(str(uid))
+                rfidTag = ""
+                i = 0
+                while i<len(uid):
+                    rfidTag = rfidTag + str(uid[i])
+                    i = i + 1
+                #debug(rfidTag)
+                proc = subprocess.check_output(["php", self.rfiddir, rfidTag])
+                usrId = int(proc)
+                if usrId > -1:
+                    if usrId <> self.lastUserId or self.rfidTag <> rfidTag:
+                        debug("RFID "+rfidTag+" User Id "+ proc)
+                    self.userId = usrId
+                    self.lastUserId = usrId
+                self.rfidTag = rfidTag
+    
+                # This is the default key for authentication
+                #key = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
+                
+                # Select the scanned tag
+                #MIFAREReader.MFRC522_SelectTag(uid)
+    
+                # Authenticate
+                #status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
+    
+                # Check if authenticated                           
+                #if status == MIFAREReader.MI_OK:
+                #    MIFAREReader.MFRC522_Read(8)
+                #    MIFAREReader.MFRC522_StopCrypto1()
+    def getLastUserId(self):
+        ret = self.userId
+        if ret <> -1:
+            self.userId = -1
+        return ret 
+    
+    def exit():
+        self.shutdown = true
+    
+class WritePinsThread (threading.Thread):
+    def __init__(self, threadID, splitMsg, dispatch, delay = .005):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.splitMsg = splitMsg
+        self.delay = delay
+        self.dispatch = dispatch
+      
+    def run(self):
+        part = 1
+        MODE = int(self.splitMsg[part])
+        part += 1
+        COUNT = int(self.splitMsg[part])
+        part += 1
+        while ( part-2 <= COUNT ):
+            self.dispatch.updatepin(int(self.splitMsg[part]), MODE)
+            part += 1
+            if self.delay > 0:
+                time.sleep(self.delay) 
