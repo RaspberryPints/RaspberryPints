@@ -77,7 +77,7 @@
 					<td class="tap-num">
 					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
 						<a href ="./includes/pours.php/?tapId=<?php echo $beer['id']; ?>">
-							<span class="tapcircle" <?php if(isset($beer) && isset($beer['tapRgba'])) echo "style=\"background-color: ".$htmlHelper->CreateRGB($beer['tapRgba'])."\""; ?>>
+							<span class="tapcircle" <?php if(isset($beer) && isset($beer['tapRgba']) && $beer['tapRgba']) echo "style=\"background-color: ".$htmlHelper->CreateRGB($beer['tapRgba'])."\""; ?>>
                             
 		                    	<?php if(isset($beer['tapNumber']) && $beer['tapNumber'] != 0){echo $beer['tapNumber'];}else{echo $i;} ?>
                             </span>
@@ -94,7 +94,7 @@
 			
 				<?php if($config[ConfigNames::ShowSrmCol]){ ?>
 					<td class="srm">
-					<?php if(isset($beer) && $beer['srm'] > 0){ ?>						
+					<?php if(isset($beer) && $beer['beername'] ){ ?>						
 						<div class="srm-container">
 							<?php echo '<div class="srm-indicator" style="background-color:'.$htmlHelper->CreateRGB($beer['srmRgb']).'"></div>'?>
 							<div class="srm-stroke"></div> 
@@ -107,7 +107,7 @@
 			
 				<?php if($config[ConfigNames::ShowIbuCol]){ ?>
 					<td class="ibu">
-					<?php if(isset($beer)){ ?>
+					<?php if(isset($beer) && $beer['beername']){ ?>
 						<?php if($config[ConfigNames::ShowBuGuValue]){ ?>
 						<h3>
 							<?php 
@@ -131,15 +131,15 @@
 			
 				<?php if($config[ConfigNames::ShowBreweryImages]){ ?>
 					<td style="width:150px" >
-					<?php if(isset($beer)){ ?>
-						<img class="breweryimg" src="<?php echo $beer['breweryImage']; ?>" />
+					<?php if(isset($beer) && $beer['beername']){ ?>
+						<img class="breweryimg" src="<?php echo $beer['']; ?>" />
 					<?php } ?>
 					</td>
 				<?php } ?>
 				
 				<?php if($config[ConfigNames::ShowBeerImages]){ ?>
 					<td style="width:150px <?php if($beerColSpan > 1){ echo ';border-left: none;'; } ?>" class="beerimg">
-					<?php if(isset($beer)){ ?>
+					<?php if(isset($beer) && $beer['beername']){ ?>
 						<?php 
 							beerImg($config, $beer['untID']);
 						?>
@@ -148,7 +148,7 @@
 				<?php } ?>
                 
 				<td class="name" <?php if($beerColSpan > 1){ echo 'style="border-left: none;"'; } ?>>	
-					<?php if(isset($beer)){ ?>		
+					<?php if(isset($beer) && $beer['beername']){ ?>		
                     					
 						<?php if($config[ConfigNames::ShowBeerName]){ ?>
                             <h1><?php echo $beer['beername']; ?></h1>
@@ -173,58 +173,60 @@
 			
 				<?php if(($config[ConfigNames::ShowAbvCol])){ ?>
 					<td class="abv">
-					<?php if(($config[ConfigNames::ShowAbvImg])) { ?>
-						<div class="abv-container">
-        					<?php 
-        						$abv = $beer['abv'];
-        						if(!isset($abv)) $abv = ($beer['og'] - $beer['fg']) * 131; 
-        					?>	
-							<?php
-								$numCups = 0;
-								$remaining = $abv * 20;
-								do{
-									if( $remaining < 100 ){
-											$level = $remaining;
-									}else{
-											$level = 100;
-									}
-									?><div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div><?php
-									
-									$remaining = $remaining - $level;
-									$numCups++;
-								}while($remaining > 0 && $numCups < 2);
-								
-								if( $remaining > 0 ){
-									?><div class="abv-offthechart"></div><?php
-								}
-							?>
-						</div>
-					<?php } else { ?>
-						<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?> ABV</h2>
-					<?php } ?>
-					<?php if(isset($beer)){ ?>
-						<?php if($config[ConfigNames::ShowCalories]){ ?>
-						<h3><?php
-							$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
-							$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
-							if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
-								$calfromalc = 0;
-								$calfromcarbs = 0;
-								}
-							echo number_format($calfromalc + $calfromcarbs), " kCal";
-							?>
-						</h3>
-						<?php } ?>
-					<?php if($config[ConfigNames::ShowGravity] && $beer['og'] > 0){ ?>
-						<h3><?php echo $beer['og']; ?> OG</h3>
-					<?php } ?>
+        			<?php if(isset($beer) && $beer['beername']){?>
+    					<?php if(($config[ConfigNames::ShowAbvImg])) { ?>
+    						<div class="abv-container">
+            					<?php 
+            						$abv = $beer['abv'];
+            						if(!isset($abv)) $abv = ($beer['og'] - $beer['fg']) * 131; 
+            					?>	
+    							<?php
+    								$numCups = 0;
+    								$remaining = $abv * 20;
+    								do{
+    									if( $remaining < 100 ){
+    											$level = $remaining;
+    									}else{
+    											$level = 100;
+    									}
+    									?><div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div><?php
+    									
+    									$remaining = $remaining - $level;
+    									$numCups++;
+    								}while($remaining > 0 && $numCups < 2);
+    								
+    								if( $remaining > 0 ){
+    									?><div class="abv-offthechart"></div><?php
+    								}
+    							?>
+    						</div>
+    					<?php } else { ?>
+    						<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?> ABV</h2>
+    					<?php } ?>
+    					<?php if(isset($beer)){ ?>
+    						<?php if($config[ConfigNames::ShowCalories]){ ?>
+    						<h3><?php
+    							$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
+    							$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
+    							if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
+    								$calfromalc = 0;
+    								$calfromcarbs = 0;
+    								}
+    							echo number_format($calfromalc + $calfromcarbs), " kCal";
+    							?>
+    						</h3>
+    						<?php } ?>
+    					<?php if($config[ConfigNames::ShowGravity] && $beer['og'] > 0){ ?>
+    						<h3><?php echo $beer['og']; ?> OG</h3>
+    					<?php } ?>
+    				<?php } ?>
 				<?php } ?>
 				</td>								
 			<?php } ?>
 				
 			<?php if($config[ConfigNames::ShowKegCol]){ ?>
 				<td class="keg" colspan="2">
-				<?php if(isset($beer)){ ?>
+				<?php if(isset($beer) && $beer['beername']){ ?>
 					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
 						<h3><?php echo number_format((($beer['startAmount'] - $beer['remainAmount']) * 128)); ?> fl oz poured</h3>
 					<?php } else { ?>
