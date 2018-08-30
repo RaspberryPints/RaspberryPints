@@ -43,7 +43,7 @@ class TapManager extends Manager{
 	
 	function GetByBeerId($id){
 		$id = (int) preg_replace('/\D/', '', $id);	
-		$sql="SELECT * FROM ".$this->getTableName()." WHERE beerId = $id AND active = 1";
+		$sql="SELECT t.* FROM ".$this->getTableName()." t LEFT JOIN kegs k ON (t.kegId = k.id) WHERE k.beerId = $id AND t.active = 1";
 		return $this->executeQueryWithSingleResult($sql);
 	}
 	
