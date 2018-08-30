@@ -114,7 +114,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css">
 		
 		<?php if($config[ConfigNames::UseHighResolution]) { ?>
-			<link rel="stylesheet" type="text/css" href="high-res.css">
+			<link rel="stylesheet" type="text/css" href="style-high-res.css">
 		<?php } ?>
 		
 		<?php	
