@@ -93,7 +93,7 @@ include 'top_menu.php';
 				<thead class="intborder thick">
 					<tr>
 						<th style="align-content:center">Label</th>
-						<th style="width:10%;colspan=2;align-content:center">Status / Update</th>
+						<th style="width:10%;align-content:center">Status / Update</th>
 						<th style="width:28%;align-content:center">Beer Name</th>
 						<th style="width:28%;align-content:center">Keg Type</th>
 						<th style="width:28%;align-content:center">Make</th>
@@ -124,48 +124,54 @@ include 'top_menu.php';
 								}
 					?>
 					<tr>
-						<td rowspan="2" class="intborder">
-							<span class="kegsquare" style="align-content:center"> 
+						<td rowspan="3" class="intborder" style="vertical-align:middle;align-content:center">
+							<span class="kegsquare"> 
 								<input type="text" id="label" class="smallbox" name="label[]" value="<?php echo $keg->get_label() ?>" />
                             </span>
 						</td>
 						
-						<td colspan="2" class="leftborder rightborder" style="vertical-align:middle; font-size:1.2em; align-content:center">
+						<td rowspan="3" class="leftborder rightborder" style="vertical-align:middle; align-content:center; font-size:1.2em">
 							<?php 
 								echo $htmlHelper->ToSelectList("kegStatusCode[]", "kegStatusCode", $kegStatusList, "name", "code", $keg->get_kegStatusCode(), "Select One"); 
 							?>
 						</td>
-						<td style="vertical-align:middle; font-size:1.2em; align-content:center">
+						<td rowspan="3" class="leftborder rightborder" style="vertical-align:middle; align-content:center; font-size:1.2em">
 							<?php 
 								echo $htmlHelper->ToSelectList("beerId[]", "beerId", $beerList, "name", "id", $keg->get_beerId(), ($keg->get_onTapId()?null:"Select One"));
 							?>
 						</td>						
-						<td style="vertical-align:middle; font-size:1.2em; align-content:center">
+						<td style="vertical-align:middle; align-content:center; font-size:1.2em">
 							<b><?php echo $kegType->get_name() ?></b>
 						</td>
-						<td style="vertical-align:middle; font-size:1.2em; align-content:center">
+						<td style="vertical-align:middle; align-content:center; font-size:1.2em">
 							<b><?php echo $keg->get_make() ?></b>
 						</td>
 						
-						<td style="vertical-align:middle; font-size:1.2em; align-content:center">
+						<td style="vertical-align:middle; align-content:center; font-size:1.2em">
 							<b><?php echo $keg->get_model() ?></b>
 						</td>
-						<td class="rightborder thick" style="vertical-align:middle; font-size:1.2em; align-content:center">
+						<td class="rightborder thick" style="vertical-align:middle1.2em; align-content:center; font-size:">
 							<button class="btn" name="editKeg" type="submit" value="<?php echo $keg->get_id()?>" >Edit</button>
                         </td>
 					</tr>
-					<tr class="intborder">
-						<td class="leftborder">
-						</td>		
-						<td class="rightborder">
-						</td>						
-						<td colspan="4">
-							<b>Stamped Owner / Location:</b> &nbsp; <?php echo $keg->get_stampedOwner() ?> / <?php echo $keg->get_stampedLoc() ?><br>
-							<b>Serial Number:</b> &nbsp; <?php echo $keg->get_serial() ?> &nbsp; &nbsp; &nbsp; <b>Empty weight:</b> <?php echo $keg->get_weight() ?><br>
-							<b>Notes:</b> &nbsp; <?php echo htmlentities($keg->get_notes()) ?>
+					<tr>					
+						<td style="padding-bottom: 1px; padding-top: 1px">
+							<b>Stamped Owner:</b> &nbsp; <?php echo $keg->get_stampedOwner() ?><br>
+							<b>Serial Number:</b> &nbsp; <?php echo $keg->get_serial() ?><br>
+						</td>			
+						<td  style="padding-bottom: 1px; padding-top: 1px">
+							<b>Location:</b> &nbsp; <?php echo $keg->get_stampedLoc() ?><br>
+							<b>Empty weight:</b> &nbsp; <?php echo $keg->get_weight() ?><br>
 						</td>
-						<td class="rightborder thick" style="vertical-align:middle; font-size:1.2em; align-content:center">
+						<td style="padding-bottom: 1px; padding-top: 1px">
+						</td>
+						<td class="rightborder thick" style="vertical-align:middle; align-content:center; font-size:1.2em; padding-bottom: 2px">
 							<button class="inactivateKeg btn" name="inactivateKeg" type="submit" value="<?php echo $keg->get_id()?>" >Delete</button>
+						</td>
+					</tr>
+					<tr class="intborder">				
+						<td colspan="4" class="rightborder thick"  style="padding-top: 1px">
+							<b>Notes:</b> &nbsp; <?php echo htmlentities($keg->get_notes()) ?>
 						</td>
 					</tr>
 		<?php 
