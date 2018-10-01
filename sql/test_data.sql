@@ -32,7 +32,7 @@ INSERT INTO `breweries` (`name`, `imageUrl`) VALUES
 -- Dumping data for table `beers`
 --
 
-INSERT INTO `beers` (`name`, `beerStyleId`, `abv`, `ogEst`, `fgEst`, `srmEst`, `ibuEst`, `notes`, `createdDate`, `modifiedDate`) VALUES
+INSERT INTO `beers` (`name`, `beerStyleId`, `abv`, `og`, `fg`, `srm`, `ibu`, `notes`, `createdDate`, `modifiedDate`) VALUES
 ('Darth Vader', '80', '6.6', '1.066', '1.016', '38.0', '66.0', 'Rich, toasty malt flavor. Generous amounts of pine, citrus and roasted coffee. Herbal aroma with a punch of IPA hops at the finish.', NOW(), NOW() ),
 ('Row 2 Hill 56', '33', '5.9', '1.055', '1.010', '5.1', '40', '100% Simcoe hops make up this beer from start to finish! It is named for the location in the experimental hop yard in Yakima, WA, where it was first created.', NOW(), NOW() ),
 ('Loon Lake Porter', '78', '5.0', '1.050', '1.012', '24', '24.6', 'With a low IBU and a mellow base recipe, this is a beer that can be turned from grain to glass quickly. The smoke aroma is prominent, but not at all overpowering. The sweetness of the malt really balances this beer well.', NOW(), NOW() ),
