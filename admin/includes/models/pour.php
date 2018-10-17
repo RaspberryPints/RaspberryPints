@@ -49,8 +49,8 @@ class Pour
 	public function get_tapId(){ return $this->_tapId; } 
 	public function set_tapId($_tapId){ $this->_tapId = $_tapId; }
 	
-	public function get_pinId(){ return $this->_flowPinId; } 
-	public function set_pinId($_flowPinId){ $this->_flowPinId= $_flowPinId; }
+	public function get_flowPinId(){ return $this->_flowPinId; } 
+	public function set_flowPinId($_flowPinId){ $this->_flowPinId= $_flowPinId; }
 	
 	public function get_pulses(){ return $this->_pulses; } 
 	public function set_pulses($_pulses){ $this->_pulses = $_pulses; }
