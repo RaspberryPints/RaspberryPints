@@ -120,9 +120,9 @@ class Pour
 			$this->set_tapId(null);
 			
 		if( isset($postArr['pinId']) )
-			$this->set_pinId($postArr['pinId']);
+			$this->set_flowPinId($postArr['pinId']);
 		else
-			$this->set_pinId(null);
+			$this->set_flowPinId(null);
 			
 		if( isset($postArr['pulses']) )
 			$this->set_pulses($postArr['pulses']);
@@ -156,7 +156,7 @@ class Pour
 			"amountPoured: '" . encode($this->get_amountPoured()) . "', " .
 			"userName: '" . $this->get_userName() . "', " .
 			"tapId: '" . encode($this->get_tapId()) . "', " .
-			"flowPinId: '" . encode($this->get_pinId()) . "', " .
+			"flowPinId: '" . encode($this->get_flowPinId()) . "', " .
 			"pulses: '" . encode($this->get_pulses()) . "', " .
 			"beerId: '" . encode($this->get_beerId()) . "', " .
 			"conversion: '" . encode($this->get_conversion()) . "', " .
