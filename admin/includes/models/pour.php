@@ -12,7 +12,7 @@ class Pour
 	private $_amountPoured;
 	private $_userName;
 	private $_tapId;
-	private $_flowPinId;
+	private $_pinId;
 	private $_pulses;
 	private $_beerId;
 	private $_conversion;
@@ -49,8 +49,8 @@ class Pour
 	public function get_tapId(){ return $this->_tapId; } 
 	public function set_tapId($_tapId){ $this->_tapId = $_tapId; }
 	
-	public function get_flowPinId(){ return $this->_flowPinId; } 
-	public function set_flowPinId($_flowPinId){ $this->_flowPinId= $_flowPinId; }
+	public function get_pinId(){ return $this->_pinId; } 
+	public function set_pinId($_pinId){ $this->_pinId= $_pinId; }
 	
 	public function get_pulses(){ return $this->_pulses; } 
 	public function set_pulses($_pulses){ $this->_pulses = $_pulses; }
@@ -120,9 +120,9 @@ class Pour
 			$this->set_tapId(null);
 			
 		if( isset($postArr['pinId']) )
-			$this->set_flowPinId($postArr['pinId']);
+			$this->set_pinId($postArr['pinId']);
 		else
-			$this->set_flowPinId(null);
+			$this->set_pinId(null);
 			
 		if( isset($postArr['pulses']) )
 			$this->set_pulses($postArr['pulses']);
@@ -156,7 +156,7 @@ class Pour
 			"amountPoured: '" . encode($this->get_amountPoured()) . "', " .
 			"userName: '" . $this->get_userName() . "', " .
 			"tapId: '" . encode($this->get_tapId()) . "', " .
-			"flowPinId: '" . encode($this->get_flowPinId()) . "', " .
+			"pinId: '" . encode($this->get_pinId()) . "', " .
 			"pulses: '" . encode($this->get_pulses()) . "', " .
 			"beerId: '" . encode($this->get_beerId()) . "', " .
 			"conversion: '" . encode($this->get_conversion()) . "', " .

@@ -83,7 +83,7 @@ class PourManager extends Manager{
 		// Inserts in to the pours table 
 		$pour = new Pour();
 		$pour->set_tapId($tapId);
-		$pour->set_flowPinId($PIN);
+		$pour->set_pinId($PIN);
 		$pour->set_amountPoured($amount);
 		$pour->set_pulses($PULSE_COUNT);
 		$pour->set_conversion($pourCountConversion);
