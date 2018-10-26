@@ -35,9 +35,14 @@ RP_VERSION=2.9.0.1
 # packages needed to install. This is a default set
 PACKAGES="dialog apache2 libapache2-mod-php7.0 mysql-client mysql-server 
          php7.0-mysql phpmyadmin chromium-browser git 
+         ttf-mscorefonts-installer x11-xserver-utils unclutter vim"         
+JESSIE_PACKAGES="dialog apache2 php5 mysql-client mysql-server  
+         php5-mysql phpmyadmin chromium-browser git 
          ttf-mscorefonts-installer x11-xserver-utils unclutter vim"
 		 
 FLOW_MEATERS_PACKAGES="arduino python-serial python-mysqldb php7.0-cli 
+					   xdotool dos2unix python-mod-pywebsocket i2c-tools"
+JESSIE_FLOW_MEATERS_PACKAGES="arduino python-serial python-mysqldb php5-cli 
 					   xdotool dos2unix python-mod-pywebsocket i2c-tools"
 
 # default directory to install to
@@ -51,7 +56,7 @@ MODULE_CONFIG_FILE=/etc/modules
 BLACKLIST_CONFIG_FILE=/etc/modprobe.d/raspi-blacklist.conf
 
 MYSQL_SERVER="localhost"
-MYSQL_DB_NAME="RaspberryPints"
+MYSQL_DB_NAME="raspberrypints"
 MYSQL_USER=""
 MYSQL_PASS=""
 MYSQL_RP_USER="RaspberryPints"
@@ -60,7 +65,8 @@ MYSQL_RP_PASS="RaspberryPints"
 USE_FLOW_METERS=N
 
 # the base github repo name
-REPO=https://github.com/RaspberryPints/RaspberryPints.git  
+DEFAULT_REPO=https://github.com/RaspberryPints/RaspberryPints.git  
+CUSTOM_REPO=https://github.com/rtlindne/RaspberryPints.git  
 FLOW_METERS_REPO=https://github.com/wyolum/alamode/raw/master/bundles/alamode-setup.tar.gz
 FLOW_METERS_STRETCH_REPO=https://github.com/wyolum/alamode/raw/master/alamode-setup/stretch-setup
 
@@ -85,10 +91,24 @@ fi
 . /etc/os-release
 
 if [ "$ID" != "raspbian" ]; then
-   echo "You do not appear to be running Raspbian"
+   echo "You appear to be running $ID NOT Raspbian"
    exit 2
 fi
 VER_NAME="$(echo $VERSION | grep -oP '(?<=\()[^\)]+')"
+
+if echo "$VER_NAME" | grep -iq "^jessie" ; then
+	PACKAGES=$JESSIE_PACKAGES
+	FLOW_MEATERS_PACKAGES=$JESSIE_FLOW_MEATERS_PACKAGES
+fi
+
+REPO=$CUSTOM_REPO
+# ask the user what REPO they want to install. The original does not work with this script
+ANSWER=N
+read -e -p "Do You wish to use the Original GitHub Repository (It does not fully work with this script)? (default is: $ANSWER): " ANSWER
+if echo "$ANSWER" | grep -iq "^y" ; then
+	REPO=$DEFAULT_REPO
+fi
+echo "Installing Source ${REPO}"
 
 echo "Installing RaspberryPints ${RP_VERSION}"
 # ask the user where they want to install to (default is WEBROOT)
@@ -116,6 +136,14 @@ then
 	read -s -e -p "MySql Admin Password for server ${MYSQL_SERVER}?: " ANSWER
 	MYSQL_PASS=$ANSWER
 	echo
+else
+	if echo "$VER_NAME" | grep -iq "^jessie" ; 
+	then
+		ANSWER=""
+		read -s -e -p "MySql Admin Password to be used for server ${MYSQL_SERVER}?: " ANSWER
+		MYSQL_PASS=$ANSWER
+		echo
+	fi
 fi
 
 # ask the user where they want to install flowmeters
@@ -373,9 +401,15 @@ read -e -p "Admin First Name?: " RP_NAME_FIRST
 read -e -p "Admin Last Name?: " RP_NAME_Last
 read -e -p "Admin Email?: " RP_EMAIL
 
-mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO users 
+if ! echo "$REPO" | grep -iq "rtlindne" ; then
+	mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO users 
+						 (username,password,name,email,createdDate,modifiedDate) 
+						 VALUES ('${RP_USERNAME}',MD5('${RP_PASS}'),CONCAT('${RP_NAME_FIRST}', ' ', '${RP_NAME_LAST}'),'${RP_EMAIL}',NOW(),NOW());";
+else
+	mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO users 
 					 (username,password,nameFirst,nameLast,mugId,email,unTapAccessToken,isAdmin,active,createdDate,modifiedDate) 
-					 VALUES ('${RP_USERNAME}',MD5('${RP_PASS}'),'${RP_NAME_FIRST}','${RP_NAME_LAST}',NULL,'${RP_EMAIL}',NULL,1,1,NOW(),NOW());";
+						 VALUES ('${RP_USERNAME}',MD5('${RP_PASS}'),'${RP_NAME_FIRST}','${RP_NAME_LAST}',NULL,'${RP_EMAIL}',NULL,1,1,NOW(),NOW());";
+fi
 
 if [ -f "${DIRECTORY}/index.html" ]; then
 	rm ${DIRECTORY}/index.html
@@ -462,13 +496,17 @@ then
 	if [ -f "${DIRECTORY}/python/flowmon" ];
 	then
 		FIND_STR="DIR=.*"
-		REPL_STR="DIR=${DIRECTORY}/python/flowmon"
-		sed -i "s/$FIND_STR/${REPL_STR//\//\\\/}/" "${DIRECTORY}/python/flowmon"
+		REPL_STR="DIR=${DIRECTORY}/python"
+		sed -i "s_${FIND_STR}_${REPL_STR}_" "${DIRECTORY}/python/flowmon"
 		  
 		cp "${DIRECTORY}/python/flowmon" "${INIT_DIRECTORY}/flowmon"
 		chmod a+x "${INIT_DIRECTORY}/flowmon"
+		if echo "$VER_NAME" | grep -iq "^jessie" ; then
+			/bin/systemctl daemon-reload
+			/bin/systemctl enable flowmon.service
+		fi
 		"${INIT_DIRECTORY}/flowmon" start 
-		if [ ps aux | grep -iq "[f]low_monitor.py" ]; then
+		if ps aux | grep -iq "flow_monitor.py" ; then
 			echo "Flowmon install successfully"
 		else
 			echo "Unable to install flowmon"
@@ -478,7 +516,7 @@ then
 	if [ -f "${DIRECTORY}/python/Config.py" ]; then
 		FIND_STR="config\['pints.dir'.*"
 		REPL_STR="config\['pints.dir'\] = '${DIRECTORY}/'"
-		sed -i "s/$FIND_STR/${REPL_STR//\//\\\/}/" "${DIRECTORY}/python/Config.py"	
+		sed -i "s_${FIND_STR}_${REPL_STR}_" "${DIRECTORY}/python/Config.py"	
 	fi
 	mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "UPDATE config SET configValue='1' WHERE configName='useFlowMeter';";
 	read -e -p "For alamode set the 5V_link jumper to on (see page 11 of the Alamode Manual). Enter to continue" ANSWER
