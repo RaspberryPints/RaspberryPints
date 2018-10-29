@@ -10,11 +10,9 @@ $srmManager = new SrmManager();
 $activeBottleIds = $bottleManager->GetAllActiveIds();
 if (isset ( $_POST ['saveBottles'] ) ) {
 	$error = false;
-	if( isset($_POST ['id']) ){
-		foreach($activeBottleIds as $id){
-			if(!in_array($id, $_POST ['id'])){
-				if(!$bottleManager->Inactivate($id))$error = true;	
-			}
+	foreach($activeBottleIds as $id){
+	    if(!isset($_POST ['id']) || !in_array($id, $_POST ['id'])){
+			if(!$bottleManager->Inactivate($id))$error = true;	
 		}
 	}
 	$ii = 0;
