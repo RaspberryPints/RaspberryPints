@@ -298,8 +298,8 @@ if $MONITOR = true ; then
 	   ANSWER="Y"
 	fi
 	if echo "$ANSWER" | grep -iq "^y" ;then
-		sed -i -E 's/^\s*(@chromium –-kiosk.*)/#\1/g' $START_CONFIG_FILE
-		echo '@chromium –-kiosk localhost' >> $START_CONFIG_FILE
+		sed -i -E 's/^\s*(@chromium --kiosk.*)/#\1/g' $START_CONFIG_FILE
+		echo '@chromium --kiosk localhost' >> $START_CONFIG_FILE
 	fi
 fi
  
@@ -458,8 +458,8 @@ then
 	  echo 'enable_uart=1' >> $BOOT_CONFIG_FILE
 	fi
 	if [ -f /etc/modprobe.d/raspi-blacklist.conf ]; then
-	  sed -i 's/^\s*(blacklist\s*spi-bcm2708)/#\1/g' $BLACKLIST_CONFIG_FILE
-	  sed -i 's/^\s*(blacklist\s*i2c-bcm2708)/#\1/g' $BLACKLIST_CONFIG_FILE
+	  sed -i -r 's/^\s*(blacklist\s*spi-bcm2708)/#\1/g' $BLACKLIST_CONFIG_FILE
+	  sed -i -r 's/^\s*(blacklist\s*i2c-bcm2708)/#\1/g' $BLACKLIST_CONFIG_FILE
 	fi
 
 	FLOW_METERS_DIRECTORY=${DIRECTORY}/alamode/
