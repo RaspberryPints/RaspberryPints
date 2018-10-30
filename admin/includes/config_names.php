@@ -31,7 +31,7 @@ abstract class ConfigNames
 	const ShowBalance = 'showBalance';
 	const ShowBeerImages = 'showBeerImages';
 	const ShowBeerName = 'showBeerName';
-	const ShowBeerNotes = 'showBeerRating';
+	const ShowBeerNotes = 'showTastingNotes';
 	const ShowBeerRating = 'showBeerRating';
 	const ShowBeerStyle = 'showBeerStyle';
 	const ShowBreweryImages = 'showBreweryImages';
