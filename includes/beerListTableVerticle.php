@@ -5,7 +5,6 @@
 	require_once __DIR__.'/../admin/includes/html_helper.php';	
 	$config = getAllConfigs();
 	$htmlHelper = new HtmlHelper();
-	$beerColSpan = 1;
 	$row = 0;
 ?>
 
@@ -48,6 +47,7 @@
 				COLOR
 			</td>
     		<?php for($i = 1; $i <= $numberOfBeers; $i++) {
+	            $beerColSpan = 1;
     			$beer = null;
     			if( isset($beers[$i]) ) $beer = $beers[$i];
     			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG  && !isset($beer) ) continue;
@@ -106,23 +106,24 @@
 			
 		<?php if($config[ConfigNames::ShowBeerName]){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
-			<?php 
-                if($config[ConfigNames::ShowBreweryImages]){ $beerColSpan++; }
-                if($config[ConfigNames::ShowBeerImages]){ $beerColSpan++; }
-            ?> 
-			<td class="beername" <?php if($beerColSpan > 1){ echo 'colspan="$beerColSpan"';}?> >
+			<td class="beername">
 				BEER NAME 
 				<?php if($config[ConfigNames::ShowBeerStyle]){ ?>&nbsp; &nbsp; STYLE<hr><?php } ?>
 				<?php if($config[ConfigNames::ShowBeerNotes]){ ?>&nbsp; &nbsp; TASTING NOTES<?php } ?>
 				<?php if($config[ConfigNames::ShowBeerRating]){?>&nbsp; &nbsp; RATING<hr><?php } ?>
 			<td>
+			<table>
     		<?php for($i = 1; $i <= $numberOfBeers; $i++) {
     			$beer = null;
     			if( isset($beers[$i]) ) $beer = $beers[$i];
     			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG && !isset($beer) ) continue;
     		?>
+    		
+				<?php if($config[ConfigNames::ShowBreweryImages] || $config[ConfigNames::ShowBeerImages]){ ?>
+					<tr>
+				<?php } ?>
 				<?php if($config[ConfigNames::ShowBreweryImages]){ ?>
-					<td style="width:150px" >
+					<td style="width:75px" >
 					<?php if(isset($beer) && $beer['beername']){ ?>
 						<img class="breweryimg" src="<?php echo $beer['breweryImage']; ?>" />
 					<?php } ?>
@@ -130,7 +131,7 @@
 				<?php } ?>
 				
 				<?php if($config[ConfigNames::ShowBeerImages]){ ?>
-					<td style="width:150px <?php if($beerColSpan > 1){ echo ';border-left: none;'; } ?>" class="beerimg">
+					<td style="width:75px <?php if($beerColSpan > 1){ echo ';border-left: none;'; } ?>" class="beerimg">
 					<?php if(isset($beer) && $beer['beername']){ ?>
 						<?php 
 							beerImg($config, $beer['untID']);
@@ -138,7 +139,10 @@
 					<?php } ?>
 					</td>
 				<?php } ?>
-                
+				<?php if($config[ConfigNames::ShowBreweryImages] || $config[ConfigNames::ShowBeerImages]){ ?>
+					</tr>
+				<?php } ?>
+                <tr>
 				<td class="name" <?php if($beerColSpan > 1){ echo 'style="border-left: none;"'; } ?>>	
 					<?php if(isset($beer) && $beer['beername']) { ?>		
                     					
@@ -162,7 +166,9 @@
 					
 					<?php } ?>
 				</td>
+				</tr>
     		<?php }?>
+    		</table>
 		</tr>
 		<?php } ?>
 			
@@ -246,7 +252,7 @@
     			if( isset($beers[$i]) ) $beer = $beers[$i];
     			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG  && !isset($beer) ) continue;
     		?>
-				<td class="keg" colspan="2">
+				<td class="keg">
 				<?php if(isset($beer) && $beer['beername']){ ?>
 					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
 						<h3><?php echo number_format((($beer['startAmount'] - $beer['remainAmount']) * 128)); ?> fl oz poured</h3>

@@ -31,13 +31,14 @@
 					BITTERNESS
 				</th>
 			<?php } ?>
-			
+		
+
 			<?php if($config[ConfigNames::ShowBeerName]){ ?>
 				<?php 
                     if($config[ConfigNames::ShowBreweryImages]){ $beerColSpan++; }
                     if($config[ConfigNames::ShowBeerImages]){ $beerColSpan++; }
                 ?> 
-				<th <?php if($beerColSpan > 1){ echo 'colspan="$beerColSpan"';}?> class="beername">
+				<th <?php if($beerColSpan > 1){ echo 'colspan="'.$beerColSpan.'"';}?> class="beername">
 					<?php if($config[ConfigNames::ShowBeerName]){ ?>
 						BEER NAME 
 						<?php if($config[ConfigNames::ShowBeerStyle]){ ?>&nbsp; &nbsp; STYLE<hr><?php } ?>
@@ -130,7 +131,7 @@
 				<?php } ?>
 			
 				<?php if($config[ConfigNames::ShowBreweryImages]){ ?>
-					<td style="width:150px" >
+					<td style="width:75px" >
 					<?php if(isset($beer) && $beer['beername']){ ?>
 						<img class="breweryimg" src="<?php echo $beer['']; ?>" />
 					<?php } ?>
@@ -138,7 +139,7 @@
 				<?php } ?>
 				
 				<?php if($config[ConfigNames::ShowBeerImages]){ ?>
-					<td style="width:150px <?php if($beerColSpan > 1){ echo ';border-left: none;'; } ?>" class="beerimg">
+					<td style="width:75px <?php if($beerColSpan > 1){ echo ';border-left: none;'; } ?>" class="beerimg">
 					<?php if(isset($beer) && $beer['beername']){ ?>
 						<?php 
 							beerImg($config, $beer['untID']);
