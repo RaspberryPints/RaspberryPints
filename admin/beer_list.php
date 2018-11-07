@@ -193,7 +193,13 @@ include 'top_menu.php';
 								</tr>
 								<tr class="intborder">
 									<td colspan="2">
-										<?php echo $beer->get_notes() ?>
+										<?php
+										if(strlen($beer->get_notes()) < 200){
+										  echo $beer->get_notes() ;
+										}else{
+										    echo substr($beer->get_notes(), 0, 200) .' ...';										      
+										}
+										?>
 									</td>
 									<td style="width:50px; text-align: center;">
 										<input name="editBeer" type="button" class="btn" value="Edit" onClick="window.location='beer_form.php?id=<?php echo $beer->get_id()?>'" />
