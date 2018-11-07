@@ -42,7 +42,16 @@
 		//echo $sql; exit;
 		return $mysqli->query($sql);
 	}
-
+	
+	function getRFIDConfigurableConfigs()
+	{
+	    global $mysqli;
+	    $config = array();
+	    $sql = "SELECT * FROM config WHERE configName IN ('".ConfigNames::UseTapValves."', '".ConfigNames::UseRFID."')";
+	    //echo $sql; exit;
+	    return $mysqli->query($sql);
+	}
+	
 	function saveConfigValue($configName, $configValue, $insert = false)
 	{
 	    global $mysqli;
@@ -67,5 +76,17 @@
 				$oldValues[$constVal] = $newValues[$key];
 			}	
 		}
+	}
+	
+	function getAllConfigsLike($name)
+	{
+	    global $mysqli;
+	    $config = array();
+	    $sql = "SELECT * FROM config WHERE configName LIKE $name";
+	    $qry = $mysqli->query($sql);
+	    while($c = $qry->fetch_array()){
+	        $config[$c['configName']] = $c['configValue'];
+	    }
+	    return $config;
 	}
 ?>

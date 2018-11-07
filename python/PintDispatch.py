@@ -70,16 +70,16 @@ class CommandTCPHandler(SocketServer.StreamRequestHandler):
             return
         if(reading[0] == "RPC"): # reconfigure
             debug("reconfigure trigger: " + reading[1])
-            if ( reading[1] == "valve" or reading[1] == "all" ):
+            if ( reading[1] == "valve" ):
                 debug("updating valve status from db")
                 self.server.pintdispatch.updateValvePins()
-            if ( reading[1] == "fan" or reading[1] == "all" ):
+            if ( reading[1] == "fan" ):
                 debug("updating fan status from db")
                 self.server.pintdispatch.resetFanConfig()
-            if ( reading[1] == "config" or reading[1] == "all" ):
+            if ( reading[1] == "config" ):
                 debug("triggering config update refresh")
                 self.server.pintdispatch.sendconfigupdate()
-            if ( reading[1] == "flow" or reading[1] == "all" ):
+            if ( reading[1] == "flow" ):
                 debug("updating flow meter config from db")
                 self.server.pintdispatch.updateFlowmeterConfig()
             if ( reading[1] == "alamode" or reading[1] == "all" ):
@@ -123,7 +123,7 @@ class PintDispatch(object):
             log("FATAL: Unable to setup socket")
             quit()
 			
-        self.flowmonitor = FlowMonitor(self)
+        self.valvesState = []
         self.fanTimer = None
         self.valvePowerTimer = None
         if OPTION_VALVETYPE == 'three_pin_ballvalve':
@@ -134,6 +134,7 @@ class PintDispatch(object):
         
         self.commandserver = CommandTCPServer(('localhost', MCAST_PORT), CommandTCPHandler)
         self.commandserver.pintdispatch = self
+        self.flowmonitor = FlowMonitor(self)
     
     def parseConnFile(self):
         connFileName = ADMIN_INCLUDES_DIR + "/conn.php"
@@ -168,6 +169,14 @@ class PintDispatch(object):
         con = self.connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)
         cursor.execute("SELECT tapId,flowPin,valvePin,valveOn FROM tapconfig ORDER BY tapId")
+        rows = cursor.fetchall()
+        con.close()
+        return rows
+    
+    def getRFIDReaders(self):
+        con = self.connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        cursor.execute("SELECT * from rfidReaders ORDER BY priority")
         rows = cursor.fetchall()
         con.close()
         return rows
@@ -255,16 +264,10 @@ class PintDispatch(object):
             
     # check if we're exceeding the pour threshold
     def sendflowupdate(self, pin, count):
-        if( self.pourShutOffCount > 10 ) and ( int(count) > self.pourShutOffCount ):
-            if self.useOption("useTapValves"):
-                debug( "too long a pour, shutting down tap with flow pin " + str(pin) + ", count: " + str(count) + ", shut off: " + str(self.pourShutOffCount) )
-                self.shutDownTap(pin)
+        return
         
     # check if we're exceeding the pour threshold
     def sendkickupdate(self, pin):
-        if self.useOption("useTapValves"):
-            debug( "keg kicked, shutting down tap with flow pin " + str(pin) )
-            self.shutDownTap(pin)
         msg = "RPU:KICK:" + str(pin)
         debug("Kicking Keg: "  + msg.rstrip())
         self.mcast.sendto(msg + "\n", (MCAST_GRP, MCAST_PORT))
@@ -385,7 +388,7 @@ class PintDispatch(object):
         
     # check if something got changed which requires reset/reconfigure of alamode
     def needAlaModeReconfig(self):
-        return self.alaModeReconfig
+        return 1 if self.alaModeReconfig else 0
                     
     # reset the alamode by tripping it's reset line
     def resetAlaMode(self):
@@ -444,32 +447,29 @@ class PintDispatch(object):
         value = GPIO.input(pin)
         debug( "read pin %s value %s" %(pin, value))
         return value;
-		
-    def valveStartPower(self):
-        if self.valvePowerTimer is not None:
-            self.valvePowerTimer.cancel()
-            self.valvePowerTimer = Timer(self.getValvesPowerTime(), self.valveStopPower)
-            self.valvePowerTimer.daemon=True
-            self.valvePowerTimer.start()
-            debug( "starting valve power on pin %s for %s seconds" %(self.getValvesPowerPin(), OPTION_VALVEPOWERON))
-            self.updatepin(self.getValvesPowerPin(), 1)
-        
+		        
     def valveStopPower(self):
         debug( "stopping valve power on pin %s" %(OPTION_VALVEPOWERPIN))
         self.updatepin(self.getValvesPowerPin(), 0)
         
-    def updateValvePins(self):
+    def updateValvePins(self):            
         taps = self.getTapConfig()
-        
-        self.valveStartPower()    
+        ii = 0
         for tap in taps:
+            if( len(self.valvesState) < ii + 1):
+                self.valvesState.append(-1)
+                
             if(tap["valveOn"] is None):
                 tap["valveOn"] = 0
                 
-            pin = int(tap["valvePin"])
-            pinNewValue = int(tap["valveOn"])
-            if pinNewValue > 0 and self.updatepin(pin, pinNewValue):
-                self.sendvalveupdate(pin, pinNewValue)
+            if self.valvesState[ii] != int(tap["valveOn"]):
+                self.sendvalveupdate(ii, tap["valveOn"])
+                
+            self.valvesState[ii] = int(tap["valveOn"])
+            ii = ii + 1
+            
+    def getValvesState(self):
+        return self.valvesState      
     
     def getConfigItem(self, itemName):
         config = self.getConfig()

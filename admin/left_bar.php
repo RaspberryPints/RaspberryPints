@@ -46,7 +46,7 @@
 	<li>
 		<a class="collapsed heading">Advanced Hardware</a>
 		<ul class="navigation">
-			<li><a href="#" title="rfid-reader">RFID Readers <small>(coming v2.0.0)</small></a></li>
+			<li><a href="rfid_reader_list.php" title="rfid-reader">RFID Readers</a></li>
 			<li><a href="#" title="temp-probe">Temperature Probes <small>(coming v3.0.0)</small></a></li>
 			<li><a href="#" title="solenoid">Solenoids <small>(coming v3.0.0)</small></a></li>
 			<li><a href="#" title="motion-sensor">Motion Sensors <small>(coming v3.0.0)</small></a></li>

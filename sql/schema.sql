@@ -692,6 +692,17 @@ CREATE TABLE IF NOT EXISTS `bottleTypes` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
+CREATE TABLE IF NOT EXISTS `rfidReaders` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text NULL,
+	`type` int(11) NOT NULL,
+	`pin` int(11) NULL,
+	`priority` int(11) NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 --
 -- Dumping data for table `bottleTypes`
 --

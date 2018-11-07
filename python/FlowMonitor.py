@@ -22,18 +22,18 @@ import traceback
 from Config import config
 
 alamodeRelayTrigger = 0
-rfidSPISSPin = 24
-
+readers = []
+  
 def debug(msg):
     if(config['flowmon.debug']):
         log(msg)
                  
 def log(msg):
-    if msg != "RFIDCheck" or log.lastMsg != msg:
+    if ("RFIDCheck" not in msg and "Status" not in msg) or log.lastMsg != msg:
         print datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S') + " RPINTS: " + msg.rstrip()
         sys.stdout.flush()
         log.lastMsg = msg
-log.lastMsg = ""
+log.lastMsg = "" 
 
 class FlowMonitor(object):
     
@@ -43,7 +43,8 @@ class FlowMonitor(object):
         self.poursdir = config['pints.dir'] + '/includes/pours.php'
         self.rfiddir = config['pints.dir'] + '/includes/rfidCheck.php'
         self.resetAlamode = True
-        self.alaKeepAlive = False
+        self.alaIsAlive = False
+        self.alamodeUseRFID = False
         
     def readline_notimeout(self):
         eol = b'\r\n'
@@ -102,10 +103,6 @@ class FlowMonitor(object):
                     alamodePourShutOffCount = item["configValue"]
             if (item["configName"] == 'alamodeUpdateTriggerCount'):
                     alamodeUpdateTriggerCount = item["configValue"]
-            if (item["configName"] == 'useRFID'):
-                    alamodeUseRFID = item["configValue"]
-            if (item["configName"] == 'rfidSSPin'):
-                    rfidSPISSPin = item["configValue"]
         
         numberOfTaps = len(taps)
         pins = []
@@ -135,7 +132,8 @@ class FlowMonitor(object):
         cfgmsg = cfgmsg + alamodeKickTriggerCount + ":"
         cfgmsg = cfgmsg + alamodeUpdateTriggerCount + ":"
         cfgmsg = cfgmsg + alamodePourShutOffCount + ":"
-        cfgmsg = cfgmsg + alamodeUseRFID + "|"
+        cfgmsg = cfgmsg + ("1" if self.alamodeUseRFID else "0")
+        cfgmsg = cfgmsg + "|"
         return cfgmsg
                             
     def reconfigAlaMode(self):
@@ -150,6 +148,7 @@ class FlowMonitor(object):
         self.arduino.reset_input_buffer()
         
         debug( "alamode alive..." )
+        self.alaIsAlive = True
         cfgmsg = self.assembleConfigMessage()
 
         debug( "alamode config, about to send: " + cfgmsg )
@@ -171,35 +170,42 @@ class FlowMonitor(object):
     def monitor(self):
         running = True
         
-        if self.alaKeepAlive is False:
+        if self.alaIsAlive is False:
             debug( "resetting alamode" )
             self.dispatch.resetAlaMode()
             self.arduino = serial.Serial(self.port,9600,timeout=.5)
         else:
-            self.alaKeepAlive = False
+            self.alaIsAlive = False
 
+        dbReaders = self.dispatch.getRFIDReaders()
+        for item in dbReaders:
+            if (item["type"] == 0):
+                    readers.append( RFIDCheckThread( "RFID", self.rfiddir, rfidSPISSPin=int(item["pin"]) ) )
+            self.alamodeUseRFID = True
         self.reconfigAlaMode()
         debug( "listening to alamode" )
-        rfidThread = RFIDCheckThread("RFID", self.rfiddir, rfidSPISSPin=rfidSPISSPin)
         
         try:
             while running:   
                 #msg = self.arduino.readline()
                 msg = self.readline_notimeout()
                 if not msg:
-                    # check if we need to reconfigure alamode
-                    if(self.dispatch.needAlaModeReconfig()):
-                        debug( "alamode reconfig in progress..." )
-                        return; # get out and let the caller restart us
                     continue
                 
                 reading = msg.split(";")
                 if reading[0] == "alive" :
                     debug(msg)
-                    debug( "alamode was restarted, restart flowmonitor")
-                    self.alaKeepAlive = True
+                    if self.alaIsAlive == True :
+                        debug( "alamode was restarted, restart flowmonitor" )
+                    else :
+                        debug( "alamode was started" )
+                    #incase the arduino restarts its self we want to do not alive so that we reset it next time
+                    self.alaIsAlive = not self.alaIsAlive 
                     return # arduino was restarted, get out and let the caller restart us
-                
+                if reading[0] == "dead" :
+                    # check if we need to reconfigure alamode
+                    debug( "alamode reconfig in progress..." )
+                    return # get out and let the caller restart us                
                 if ( len(reading) < 2 ):
                     debug( "alamode - Unknown message (length too short): "+ msg )
                     continue
@@ -226,6 +232,7 @@ class FlowMonitor(object):
                     MCP_PIN = str(reading[2])
                     subprocess.call(["php", self.poursdir, "Kick", MCP_PIN])
                     self.dispatch.sendkickupdate(MCP_PIN)
+                    
                 elif ( reading[0] == "SM" and len(reading) >= 3 ):
                     #debug( "got a Pin Mode Request: "+ msg )
                     part = 1
@@ -239,6 +246,7 @@ class FlowMonitor(object):
                     msg = "DONE;%d;%d|" % (COUNT, MODE)
                     #debug( "Sending "+ msg )
                     self.arduino.write(msg)
+                    
                 elif ( reading[0] == "RP" and len(reading) >= 2 ):
                     #debug( "got a Read Pin Request: "+ msg )
                     MCP_PIN = int(reading[1])
@@ -246,24 +254,35 @@ class FlowMonitor(object):
                     msg = "PINREAD;%s;%s|" % (MCP_PIN, pinState)
                     #debug( "Sending "+ msg )
                     self.arduino.write(msg)
+                    
                 elif ( reading[0] == "WP" and len(reading) >= 3 ):
                     #debug( "got a Write Pins Request: "+ msg )
                     WritePinsThread("WP", reading, self.dispatch).start()
                     msg = "DONE;%d;%d|" % (COUNT, MODE)
                     #debug( "Sending "+ msg )
                     self.arduino.write(msg)
-                elif ( reading[0] == "RFIDCheck" ):
+                    
+                #request basic status infomration like rfid/user and reconfig required
+                elif ( reading[0] == "StatusCheck" ):
                     #debug("RFIDCheck")
                     RFIDState = "NOTOK"
-                    if not rfidThread.isAlive():
-                        rfidThread.start() 
-
-                    userId = rfidThread.getLastUserId() 
-                    if userId > -1:
-                        RFIDState = "OK"
-                        
-                    msg = "RFID;%s;%s;" % (RFIDState, userId)
-                    #debug( "Sending "+ msg )
+                    userId = -1
+                    if self.alamodeUseRFID == True:
+                        for item in readers:
+                            if not item.isAlive():
+                                item.start() 
+    
+                        userId = item.getLastUserId() 
+                        if userId > -1:
+                            RFIDState = "OK"
+                    
+                    valves = ""
+                    valvesState = self.dispatch.getValvesState()
+                    if not valvesState is None :
+                        valves = ';'.join(map(str, valvesState))
+                                
+                    msg = "Status;%s;%d;%s;%s;|" % (RFIDState, userId, self.dispatch.needAlaModeReconfig(), valves)
+                    debug( "Sending "+ msg )
                     self.arduino.write(msg)
                 else:
                     debug( "unknown message: "+ msg )
@@ -271,11 +290,12 @@ class FlowMonitor(object):
             print("Unexpected error:", sys.exc_info()[0])
             traceback.print_exc(file=sys.stdout)
         finally:            
-            if self.alaKeepAlive is False :
+            if self.alaIsAlive is False :
                 debug( "closing serial connection to alamode..." )
                 self.arduino.close()
-            if rfidThread.isAlive():
-                rfidThread.exit()
+            for item in readers:
+                if item.isAlive():
+                    item.exit
 
     def fakemonitor(self):
         running = True
