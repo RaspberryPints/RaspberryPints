@@ -14,17 +14,17 @@
 
 	$data = "";
 
-	if ($value == "valve") {
-		$data = "RPC:valve\n";
-	} else if ($value == "fan") {
-		$data = "RPC:fan\n";
-	} else if ($value == "flow") {
-		$data = "RPC:flow\n";
-	} else if ($value == "config") {
-		$data = "RPC:config\n";
-	} else if ($value == "alamode") {
-		$data = "RPC:alamode\n";
-	} else {
+	if ($value == "all"  ||
+	    $value == "valve"||
+	    $value == "fan"  ||
+	    $value == "flow" ||
+	    $value == "config" ||
+	    $value == "alamode")
+	{
+		$data = "RPC:".$value."\n";
+	} 
+	else 
+	{
 		echo $received;
 		exit();
 	}
