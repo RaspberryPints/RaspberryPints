@@ -175,12 +175,12 @@
 				<?php if(($config[ConfigNames::ShowAbvCol])){ ?>
 					<td class="abv">
         			<?php if(isset($beer) && $beer['beername']){?>
+    					<?php 
+    						$abv = $beer['abv'];
+    						if(!isset($abv)) $abv = ($beer['og'] - $beer['fg']) * 131; 
+    					?>	
     					<?php if(($config[ConfigNames::ShowAbvImg])) { ?>
     						<div class="abv-container">
-            					<?php 
-            						$abv = $beer['abv'];
-            						if(!isset($abv)) $abv = ($beer['og'] - $beer['fg']) * 131; 
-            					?>	
     							<?php
     								$numCups = 0;
     								$remaining = $abv * 20;
