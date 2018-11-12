@@ -16,7 +16,6 @@ import MySQLdb as mdb
 import subprocess
 import os
 import os.path
-import MFRC522
 import traceback
 
 from Config import config
@@ -36,8 +35,19 @@ def log(msg):
 log.lastMsg = "" 
 
 class FlowMonitor(object):
+    RFID_IMPORT_SUCCESSFUL = True
     
     def __init__(self, dispatcher):
+        try:
+            import MFRC522
+        except ImportError:
+            self.RFID_IMPORT_SUCCESSFUL = False
+        except ImportError:
+            self.RFID_IMPORT_SUCCESSFUL = False
+            
+        if not self.RFID_IMPORT_SUCCESSFUL:
+            log("Could not import RFID Reader, RFID disabled. Assuming SPI not installed/configured")
+            
         self.port = config['flowmon.port']
         self.dispatch = dispatcher
         self.poursdir = config['pints.dir'] + '/includes/pours.php'
@@ -177,11 +187,13 @@ class FlowMonitor(object):
         else:
             self.alaIsAlive = False
 
-        dbReaders = self.dispatch.getRFIDReaders()
-        for item in dbReaders:
-            if (item["type"] == 0):
-                    readers.append( RFIDCheckThread( "RFID", self.rfiddir, rfidSPISSPin=int(item["pin"]) ) )
-            self.alamodeUseRFID = True
+        readers = []
+        if self.RFID_IMPORT_SUCCESSFUL:
+            dbReaders = self.dispatch.getRFIDReaders()
+            for item in dbReaders:
+                if (item["type"] == 0):
+                        readers.append( RFIDCheckThread( "RFID", self.rfiddir, rfidSPISSPin=int(item["pin"]) ) )
+                self.alamodeUseRFID = True
         self.reconfigAlaMode()
         debug( "listening to alamode" )
         
