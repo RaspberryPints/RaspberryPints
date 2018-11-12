@@ -70,7 +70,7 @@ pi@raspberrypi ~ $ sudo reboot
 
 
 Install the LAMP Stack
-Now we’ll install Linux, Apache, MySQL and PHP. These four packages are commonly condensed into a stack called “LAMP”.
+Now we'll install Linux, Apache, MySQL and PHP. These four packages are commonly condensed into a stack called "LAMP".
 
 pi@raspberrypi ~ $ sudo apt-get -y install apache2 php7.0 mysql-client mysql-server php7.0-mysql phpmyadmin
 
@@ -162,13 +162,20 @@ Pin3 -> VIN
 Once the alamode has been seated on the rPi (on the gpio pins) and the flow meter has been attached you can power the 
 rPi up. Plug the power in to the micro usb on the alamode and not the rPi.
 
+If you plan to use RFID than you need to install SPI-Py
+get the package (Note: it will retreive to the current directory of the shell)
+git clone https://github.com/lthiery/SPI-Py
+cd SPI-Py
+sudo python setup.py install
+
 SETUP Raspberry Pints
-Goto http://raspberrypints.com/download/ and click Download Now
+Goto http://raspberrypints.com/download/ and click Download Now (this version does not work with PHP7)
+OR for a version that works with PHP7 https://github.com/rtlindne/RaspberryPints
 
 Open a terminal and change directories to download location)
 pi@raspberrypi ~ $ sudo rm /var/www/index.html
 If you get an error message stating that the file was not found, you can safely disregard it.
-*“x.x.x.x” is the version number you downloaded
+"x.x.x.x" is the version number you downloaded
 pi@raspberrypi ~ $ unzip RaspberryPints-x.x.x.x.zip     
 pi@raspberrypi ~ $ sudo mv RaspberryPints-x.x.x.x/* /var/www/ html/    
 pi@raspberrypi ~ $ sudo chmod 777 /var/www/html -R 

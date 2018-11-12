@@ -37,6 +37,12 @@ Pin3 -> VIN
 Once the alamode has been seated on the rPi (on the gpio pins) and the flow meter has been attached you can power the 
 rPi up. Plug the power in to the micro usb on the alamode and not the rPi.
 
+If you plan to use RFID than you need to install SPI-Py
+get the package (Note: it will retreive to the current directory of the shell)
+git clone https://github.com/lthiery/SPI-Py
+cd SPI-Py
+sudo python setup.py install
+
 Log in to the GUI on the rpi and go to the menu -> Programming -> arduino
 This opens a program used to edit the ino file for arduino as well as compiler and uploader.
 Click on file -> open

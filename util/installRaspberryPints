@@ -63,6 +63,7 @@ MYSQL_RP_USER="RaspberryPints"
 MYSQL_RP_PASS="RaspberryPints"
 
 USE_FLOW_METERS=N
+USE_RFID=N
 
 # the base github repo name
 DEFAULT_REPO=https://github.com/RaspberryPints/RaspberryPints.git  
@@ -146,7 +147,7 @@ else
 	fi
 fi
 
-# ask the user where they want to install flowmeters
+# ask the user if they want to install flowmeters
 read -e -p "Do you want to use Flow Meters? (Y:N) (default is: ${USE_FLOW_METERS}): " ANSWER
 if [ "$ANSWER" = "" ]; then
    ANSWER="${USE_FLOW_METERS}"
@@ -160,6 +161,22 @@ then
 else
 	echo "Will Not Install Flow Meters"
 fi
+
+# ask the user if they want to install RFID
+read -e -p "Do you want to use RFID? (Y:N) (default is: ${USE_RFID}): " ANSWER
+if [ "$ANSWER" = "" ]; then
+   ANSWER="${USE_RFID}"
+fi
+if echo "$ANSWER" | grep -iq "^y" ;then
+	USE_RFID=true
+fi
+if [ "$USE_RFID" = "true" ];
+then
+	echo "Will Install RFID"
+else
+	echo "Will Not Install RFID"
+fi
+
 #update the RPI
 rpi-update
 
@@ -527,6 +544,21 @@ then
 	if echo "$ANSWER" | grep -iq "^y" ;then
 		reboot
 	fi
+fi
+
+if [ "$USE_RFID" = "true" ];
+then
+	RFID_SPI_DIRECTORY=${DIRECTORY}/python/SPI-Py
+	pushd .
+	
+	if [ -d "${RFID_SPI_DIRECTORY}/" ]; then
+		rm "${RFID_SPI_DIRECTORY}/" -r
+	fi
+	git clone https://github.com/lthiery/SPI-Py "${RFID_SPI_DIRECTORY}"
+	cd ${RFID_SPI_DIRECTORY}
+	python setup.py install 
+	
+	popd
 fi
 
 
