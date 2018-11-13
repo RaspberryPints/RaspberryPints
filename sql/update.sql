@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `rfidReaders` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
-INSERT INTO rfidReaders(`name`, `type,`, `pin`, `priority`)
-(SELECT 'Default', 0, configValue, 1 FROM `config` WHERE `configName` = 'rfidSSPin'
-DELETE FROM `config` WHERE `configName` = 'rfidSSPin'
-DELETE FROM `config` WHERE `configName` = 'useRFID'
+INSERT INTO rfidReaders(`name`, `type`, `pin`, `priority`)
+(SELECT 'Default', 0, configValue, 1 FROM `config` WHERE `configName` = 'rfidSSPin');
+DELETE FROM `config` WHERE `configName` = 'rfidSSPin';
+DELETE FROM `config` WHERE `configName` = 'useRFID';
