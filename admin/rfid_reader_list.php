@@ -265,10 +265,10 @@ include 'scripts.php';
 				foreach ($readers as $reader){
 				    if(null == $readers)continue; 
 				?>
-					<?php echo $comma; ?>type<?php echo $readers->get_id(); ?>: { required: true }
+					<?php echo $comma; ?>type<?php echo $reader->get_id(); ?>: { required: true }
 					<?php $comma = ","; ?>
-					<?php echo $comma; ?>pin<?php echo $tap->get_id(); ?>: { required: true, number: true }
-					<?php echo $comma; ?>priority<?php echo $tap->get_id(); ?>: { required: true, number: true }
+					<?php echo $comma; ?>pin<?php echo $reader->get_id(); ?>: { required: true, number: true }
+					<?php echo $comma; ?>priority<?php echo $reader->get_id(); ?>: { required: true, number: true }
 			     <?php } ?> 
 				}
 			});		

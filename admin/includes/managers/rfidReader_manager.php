@@ -9,7 +9,7 @@ class RFIDReaderManager extends Manager{
         return ["id"];
     }
     protected function getColumns(){
-        return ["name", "type", "pin"];
+        return ["name", "type", "pin", "priority"];
     }
     protected function getTableName(){
         return "rfidReaders";
