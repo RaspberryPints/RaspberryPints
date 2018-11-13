@@ -7,6 +7,9 @@ $kegManager = new KegManager();
 
 $config = getAllConfigs();
 
+const TAP_TEXT_ENABLE =  "Let it flow";
+const TAP_TEXT_DISABLE = "Stop flow";
+
 $reconfig = false;
 if( isset($_POST['enableTap']) && $_POST['enableTap'] != ""){
 	//The element holds the tap Id
@@ -78,7 +81,7 @@ if (isset ( $_POST ['saveSettings'] )) {
 		}
 		unset($_POST ['numberOfTaps']);
 	} 
-	} 
+} 
 if (isset ( $_POST ['saveSettings'] ) || isset ( $_POST ['configuration'] )) {
 	setConfigurationsFromArray($_POST, $config);
 	if (isset ( $_POST ['saveSettings'] ) )$reconfig = true;
@@ -116,6 +119,7 @@ include 'top_menu.php';
               
         <a onClick="toggleSettings(this, 'settingsDiv')" class="collapsed heading">Settings</a>
 		
+	<!-- Start Tap Config Form -->
 		<div id="settingsDiv" style="<?php echo (isset($_POST['settingsExpanded'])?$_POST['settingsExpanded']:'display:none'); ?>">
         
         <form id="configuration" method="post">
@@ -244,10 +248,7 @@ include 'top_menu.php';
 			echo $htmlHelper->CreateMessage('warning', $tapsErrorMsg);	
 		}else{
 ?>	
-	    <form method="POST" id="tap-form" onSubmit='return validateBeerSelected("kegId", "beerId")'>
-                <input type="hidden" name="enableTap" id="enableTap" value="" />
-                <input type="hidden" name="disableTap" id="disableTap" value="" />
-        
+	    <form method="POST" id="tap-form" onSubmit='return validateBeerSelected("kegId", "beerId")'>        
                 <?php foreach($activeTaps as $tap){ 
 	                if(null == $tap)continue; 
 				?>
@@ -347,19 +348,10 @@ include 'top_menu.php';
                         <?php } ?>
           				<?php 
                             if($config[ConfigNames::UseTapValves]) {
-                                $kegOn = "";
-                                $kegOnSay = "";
-                                if ( $tap->get_valveOn() < 1 ) {
-                                    $kegOn = "enableTap";
-                                    $kegOnSay = "Let it flow";
-                                } else {
-                                    $kegOn = "disableTap";
-                                    $kegOnSay = "Stop this";
-                                }
                             ?>
                             <td>
                                 <?php if( isset($tap) ) { ?>
-                                    <button name="<?php echo $kegOn?>" type="button" class="btn" style="white-space:nowrap" value="<?php echo $tap->get_id()?>" onClick="document.getElementById('<?php echo $kegOn?>').value=this.value;this.form.submit();"><?php echo $kegOnSay?></button>
+                                    <button name="tapOverride[]" id="tapOverride<?php echo $tap->get_id();?>" type="button" class="btn" style="white-space:nowrap" value="<?php echo $tap->get_valveOn(); ?>" onClick="changeTapState(this, <?php echo $tap->get_id()?>)"><?php echo ($tap->get_valveOn() < 1?TAP_TEXT_ENABLE:TAP_TEXT_DISABLE);?></button>
                                 <?php } ?>
                             </td>
                         <?php } ?>
@@ -428,9 +420,10 @@ include 'scripts.php';
 			?>
 				<?php echo $comma; ?>tapId<?php echo $tap->get_id(); ?>: { required: true }
 				<?php $comma = ","; ?>
+				<?php echo $comma; ?>tapNumber<?php echo $tap->get_id(); ?>: { required: true, number: true, min: 1, integer: true }
 				<?php echo $comma; ?>kegId<?php echo $tap->get_id(); ?>: { required: true }
-				<?php echo $comma; ?>startAmount<?php echo $tap->get_id(); ?>: { required: true, number: true }
-				<?php echo $comma; ?>currentAmount<?php echo $tap->get_id(); ?>: { required: true, number: true }
+				<?php echo $comma; ?>startAmount<?php echo $tap->get_id(); ?>: { required: true, number: true, min: 0 }
+				<?php echo $comma; ?>currentAmount<?php echo $tap->get_id(); ?>: { required: true, number: true, min: 0 }
 			<?php } ?> 
 				//,tapId: { required: true }				
 				//,kegId: { required: true, beerRequired: true }
@@ -494,8 +487,7 @@ include 'scripts.php';
 				if(secOtherTapKegSelect != null)secOtherTapKegSelect.selectedIndex = 0;		
 			}	
 		}
-		if(beerId != null)
-		{
+		if(beerId != null){
 			var secSelect = document.getElementById(secSelectBeerStart+tapId);
 			var secSelectOptions = secSelect.options;
 			for (var i = 0; i < secSelectOptions.length; i++) 
@@ -506,6 +498,29 @@ include 'scripts.php';
 				}
 			}
 		}
+	}
+
+	function changeTapState(btn, tapId){
+		var data
+		if(btn.value < 1){
+			data = { "enableTap" : tapId }
+		}else{
+			data = { "disableTap" : tapId }
+		}
+		$.ajax(
+            {
+                   type: "POST",
+                   url: "tap_list.php",
+                   data: data,// data to send to above script page if any
+                   cache: false,
+    
+                   success: function(response)
+                   {
+                    btn.value = ((parseInt(btn.value) + 1)%2);
+                    btn.innerHTML = btn.value < 1?"<?php echo TAP_TEXT_ENABLE;?>":"<?php echo TAP_TEXT_DISABLE;?>";
+                   }
+             });
+		
 	}
 </script>
 	<!-- End Js -->
