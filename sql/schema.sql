@@ -419,7 +419,6 @@ INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`,
 ('useFanPin', '17', 'Use Fan I/O Pin', 0, NOW(), NOW() ),
 ('fanInterval', '120', 'Fan Interval', 0, NOW(), NOW() ),
 ('fanOnTime', '1', 'Fan On time', 0, NOW(), NOW() ),
-('useRFID', '1', 'Use RFID', 1, NOW(), NOW() ),
 ('pourShutOffCount', '0', 'pour shutoff amount in counts', 0, NOW(), NOW() ),
 ('pourCountConversion', '1500', 'pour count conversion to gallons', 0, NOW(), NOW() ),
 ('alamodePourMessageDelay', '300', 'Arduino Pour Message Delay', 0, NOW(), NOW() ),
@@ -549,6 +548,7 @@ CREATE TABLE IF NOT EXISTS `tapconfig` (
   `flowPin` int(11) DEFAULT NULL,
   `valvePin` int(11) DEFAULT NULL,
   `valveOn` int(11) DEFAULT NULL,
+  `valvePinState` int(11) DEFAULT NULL,
   `count` float NOT NULL DEFAULT '1500',
 	PRIMARY KEY (`tapId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -697,7 +697,19 @@ CREATE TABLE IF NOT EXISTS `rfidReaders` (
   `name` text NULL,
 	`type` int(11) NOT NULL,
 	`pin` int(11) NULL,
-	`priority` int(11) NULL,
+	`priority` int(11) NULL DEFAULT 0,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `motionDetectors` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text NULL,
+	`type` int(11) NOT NULL DEFAULT 0,
+	`pin` int(11) NULL,
+	`priority` int(11) NULL DEFAULT 0,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	

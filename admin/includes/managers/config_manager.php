@@ -13,6 +13,14 @@
 		while($c = $qry->fetch_array()){
 			$config[$c['configName']] = $c['configValue'];
 		}
+		//Use RFID is no longer a config but the status that there are RFID Readers in the system
+		$config[ConfigNames::UseRFID] = False;
+		$sql = "SELECT * FROM rfidReaders";
+		$qry = $mysqli->query($sql);
+		while($c = $qry->fetch_array()){
+		    $config[ConfigNames::UseRFID] = True;
+		    break;
+		}
 		return $config;
 	}
 	
@@ -38,7 +46,7 @@
 	{	
 		global $mysqli;
 		$config = array();
-		$sql = "SELECT * FROM config WHERE configName IN ('".ConfigNames::UseTapValves."', '".ConfigNames::UseFanControl."', '".ConfigNames::UseRFID."', '".ConfigNames::UseFlowMeter."')";
+		$sql = "SELECT * FROM config WHERE configName IN ('".ConfigNames::UseTapValves."', '".ConfigNames::UseFanControl."', '".ConfigNames::UseFlowMeter."')";
 		//echo $sql; exit;
 		return $mysqli->query($sql);
 	}
@@ -47,7 +55,7 @@
 	{
 	    global $mysqli;
 	    $config = array();
-	    $sql = "SELECT * FROM config WHERE configName IN ('".ConfigNames::UseTapValves."', '".ConfigNames::UseRFID."')";
+	    $sql = "SELECT * FROM config WHERE configName IN ('".ConfigNames::UseTapValves."')";
 	    //echo $sql; exit;
 	    return $mysqli->query($sql);
 	}
