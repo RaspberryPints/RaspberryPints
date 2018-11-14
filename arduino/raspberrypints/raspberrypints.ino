@@ -303,15 +303,15 @@ void pollPins() {
 }
 
 void piStatusCheck(){
-  char readMsg[INPUT_SIZE]; 
-  int ii = 0;
+  static char readMsg[INPUT_SIZE];
+  int ii;
   char *command = NULL;
   char *rfidState = NULL;
   char *curPart = readMsg;
   char *tagValue = NULL;
   char *reconfigReq = NULL;
   char *valveState = NULL;
-  unsigned int tapNum = 0;
+  unsigned int tapNum;
   int newState;
   int turnOnPins[numSensors];
   int turnOffPins[numSensors];
@@ -327,55 +327,56 @@ void piStatusCheck(){
 	  waitingStatusResponse = true;
   }
   if(Serial.available() <= 0) return;
-  while(ii < INPUT_SIZE)
+  ii = 0;
+  while(ii + 1 < INPUT_SIZE)
   {
     readMsg[ii] = getsc();
-    if(readMsg[ii] == '\n' || readMsg[ii] == '|'){
-      readMsg[ii] = 0;
-      break;
-    }
+    if(readMsg[ii] == 'S') ii = 0; //In case serial string starts over (S)tatus
+    if(readMsg[ii] == '\n' || readMsg[ii] == '|') break;
     ii++;
   }
+  readMsg[ii] = 0;
 
   command     = strtok(readMsg, MSG_DELIMETER); //Read Status (const)
-  rfidState   = strtok(NULL, MSG_DELIMETER);
-  tagValue    = strtok(NULL, MSG_DELIMETER);
-  reconfigReq = strtok(NULL, MSG_DELIMETER);
-  for(tapNum = 0; tapNum < numSensors; tapNum++){
-	  valveState = strtok(NULL, MSG_DELIMETER);
-	  if(!valveState) break;
-	  newState = atoi(valveState);
-	  if( newState != manualValveState[tapNum] ){
-		 if(newState){
-			 turnOnPins [countOn++] = valvesPin[tapNum];
-	     //If not waiting to select a tap and tap is not pouring then we can shut off tap
-		 }else if( activeUserId == INVALID_USER_ID &&
-				   !isValvePinPouring(valvesPin[tapNum], tapNum) ){
-			 turnOffPins[countOff++] = valvesPin[tapNum];
-		 }
+  if( strcmp(command, "Status") == 0){
+	  rfidState   = strtok(NULL, MSG_DELIMETER);
+	  tagValue    = strtok(NULL, MSG_DELIMETER);
+	  reconfigReq = strtok(NULL, MSG_DELIMETER);
+	  for(tapNum = 0; tapNum < numSensors; tapNum++){
+		  valveState = strtok(NULL, MSG_DELIMETER);
+		  if(!valveState) break;
+		  newState = atoi(valveState);
+		  if( newState != manualValveState[tapNum] ){
+			 if(newState){
+				 turnOnPins [countOn++] = valvesPin[tapNum];
+		     //If not waiting to select a tap and tap is not pouring then we can shut off tap
+			 }else if( activeUserId == INVALID_USER_ID &&
+					   !isValvePinPouring(valvesPin[tapNum], tapNum) ){
+				 turnOffPins[countOff++] = valvesPin[tapNum];
+			 }
+		  }
+		  manualValveState[tapNum] = newState;
 	  }
-	  manualValveState[tapNum] = newState;
+
+
+	  if(rfidState && strcmp(rfidState, "OK") == 0){
+	    activeUserDate = millis();
+	    if(tagValue && activeUserId != atol(tagValue)){
+	      activeUserId = atol(tagValue);
+	      //serialPrint("RFID:");
+	      //serialPrintln(activeUserId);
+	      if(useValves > 0){
+	        writePins( numSensors, valvesPin, relayTrigger );
+	      }
+	    }
+	  }
+
+	  if(reconfigReq) reconfigRequired = atol(reconfigReq);
+
+	  //If any pins changed write them now
+	  if(turnOffPins[0] != 0) writePins(countOff, turnOffPins, !relayTrigger);
+	  if(turnOnPins [0] != 0) writePins(countOn,  turnOnPins,  relayTrigger);
   }
-
-  if(rfidState && strcmp(rfidState, "OK") == 0)
-  {
-    activeUserDate = millis();
-    if(tagValue && activeUserId != atol(tagValue)){
-      activeUserId = atol(tagValue);
-      //serialPrint("RFID:");
-      //serialPrintln(activeUserId);
-      if(useValves > 0){
-        writePins( numSensors, valvesPin, relayTrigger );
-      }
-    }
-  }
-
-  if(reconfigReq) reconfigRequired = atol(reconfigReq);
-
-  //If any pins changed write them now
-  if(turnOffPins[0] != 0) writePins(countOff, turnOffPins, !relayTrigger);
-  if(turnOnPins [0] != 0) writePins(countOn,  turnOnPins,  relayTrigger);
-
   waitingStatusResponse = false;
 }
 
