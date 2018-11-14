@@ -10,10 +10,10 @@ config['flowmon.port'] = '/dev/ttyS0'
 #config['flowmon.port'] = '/dev/rfcomm0'
 
 #logging settings for flowmon
-config['flowmon.debug' ] = True
+config['flowmon.debug' ] = False#True
 
 #logging settings for pintdispatch
-config['dispatch.debug' ] = True
+config['dispatch.debug' ] = False#True
 #Use fake monitoring to report flow
 config['dispatch.debugMonitoring' ] = False
 # restart line cooling timer if a pour happens

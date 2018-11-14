@@ -316,6 +316,10 @@ class PintDispatch(object):
 
     def spawnWebSocketServer(self):
         args = ["-p", "8081", "-d", "/var/www/html/python/ws"]
+        #only log all errors in the webservice if we are debuging, turn level to critical
+        if(not config['dispatch.debug']):
+            args.append("--log-level")
+            args.append("critical")
         options, args = _parse_args_and_config(args=args)
         options.cgi_directories = []
         options.is_executable_method = None
