@@ -72,5 +72,6 @@ abstract class ConfigNames
 	const ValvesOnTime = 'valvesOnTime';
 	const Version = 'version';
 	const UpdateDate = 'updateDate';
+	const RelayTrigger = 'relayTrigger';
 }
 ?>
