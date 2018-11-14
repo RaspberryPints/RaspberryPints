@@ -254,7 +254,8 @@
 						$kegImgClass = strtolower($tapOrBottle).$kegImgClass;
 						$kegOn = "";
 						if($config[ConfigNames::UseTapValves]){
-							if ( $beer['valveOn'] > 0 || $tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG ) 
+						    if ( $tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG &&
+						        $beer['valvePinState'] == $config[ConfigNames::RelayTrigger] ) 
 								$kegOn = "keg-enabled";
 							else
 								$kegOn = "keg-disabled";

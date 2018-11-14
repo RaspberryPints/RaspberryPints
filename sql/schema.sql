@@ -1226,7 +1226,8 @@ SELECT
 	t.tapRgba,
     tc.flowPin as pinId,
 	s.rgb as srmRgb,
-	tc.valveOn
+	tc.valveOn,
+	tc.valvePinState
 FROM taps t
 	LEFT JOIN tapconfig tc ON t.id = tc.tapId
 	LEFT JOIN kegs k ON k.id = t.kegId
@@ -1268,7 +1269,8 @@ SELECT
 	t.capRgba,
     NULL as pinId,
 	s.rgb as srmRgb,
-	1 as valveOn
+	1 as valveOn,
+	1 as valvePinState
 FROM bottles t
 	LEFT JOIN beers b ON b.id = t.beerId
 	LEFT JOIN bottleTypes bt ON bt.id = t.bottleTypeId

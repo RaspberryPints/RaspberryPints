@@ -111,64 +111,64 @@
 				<?php if($config[ConfigNames::ShowBeerStyle]){ ?>&nbsp; &nbsp; STYLE<hr><?php } ?>
 				<?php if($config[ConfigNames::ShowBeerNotes]){ ?>&nbsp; &nbsp; TASTING NOTES<?php } ?>
 				<?php if($config[ConfigNames::ShowBeerRating]){?>&nbsp; &nbsp; RATING<hr><?php } ?>
-			<td>
-			<table>
+			</td>
     		<?php for($i = 1; $i <= $numberOfBeers; $i++) {
     			$beer = null;
     			if( isset($beers[$i]) ) $beer = $beers[$i];
     			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG && !isset($beer) ) continue;
     		?>
-    		
-				<?php if($config[ConfigNames::ShowBreweryImages] || $config[ConfigNames::ShowBeerImages]){ ?>
-					<tr>
-				<?php } ?>
-				<?php if($config[ConfigNames::ShowBreweryImages]){ ?>
-					<td style="width:75px" >
-					<?php if(isset($beer) && $beer['beername']){ ?>
-						<img class="breweryimg" src="<?php echo $beer['breweryImage']; ?>" />
-					<?php } ?>
-					</td>
-				<?php } ?>
-				
-				<?php if($config[ConfigNames::ShowBeerImages]){ ?>
-					<td style="width:75px <?php if($beerColSpan > 1){ echo ';border-left: none;'; } ?>" class="beerimg">
-					<?php if(isset($beer) && $beer['beername']){ ?>
-						<?php 
-							beerImg($config, $beer['untID']);
-						?>
-					<?php } ?>
-					</td>
-				<?php } ?>
-				<?php if($config[ConfigNames::ShowBreweryImages] || $config[ConfigNames::ShowBeerImages]){ ?>
-					</tr>
-				<?php } ?>
-                <tr>
-				<td class="name" <?php if($beerColSpan > 1){ echo 'style="border-left: none;"'; } ?>>	
-					<?php if(isset($beer) && $beer['beername']) { ?>		
-                    					
-						<?php if($config[ConfigNames::ShowBeerName]){ ?>
-                            <h1><?php echo $beer['beername']; ?></h1>
-                        <?php } ?>
-                        
-                        <?php if($config[ConfigNames::ShowBeerStyle]){ ?>
-                            <h2 class="subhead"><?php echo str_replace("_","",$beer['style']); ?></h2>
-                        <?php } ?>
-                        
-                        <?php if($config[ConfigNames::ShowBeerNotes]){ ?>
-                            <p><?php echo $beer['notes']; ?></p>
-                        <?php } ?>
-                        
-                        <?php 
-                            if($config[ConfigNames::ShowBeerRating]){ 
-                            	beerRATING($config, $beer['untID']);
-                            } 
-                        ?>
-					
-					<?php } ?>
-				</td>
-				</tr>
+    			<td>
+				<table>
+    				<?php if($config[ConfigNames::ShowBreweryImages] || $config[ConfigNames::ShowBeerImages]){ ?>
+    					<tr>
+    				<?php } ?>
+    				<?php if($config[ConfigNames::ShowBreweryImages]){ ?>
+    					<td style="width:75px" >
+    					<?php if(isset($beer) && $beer['beername']){ ?>
+    						<img class="breweryimg" src="<?php echo $beer['breweryImage']; ?>" />
+    					<?php } ?>
+    					</td>
+    				<?php } ?>
+    				
+    				<?php if($config[ConfigNames::ShowBeerImages]){ ?>
+    					<td style="width:75px <?php if($beerColSpan > 1){ echo ';border-left: none;'; } ?>" class="beerimg">
+    					<?php if(isset($beer) && $beer['beername']){ ?>
+    						<?php 
+    							beerImg($config, $beer['untID']);
+    						?>
+    					<?php } ?>
+    					</td>
+    				<?php } ?>
+    				<?php if($config[ConfigNames::ShowBreweryImages] || $config[ConfigNames::ShowBeerImages]){ ?>
+    					</tr>
+    				<?php } ?>
+                    <tr>
+    				<td class="name" <?php if($beerColSpan > 1){ echo 'style="border-left: none;"'; } ?>>	
+    					<?php if(isset($beer) && $beer['beername']) { ?>		
+                        					
+    						<?php if($config[ConfigNames::ShowBeerName]){ ?>
+                                <h1><?php echo $beer['beername']; ?></h1>
+                            <?php } ?>
+                            
+                            <?php if($config[ConfigNames::ShowBeerStyle]){ ?>
+                                <h2 class="subhead"><?php echo str_replace("_","",$beer['style']); ?></h2>
+                            <?php } ?>
+                            
+                            <?php if($config[ConfigNames::ShowBeerNotes]){ ?>
+                                <p><?php echo $beer['notes']; ?></p>
+                            <?php } ?>
+                            
+                            <?php 
+                                if($config[ConfigNames::ShowBeerRating]){ 
+                                	beerRATING($config, $beer['untID']);
+                                } 
+                            ?>
+    					
+    					<?php } ?>
+    				</tr>
+    			</table>
+    		</td>
     		<?php }?>
-    		</table>
 		</tr>
 		<?php } ?>
 			
@@ -280,7 +280,8 @@
 						$kegImgClass = strtolower($tapOrBottle).$kegImgClass;
 						$kegOn = "";
 						if($config[ConfigNames::UseTapValves]){
-							if ( $beer['valveOn'] > 0 || $tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG ) 
+						    if ( $tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG && 
+						         $beer['valvePinState'] == $config[ConfigNames::RelayTrigger] ) 
 								$kegOn = "keg-enabled";
 							else
 								$kegOn = "keg-disabled";

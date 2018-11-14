@@ -10,6 +10,7 @@ class Tap
 	private $_count; 
 	private $_valvePinId;
 	private $_valveOn; 
+	private $_valvePinState; 
 	private $_startAmount; 
 	private $_currentAmount; 
 	private $_active;
@@ -38,6 +39,9 @@ class Tap
 	
 	public function get_valveOn() { return $this->_valveOn; }
 	public function set_valveOn($_valveOn){ $this->_valveOn = $_valveOn; }
+	
+	public function get_valvePinState() { return $this->_valvePinState; }
+	public function set_valvePinState($_valvePinState){ $this->_valvePinState = $_valvePinState; }
 	
 	public function get_flowPinId() { return $this->_pinId; }
 	public function set_flowPinId($_pinId){ $this->_pinId = $_pinId; }
@@ -106,6 +110,11 @@ class Tap
 			$this->set_valveOn($postArr['valveOn']);
 		else
 			$this->set_valveOn('0');
+		
+		if( isset($postArr['valvePinState']) )
+			$this->set_valvePinState($postArr['valvePinState']);
+		else
+			$this->set_valvePinState('0');
 				
 		if( isset($postArr['startAmount']) )
 			$this->set_startAmount($postArr['startAmount']);

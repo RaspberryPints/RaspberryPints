@@ -360,28 +360,7 @@ class PintDispatch(object):
 
         signal.pause()
         debug( "exiting...")
-#        stdin.readline()
-
-    def shutDownTap(self, flowPin):
         
-        taps = self.getTapConfig();
-        for tap in taps:
-            if(int(tap["flowPin"]) == int(flowPin)):
-                
-                if self.useOption("useTapValves"):
-                    valvePin = int(tap["valvePin"])
-                    self.updatepin(valvePin, 0) 
-                
-                sql = "UPDATE tapconfig SET valveOn=0 WHERE tapId=" +  str(tap["tapId"])
-                # update db
-                con = self.connectDB()
-                cursor = con.cursor(mdb.cursors.DictCursor)
-                result = cursor.execute(sql)
-                con.commit()
-                con.close()
-                # update browsers
-                self.sendvalveupdate(valvePin, 0)
-
     # 
     def triggerAlaModeReset(self):
         self.alaModeReconfig = True;
@@ -435,6 +414,14 @@ class PintDispatch(object):
                 GPIO.output(pin, GPIO.LOW)
             else:
                 GPIO.output(pin, GPIO.HIGH)
+                
+            sql = "UPDATE tapconfig SET valvePinState=" + str(value) + " WHERE valvePin =" +  str(-1*pin)
+            con = self.connectDB()
+            cursor = con.cursor(mdb.cursors.DictCursor)
+            result = cursor.execute(sql)
+            con.commit()
+            con.close()
+            
             return True
         return False
 

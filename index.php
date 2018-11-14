@@ -53,7 +53,7 @@
 				"tapNumber" => $b['tapNumber'],
 				"rating" => $b['rating'],
 				"srmRgb" => $b['srmRgb'],
-				"valveOn" => $b['valveOn']
+				"valvePinState" => $b['valvePinState']
 			);
 			$taps[$b['id']] = $beeritem;
 		}
@@ -87,7 +87,7 @@
 				"capNumber" => $b['capNumber'],
 				"rating" => $b['rating'],
 				"srmRgb" => $b['srmRgb'],
-				"valveOn" => $b['valveOn']
+				"valvePinState" => $b['valvePinState']
 			);
 			$bottles[$rowNumber] = $beeritem;
       		$rowNumber = $rowNumber+1;
