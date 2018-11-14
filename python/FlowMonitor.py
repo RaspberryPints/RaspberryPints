@@ -18,6 +18,12 @@ import os
 import os.path
 import traceback
 
+RFID_IMPORT_SUCCESSFUL = True
+try:
+    import MFRC522
+except:
+    RFID_IMPORT_SUCCESSFUL = False
+    
 from Config import config
 
 alamodeRelayTrigger = 0
@@ -35,17 +41,10 @@ def log(msg):
 log.lastMsg = "" 
 
 class FlowMonitor(object):
-    RFID_IMPORT_SUCCESSFUL = True
     
     def __init__(self, dispatcher):
-        try:
-            import MFRC522
-        except ImportError:
-            self.RFID_IMPORT_SUCCESSFUL = False
-        except ImportError:
-            self.RFID_IMPORT_SUCCESSFUL = False
             
-        if not self.RFID_IMPORT_SUCCESSFUL:
+        if not RFID_IMPORT_SUCCESSFUL:
             log("Could not import RFID Reader, RFID disabled. Assuming SPI not installed/configured")
             
         self.port = config['flowmon.port']
@@ -188,11 +187,11 @@ class FlowMonitor(object):
             self.alaIsAlive = False
 
         readers = []
-        if self.RFID_IMPORT_SUCCESSFUL:
+        if RFID_IMPORT_SUCCESSFUL:
             dbReaders = self.dispatch.getRFIDReaders()
             for item in dbReaders:
                 if (item["type"] == 0):
-                        readers.append( RFIDCheckThread( "RFID", self.rfiddir, rfidSPISSPin=int(item["pin"]) ) )
+                        readers.append( RFIDCheckThread( "RFID-" + item["name"], self.rfiddir, rfidSPISSPin=int(item["pin"]) ) )
                 self.alamodeUseRFID = True
         self.reconfigAlaMode()
         debug( "listening to alamode" )
@@ -284,9 +283,10 @@ class FlowMonitor(object):
                             if not item.isAlive():
                                 item.start() 
     
-                        userId = item.getLastUserId() 
-                        if userId > -1:
-                            RFIDState = "OK"
+                            userId = item.getLastUserId() 
+                            if userId > -1:
+                                RFIDState = "OK"
+                                break
                     
                     valves = ""
                     valvesState = self.dispatch.getValvesState()
@@ -362,6 +362,7 @@ class RFIDCheckThread (threading.Thread):
         self.lastUserId = -1
         
     def run(self):
+        log("RFID Reader " + self.threadID + " is Running")
         while not self.shutdown:
             self.checkRFID(self.rfidSPISSPin)
             time.sleep(self.delay)
