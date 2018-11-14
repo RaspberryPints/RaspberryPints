@@ -21,7 +21,7 @@ OPTION_DEBUG = True
 
 def debug(msg):
     if(OPTION_DEBUG):
-        print "RPINTS: " + msg
+        print datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S') + " RPINTS: " + msg.rstrip()
         sys.stdout.flush()
                  
 def web_socket_do_extra_handshake(request):
