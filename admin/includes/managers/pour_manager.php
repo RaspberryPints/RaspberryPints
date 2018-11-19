@@ -75,7 +75,12 @@ class PourManager extends Manager{
 		$pourCountConversion = $tap->get_count();
 		
 		// Sets the amount to be a fraction of a gallon
-		$amount = $PULSE_COUNT / $pourCountConversion;
+		$amount = 0;
+		if( $pourCountConversion > 0 ) {
+		    $PULSE_COUNT / $pourCountConversion;
+		}else{
+		    echo "pours.php: No Count Per Gallon Configured for pin " .$PIN. " Please update from Admin->Taps\n";
+		}
 		
 		echo "pours.php:Pour: pour on pin: " . $PIN . ", count: " . $PULSE_COUNT . 
 			", conversion: " . $pourCountConversion . ", amount: " . $amount . 
