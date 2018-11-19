@@ -28,7 +28,7 @@
                     if($config[ConfigNames::ShowPourBreweryImages]){ $beerColSpan++; }
                     if($config[ConfigNames::ShowPourBeerImages]){ $beerColSpan++; }
                 ?> 
-				<th <?php if($beerColSpan > 1){ echo 'colspan="$beerColSpan"';}?> class="poursbeername">
+				<th <?php if($beerColSpan > 1){ echo 'colspan="'.$beerColSpan.'"';}?> class="poursbeername">
 					<?php if($config[ConfigNames::ShowPourBeerName]){ ?>
 						BEER 
 					<?php } ?>
@@ -65,15 +65,15 @@
 				<?php } ?>
 			
 				<?php if($config[ConfigNames::ShowPourBreweryImages]){ ?>
-					<td style="width:150px" >
-					<?php if(isset($pour->get_breweryImageUrl)){ ?>
-						<img class="poursbreweryimg" src="<?php echo $pour->get_beerBreweryImage(); ?>" />
+					<td style="width:150px <?php if($beerColSpan > 1){ echo ';border-left: none;'; } ?>" >
+					<?php if(null !== $pour->get_breweryImageUrl()){ ?>
+						<img class="poursbreweryimg" src="<?php echo $pour->get_breweryImageUrl(); ?>" />
 					<?php } ?>
 					</td>
 				<?php } ?>
 						
 				<?php if($config[ConfigNames::ShowPourBeerImages]){ ?>
-                    <td class="beerimg" <?php if($beerColSpan > 1){ echo 'style="border-left: none;"'; } ?>>	
+                    <td style="width:150px <?php if($beerColSpan > 1){ echo ';border-left: none;'; } ?>" class="beerimg">	
                     <?php beerImg($config, $pour->get_beerUntID()); ?>
                     </td>
                 <?php } ?>

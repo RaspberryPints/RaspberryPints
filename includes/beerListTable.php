@@ -131,15 +131,15 @@
 				<?php } ?>
 			
 				<?php if($config[ConfigNames::ShowBreweryImages]){ ?>
-					<td style="width:75px" >
+					<td style="width:50px" >
 					<?php if(isset($beer) && $beer['beername']){ ?>
-						<img class="breweryimg" src="<?php echo $beer['']; ?>" />
+						<img class="breweryimg" src="<?php echo $beer['breweryImage']; ?>" />
 					<?php } ?>
 					</td>
 				<?php } ?>
 				
 				<?php if($config[ConfigNames::ShowBeerImages]){ ?>
-					<td style="width:75px <?php if($beerColSpan > 1){ echo ';border-left: none;'; } ?>" class="beerimg">
+					<td style="width:50px <?php if($beerColSpan > 1){ echo ';border-left: none;'; } ?>" class="beerimg">
 					<?php if(isset($beer) && $beer['beername']){ ?>
 						<?php 
 							beerImg($config, $beer['untID']);

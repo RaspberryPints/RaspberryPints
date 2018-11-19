@@ -52,6 +52,17 @@ table td.name{
 	text-align: center;
 	vertical-align: middle;	
 }
+.beerimg{
+	position: relative;
+	float: right
+}
+.breweryimg{
+	display:block; 
+	max-width:150px; 
+	max-height:150px; 
+	width: auto; 
+	height:auto;
+}
 html, body {
 	background-image: url(img/background.jpg);
 	background-color: #000000;
@@ -392,17 +403,6 @@ font-size: 12px;
 
 }
 
-.beerimg{
-position: relative;
-float: right
-}
-.breweryimg{
-	display:block; 
-	max-width:150px; 
-	max-height:150px; 
-	width: auto; 
-	height:auto;
-}
 
 table{
 	width: 100%;
