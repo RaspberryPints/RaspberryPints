@@ -216,9 +216,11 @@ void loop() {
 
   int shutNonPouring = false;
   int reset = false;
+  int tapPouring = false;
   for( unsigned int i = 0; i < numSensors; i++ ) {
     nowTime = millis();
     if ( lastPourTime[i] <= 0 ) continue;
+    tapPouring = true;
     if ( pulseCount[i] > 0 ) {
       //If pulse count has reached a point were we can assign the user to this tap
       if( pulseCount[i] > userPourTriggerValue &&
@@ -269,7 +271,11 @@ void loop() {
 
     }
   }
-  fastLED();
+  if(!tapPouring){
+	  fastLED();
+  }else{
+	  longLED();
+  }
 
   if( activeUserDate != -1UL && activeUserId != INVALID_USER_ID &&
     nowTime - activeUserDate > tapSelectTime )
