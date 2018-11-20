@@ -11,6 +11,8 @@
 # - Install Raspbian onto your Raspberry Pi and configure the network
 # - login as user 'pi' (default password is 'raspberry')
 # - Download a raw copy of this script
+#     i.e. "wget https://raw.githubusercontent.com/rtlindne/RaspberryPints/master/util/installRaspberryPints"
+#	  This script is based off the original work of tssgery to get the original use (NOTE this may not work with latest Raspbian):
 #     i.e. "wget https://raw.github.com/tssgery/RaspberryPints/master/util/installRaspberryPints"
 # - make the script executable
 #     i.e. "chmod +x installRaspberryPints"
@@ -52,6 +54,7 @@ INIT_DIRECTORY=/etc/init.d
 ADMIN_INCLUDES_DIRECTORY=${DIRECTORY}/admin/includes/
 BOOT_CONFIG_FILE="/boot/config.txt"
 START_CONFIG_FILE=/home/pi/.config/lxsession/LXDE-pi/autostart
+GLOBAL_CONFIG_FILE=/etc/xdg/lxsession/LXDE-pi/autostart
 MODULE_CONFIG_FILE=/etc/modules
 BLACKLIST_CONFIG_FILE=/etc/modprobe.d/raspi-blacklist.conf
 
@@ -299,6 +302,9 @@ if $MONITOR = true ; then
 	if [ "$ANSWER" = "" ]; then
 	   ANSWER="Y"
 	fi
+	if [ ! -f "${START_CONFIG_FILE}" ]; then
+		START_CONFIG_FILE=${GLOBAL_CONFIG_FILE}
+	fi
 	if echo "$ANSWER" | grep -iq "^y" ;then
 		if ! grep -q '^\s*@xset s off' $START_CONFIG_FILE; then
 		  echo '@xset s off' >> $START_CONFIG_FILE
@@ -537,7 +543,7 @@ then
 	fi
 	mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "UPDATE config SET configValue='1' WHERE configName='useFlowMeter';";
 	read -e -p "For alamode set the 5V_link jumper to on (see page 11 of the Alamode Manual). Enter to continue" ANSWER
-	read -e -p "Restarted needed to use alamode. Restart Now? (default is: Y): " ANSWER
+	read -e -p "Restarted needed to use alamode. Restart Now? Note Installation will NOT resume on startup(default is: Y): " ANSWER
 	if [ "$ANSWER" = "" ]; then
 	   ANSWER="Y"
 	fi
