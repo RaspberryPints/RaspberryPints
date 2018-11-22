@@ -26,19 +26,21 @@ include 'top_menu.php';
 		</div>
 		<div class="contentbox">
 		<a id="columns"></a> 
-		<h2>Show/Hide Columns</h2><br /> 
-		<form method="post" action="includes/update_columnConfig.php">
-			<?php
-			    $result = getConfigurableConfigs();
-				foreach($result as $row) {
-				echo '<h3>' . $row['displayName'] . ":" . '</h3>' . 
-					'On<input type="radio" ' . ($row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="1">' .
-					'Off<input type="radio" ' . (!$row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="0"><br>' .
-					'<br>';
-			} ?>
-			<input type="submit" class="btn" value="Save" />
-		</form>
-
+<div id="success" style="display:none;  z-index: 99 !important;">
+Configuration Updated
+</div>
+		<h2>Display Preferences</h2><br /> 
+    		<div>
+    			<?php
+    			    $result = getConfigurableConfigs();
+    				foreach($result as $row) {
+    				    echo '<h3>' . $row['displayName'] . ":"  .'<span id="' . $row['configName'] . 'Success" style="display:none; color: #8EA534;"> (Updated)</span>'. '</h3>'.
+    					'On<input type="radio" ' . ($row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="1" onclick="changeConfiguration(this)">' .
+    					'Off<input type="radio" ' . (!$row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="0" onclick="changeConfiguration(this)">'. 
+    					
+    					'<br><br>';
+    			} ?>
+    		</div>
 		<hr />
 
 	<?php
@@ -159,5 +161,24 @@ include 'scripts.php';
 	DD_belatedPNG.fix('img, .notifycount, .selected');
 	</script>
 	<![endif]--> 
+	<script>
+	function changeConfiguration(checkBox, config){
+		var data = {};
+		data[checkBox.name] = checkBox.value;
+		$.ajax(
+            {
+                   type: "POST",
+                   url: "includes/update_columnConfig.php",
+                   data: data,// data to send to above script page if any
+                   cache: false,
+    
+                   success: function(response)
+                   {
+                	   checkBox.checked = true; 
+                	   document.getElementById(checkBox.name + 'Success').style.display = ""; 
+                   }
+             });
+  	}
+  	</script>
 </body>
 </html>
