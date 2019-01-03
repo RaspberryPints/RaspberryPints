@@ -567,6 +567,42 @@ then
 	popd
 fi
 
+# ask the user if they want to install Motion Detectors
+#from day_trippr's instructions
+read -e -p "Do you want to install Motion Detectors? (Y:N) (default is: N): " ANSWER
+if [ "$ANSWER" = "" ]; then
+   ANSWER="N"
+fi
+if echo "$ANSWER" | grep -iq "^y" ;then
+	apt-get install xscreensaver
+	
+	read -e -p "Do you want to use day_trippr's configuration? (Y:N) (default is: Y): " ANSWER
+	if [ "$ANSWER" = "" ]; then
+	   ANSWER="Y"
+	fi
+	if echo "$ANSWER" | grep -iq "^y" ;then
+		cp ${DIRECTORY}/util/.xscreensaver /home/pi/.xscreensaver
+	else
+		echo "Configure Screen Saver"
+	fi
+	
+	echo "Connect the detector to the PI when power is off)"
+	echo "5V: Pin 2, or 4 (pick one)"
+	echo "GND: Pin 6,9,14,20 or 25 (pick one)"
+	echo "Notes:"
+	echo "	- Verify that the two pin jumper is positioned on the 2 pins closes to the adjust dials."
+	echo "	- Set the Sensitivity Adjust to 50% of travel to start"
+	echo "	- Set the Time Delay Adjust full counter-clockwise to start (minimum delay between triggers is roughly 10 seconds)"
+	
+	read -e -p "What Pi Pin is the output connected to?: " ANSWER
+	if [ "$ANSWER" != "" ]; then
+		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO motionDetectors 
+							 (name,pin,createdDate,modifiedDate) 
+							 VALUES ('default','${ANSWER}',NOW(),NOW());";
+	else
+		echo "To setup a Motion Detector visit your RaspberryPints Admin - Motion Detector page"
+	fi
+fi
 
 read -e -p "Open RaspberryPints? (default is: Y): " ANSWER
 if [ "$ANSWER" = "" ]; then

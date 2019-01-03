@@ -118,3 +118,15 @@ ORDER BY t.id;
 INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES 
 ( 'use3WireValves', '0', 'Use Three Wire Valves', 1, NOW(), NOW() ),
 ( 'displayRowsSameHeight', '0', 'Display all tap rows as the same height', '1', NOW(), NOW() ) ;
+
+CREATE TABLE IF NOT EXISTS `motionDetectors` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text NULL,
+	`type` int(11) NOT NULL DEFAULT 0,
+	`pin` int(11) NULL,
+	`priority` int(11) NULL DEFAULT 0,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;

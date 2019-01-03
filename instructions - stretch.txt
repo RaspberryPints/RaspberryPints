@@ -167,6 +167,13 @@ get the package (Note: it will retreive to the current directory of the shell)
 git clone https://github.com/lthiery/SPI-Py
 cd SPI-Py
 sudo python setup.py install
+In the UI setup the RFID Reader information from the admin page (link on the left)
+
+if you plan on using Motion Sensors:
+apt-get install xscreensaver
+There is a link to the setting for it in the start menu->preferences->Screensaver
+configure as desired
+In the UI setup the motion detector information from the admin page (link on the left)
 
 SETUP Raspberry Pints
 Goto http://raspberrypints.com/download/ and click Download Now (this version does not work with PHP7)
