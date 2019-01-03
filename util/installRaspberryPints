@@ -565,6 +565,15 @@ then
 	python setup.py install 
 	
 	popd
+	
+	read -e -p "What Pi Pin is the RFID Slave Select (SDA) connected to?: " ANSWER
+	if [ "$ANSWER" != "" ]; then
+		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO rfidReaders 
+							 (name,type,pin,priority,createdDate,modifiedDate) 
+							 VALUES ('default',0,'${ANSWER}',0,NOW(),NOW());";
+	else
+		echo "To setup a RFID Reader visit your RaspberryPints Admin - RFID Reader page"
+	fi
 fi
 
 # ask the user if they want to install Motion Detectors
