@@ -175,6 +175,29 @@
 				if($numberOfPours > 0) printPoursList($poursList);
 			?>
 		</div>
-		<div class="copyright">Data provided by <a href="http://untappd.com">Untappd</a>.</div>
+		<div class="copyright">Data provided by <a href="http://untappd.com">Untappd</a></div>
+		
+		<?php if($config[ConfigNames::DisplayRowsSameHeight]) { ?>
+		<script>
+		window.onload = function(){
+			tables = document.getElementsByTagName("table")
+			for (var i = 0; i < tables.length; i++) {
+			    var table = tables[i];		
+				maxHeight = -1;
+				//Start at 1 to avoid header row
+				for (var j = 1; j < table.rows.length; j++) {
+				    var row = table.rows[j];		
+					if( row.offsetHeight > maxHeight ) maxHeight = row.offsetHeight;
+				}
+				if( maxHeight > 0 ){
+    				for (var j = 1; j < table.rows.length; j++) {
+    				    var row = table.rows[j];	
+    					row.style.height = maxHeight + 'px';
+    				}
+				}
+			}
+		}
+		</script>
+		<?php } ?>
 	</body>
 </html>

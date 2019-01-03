@@ -408,7 +408,8 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'BreweryID', '','Brewery ID','0',NOW(),NOW() ),
 ( 'adminThemeColor', 'styles.css', 'Admin Color', '0', NOW(), NOW() ),
 ( 'useHighResolution', '0', '4k Monitor Support', '1', NOW(), NOW() ),
-( 'autoRefreshLocal', '1', 'refresh listeners automatically', '1', NOW(), NOW() );
+( 'autoRefreshLocal', '1', 'refresh listeners automatically', '1', NOW(), NOW(),
+( 'displayRowSameHeight', '1', 'Display all tap rows as the same height', '1', NOW(), NOW() ) );
 
 INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
 ('autoKickKegs', '1', 'Kick Kegs from Tap when kill is detected', 1, NOW(), NOW() ),

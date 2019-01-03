@@ -74,5 +74,6 @@ abstract class ConfigNames
 	const Version = 'version';
 	const UpdateDate = 'updateDate';
 	const RelayTrigger = 'relayTrigger';
+	const DisplayRowsSameHeight = 'displayRowsSameHeight';
 }
 ?>
