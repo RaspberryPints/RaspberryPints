@@ -130,3 +130,5 @@ CREATE TABLE IF NOT EXISTS `motionDetectors` (
 	
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+UPDATE `config` SET configValue` = '3.0.0.0' WHERE `configName` = 'version'

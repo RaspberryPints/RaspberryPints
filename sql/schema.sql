@@ -400,7 +400,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '0', NOW(), NOW() ),
 ( 'headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() ),
 ( 'numberOfTaps', '0', 'Number of Taps', '0', NOW(), NOW() ),
-( 'version', '1.0.3.395', 'Version', '0', NOW(), NOW() ),
+( 'version', '3.0.0.0', 'Version', '0', NOW(), NOW() ),
 ( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() ),
 ( 'useFlowMeter','0','Use Flow Monitoring', '1', NOW(),NOW() ),
 ( 'ClientID', '','Client ID', '0', NOW(), NOW() ),
