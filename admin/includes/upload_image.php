@@ -3,14 +3,16 @@ $target = $_POST['target'];
 $ok=1; 
 
 //This is our size condition 
-if ($uploaded_size > 1000000) 
+if (filesize($target) > 1000000) 
 { 
     echo "Your file is too large.<br>"; 
     $ok=0; 
 } 
 
+$path_parts = pathinfo($target);
+$uploaded_type = $path_parts['extension'];
 //This is our limit file type condition 
-if ($uploaded_type =="text/php") 
+if ($uploaded_type =="php") 
 { 
     echo "No PHP files<br>"; 
     $ok=0; 
