@@ -30,8 +30,10 @@
 	}
 	
 	$fp = fsockopen($HOST, $MCAST_PORT, $errno, $errstr, 10);
-	fwrite($fp, $data);
-	$received = fread($fp, 1024);
-	fclose($fp);
-	echo $received;
+    if($fp){
+    	fwrite($fp, $data);
+    	$received = fread($fp, 1024);
+    	fclose($fp);
+    	echo $received;
+    }
 ?>
