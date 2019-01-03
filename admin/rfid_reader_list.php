@@ -76,71 +76,6 @@ include 'top_menu.php';
 		<div class="headings alt">
 			<h2>RFID Readers</h2>
 		</div>
-		
-        <!-- Start Tap Config Form -->
-		<div id="settingsDiv" style="">
-        
-        <form id="configuration" method="post">
-        	<input type="hidden" name="configuration" id="configuration" />
-        	<input type="hidden" name="settingsExpanded" id="settingsExpanded" value="<?php echo (isset($_POST['settingsExpanded'])?$_POST['settingsExpanded']:'display:none'); ?>" />
-            <table class="contentbox" style="width:100%; border:0;" >
-            	<tr>
-			<?php
-			    $result = getRFIDConfigurableConfigs();
-				foreach($result as $row) {
-					echo '<td>';
-					echo '	<input type="hidden" name="' . $row['configName'] . '" value="0"/>';
-					echo '	<input type="checkbox" ' . ($row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="1" onClick="this.form.submit()">'.$row['displayName']."&nbsp;\n";
-					echo '</td>';
-				}
-			?>        
-            	</tr>
-            </table>
-        </form>
-        
-		<form method="POST" name="settings" > 
-	<?php if($config[ConfigNames::UseTapValves]) { ?>
-			<input type="hidden" name="tapValveConfig" id="tapValveConfig" />
-	<?php } ?>
-			<table class="contentbox" style="width:100%; border:0;" >
-				<thead>
-					<tr>
-						<th></th>
-						<th></th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-
-	<?php if($config[ConfigNames::UseTapValves]) { ?>
-					<tr>
-						<td><b>Tap Valves Setup:</b></td>
-						<td><b>Pour Shutoff Count:</b><br/>The flow meter count in one pour after which a tap is shutoff (0 to turn off) </td>
-						<td><input type="text" name="pourShutOffCount" class="smallbox"	value="<?php echo ($config[ConfigNames::PourShutOffCount]) ?>"></td>
-                    </tr>
-					<tr>
-						<td><b>Tap Valves Setup:</b></td>
-						<td><b>Valve Power Pin:</b><br/>The pin that powers the valves </td>
-						<td><input type="text" name="valvesPowerPin" class="smallbox" value="<?php echo ($config[ConfigNames::ValvesPowerPin]) ?>"></td>
-					</tr>
-					<tr>
-						<td><b>Tap Valves Setup:</b></td>
-						<td><b>Valve On Time:</b><br/>The time the valves remain on </td>
-						<td><input type="text" name="valvesOnTime" class="smallbox" value="<?php echo ($config[ConfigNames::ValvesOnTime]) ?>"></td>
-					</tr>
-	<?php } ?>
-					<tr>
-						<td colspan="3">
-                        	<input type="submit" name="saveSettings" class="btn" value="Save" />
-                            <input type="submit" name="revert"       class="btn" value="Revert" />
-                        </td>
-					</tr>
-			</tbody>
-		</table>
-	</form>
-    </div>
-	<!-- End Tap Config Form -->
-	
 		<div class="contentbox">
 			<?php $htmlHelper->ShowMessage(); ?>
    			 <input type="button" id="newRow1" name="newRow2" class="btn" value="Add Reader" />
@@ -160,7 +95,7 @@ include 'top_menu.php';
                         <tr>
                             <th style="width:30%; vertical-align: middle;">Name</th>
                             <th style="width:30%; vertical-align: middle;">Type</th>
-                            <th style="width:30%; vertical-align: middle;">Pin</th>
+                            <th style="width:30%; vertical-align: middle;">Pi Pin</th>
                             <th style="width:30%; vertical-align: middle;">Priority</th>
                             <th style="width:10%; vertical-align: middle;"></th>
                         </tr>

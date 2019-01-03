@@ -62,6 +62,10 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 		if (isset ( $_POST ['valvepin'][$ii] )) {
 			$valvepin = $_POST ['valvepin'][$ii] * ($_POST ['valvepinPi'][$id]?-1:1);
 		}
+		
+		if (isset ( $_POST ['tapOverride'][$ii] )) {
+		    $valveon = $_POST ['tapOverride'][$ii];
+		}
 	
 		if (isset ( $_POST ['countpergallon'][$ii] )) {
 			$countpergallon = $_POST ['countpergallon'][$ii];
@@ -206,11 +210,13 @@ include 'top_menu.php';
 						<td><b>Pour Shutoff Count:</b><br/>The flow meter count in one pour after which a tap is shutoff (0 to turn off) </td>
 						<td><input type="text" name="pourShutOffCount" class="smallbox"	value="<?php echo ($config[ConfigNames::PourShutOffCount]) ?>"></td>
                     </tr>
-					<tr>
-						<td><b>Tap Valves Setup:</b></td>
-						<td><b>Valve Power Pin:</b><br/>The pin that powers the valves </td>
-						<td><input type="text" name="valvesPowerPin" class="smallbox" value="<?php echo ($config[ConfigNames::ValvesPowerPin]) ?>"></td>
-					</tr>
+                    <?php if($config[ConfigNames::Use3WireValves]) {?>
+    					<tr>
+							<td><b>Tap Valves Setup:</b></td>
+    						<td><b>Valve Power Pin:</b><br/>The pin that powers three way the valves </td>
+    						<td><input type="text" name="valvesPowerPin" class="smallbox" value="<?php echo ($config[ConfigNames::ValvesPowerPin]) ?>"></td>
+    					</tr>
+					<?php }?>
 					<tr>
 						<td><b>Tap Valves Setup:</b></td>
 						<td><b>Valve On Time:</b><br/>The time the valves remain on </td>
@@ -351,7 +357,7 @@ include 'top_menu.php';
                             ?>
                             <td>
                                 <?php if( isset($tap) ) { ?>
-                                    <button name="tapOverride[]" id="tapOverride<?php echo $tap->get_id();?>" type="button" class="btn" style="white-space:nowrap" value="<?php echo $tap->get_valveOn(); ?>" onClick="changeTapState(this, <?php echo $tap->get_id()?>)"><?php echo ($tap->get_valveOn() < 1?TAP_TEXT_ENABLE:TAP_TEXT_DISABLE);?></button>
+                                    <button name="tapOverride[]" id="tapOverride<?php echo $tap->get_id();?>" type="button" class="btn" style="white-space:nowrap;" value="<?php echo $tap->get_valveOn(); ?>" onClick="changeTapState(this, <?php echo $tap->get_id()?>)"><?php echo ($tap->get_valveOn() < 1?TAP_TEXT_ENABLE:TAP_TEXT_DISABLE);?></button>
                                 <?php } ?>
                             </td>
                         <?php } ?>
@@ -520,8 +526,7 @@ include 'scripts.php';
                     btn.innerHTML = btn.value < 1?"<?php echo TAP_TEXT_ENABLE;?>":"<?php echo TAP_TEXT_DISABLE;?>";
                    }
              });
-		
-	}
+  	}
 </script>
 	<!-- End Js -->
 

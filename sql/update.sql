@@ -114,3 +114,6 @@ FROM bottles t
 	LEFT JOIN srmRgb s ON s.srm = b.srm
 WHERE t.active = true
 ORDER BY t.id;
+
+INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES 
+( 'use3WireValves', '0', 'Use Three Wire Valves', 1, NOW(), NOW() )

@@ -46,16 +46,16 @@
 	{	
 		global $mysqli;
 		$config = array();
-		$sql = "SELECT * FROM config WHERE configName IN ('".ConfigNames::UseTapValves."', '".ConfigNames::UseFanControl."', '".ConfigNames::UseFlowMeter."')";
+		$sql = "SELECT * FROM config WHERE configName IN ('".ConfigNames::UseTapValves."','".ConfigNames::Use3WireValves."', '".ConfigNames::UseFanControl."', '".ConfigNames::UseFlowMeter."') ORDER BY id";
 		//echo $sql; exit;
 		return $mysqli->query($sql);
 	}
 	
-	function getRFIDConfigurableConfigs()
+	function getValveConfigurableConfigs()
 	{
 	    global $mysqli;
 	    $config = array();
-	    $sql = "SELECT * FROM config WHERE configName IN ('".ConfigNames::UseTapValves."')";
+	    $sql = "SELECT * FROM config WHERE configName IN ('".ConfigNames::UseTapValves."','".ConfigNames::Use3WireValves."') ORDER BY id";
 	    //echo $sql; exit;
 	    return $mysqli->query($sql);
 	}

@@ -413,7 +413,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
 ('autoKickKegs', '1', 'Kick Kegs from Tap when kill is detected', 1, NOW(), NOW() ),
 ('useTapValves', '0', 'Use Tap Valves', 1, NOW(), NOW() ),
-('useValvesPowerPin', '19', 'Use Valves I/O Pin', 0, NOW(), NOW() ),
+('use3WireValves', '0', 'Use Three Wire Valves', 1, NOW(), NOW() ),
 ('valvesOnTime', '8', 'Time to keep Valves on', 0, NOW(), NOW() ),
 ('useFanControl', '0', 'Use Fan Control', 1, NOW(), NOW() ),
 ('useFanPin', '17', 'Use Fan I/O Pin', 0, NOW(), NOW() ),

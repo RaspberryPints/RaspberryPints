@@ -286,3 +286,18 @@ top:115px;
 right:800px;
 }*/
 
+.tapcircle {
+  background-color: rgba(153,153,153,.3);
+  border-radius: 1em;
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  color: #ffffff;
+  display: inline-block;
+  font-weight: bold;
+  margin-left: 5px;
+  margin-right: 5px;
+  text-align: center;
+  line-height: 33px;
+  width: 33px; 
+}
+
