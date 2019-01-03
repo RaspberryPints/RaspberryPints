@@ -99,7 +99,7 @@ class TapManager extends Manager{
 		$tap->set_kegId(null);
 		
 		$kegManager = new KegManager();
-		$ret = $ret && $kegManager->Kick($tap->get_kegId());
+		$ret = $kegManager->Kick($tap->get_kegId());
 
 			$sql="UPDATE tapconfig SET valveOn = 0 WHERE tapId = ".$tap->get_id();
 			$ret = $ret && $this->executeQueryNoResult($sql);
