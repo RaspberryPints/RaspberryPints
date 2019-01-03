@@ -17,6 +17,7 @@ import subprocess
 import os
 import os.path
 import traceback
+import RPi.GPIO as GPIO
 
 RFID_IMPORT_SUCCESSFUL = True
 try:
@@ -28,6 +29,7 @@ from Config import config
 
 alamodeRelayTrigger = 0
 readers = []
+motionDetectors = []
   
 def debug(msg):
     if(config['flowmon.debug']):
@@ -153,6 +155,10 @@ class FlowMonitor(object):
         msg = self.readline_notimeout()
         while (b"alive" != msg):
             #debug("["+str(msg)+"]")
+            if(b"StatusCheck" == msg):
+                msg = "Status;%s;%d;%s;|" % ("NOTOK", -1, 1)
+                debug( "Sending "+ msg )
+                self.arduino.write(msg)
             msg = self.readline_notimeout()
         self.arduino.reset_input_buffer()
         
@@ -185,7 +191,16 @@ class FlowMonitor(object):
             self.arduino = serial.Serial(self.port,9600,timeout=.5)
         else:
             self.alaIsAlive = False
+            debug( "NOT resetting alamode" )
 
+        motionDetectors = []
+        configMD = self.dispatch.getMotionDetectors()
+        for item in configMD:
+            if (item["type"] == 0):
+                detector = MotionDetectionPIRThread( "MD-" + item["name"], pirPin=int(item["pin"]) )
+                detector.start()
+                motionDetectors.append(detector)
+            
         readers = []
         if RFID_IMPORT_SUCCESSFUL:
             dbReaders = self.dispatch.getRFIDReaders()
@@ -216,6 +231,7 @@ class FlowMonitor(object):
                 if reading[0] == "dead" :
                     # check if we need to reconfigure alamode
                     debug( "alamode reconfig in progress..." )
+                    self.alaIsAlive = False
                     return # get out and let the caller restart us                
                 if ( len(reading) < 2 ):
                     debug( "alamode - Unknown message (length too short): "+ msg )
@@ -308,6 +324,9 @@ class FlowMonitor(object):
             for item in readers:
                 if item.isAlive():
                     item.exit
+            for item in motionDetectors:
+                if item.isAlive():
+                    item.exit
 
     def fakemonitor(self):
         running = True
@@ -328,9 +347,9 @@ class FlowMonitor(object):
                     debug( "alamode - Unknown message (length too short): "+ msg )
                     continue
                 if ( reading[0] == "P" ):
-                    MCP_RFID = str(0)
-                    MCP_PIN = str(reading[1])
-                    POUR_COUNT = str(reading[2])
+                    MCP_RFID = str(reading[1])
+                    MCP_PIN = str(reading[2])  
+                    POUR_COUNT = str(reading[3])   
                     subprocess.call(["php", self.poursdir, "Pour", MCP_RFID, MCP_PIN, POUR_COUNT])
                     self.dispatch.sendflowcount(MCP_RFID, MCP_PIN, POUR_COUNT)
                 elif ( reading[0] == "U" ):
@@ -438,3 +457,29 @@ class WritePinsThread (threading.Thread):
             part += 1
             if self.delay > 0:
                 time.sleep(self.delay) 
+                
+#Following is based on code from day_trippr (coverted to thread and allow configurable pin)
+class MotionDetectionPIRThread (threading.Thread):
+    def __init__(self, threadID, pirPin = 7):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.pirPin = pirPin
+      
+    def MOTION(self, PIR_PIN):
+        debug("Motion Detector " + self.threadID + " Detected Motion")
+        #Wake up every users monitor, need to loop through the users otherwise the command wont know who is currently logged in
+        #To see full command replace ;'s with new lines
+        os.system('export DISPLAY=":0.0"; for dir in /home/*/; do export XAUTHORITY=$dir.Xauthority; xscreensaver-command -deactivate > /dev/null 2>&1; done;')
+        time.sleep(1)
+
+    def run(self):
+        log("Motion Detector " + self.threadID + " is Running")
+        try:
+            GPIO.setup(self.pirPin, GPIO.IN)
+            GPIO.add_event_detect(self.pirPin, GPIO.RISING, callback=self.MOTION)
+            while 1:
+                time.sleep(100)
+        except:
+            log("Unable to run Motion Detection")
+            return
+            

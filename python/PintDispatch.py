@@ -44,7 +44,7 @@ MCAST_RETRY_SLEEP_SEC=5
 
 OPTION_RESTART_FANTIMER_AFTER_POUR = config['dispatch.restart_fan_after_pour']
 
-OPTION_VALVETYPE = config['dispatch.valve_type']
+OPTION_VALVETYPE = getConfigItem(self, "use3WireValves")
 
 def debug(msg):
     if(config['dispatch.debug']):
@@ -177,6 +177,14 @@ class PintDispatch(object):
         con = self.connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)
         cursor.execute("SELECT * from rfidReaders ORDER BY priority")
+        rows = cursor.fetchall()
+        con.close()
+        return rows
+    
+    def getMotionDetectors(self):
+        con = self.connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        cursor.execute("SELECT * from motionDetectors ORDER BY priority")
         rows = cursor.fetchall()
         con.close()
         return rows
