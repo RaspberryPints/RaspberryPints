@@ -408,8 +408,8 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'BreweryID', '','Brewery ID','0',NOW(),NOW() ),
 ( 'adminThemeColor', 'styles.css', 'Admin Color', '0', NOW(), NOW() ),
 ( 'useHighResolution', '0', '4k Monitor Support', '1', NOW(), NOW() ),
-( 'autoRefreshLocal', '1', 'refresh listeners automatically', '1', NOW(), NOW(),
-( 'displayRowSameHeight', '1', 'Display all tap rows as the same height', '1', NOW(), NOW() ) );
+( 'autoRefreshLocal', '1', 'refresh listeners automatically', '1', NOW(), NOW() ),
+( 'displayRowSameHeight', '1', 'Display all tap rows as the same height', '1', NOW(), NOW() );
 
 INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
 ('autoKickKegs', '1', 'Kick Kegs from Tap when kill is detected', 1, NOW(), NOW() ),
@@ -417,7 +417,7 @@ INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`,
 ('use3WireValves', '0', 'Use Three Wire Valves', 1, NOW(), NOW() ),
 ('valvesOnTime', '8', 'Time to keep Valves on', 0, NOW(), NOW() ),
 ('useFanControl', '0', 'Use Fan Control', 1, NOW(), NOW() ),
-('useFanPin', '17', 'Use Fan I/O Pin', 0, NOW(), NOW() ),
+('useFanPin', '17', 'Fan I/O Pin', 0, NOW(), NOW() ),
 ('fanInterval', '120', 'Fan Interval', 0, NOW(), NOW() ),
 ('fanOnTime', '1', 'Fan On time', 0, NOW(), NOW() ),
 ('pourShutOffCount', '0', 'pour shutoff amount in counts', 0, NOW(), NOW() ),
