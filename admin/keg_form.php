@@ -69,6 +69,7 @@ include 'top_menu.php';
 
 	<form id="keg-form" method="POST">
 		<input type="hidden" name="id" value="<?php echo $keg->get_id() ?>" />
+		<input type="hidden" name="active" value="1" />
 
 		<table style="width:950;border:0;cellspacing:1;cellpadding:0;">
 			<tr>
@@ -94,6 +95,8 @@ include 'top_menu.php';
 						$tap = $tapManager->GetByID($keg->get_onTapId());
 						if($tap){
 							echo "On Tap ".$tap->get_tapNumber().":";
+		                    echo '<input type="hidden" name="onTapId" value="'.$tap->get_id().'" />';
+		                    echo '<input type="hidden" name="tapNumber" value="'.$tap->get_tapNumber().'" />';
 						}
 					?>
 				</td>
