@@ -14,7 +14,6 @@ import sys
 import os
 import struct
 import socket
-import RPi.GPIO as GPIO
 import MySQLdb as mdb
 from FlowMonitor import FlowMonitor
 from threading import Timer
@@ -28,6 +27,13 @@ from mod_pywebsocket.standalone import _parse_args_and_config
 from mod_pywebsocket.standalone import _configure_logging
 
 from Config import config
+
+GPIO_IMPORT_SUCCESSFUL = True
+try:
+    import RPi.GPIO as GPIO
+except:
+    GPIO_IMPORT_SUCCESSFUL = False
+
 
 PINTS_DIR               = config['pints.dir' ]
 INCLUDES_DIR            = PINTS_DIR + "/includes"
@@ -43,8 +49,6 @@ MCAST_RETRY_ATTEMPTS = 10
 MCAST_RETRY_SLEEP_SEC=5
 
 OPTION_RESTART_FANTIMER_AFTER_POUR = config['dispatch.restart_fan_after_pour']
-
-OPTION_VALVETYPE = getConfigItem(self, "use3WireValves")
 
 def debug(msg):
     if(config['dispatch.debug']):
@@ -98,9 +102,11 @@ class CommandTCPServer(SocketServer.TCPServer):
 class PintDispatch(object):
     
     def __init__(self):
+        self.OPTION_VALVETYPE = self.getConfigItem("use3WireValves")
         setupSocket = MCAST_RETRY_ATTEMPTS
-        GPIO.setwarnings(False)
-        GPIO.setmode(GPIO.BOARD) # Broadcom pin-numbering scheme
+        if GPIO_IMPORT_SUCCESSFUL:
+            GPIO.setwarnings(False)
+            GPIO.setmode(GPIO.BOARD) # Broadcom pin-numbering scheme
         self.alaModeReconfig = False;
 
         while setupSocket > 0:
@@ -126,7 +132,7 @@ class PintDispatch(object):
         self.valvesState = []
         self.fanTimer = None
         self.valvePowerTimer = None
-        if OPTION_VALVETYPE == 'three_pin_ballvalve':
+        if self.OPTION_VALVETYPE == 'three_pin_ballvalve':
             self.valvePowerTimer = Timer(OPTION_VALVEPOWERON, self.valveStopPower)
     
         self.updateFlowmeterConfig()
@@ -310,10 +316,10 @@ class PintDispatch(object):
     def spawn_flowmonitor(self):
         while True:
             try:
-				if(config['dispatch.debugMonitoring']):
-					self.flowmonitor.fakemonitor()
-				else:
-					self.flowmonitor.monitor()
+                if(config['dispatch.debugMonitoring']):
+                    self.flowmonitor.fakemonitor()
+                else:
+                    self.flowmonitor.monitor()
             except Exception, e:
                 log("serial connection stopped...")
                 debug( str(e) )
@@ -386,19 +392,23 @@ class PintDispatch(object):
         self.alaModeReconfig = False;
         resetpin = 12
 
-        GPIO.setup(int(resetpin), GPIO.OUT)
-        oldValue = GPIO.input(resetpin)
-        if (oldValue == 1):
-            value1 = 0
-        else:
-            value1 = 1
-            
-        self.updatepin(resetpin, value1)
-        time.sleep(1)
-        self.updatepin(resetpin, oldValue)
+        if GPIO_IMPORT_SUCCESSFUL:
+            GPIO.setup(int(resetpin), GPIO.OUT)
+            oldValue = GPIO.input(resetpin)
+            if (oldValue == 1):
+                value1 = 0
+            else:
+                value1 = 1
+                
+            self.updatepin(resetpin, value1)
+            time.sleep(1)
+            self.updatepin(resetpin, oldValue)
         
     # update PI gpio pin mode (either input or output), this requires that this is run as root 
     def setpinmode(self, pin, value):
+        if not GPIO_IMPORT_SUCCESSFUL:
+            return False
+        
         if (pin < 1):
             debug("invalid pin " + str(pin))
             return False
@@ -412,6 +422,9 @@ class PintDispatch(object):
 		
     # update PI gpio pin (either turn on or off), this requires that this is run as root 
     def updatepin(self, pin, value):
+        if not GPIO_IMPORT_SUCCESSFUL:
+            return False
+        
         pin = int(pin)
         value = int(value)
         if (pin < 1):
@@ -439,6 +452,8 @@ class PintDispatch(object):
 
     # update PI gpio pin (either turn on or off), this requires that this is run as root 
     def readpin(self, pin):
+        if not GPIO_IMPORT_SUCCESSFUL:
+            return 0
         pin = int(pin)
         if (pin < 1):
             debug("invalid pin " + str(pin))
