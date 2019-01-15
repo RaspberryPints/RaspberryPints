@@ -80,3 +80,46 @@ blockquote:after {
 	margin-right: -8%;
 	height: 25px; 
 }
+
+/* bottle list styling */
+span.bottlecircle {
+  /* background-color: rgba(153,153,153,.3); */
+  border-radius: 1em;
+  border-style: dashed;
+  border-color: rgba(200,200,200,0.75);
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 2em;
+  margin-right: 5px;
+  text-align: center;
+  width: 2em; 
+}
+
+.alert {
+	color: #FF0000;
+	text-align:left;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+.tooltip .tooltiptext {
+  visibility: hidden;
+  background-color: gray;
+  color: #000;
+  text-align: center;
+  border-radius: 6px;
+  text-shadow:0px 0px 0px #000;
+  font-size:12px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
