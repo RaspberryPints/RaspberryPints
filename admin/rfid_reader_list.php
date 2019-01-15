@@ -198,7 +198,7 @@ include 'scripts.php';
 				<?php 
 				$comma = "";
 				foreach ($readers as $reader){
-				    if(null == $readers)continue; 
+				    if(null == $reader)continue; 
 				?>
 					<?php echo $comma; ?>type<?php echo $reader->get_id(); ?>: { required: true }
 					<?php $comma = ","; ?>
