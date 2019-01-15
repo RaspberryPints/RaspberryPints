@@ -47,6 +47,16 @@ class HtmlHelper{
 		return 'rgb'.(count(explode(",", $color)) > 3?'a':'').'('.$color.');';
 	}
 	
+	function ColorHextoRGB($color){
+	    if(!$color) return 'rgb(0,0,0);';
+	    $ii = 0;
+	    if(substr($color, 0, 1) == '#') $ii++;
+	    $red = hexdec(substr($color, $ii, 2)); $ii += 2;
+	    $blu = hexdec(substr($color, $ii, 2)); $ii += 2;
+	    $grn = hexdec(substr($color, $ii, 2)); $ii += 2;
+	    return $red.','.$blu.','.$grn;
+	}
+	
 	function ToCombinedSelectList($selectName, $items, $name1Property, $name2Property, $valueProperty, $selectedValue, $defaultName = null, $cssClasses = "", $onchangeFunction = ""){
 		
 		$str = "<select id='$selectName' name='$selectName' class='$cssClasses' onchange=\"$onchangeFunction\">";

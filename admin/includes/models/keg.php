@@ -16,6 +16,8 @@ class Keg
 	private $_active;
 	private $_onTapId;
 	private $_tapNumber;
+	private $_emptyWeight;
+	private $_maxVolume;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
@@ -46,7 +48,10 @@ class Keg
 	public function set_stampedLoc($_stampedLoc){ $this->_stampedLoc = $_stampedLoc; }
 
 	public function get_weight(){ return $this->_weight; }
-	public function set_weight($_weight){ $this->_weight = $_weight; }
+	public function set_weight($_weight){ 
+	    $this->_weight = $_weight;
+	    if($this->_emptyWeight > $this->_weight) $this->_weight = $this->_emptyWeight;
+	}
 
 	public function get_notes(){ return $this->_notes; }
 	public function set_notes($_notes){ $this->_notes = $_notes; }
@@ -65,6 +70,15 @@ class Keg
 	
 	public function get_tapNumber(){ return $this->_tapNumber; }
 	public function set_tapNumber($_tapNumber){ $this->_tapNumber = $_tapNumber; }
+	
+	public function get_emptyWeight(){ return $this->_emptyWeight; }
+	public function set_emptyWeight($_emptyWeight){ 
+	    $this->_emptyWeight = $_emptyWeight; 
+	    if($this->_emptyWeight > $this->_weight) $this->_weight = $this->_emptyWeight;
+	}
+	
+	public function get_maxVolume(){ return $this->_maxVolume; }
+	public function set_maxVolume($_maxVolume){ $this->_maxVolume = $_maxVolume; }
 	
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -149,6 +163,16 @@ class Keg
 		else
 			$this->set_tapNumber($this->get_tapNumber());
 		
+		if( isset($postArr['emptyWeight']) )
+			$this->set_emptyWeight($postArr['emptyWeight']);
+		else
+			$this->set_emptyWeight(null);
+		
+		if( isset($postArr['maxVolume']) )
+			$this->set_maxVolume($postArr['maxVolume']);
+		else
+			$this->set_maxVolume(null);
+		
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);
 		else
@@ -176,6 +200,8 @@ class Keg
 			"onTapId: " . $this->get_onTapId() . ", " .
 			"beerId: " . $this->get_beerId() . ", " .
 			"active: '" . $this->get_active() . "', " .
+			"emptyWeight: " . $this->get_emptyWeight() . ", " .
+			"maxVolume: " . $this->get_maxVolume() . ", " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  
 		"}";

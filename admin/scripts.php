@@ -6,4 +6,6 @@
 	<script type='text/javascript' src='scripts/jquery.wysiwyg.js'></script>
 	<script type='text/javascript' src='scripts/visualize.jQuery.js'></script>
 	<script type="text/javascript" src='scripts/functions.js'></script>	
+	<script type="text/javascript" src='scripts/kegAssistFunctions.js'></script>	
+	<script type="text/javascript" src='scripts/jscolor.js'></script>	
     

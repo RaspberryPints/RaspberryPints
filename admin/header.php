@@ -39,4 +39,6 @@ require_once __DIR__.'/includes/managers/tap_manager.php';
     <!-- Theme End -->
 <link href='http://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
 <?php require __DIR__.'/scripts.php'; ?>
+<?php if(!isset($noHeadEnd) || !$noHeadEnd){?>
 </head>
+<?php }?>

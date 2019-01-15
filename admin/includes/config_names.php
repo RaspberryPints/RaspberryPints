@@ -75,5 +75,10 @@ abstract class ConfigNames
 	const UpdateDate = 'updateDate';
 	const RelayTrigger = 'relayTrigger';
 	const DisplayRowsSameHeight = 'displayRowsSameHeight';
+	const UseKegWeightCalc = 'useKegWeightCalc';
+	const UseDefWeightSettings = 'useDefWeightSettings';
+	const BreweryAltitude = 'breweryAltitude';
+	const DefaultFermPSI  = 'defaultFermPSI';
+	const DefaultKeggingTemp = 'defaultKeggingTemp';
 }
 ?>

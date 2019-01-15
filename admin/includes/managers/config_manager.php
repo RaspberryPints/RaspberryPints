@@ -46,7 +46,7 @@
 	{	
 		global $mysqli;
 		$config = array();
-		$sql = "SELECT * FROM config WHERE configName IN ('".ConfigNames::UseTapValves."','".ConfigNames::Use3WireValves."', '".ConfigNames::UseFanControl."', '".ConfigNames::UseFlowMeter."') ORDER BY id";
+		$sql = "SELECT * FROM config WHERE configName IN ('".ConfigNames::UseTapValves."','".ConfigNames::Use3WireValves."', '".ConfigNames::UseFanControl."', '".ConfigNames::UseFlowMeter."', '".ConfigNames::UseKegWeightCalc."') ORDER BY id";
 		//echo $sql; exit;
 		return $mysqli->query($sql);
 	}

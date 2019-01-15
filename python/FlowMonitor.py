@@ -17,7 +17,12 @@ import subprocess
 import os
 import os.path
 import traceback
-import RPi.GPIO as GPIO
+
+GPIO_IMPORT_SUCCESSFUL = True
+try:
+    import RPi.GPIO as GPIO
+except:
+    GPIO_IMPORT_SUCCESSFUL = False
 
 RFID_IMPORT_SUCCESSFUL = True
 try:
@@ -28,9 +33,7 @@ except:
 from Config import config
 
 alamodeRelayTrigger = 0
-readers = []
-motionDetectors = []
-  
+
 def debug(msg):
     if(config['flowmon.debug']):
         log(msg)
@@ -56,6 +59,10 @@ class FlowMonitor(object):
         self.resetAlamode = True
         self.alaIsAlive = False
         self.alamodeUseRFID = False
+        
+        self.motionDetectors = []
+        self.loadCellThreads = []
+        self.readers = []
         
     def readline_notimeout(self):
         eol = b'\r\n'
@@ -193,20 +200,28 @@ class FlowMonitor(object):
             self.alaIsAlive = False
             debug( "NOT resetting alamode" )
 
-        motionDetectors = []
-        configMD = self.dispatch.getMotionDetectors()
-        for item in configMD:
-            if (item["type"] == 0):
-                detector = MotionDetectionPIRThread( "MD-" + item["name"], pirPin=int(item["pin"]) )
-                detector.start()
-                motionDetectors.append(detector)
+        if GPIO_IMPORT_SUCCESSFUL:
+            self.motionDetectors = []
+            configMD = self.dispatch.getMotionDetectors()
+            for item in configMD:
+                if (item["type"] == 0):
+                    detector = MotionDetectionPIRThread( "MD-" + str(item["name"]), pirPin=int(item["pin"]) )
+                    detector.start()
+                    self.motionDetectors.append(detector)
+                    
+            self.loadCellThreads = []
+            configMD = self.dispatch.getLoadCellConfig()
+            for item in configMD:
+                loadCell = LoadCellCheckThread( "LC-" + str(item["tapId"]), updateDir=config['pints.dir'], dispatch=self.dispatch, tapId=item["tapId"], commandPin=item["loadCellCmdPin"], responsePin=item["loadCellRspPin"] )
+                loadCell.start()
+                self.loadCellThreads.append(loadCell)
             
-        readers = []
+        self.readers = []
         if RFID_IMPORT_SUCCESSFUL:
             dbReaders = self.dispatch.getRFIDReaders()
             for item in dbReaders:
                 if (item["type"] == 0):
-                        readers.append( RFIDCheckThread( "RFID-" + item["name"], self.rfiddir, rfidSPISSPin=int(item["pin"]) ) )
+                        self.readers.append( RFIDCheckThread( "RFID-" + str(item["name"]), self.rfiddir, rfidSPISSPin=int(item["pin"]) ) )
                 self.alamodeUseRFID = True
         self.reconfigAlaMode()
         debug( "listening to alamode" )
@@ -321,10 +336,13 @@ class FlowMonitor(object):
             if self.alaIsAlive is False :
                 debug( "closing serial connection to alamode..." )
                 self.arduino.close()
-            for item in readers:
+            for item in self.readers:
                 if item.isAlive():
                     item.exit
-            for item in motionDetectors:
+            for item in self.motionDetectors:
+                if item.isAlive():
+                    item.exit
+            for item in self.loadCellThreads:
                 if item.isAlive():
                     item.exit
 
@@ -369,6 +387,11 @@ class FlowMonitor(object):
             debug( "Closing serial connection to alamode..." )
             debug( "Exiting" )
 
+    def tareRequest(self):
+        for item in self.loadCellThreads:
+            if item.isAlive():
+                item.setCheckTare(True)
+                
 class RFIDCheckThread (threading.Thread):
     userId = -1
     shutdown = False
@@ -482,4 +505,53 @@ class MotionDetectionPIRThread (threading.Thread):
         except:
             log("Unable to run Motion Detection")
             return
+        
+        
+class LoadCellCheckThread (threading.Thread):
+    def __init__(self, threadID, dispatch, updateDir, tapId = 1, commandPin = 7, responsePin = 8, delay=1, updateVariance=.01):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.dispatch = dispatch
+        self.updateDir = updateDir
+        self.tapId = tapId
+        self.commandPin = commandPin
+        self.responsePin = responsePin
+        self.delay = delay
+        self.updateVariance = updateVariance
+        self.checkTare = False
+        
+    def setCheckTare(self, checkTare):
+        self.checkTare = checkTare
+        
+    def tare(self):
+        ##TODO determine how to tare the load cell
+        return
+    
+    def getWeight(self):
+        #TODO use the commandpin and responsepin to get the weight
+        #Dependant on the type of load cell that you have
+        return -1
+    
+    def run(self):
+        log("Load Cell Checker " + self.threadID + " is Running")
+        lastWeight = -1
+        try:
+            while 1:
+                if self.checkTare:
+                    if self.dispatch.getTareRequest(self.tapId):
+                        self.tare()
+                        self.dispatch.setTareRequest(self.tapId, False)
+                        self.setCheckTare(False)
+                    
+                weight = self.getWeight()
+                #if weight is valid and the difference between the last read is significant enough to update
+                if weight > 0 and abs(lastWeight - weight) > self.updateVariance :
+                    #The following 2 lines passes the PIN and WEIGHT to the php script
+                    subprocess.call(["php", self.updateDir + '/admin/updateKeg.php', str(self.tapId), str(weight)])
+                    lastWeight = weight
+                time.sleep(self.delay)
+        except:
+            log("Unable to run Load Cell Checker")
+            return
+        
             

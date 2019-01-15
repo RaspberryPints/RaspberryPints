@@ -39,9 +39,15 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 		$kegId = null;
 		if(count($kegSelArr) > 0 && isset($kegSelArr[0]))$kegId = $kegSelArr[0];
 		if($kegId){			
-			if( ( !isset($kegSelArr[1]) || !$kegSelArr[1] || $tap->get_beerId() != $_POST['beerId'][$ii] ) ||
+		    $selectedBeerId = explode("~", $_POST['beerId'][$ii])[0];
+		    if( ( !isset($kegSelArr[1]) || !$kegSelArr[1] || $tap->get_beerId() != $selectedBeerId ) ||
 			    ( !isset($kegSelArr[2]) || !$kegSelArr[2] || $tap->get_kegId() != $kegId ) ){
-			$tapManager->tapKeg($tap, $kegId, $_POST['beerId'][$ii]);		
+			        $tapManager->tapKeg($tap, $kegId, $selectedBeerId);		
+			}
+			$keg = $kegManager->GetById($kegId);
+			if($keg->get_maxVolume() < ($_POST['startAmount'][$ii])){;
+			    $keg->set_maxVolume($_POST['startAmount'][$ii]);
+			    $kegManager->Save($keg);
 			}
 		}else if($tap->get_kegId()){
 			//User indicated the tap was untapped
@@ -54,6 +60,8 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 		$valveon = 0;
 		$valvepin = 0;
 		$countpergallon = 0;
+		$fermentationPSI = '';
+		$keggingTemp = '';
 	
 		if (isset ( $_POST ['flowpin'][$ii] )) {
 			$flowpin = $_POST ['flowpin'][$ii];
@@ -70,8 +78,22 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 		if (isset ( $_POST ['countpergallon'][$ii] )) {
 			$countpergallon = $_POST ['countpergallon'][$ii];
 		}
+		echo !isset ( $_POST['defaultFermentiationPSI'][$ii] );
+		if (isset ( $_POST ['fermentationPSI'][$ii] ) && 
+		    (!isset ( $_POST['defaultFermentiationPSI'][$ii] ) ||
+		        $_POST['defaultFermentiationPSI'][$ii] == 0 ||
+		        $_POST ['fermentationPSI'][$ii] != $config[ConfigNames::DefaultFermPSI]) ) {
+		    $fermentationPSI = $_POST ['fermentationPSI'][$ii];
+		}
+		
+	    if (isset ( $_POST ['keggingTemp'][$ii] ) &&
+	        (!isset ( $_POST['defaultKeggingTemp'][$ii] ) ||
+	            $_POST['defaultKeggingTemp'][$ii] == 0 ||
+	            $_POST ['keggingTemp'][$ii] != $config[ConfigNames::DefaultKeggingTemp]) ) {
+		    $keggingTemp = $_POST ['keggingTemp'][$ii];
+		}
 	
-		$tapManager->saveTapConfig ( $id, $flowpin, $valvepin, $valveon, $countpergallon );
+		$tapManager->saveTapConfig ( $id, $flowpin, $valvepin, $valveon, $countpergallon, $fermentationPSI, $keggingTemp );
 		$ii++;
 	}
 	$reconfig = true;
@@ -100,7 +122,6 @@ $numberOfTaps = count($activeTaps);
 $beerList = $beerManager->GetAllActive();
 $kegList = $kegManager->GetAllActive();
 ?>
-
 <body>
 	<!-- Start Header  -->
 <?php
@@ -142,6 +163,49 @@ include 'top_menu.php';
 			?>        
             	</tr>
             </table>
+            
+        	<?php if($config[ConfigNames::UseKegWeightCalc]) { ?>
+				<table class="contentbox" style="width:100%; border:0;" >
+					<thead>
+					<tr>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+					</thead>
+    				<tbody>
+    					<tr>
+    						<td><b>Weight Calculator:</b></td>
+    						<td><b>Brewery Altitude:</b><br/>The altitude (ft) above see level</td>
+    						<td><input type="text" name="breweryAltitude" class="smallbox" value="<?php echo ($config[ConfigNames::BreweryAltitude]) ?>"></td>
+    					</tr>
+    					<tr>
+    						<td><b>Weight Calculator:</b></td>
+    						<td><b>Only Use Defaults:</b><br/>If you do not want to configure each tap seperately<br/>for each weight calculator setting</td>
+    						<td>
+								<input type="hidden" name="<?php echo ConfigNames::UseDefWeightSettings; ?>" value="0"/>'
+								<input type="checkbox" <?php echo $config[ConfigNames::UseDefWeightSettings]?'checked':''; ?> name="<?php echo ConfigNames::UseDefWeightSettings; ?>" value="1">
+							</td>
+    					</tr>
+    					<tr>
+    						<td><b>Weight Calculator:</b></td>
+    						<td><b>Default Fermentation Pressure:</b><br/>The PSI of fermentation<br/>0 if not fermenting under pressure</td>
+    						<td><input type="text" name="defaultFermPSI" class="smallbox" value="<?php echo ($config[ConfigNames::DefaultFermPSI]) ?>"></td>
+    					</tr>
+    					<tr>
+    						<td><b>Weight Calculator:</b></td>
+    						<td><b>Default Kegging Temperature:</b><br/>The Temperature (F) when transfering into the Keg.<br/>This is used to calculate the CO2 in the beer at that time</td>
+    						<td><input type="text" name="defaultKeggingTemp" class="smallbox" value="<?php echo ($config[ConfigNames::DefaultKeggingTemp]) ?>"></td>
+    					</tr>
+    					<tr>
+    						<td colspan="3">
+                            	<input type="submit" name="saveSettings" class="btn" value="Save" />
+                                <input type="submit" name="revert"       class="btn" value="Revert" />
+                            </td>
+    					</tr>
+					</tbody>
+        		</table>
+        	<?php } ?>
         </form>
         
 		<form method="POST" name="settings" >        
@@ -153,6 +217,9 @@ include 'top_menu.php';
     <?php } ?>
 	<?php if($config[ConfigNames::UseTapValves]) { ?>
 			<input type="hidden" name="tapValveConfig" id="tapValveConfig" />
+	<?php } ?>
+	<?php if($config[ConfigNames::UseKegWeightCalc]) { ?>
+			<input type="hidden" name="weightCalcConfig" id="weightCalcConfig" />
 	<?php } ?>
 			<table class="contentbox" style="width:100%; border:0;" >
 				<thead>
@@ -269,13 +336,20 @@ include 'top_menu.php';
                     <th style="width:10%">Beer</th>
                     <th>Start<br>Amount (Gal)</th>
                     <th>Current<br>Amount(Gal)</th>
+					<?php if($config[ConfigNames::UseKegWeightCalc]) { ?>
+                        <th>Current<br>Weight(lbs)</th>
+    					<?php if(!$config[ConfigNames::UseDefWeightSettings]) { ?>
+                            <th><div class="tooltip">Fermenter<br>PSI<span class="tooltiptext">0 If not fermenting under pressure</span></div></th>
+                            <th><div class="tooltip">Kegging<br>Temp<span class="tooltiptext">Temperature of Beer when kegged<br>room temp if not cold crashing or keg conditioning</span></div></th>
+                        <?php } ?>
+                    <?php } ?>
                     <?php if($config[ConfigNames::UseFlowMeter]) { ?>
                         <th>Flow Pin</th>
-                        <th>Count Per Gal</th>
+                        <th>Count<br>Per Gal</th>
                     <?php } ?>
                     <?php if($config[ConfigNames::UseTapValves]) { ?>
                         <th>Valve Pin</th>
-                        <th> PI<br>Pin?</th>
+                        <th>Valve<br>PI Pin?</th>
                     	<th></th>
                     <?php } ?>
                 </tr>
@@ -299,7 +373,7 @@ include 'top_menu.php';
                         </td>
                         <td>                            
 							<?php 					
-                                $str = "<select id='kegId".$tap->get_id()."' name='kegId[]' class='' onChange='toggleDisplay(this, \"kegId\", \"beerId\", ".$tap->get_id().")'>\n";
+							    $str = "<select id='kegId".$tap->get_id()."' name='kegId[]' class='' onChange='toggleDisplay(this, \"kegId\", \"beerId\", ".$tap->get_id().", \"".$tap->get_tapNumber()."\")'>\n";
                                 $str .= "<option value=''>Select One</option>\n";
                                 foreach($kegList as $item){
                                     if( !$item ) continue;
@@ -308,7 +382,7 @@ include 'top_menu.php';
                                     $desc = $item->get_id();
                                     if($item->get_label() && $item->get_label() != "" && $item->get_label() != $item->get_id())$desc.="-".$item->get_label();
 									if($item->get_onTapId() && $item->get_onTapId() != "")$desc.="(".$item->get_tapNumber().")";
-                                    $str .= "<option value='".$item->get_id()."~".$item->get_beerId()."~".$item->get_ontapId()."' ".$sel.">".$desc."</option>\n";
+									$str .= "<option value='".$item->get_id()."~".$item->get_beerId()."~".$item->get_ontapId()."~".$item->get_emptyWeight()."~".$item->get_maxVolume()."' ".$sel.">".$desc."</option>\n";
                                 }					
                                 $str .= "</select>\n";
                                                         
@@ -317,17 +391,44 @@ include 'top_menu.php';
                         </td> 
                         <td style="width:5%">	
                             <?php 
-								$selectedBeer = "";
-								if( isset($tap) && isset($beer) ) $selectedBeer = $beer->get_id() ;
-								echo $htmlHelper->ToSelectList("beerId[]", "beerId".$tap->get_id(), $beerList, "name", "id", $selectedBeer, "Select One"); 
+								$str = "<select id='beerId".$tap->get_id()."' name='beerId[]' class=''>\n";
+								$str .= "<option value=''>Select One</option>\n";
+								foreach($beerList as $item){
+								    if( !$item ) continue;
+								    $sel = "";
+								    if( isset($tap) && $tap->get_beerId() == $item->get_id())  $sel .= "selected ";
+								    $desc = $item->get_name();
+								    $str .= "<option value='".$item->get_id()."~".$item->get_fg()."' ".$sel.">".$desc."</option>\n";
+								}
+								$str .= "</select>\n";
+								
+								echo $str;
+								//echo $htmlHelper->ToSelectList("beerId[]", "beerId".$tap->get_id(), $beerList, "name", "id", $selectedBeer, "Select One"); 
 							?>
                         </td>             
                         <td>
 							<input type="text" id="startAmount<?php echo $tap->get_id();?>" class="smallbox" name="startAmount[]" value="<?php echo $tap->get_startAmount() ?>" />
-                        </td>
+                        </td>  
                     	<td>
-							<input type="text" id="currentAmount<?php echo $tap->get_id();?>" class="smallbox" name="currentAmount[]" value="<?php echo $tap->get_currentAmount() ?>" />
-                        </td>               
+							<input type="text" id="currentAmount<?php echo $tap->get_id();?>" class="smallbox" name="currentAmount[]" value="<?php echo $tap->get_currentAmount() ?>" onchange="updateCurrentWeight(<?php echo $tap->get_id();?>);"/>
+                        </td>
+						<?php if($config[ConfigNames::UseKegWeightCalc]) { ?>  
+                        <td>
+							<input type="text" id="currentWeight<?php echo $tap->get_id();?>" class="smallbox" name="startWeight[]" value="" onchange="updateCurrentAmount(<?php echo $tap->get_id();?>);"/>
+						<?php if(!$config[ConfigNames::UseDefWeightSettings]) { ?> 
+						</td>            
+                        <td>
+						<?php } ?>  
+							<input type="<?php echo $config[ConfigNames::UseDefWeightSettings]?'hidden':'text';  ?>" id="fermentationPSI<?php echo $tap->get_id();?>" class="smallbox" name="fermentationPSI[]" value="<?php echo (!$config[ConfigNames::UseDefWeightSettings] && $tap->get_fermentationPSI() && $tap->get_fermentationPSI() != ''?$tap->get_fermentationPSI():$config[ConfigNames::DefaultFermPSI]);?>" onchange="updateCurrentAmount(<?php echo $tap->get_id();?>);"/>
+							<input type="hidden" id="defaultFermentationPSI<?php echo $tap->get_id();?>" name="defaultFermentiationPSI[]" value="<?php echo (!$tap->get_fermentationPSI() || $tap->get_fermentationPSI() == '')?"1":"0"; ?>"/>
+						<?php if(!$config[ConfigNames::UseDefWeightSettings]) { ?> 
+						</td>            
+                        <td>
+						<?php } ?>  
+							<input type="<?php echo $config[ConfigNames::UseDefWeightSettings]?'hidden':'text';  ?>" id="keggingTemp<?php echo $tap->get_id();?>" class="smallbox" name="keggingTemp[]" value="<?php echo (!$config[ConfigNames::UseDefWeightSettings] && $tap->get_keggingTemp() && $tap->get_keggingTemp() != ''?$tap->get_keggingTemp():$config[ConfigNames::DefaultKeggingTemp]);?>" onchange="updateCurrentAmount(<?php echo $tap->get_id();?>);"/>
+							<input type="hidden" id="defaultKeggingTemp<?php echo $tap->get_id();?>" name="defaultKeggingTemp[]" value="<?php echo (!$tap->get_keggingTemp() || $tap->get_keggingTemp() == '')?"1":"0"; ?>"/>						
+						</td>      
+						<?php } ?>      
                         <?php if($config[ConfigNames::UseFlowMeter]) { ?>
                                 <td>
                                     <?php if( isset($tap) ) { ?>
@@ -348,7 +449,7 @@ include 'top_menu.php';
                             </td>
                             <td>
                                 <?php if( isset($tap) ) { ?>
-                                	<input type="checkbox" id="valvepinPi<?php echo $tap->get_id();?>" class="xsmallbox" name="valvepinPi[<?php echo $tap->get_id();?>]" value="1" <?php if($tap->get_valvePinId() < 0)echo "checked" ?>  />
+                                	<input type="checkbox" id="valvepinPi<?php echo $tap->get_id();?>" class="xsmallbox" name="valvepinPi[<?php echo $tap->get_id();?>]" value="1" <?php if($tap->get_valvePinId() < 0)echo "checked"; ?>  />
                                 <?php } ?>
                             </td>
                         <?php } ?>
@@ -396,7 +497,59 @@ include 'scripts.php';
 ?>
 
 <script>
-
+<?php 
+    foreach($activeTaps as $tap){
+        if(null == $tap)continue; 
+        echo "updateCurrentWeight(".$tap->get_id().");\n";
+    }
+?>
+	function updateCurrentWeight(tapId){
+		var kegSelArr = document.getElementById("kegId"+tapId).value.split("~");
+		var beerSelArr = document.getElementById("kegId"+tapId).value.split("~");
+		var emptyKegWeight = 0;
+		if(kegSelArr.length > 4 && kegSelArr[3] != "")
+		{
+			emptyKegWeight = kegSelArr[3];
+		}
+		var beerSelArr = document.getElementById("beerId"+tapId).value.split("~");
+		var fg = 1.000;
+		if(beerSelArr.length > 1 && beerSelArr[1] != "")
+		{
+			fg = beerSelArr[1];
+		}
+		weight = getWeightByVol(document.getElementById("currentAmount"+tapId).value,  
+																				emptyKegWeight, 
+																		     	document.getElementById("keggingTemp"+tapId).value, 
+																		     	<?php echo $config[ConfigNames::BreweryAltitude] ?>,
+																		     	document.getElementById("fermentationPSI"+tapId).value, 
+																		     	true, 
+																		     	fg, 
+																		     	false).toFixed(5);
+		if(!isNaN(weight))document.getElementById("currentWeight"+tapId).value = weight;
+	}
+	function updateCurrentAmount(tapId){
+		var kegSelArr = document.getElementById("kegId"+tapId).value.split("~");
+		var emptyKegWeight = 0;
+		if(kegSelArr.length > 4 && kegSelArr[3] != "")
+		{
+			emptyKegWeight = kegSelArr[3];
+		}
+		var beerSelArr = document.getElementById("beerId"+tapId).value.split("~");
+		var fg = 1.000;
+		if(beerSelArr.length > 1 && beerSelArr[1] != "")
+		{
+			fg = beerSelArr[1];
+		}
+		var volume = getVolumeByWeight(document.getElementById("currentWeight"+tapId).value, 
+																				emptyKegWeight,
+																		     	document.getElementById("keggingTemp"+tapId).value, 
+																		     	<?php echo $config[ConfigNames::BreweryAltitude] ?>, 
+																		     	document.getElementById("fermentationPSI"+tapId).value, 
+																				true, 
+																				fg, 
+																				false).toFixed(5);
+		if(!isNaN(volume))document.getElementById("currentAmount"+tapId).value = volume;
+	}
 	function validateBeerSelected(kegSelectStart, beerSelectStart) {
 		var ii = 1;
 		var kegSelect = null;
@@ -452,7 +605,7 @@ include 'scripts.php';
 		}
 	}
 	
-	function toggleDisplay(selectObject, kegSelectStart, secSelectBeerStart, tapId) {
+	function toggleDisplay(selectObject, kegSelectStart, secSelectBeerStart, tapId, tapNumber) {
 		var msgDiv = document.getElementById("messageDiv");
 		if(msgDiv != null) msgDiv.style.display = "none"
 		var display = true;
@@ -488,7 +641,7 @@ include 'scripts.php';
 				var secOtherTapBeerSelect = document.getElementById(secSelectBeerStart+onOtherTap);
 				if(msgDiv != null)msgDiv.style.display = "";
 				var msgSpan = document.getElementById("messageSpan");
-				if(msgSpan != null) msgSpan.innerHTML = "Keg "+kegSelArr[0]+" currently on Tap "+kegSelArr[2]+" and will be moved to tap <?php echo ($tap?$tap->get_id():'');?> and updated to current selected beer"
+				if(msgSpan != null) msgSpan.innerHTML = "Keg "+kegSelArr[0]+" currently on Tap "+kegSelArr[2]+" and will be moved to tap "+tapNumber+" and updated to current selected beer"
 				if(secOtherTapBeerSelect != null)secOtherTapBeerSelect.selectedIndex = 0;
 				if(secOtherTapKegSelect != null)secOtherTapKegSelect.selectedIndex = 0;		
 			}	

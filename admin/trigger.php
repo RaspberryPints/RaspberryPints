@@ -19,7 +19,8 @@
 	    $value == "fan"  ||
 	    $value == "flow" ||
 	    $value == "config" ||
-	    $value == "alamode")
+	    $value == "alamode" ||
+	    $value == "tare")
 	{
 		$data = "RPC:".$value."\n";
 	} 

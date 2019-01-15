@@ -16,8 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $kegManager->KickKeg($keg);
         }
     }
-    if($kegManager->Save($keg))
+    if($kegManager->Save($keg)){
+        unset($_POST);
         redirect('keg_list.php');
+    }
 }
 
 $keg = null;
@@ -163,10 +165,26 @@ include 'top_menu.php';
 			</tr>
 			<tr>
 				<td>
-					Empty Weight: 
+					Current Weight:<br>(not &lt; Empty Weight)
 				</td>
 				<td>
 					<input type="text" id="weight" class="mediumbox" name="weight" value="<?php echo $keg->get_weight() ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Empty Weight: 
+				</td>
+				<td>
+					<input type="text" id="weight" class="mediumbox" name="emptyWeight" value="<?php echo $keg->get_emptyWeight() ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Max Volume: 
+				</td>
+				<td>
+					<input type="text" id="weight" class="mediumbox" name="maxVolume" value="<?php echo $keg->get_maxVolume() ?>" />
 				</td>
 			</tr>
 			<tr>

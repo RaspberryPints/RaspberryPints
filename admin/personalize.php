@@ -131,6 +131,31 @@ Configuration Updated
 			<form action="restore_background.php" method="POST">
 				<input type="submit" class="btn" value="Restore Default Background" />
 			</form> 
+		<hr />
+	<a id="weightCalculation"></a> 
+		<h2>Default Configuration for Calculating Weight</h2><br><br>
+		<p><b>Altitude Above Sea Level (Feet):</b></p>
+			<form method="post" action="includes/config_update.php">
+				<input type="text" class="largebox" value="<?php echo $configs[ConfigNames::BreweryAltitude]; ?>" name="configValue"> &nbsp; 
+				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::BreweryAltitude.'"/>'; ?>
+				<?php echo '<input type="hidden" name="jumpto" value="#weightCalculation"/>'; ?>
+				<input type="submit" class="btn" name="Submit" value="Submit">
+			</form><br><br>
+		<p><b>Default Fermenation Pressure (PSI):</b></p>
+		<p>0 if not fermenting under pressure</p>
+			<form method="post" action="includes/config_update.php">
+				<input type="text" class="largebox" value="<?php echo $configs[ConfigNames::DefaultFermPSI]; ?>" name="configValue"> &nbsp; 
+				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::DefaultFermPSI.'"/>'; ?>
+				<?php echo '<input type="hidden" name="jumpto" value="#weightCalculation"/>'; ?>
+				<input type="submit" class="btn" name="Submit" value="Submit">
+			</form><br><br>
+		<p><b>Default Beer Temperature During Kegging (F):</b></p>
+			<form method="post" action="includes/config_update.php">
+				<input type="text" class="largebox" value="<?php echo $configs[ConfigNames::DefaultKeggingTemp]; ?>" name="configValue"> &nbsp; 
+				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::DefaultKeggingTemp.'"/>'; ?>
+				<?php echo '<input type="hidden" name="jumpto" value="#weightCalculation"/>'; ?>
+				<input type="submit" class="btn" name="Submit" value="Submit">
+			</form><br><br>
 	</div>
 </div>
 

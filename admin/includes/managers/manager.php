@@ -12,12 +12,14 @@ abstract class Manager {
 	protected function hasModifiedColumn(){return true;}
 	protected function hasCreatedColumn(){return true;}
 	protected function getViewName(){return $this->getTableName();}
+	protected function getUpdateColumns(){return $this->getColumns();}
+	protected function getInsertColumns(){return $this->getColumns();}
 	
-	function Save($dbObject){
+	function Save($dbObject, $new=false){
 		$sql = "";
-		if($dbObject->get_id()){
+		if($dbObject->get_id() && !$new){
 			$columns = "";
-			foreach($this->getColumns() as $col){
+			foreach($this->getUpdateColumns() as $col){
 				if(strlen($columns) > 0) $columns.= ', ';
 				$value = $dbObject->{'get_'.$col}();
 				if(is_string($value)){
@@ -33,14 +35,14 @@ abstract class Manager {
 					$where;
 		}else{		
 			$columns = "";
-			foreach($this->getColumns() as $col){
+			foreach($this->getInsertColumns() as $col){
 				if(strlen($columns) > 0) $columns.= ', ';
 				$columns.= $col;
 			}
 			if($this->hasModifiedColumn())$columns.=(strlen($columns) > 0?',':'')." modifiedDate";
 			if($this->hasCreatedColumn())$columns.=(strlen($columns) > 0?',':'')." createdDate";
 			$values = "";
-			foreach($this->getColumns() as $col){
+			foreach($this->getInsertColumns() as $col){
 				if(strlen($values) > 0) $values.= ', ';
 				$value = $dbObject->{'get_'.$col}();
 				if($col == $this->getActiveColumnName()){
@@ -63,7 +65,7 @@ abstract class Manager {
 		$where = "";
 		foreach($this->getPrimaryKeys() as $key){
 			if(strlen($where) > 0) $where.= ' AND ';
-			$where.= "$key = ".$dbObject->{'get_'.$key}();
+			$where.= "$key = '".$dbObject->{'get_'.$key}()."'";
 		}
 		if(strlen($where) > 0) $where = 'WHERE '.$where;
 		return $where;
@@ -89,7 +91,11 @@ abstract class Manager {
 		while($qry && $i = $qry->fetch_array()){
 			 $dbObject = $this->getDBObject();
 			 $dbObject->setFromArray($i);
-			 $objArray[$dbObject->{'get_'.$this->getPrimaryKeys()[0]}()] = $dbObject;	
+			 $keyIndex = '';
+			 foreach($this->getPrimaryKeys() as $key){
+			     $keyIndex .= $dbObject->{'get_'.$key}();
+			 }
+			 $objArray[$keyIndex] = $dbObject;	
 		}
 
 		return $objArray;
@@ -167,7 +173,12 @@ abstract class Manager {
 	function GetAllActiveIDs(){
 		$where = "";
 		if($this->getActiveColumnName()) $where = "WHERE ".$this->getActiveColumnName()." = 1 ";
-		$sql="SELECT ".$this->getPrimaryKeys()[0]." FROM ".$this->getViewName()." $where ".$this->getOrderByClause();
+		$sql = "SELECT ";
+		for($i = 0; $i < count($this->getPrimaryKeys()); $i++) {
+		    if($i > 0) $sql .= ", ";
+		    $sql .= $this->getPrimaryKeys()[$i];
+		}
+		$sql .= " FROM ".$this->getViewName()." $where ".$this->getOrderByClause();
 		return $this->executeNonObjectQueryWithSingleResults($sql);
 	}
 	

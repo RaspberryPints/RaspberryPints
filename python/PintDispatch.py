@@ -89,6 +89,9 @@ class CommandTCPHandler(SocketServer.StreamRequestHandler):
             if ( reading[1] == "alamode" or reading[1] == "all" ):
                 debug("resetting alamode config from db")
                 self.server.pintdispatch.triggerAlaModeReset()
+            if ( reading[1] == "tare" ):
+                debug("Requesting Load Cells to check tare")
+                self.server.pintdispatch.flowmonitor.tareRequest()
         
         self.wfile.write("RPACK\n")
 
@@ -194,6 +197,38 @@ class PintDispatch(object):
         rows = cursor.fetchall()
         con.close()
         return rows
+    
+    def getLoadCellConfig(self):
+        con = self.connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        cursor.execute("SELECT tapId,loadCellCmdPin,loadCellRspPin FROM tapconfig WHERE loadCellCmdPin IS NOT NULL ORDER BY tapId")
+        rows = cursor.fetchall()
+        con.close()
+        return rows
+    
+    def getTareRequest(self, tapId):
+        con = self.connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        cursor.execute("SELECT tapId,loadCellTareReq FROM tapconfig WHERE tapId = " + str(tapId))
+        rows = cursor.fetchall()
+        con.close()
+        if len(rows) == 0:
+            return False
+        return rows[0]['loadCellTareReq'] == 1
+    
+    def setTareRequest(self, tapId, tareRequested):
+        tareReq = "0"
+        if tareRequested:
+            tareReq = "1"
+        sql = "UPDATE tapconfig SET loadCellTareReq="+tareReq
+        if not tareRequested:
+            sql = sql + ",loadCellTareDate=NOW()"
+        sql = sql + " WHERE tapId = " + str(tapId)
+        con = self.connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        result = cursor.execute(sql)
+        con.commit()
+        con.close()
     
     def getFanConfig(self):
         pin = self.getFanPin()
@@ -375,7 +410,7 @@ class PintDispatch(object):
         t = threading.Thread(target=self.commandserver.serve_forever)
         t.setDaemon(True)
         t.start()
-
+        
         signal.pause()
         debug( "exiting...")
         

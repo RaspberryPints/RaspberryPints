@@ -8,7 +8,7 @@ class KegManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["label", "kegTypeId", "make", "model", "serial", "stampedOwner", "stampedLoc", "notes", "kegStatusCode", "weight", "beerId", "onTapId", "tapNumber", "active"];
+		return ["label", "kegTypeId", "make", "model", "serial", "stampedOwner", "stampedLoc", "notes", "kegStatusCode", "weight", "beerId", "onTapId", "tapNumber", "active", "emptyWeight", "maxVolume"];
 	}
 	protected function getTableName(){
 		return "kegs";

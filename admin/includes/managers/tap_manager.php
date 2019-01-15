@@ -119,7 +119,7 @@ class TapManager extends Manager{
 		return $this->executeQueryNoResult($sql);
 	}
 	
-	function saveTapConfig($id, $flowPin, $valvePin, $valveOn, $countpergallon) {
+	function saveTapConfig($id, $flowPin, $valvePin, $valveOn, $countpergallon, $fermentationPSI, $keggingTemp) {
 		$ret = true;
 		$sql="SELECT * FROM tapconfig where tapId = $id";
 		$tap = $this->executeQueryWithSingleResult($sql);
@@ -130,12 +130,50 @@ class TapManager extends Manager{
 			if($tap->get_valvePinId() != $valvePin) 	$updateSql .= ($updateSql!=""?",":"")."valvePin = NULLIF('" . $valvePin . "', '')"; 
 			if($tap->get_valveOn() != $valveOn) 		$updateSql .= ($updateSql!=""?",":"")."valveOn = NULLIF('" . $valveOn . "', '')"; 
 			if($tap->get_count() != $countpergallon) 	$updateSql .= ($updateSql!=""?",":"")."count = NULLIF('" . $countpergallon . "', '')";
+			if($tap->get_fermentationPSI() != $fermentationPSI) 	$updateSql .= ($updateSql!=""?",":"")."fermentationPSI = NULLIF('" . $fermentationPSI . "', '')";
+			if($tap->get_keggingTemp() != $keggingTemp) $updateSql .= ($updateSql!=""?",":"")."keggingTemp = NULLIF('" . $keggingTemp . "', '')";
 			if($updateSql != "")$sql = "UPDATE tapconfig SET ".$updateSql." WHERE tapId = " . $id;
 		} else {
-			$sql = "INSERT INTO tapconfig (tapId, flowPin, valvePin, valveOn, count) VALUES(" . 
-				$id.", ".$flowPin.", ".$valvePin. ", ".$valveOn.", ".$countpergallon.")";
+			$sql = "INSERT INTO tapconfig (tapId, flowPin, valvePin, valveOn, count, fermentationPSI, keggingTemp) VALUES(" . 
+			                             $id.", ".$flowPin.", ".$valvePin. ", ".$valveOn.", ".$countpergallon.", ".$fermentationPSI.", ".$keggingTemp.")";
 		}
 		if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
 		return $ret;
+	}
+	
+	function saveTapLoadCellInfo($id, $loadCellCmdPin, $loadCellRspPin) {
+	    $ret = true;
+	    $sql="SELECT * FROM tapconfig where tapId = $id";
+	    $tap = $this->executeQueryWithSingleResult($sql);
+	    unset($sql);
+	    $updateSql = "";
+	    if( $tap ){
+	        if($tap->get_loadCellCmdPin() != $loadCellCmdPin) $updateSql .= ($updateSql!=""?",":"")."loadCellCmdPin = NULLIF('" . $loadCellCmdPin . "', '')";
+	        if($tap->get_loadCellRspPin() != $loadCellRspPin) $updateSql .= ($updateSql!=""?",":"")."loadCellRspPin = NULLIF('" . $loadCellRspPin . "', '')";
+	        if($updateSql != "")$sql = "UPDATE tapconfig SET ".$updateSql." WHERE tapId = " . $id;
+	    } else {
+	        $sql = "INSERT INTO tapconfig (tapId, loadCellCmdPin, loadCellRspPin) VALUES(" .
+	   	        $id.", ".$loadCellCmdPin.", ".$loadCellRspPin.")";
+	    }
+	    if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
+	    return $ret;
+	}
+	function set_tapTareRequested($id, $tare) {
+	    $ret = true;
+	    $sql="SELECT * FROM tapconfig where tapId = $id";
+	    $tap = $this->executeQueryWithSingleResult($sql);
+	    unset($sql);
+	    $updateSql = "";
+	    if($tare){
+	        $tare = 1;
+	    }else{
+	        $tare = 0;
+	    }
+	    if( $tap ){
+	        $updateSql .= ($updateSql!=""?",":"")."loadCellTareReq = NULLIF('" . $tare . "', '0')";
+	        if($updateSql != "")$sql = "UPDATE tapconfig SET ".$updateSql." WHERE tapId = " . $id;
+	    }
+	    if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
+	    return $ret;
 	}
 }

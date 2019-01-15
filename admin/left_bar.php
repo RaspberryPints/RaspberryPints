@@ -40,16 +40,18 @@
 			<li><a href="personalize.php#tapListLogo">Brewery Logo</a></li>
 			<li><a href="personalize.php#tapListBackground">Background Image</a></li>
 			<li><a href="themes.php">Theme Options</a></li>
-			<li><a href="#" title="personalize">Units of Measure <small>(coming v3.0.0)</small></a></li>
+			<li><a href="#" title="personalize">Units of Measure <small>(coming v3.5.0)</small></a></li>
 		</ul>
 	</li>
 	<li>
 		<a class="collapsed heading">Advanced Hardware</a>
 		<ul class="navigation">
 			<li><a href="rfid_reader_list.php" title="rfid-reader">RFID Readers</a></li>
-			<li><a href="#" title="temp-probe">Temperature Probes <small>(coming v3.0.0)</small></a></li>
+			<li><a href="#" title="temp-probe">Temperature Probes <small>(coming v3.5.0)</small></a></li>
+			<li><a href="load_cell_list.php" title="loadCells">Load Cells</a></li>
 <!-- 			<li><a href="valve_list.php" title="valves">Valves</a></li> -->
 			<li><a href="motion_detector_list.php" title="motion-detectors">Motion Detectors</a></li>
+			<li><a href="ioPins_list.php" title="io_pins">Hardware IO Display</a></li>
 		</ul>
 	</li>
 	<li>
