@@ -169,7 +169,8 @@ if ($action == 'backup' || $action == 'remove' || $action == 'restore')
                             if($values != '') $values.=',';
                             $value = $mysqli->escape_string(addslashes($value));
                             $isInt = strpos(strtolower($types[$j]), "int(") || strpos(strtolower($types[$j]), "decimal(");
-                            $value = ($value == '' && $isInt?"NULL":"'$value'");
+                            $isDate = strpos(strtolower($types[$j]), "date") || strpos(strtolower($types[$j]), "timestamp");
+                            $value = ($value == '' && ($isInt || $isDate)?"NULL":"'$value'");
                             $values.=$value;
                         }
                         $return.= $values.");\n";
