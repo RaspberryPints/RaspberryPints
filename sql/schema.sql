@@ -564,7 +564,7 @@ CREATE TABLE IF NOT EXISTS `tapconfig` (
   `loadCellCmdPin` int(11) DEFAULT NULL,
   `loadCellRspPin` int(11) DEFAULT NULL,
   `loadCellTareReq` int(11) DEFAULT NULL,
-  `loadCellTareDate` TIMESTAMP DEFAULT NULL,
+  `loadCellTareDate` TIMESTAMP,
 	PRIMARY KEY (`tapId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
