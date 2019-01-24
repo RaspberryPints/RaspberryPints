@@ -64,7 +64,7 @@ class FlowMonitor(object):
         self.motionDetectors = []
         self.loadCellThreads = []
         self.readers = []
-        self.tempProbeThread = NULL
+        self.tempProbeThread = None
         
     def readline_notimeout(self):
         eol = b'\r\n'
@@ -81,7 +81,7 @@ class FlowMonitor(object):
     
     def setup(self):
         hexfile = config['pints.dir'] + "/arduino/raspberrypints/raspberrypints.cpp.hex"
-        cmdline = "/usr/share/arduino/hardware/tools/avrdude -C/usr/share/arduino/hardware/tools/avrdude.conf -patmega328p -calamode -P/dev/ttyS0 -b115200 -D -Uflash:w:"
+        cmdline = "/usr/share/arduino/hardware/tools/avrdude -C/usr/share/arduino/hardware/tools/avrdude.conf -patmega328p -calamode -P"+self.port+" -b115200 -D -Uflash:w:"
         cmdline = cmdline + hexfile
         cmdline = cmdline + ":i"
         
