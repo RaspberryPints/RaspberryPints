@@ -7,7 +7,7 @@ $kegTypeManager = new KegTypeManager();
 $beerManager = new BeerManager();
 
 if (isset($_POST['inactivateKeg'])) {
-	$kegManager->Inactivate($_POST['id']);		
+	$kegManager->Inactivate($_POST['inactivateKeg']);		
 }
 if (isset($_POST['editKeg'])) {
 	//Element contains kegId

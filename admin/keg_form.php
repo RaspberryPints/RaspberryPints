@@ -12,9 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $keg = new Keg();
     $keg->setFromArray($_POST);
     if( isset($_POST['kickKeg'])){
-        if($tapManager->closeTapById($keg->get_onTapId())){
-            $kegManager->KickKeg($keg);
-        }
+        $tapManager->closeTapById($keg->get_onTapId());
     }
     if($kegManager->Save($keg)){
         unset($_POST);

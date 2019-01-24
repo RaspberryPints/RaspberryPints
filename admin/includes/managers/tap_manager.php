@@ -92,17 +92,18 @@ class TapManager extends Manager{
 	
 	function closeTapById($id){
 		$tap = $this->GetById($id);
-		if($tap) return closeTap($tap);
+		if($tap) return $this->closeTap($tap);
 		return false;
 	}
 	function closeTap(&$tap, $saveTap = true){
-		$tap->set_kegId(null);
-		
 		$kegManager = new KegManager();
 		$ret = $kegManager->Kick($tap->get_kegId());
+		if(!$ret) return $ret;
+		
+		$tap->set_kegId(null);
 
-			$sql="UPDATE tapconfig SET valveOn = 0 WHERE tapId = ".$tap->get_id();
-			$ret = $ret && $this->executeQueryNoResult($sql);
+		$sql="UPDATE tapconfig SET valveOn = 0 WHERE tapId = ".$tap->get_id();
+		$ret = $ret && $this->executeQueryNoResult($sql);
 		
 		if($saveTap)$ret = $ret && $this->Save($tap);
 		

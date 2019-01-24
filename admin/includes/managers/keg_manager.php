@@ -8,8 +8,12 @@ class KegManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["label", "kegTypeId", "make", "model", "serial", "stampedOwner", "stampedLoc", "notes", "kegStatusCode", "weight", "beerId", "onTapId", "tapNumber", "active", "emptyWeight", "maxVolume"];
+		return array_push($this->getUpdateColumns(), "tapNumber");
 	}
+	protected function getInsertColumns(){
+	    return ["label", "kegTypeId", "make", "model", "serial", "stampedOwner", "stampedLoc", "notes", "kegStatusCode", "weight", "beerId", "onTapId", "active", "emptyWeight", "maxVolume"];
+	}	    
+	protected function getUpdateColumns(){return $this->getInsertColumns();}
 	protected function getTableName(){
 		return "kegs";
 	}
@@ -22,6 +26,7 @@ class KegManager extends Manager{
 	protected function getActiveColumnName(){
 		return "active";
 	}	
+	
 	function Tap($tapId, $kegId, $beerId = null){
 		$sql="UPDATE kegs k SET k.onTapId = NULL, k.kegStatusCode = 'NEEDS_CLEANING', modifiedDate = NOW() WHERE onTapId = $tapId";
 		$ret = $this->executeQueryNoResult($sql);
