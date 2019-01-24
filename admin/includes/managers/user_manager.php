@@ -22,7 +22,7 @@ class UserManager extends Manager{
 	function getUnknownUserId(){
 		return -1;
 	}
-	function Save($user){		
+	function Save($user, $new=false){		
 		if(!$user->get_id() && ($existingUser = $this->GetByUserName($user->get_username())) != null){
 			if($existingUser->get_active() == 0) {
 				$user->set_id($existingUser->get_id());	
@@ -31,7 +31,7 @@ class UserManager extends Manager{
 				return false;				
 			}
 		}
-		$ret = parent::Save($user);
+		$ret = parent::Save($user, $new);
 		if(!$user->get_id()){
 			$user = $this->GetByUserName($user->get_username());
 			$ret = $ret && $this->ChangePassword($user->get_id(), $user->get_password());
