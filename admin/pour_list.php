@@ -18,8 +18,8 @@
 	$beerList = $beerManager->GetAll();
 	$userList = $userManager->GetAll();
 	
-	$startTime 	= (isset($_POST['startTime'])?$_POST['startTime']:"");
-	$endTime   	= (isset($_POST['endTime'])?$_POST['endTime']:"");
+	$startTime 	= (isset($_POST['startDate'])?$_POST['startDate']:"");
+	$endTime   	= (isset($_POST['endDate'])?$_POST['endDate']:"");
 	$tapId		= (isset($_POST['tapId'])?$_POST['tapId']:"");
 	$beerId 	= (isset($_POST['beerId'])?$_POST['beerId']:"");
 	$userId 	= (isset($_POST['userId'])?$_POST['userId']:"");
