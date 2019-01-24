@@ -504,3 +504,33 @@ INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOn
 ( 'breweryAltitude', '0', 'Feet Above Sea Level', '0', NOW(), NOW() ),
 ( 'defaultFermPSI', '0', 'Default pressure of fermentation (0 if not pressure ferment)', '0', NOW(), NOW() ),
 ( 'defaultKeggingTemp', '56', 'Default Temperature of beer when kegging', '0', NOW(), NOW() );
+
+CREATE TABLE IF NOT EXISTS `tempProbes` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` tinytext NOT NULL,
+	`type` int(11) NOT NULL,
+	`pin` int(11),
+	`notes` text NULL,
+	`manualAdj` decimal(4,2) NULL,
+	`active` tinyint(1) NOT NULL DEFAULT 1,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `tempLog` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+    `probe` text NULL,
+	`temp` decimal(4,2) NOT NULL,
+	`humidity` decimal(4,2) NULL,
+	`takenDate` TIMESTAMP NOT NULL,	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+
+INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
+('useTempProbes', '0', 'Use Temperature Probes', 0, NOW(), NOW() ),
+('tempProbeDelay', '1', 'Seconds between checking temp Probes', 0, NOW(), NOW() ),
+('tempProbeBoundLow', '0', 'Lower bound of valid Temperature', 0, NOW(), NOW() ),
+('tempProbeBoundHigh', '212', 'High bound of valid Temperature', 0, NOW(), NOW() )
+('showTempOnMainPage', '1', 'Show Avg Temperature on home page', 1, NOW(), NOW() );

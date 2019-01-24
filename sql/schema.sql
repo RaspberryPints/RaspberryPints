@@ -425,6 +425,11 @@ INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`,
 ('useFanPin', '17', 'Fan I/O Pin', 0, NOW(), NOW() ),
 ('fanInterval', '120', 'Fan Interval', 0, NOW(), NOW() ),
 ('fanOnTime', '1', 'Fan On time', 0, NOW(), NOW() ),
+('useTempProbes', '0', 'Use Temperature Probes', 0, NOW(), NOW() ),
+('tempProbeDelay', '1', 'Seconds between checking temp Probes', 0, NOW(), NOW() ),
+('tempProbeBoundLow', '0', 'Lower bound of valid Temperature', 0, NOW(), NOW() ),
+('tempProbeBoundHigh', '212', 'High bound of valid Temperature', 0, NOW(), NOW() ),
+('showTempOnMainPage', '1', 'Show Avg Temperature on home page', 1, NOW(), NOW() ),
 ('pourShutOffCount', '0', 'pour shutoff amount in counts', 0, NOW(), NOW() ),
 ('pourCountConversion', '1500', 'pour count conversion to gallons', 0, NOW(), NOW() ),
 ('alamodePourMessageDelay', '300', 'Arduino Pour Message Delay', 0, NOW(), NOW() ),
@@ -534,7 +539,6 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 	`emptyWeight` decimal(11,4) NULL,
 	`maxVolume` decimal(11,4) NULL,
 	`onTapId` int(11) NULL,
-	`tapNumber` int(11) NULL,
 	`beerId` int(11) NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
@@ -1309,6 +1313,27 @@ UPDATE ioPins SET displayPin=pin;
 
 
 
+CREATE TABLE IF NOT EXISTS `tempProbes` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` tinytext NOT NULL,
+	`type` int(11) NOT NULL,
+	`pin` int(11),
+	`notes` text NULL,
+	`manualAdj` decimal(4,2) NULL,
+	`active` tinyint(1) NOT NULL DEFAULT 1,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `tempLog` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+  `probe` text NULL,
+	`temp` decimal(4,2) NOT NULL,
+	`humidity` decimal(4,2) NULL,
+	`takenDate` TIMESTAMP NOT NULL,	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 --
 -- Create View `vwGetActiveTaps`
 --
@@ -1417,12 +1442,14 @@ AS
     k.weight,
     k.beerId,
     k.onTapId,
-    k.tapNumber,
+    t.tapNumber,
     k.active,
     CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeight ELSE k.emptyWeight END AS emptyWeight,
     CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmount ELSE k.maxVolume END AS maxVolume
  FROM kegs k LEFT JOIN kegTypes kt 
-        ON k.kegTypeId = kt.id;
+        ON k.kegTypeId = kt.id
+      LEFT JOIN taps t 
+        ON k.onTapId = t.id;
 
 CREATE OR REPLACE VIEW `vwPours`
 AS

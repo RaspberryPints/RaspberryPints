@@ -1,3 +1,11 @@
+
+.temp-indicator{
+	background: url(img/temperature/stroke-4k.png) no-repeat bottom left;  
+}
+.temp-indicator .temp-full{
+	background: url(img/temperature/full-4k.png) no-repeat bottom left;
+}	
+
 body{
 	font-size: 2.5em;
 }
@@ -66,6 +74,19 @@ span.tapcircle {
 	height: 110px;
 	width: 229px;
 	background-image: url(img/abv/offthechart-4k.png);
+}
+
+.poursbeerimg{
+	width:100px;
+}
+.poursbreweryimg{
+	width:100px ;
+}
+.beerimg{ 
+	width:200px;
+}
+.breweryimg{ 
+	width: 200px;
 }
 
 .keg-container{

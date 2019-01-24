@@ -31,6 +31,17 @@
 		$sql = "SELECT * FROM config WHERE showOnPanel = 1 ORDER BY displayName";
 		return $mysqli->query($sql);
 	}
+	function getConfig($configName)
+	{
+	    global $mysqli;
+	    $ret = null;
+	    $sql="SELECT * FROM config WHERE configName ='".$configName."'";
+	    $qry=$mysqli->query($sql);
+	    if($c = $qry->fetch_array()){
+	        $ret = $c;
+	    }
+	    return $ret;
+	}
 	function getConfigValue($configName)
 	{
 		global $mysqli;

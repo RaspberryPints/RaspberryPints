@@ -17,6 +17,7 @@ import subprocess
 import os
 import os.path
 import traceback
+import glob
 
 GPIO_IMPORT_SUCCESSFUL = True
 try:
@@ -63,6 +64,7 @@ class FlowMonitor(object):
         self.motionDetectors = []
         self.loadCellThreads = []
         self.readers = []
+        self.tempProbeThread = NULL
         
     def readline_notimeout(self):
         eol = b'\r\n'
@@ -224,6 +226,8 @@ class FlowMonitor(object):
                         self.readers.append( RFIDCheckThread( "RFID-" + str(item["name"]), self.rfiddir, rfidSPISSPin=int(item["pin"]) ) )
                 self.alamodeUseRFID = True
         self.reconfigAlaMode()
+        
+        self.reconfigTempProbes()
         debug( "listening to alamode" )
         
         try:
@@ -338,13 +342,15 @@ class FlowMonitor(object):
                 self.arduino.close()
             for item in self.readers:
                 if item.isAlive():
-                    item.exit
+                    item.exit()
             for item in self.motionDetectors:
                 if item.isAlive():
-                    item.exit
+                    item.exit()
             for item in self.loadCellThreads:
                 if item.isAlive():
-                    item.exit
+                    item.exit()
+            if self.tempProbeThread is not None and self.tempProbeThread.isAlive():
+                self.tempProbeThread.exit()
 
     def fakemonitor(self):
         running = True
@@ -391,10 +397,24 @@ class FlowMonitor(object):
         for item in self.loadCellThreads:
             if item.isAlive():
                 item.setCheckTare(True)
+        
+    def reconfigTempProbes(self):
+        if(self.dispatch.getTempProbeConfig()):
+            if(self.tempProbeThread is None or not self.tempProbeThread.is_alive()):
+                self.tempProbeThread = OneWireTemperatureThread(threadID="1", dispatch=self.dispatch, delay=1, bound_hi=212, bound_lo=0)
+                self.tempProbeThread.start()
+            self.tempProbeThread.set_delay(float(self.dispatch.getConfigValueByName('tempProbeDelay')))
+            self.tempProbeThread.set_bound_lo(float(self.dispatch.getConfigValueByName('tempProbeBoundLow')))
+            self.tempProbeThread.set_bound_hi(float(self.dispatch.getConfigValueByName('tempProbeBoundHigh')))
+            #Make sure the thread stays alive instead of exiting, incase the user disabled and reenabled when the thread was sleeping 
+            self.tempProbeThread.keepAlive()
+        else:
+            if(self.tempProbeThread is not None and self.tempProbeThread.is_alive):
+                self.tempProbeThread.exit()
+            
                 
 class RFIDCheckThread (threading.Thread):
     userId = -1
-    shutdown = False
     def __init__(self, threadID, rfiddir, delay=.250, rfidSPISSPin=24):
         threading.Thread.__init__(self)
         self.threadID = threadID
@@ -402,10 +422,14 @@ class RFIDCheckThread (threading.Thread):
         self.rfidSPISSPin = rfidSPISSPin
         self.rfiddir = rfiddir
         self.lastUserId = -1
+        self.shutdown_required = False
+        
+    def exit(self):
+        self.shutdown_required = True
         
     def run(self):
         log("RFID Reader " + self.threadID + " is Running")
-        while not self.shutdown:
+        while not self.shutdown_required:
             self.checkRFID(self.rfidSPISSPin)
             time.sleep(self.delay)
 
@@ -458,9 +482,6 @@ class RFIDCheckThread (threading.Thread):
             self.userId = -1
         return ret 
     
-    def exit():
-        self.shutdown = true
-    
 class WritePinsThread (threading.Thread):
     def __init__(self, threadID, splitMsg, dispatch, delay = .005):
         threading.Thread.__init__(self)
@@ -487,7 +508,11 @@ class MotionDetectionPIRThread (threading.Thread):
         threading.Thread.__init__(self)
         self.threadID = threadID
         self.pirPin = pirPin
+        self.shutdown_required = False
       
+    def exit(self):
+        self.shutdown_required = True
+        
     def MOTION(self, PIR_PIN):
         debug("Motion Detector " + self.threadID + " Detected Motion")
         #Wake up every users monitor, need to loop through the users otherwise the command wont know who is currently logged in
@@ -500,7 +525,7 @@ class MotionDetectionPIRThread (threading.Thread):
         try:
             GPIO.setup(self.pirPin, GPIO.IN)
             GPIO.add_event_detect(self.pirPin, GPIO.RISING, callback=self.MOTION)
-            while 1:
+            while not self.shutdown_required:
                 time.sleep(100)
         except:
             log("Unable to run Motion Detection")
@@ -519,6 +544,10 @@ class LoadCellCheckThread (threading.Thread):
         self.delay = delay
         self.updateVariance = updateVariance
         self.checkTare = False
+        self.shutdown_required = False
+        
+    def exit(self):
+        self.shutdown_required = True
         
     def setCheckTare(self, checkTare):
         self.checkTare = checkTare
@@ -536,7 +565,7 @@ class LoadCellCheckThread (threading.Thread):
         log("Load Cell Checker " + self.threadID + " is Running")
         lastWeight = -1
         try:
-            while 1:
+            while not self.shutdown_required:
                 if self.checkTare:
                     if self.dispatch.getTareRequest(self.tapId):
                         self.tare()
@@ -554,4 +583,85 @@ class LoadCellCheckThread (threading.Thread):
             log("Unable to run Load Cell Checker")
             return
         
+#See https://www.homebrewtalk.com/forum/threads/web-accessible-temperature-logger-for-raspberry-pi.469523/ for source information
+class OneWireTemperatureThread (threading.Thread):
+    def __init__(self, threadID, dispatch, delay=1, bound_lo=-200, bound_hi=212):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.dispatch = dispatch
+        self.delay = delay
+        self.bound_lo = bound_lo
+        self.bound_hi = bound_hi
+        self.shutdown_required = False
+    
+    def keepAlive(self):
+        self.shutdown_required = False
+    def exit(self):
+        self.shutdown_required = True
+        
+    def set_delay(self, delay):
+        self.delay = delay
+    def set_bound_lo(self, bound_lo):
+        self.bound_lo = bound_lo
+    def set_bound_hi(self, bound_hi):
+        self.bound_hi = bound_hi
+        
+    #-------------------------------------------------------------------------------------------------------
+    # get temperature
+    # returns None on error, or the temperature as a float
+    def get_temp(self, devicefile):
+    
+        try:
+            fileobj = open(devicefile,'r')
+            lines = fileobj.readlines()
+            fileobj.close()
+        except:
+            return None
+    
+        # get the status from the end of line 1 
+        status = lines[0][-4:-1]
+    
+        equals_pos = lines[1].find('t=')
+        if equals_pos != -1: 
+            tempstr = lines[1][equals_pos+2:]
+            tempvalue_c=float(tempstr)/1000.0
+            tempvalue_f = tempvalue_c * 9.0 / 5.0 + 32.0
+            tempvalue = round(tempvalue_f,1)
+            return tempvalue
+            
+        else:
+            return None
+        
+    def run(self):
+        log("1Wire Temperature Thread " + self.threadID + " is Running")
+        lastWeight = -1
+        firstTime = True
+        try:
+            while not self.shutdown_required:
+                # enable kernel modules
+                os.system('sudo modprobe w1-gpio')
+                os.system('sudo modprobe w1-therm')
+            
+                # search for a device file that starts with 28
+                devicelist = glob.glob('/sys/bus/w1/devices/28*')
+                for probeDir in devicelist:
+                    probeName = ''
+                    if(firstTime):
+                        self.dispatch.addTempProbeAsNeeded(probeName)
+                    firstTime = False
+                    # append /w1slave to the device file
+                    device = probeDir + '/w1_slave'
+                    temp = self.get_temp(device)
+                    #if temperature doesnt make sense try again 1 time
+                    if temp == None or temp < self.bound_lo or temp > self.bound_hi:
+                        temp = self.get_temp(device)
+                        
+                    #if valid temp save it to the database
+                    if temp != None and temp >= self.bound_lo and temp <= self.bound_hi:
+                        self.dispatch.saveTemp(probeName, temp)
+                        
+                time.sleep(self.delay)
+        except Exception, e:
+            log("Unable to Run 1Wire Temperature")
+            return
             

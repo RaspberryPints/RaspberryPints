@@ -20,7 +20,8 @@
 	    $value == "flow" ||
 	    $value == "config" ||
 	    $value == "alamode" ||
-	    $value == "tare")
+	    $value == "tare" ||
+	    $value == "tempProbe")
 	{
 		$data = "RPC:".$value."\n";
 	} 

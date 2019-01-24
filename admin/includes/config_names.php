@@ -80,5 +80,10 @@ abstract class ConfigNames
 	const BreweryAltitude = 'breweryAltitude';
 	const DefaultFermPSI  = 'defaultFermPSI';
 	const DefaultKeggingTemp = 'defaultKeggingTemp';
+	const UseTempProbes = 'useTempProbes';
+	const TempProbeDelay = 'tempProbeDelay';
+	const TempProbeBoundLow = 'tempProbeBoundLow';
+	const TempProbeBoundHigh = 'tempProbeBoundHigh';
+	const ShowTempOnMainPage = 'showTempOnMainPage';
 }
 ?>

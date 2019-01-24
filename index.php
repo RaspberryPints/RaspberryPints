@@ -6,17 +6,14 @@
 ?>
 <?php
 	require_once __DIR__.'/admin/includes/managers/config_manager.php';
-
 	require_once __DIR__.'/includes/config.php';
 	require_once __DIR__.'/includes/common.php';
 
 	require_once __DIR__.'/admin/includes/managers/tap_manager.php';
+	require_once __DIR__.'/admin/includes/managers/tempProbe_manager.php';
 	require_once __DIR__.'/admin/includes/managers/bottle_manager.php';
 	require_once __DIR__.'/admin/includes/managers/pour_manager.php'; 
-	
-	//This calls the Untappd Library
-	require_once __DIR__.'/includes/Untappd.php';
-	
+		
 	//This can be used to choose between CSV or MYSQL DB
 	$db = true;
 	
@@ -102,6 +99,7 @@
 		$poursList = $poursManager->getLastPours($limit);
 		$numberOfPours = count($poursList);
 	}
+		
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
 "http://www.w3.org/TR/html4/strict.dtd">
@@ -154,14 +152,35 @@
 						?>
 					</h1>
 				</div>
+          		<?php 
+          		    $temp = null;
+          		    if($config[ConfigNames::ShowTempOnMainPage]) { 
+          		       $tempProbeManager = new TempProbeManager();
+          		       $tempInfo = $tempProbeManager->get_lastAvgTemp();
+          		       if($tempInfo){
+              		       $temp = $tempInfo[0];
+              		       $date = $tempInfo[1];
+              		       $tempDisplay = sprintf('%0.1fF &#64;<br/> %s', $temp, str_replace(' ', "<br/>", $date));
+          		       }
+          		    }
+          		    echo '<div class="HeaderRight" style="width:15%;text-align:right;vertical-align:middle">'.$tempDisplay.'</div>';           		    
+          	     ?>
 				<div class="HeaderRight">
-          		<?php if($config[ConfigNames::ShowRPLogo]) { ?>
+          		<?php 
+          		    if(null !== $temp) { 
+          	     ?>
+          			   <div class="temp-container">
+          			   <div class="temp-indicator">
+          			   		<div class="temp-full" style="height:<?php echo $temp; ?>%; padding-right: 50px"></div>
+          			   </div>
+          		        </div>
+          		<?php }elseif($config[ConfigNames::ShowRPLogo]) { ?>
 					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
 						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints-4k.png" height="200" alt=""></a>
 					<?php } else { ?>
 						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints.png" height="100" alt=""></a>
 					<?php } ?>
-					<?php } ?>
+				<?php } ?>
 				</div>
 			</div>
 			<!-- End Header Bar -->

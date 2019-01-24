@@ -16,6 +16,7 @@ require_once __DIR__.'/includes/managers/beerStyle_manager.php';
 require_once __DIR__.'/includes/managers/bottleType_manager.php';
 require_once __DIR__.'/includes/managers/rfidReader_manager.php';
 require_once __DIR__.'/includes/managers/motionDetector_manager.php';
+require_once __DIR__.'/includes/managers/tempProbe_manager.php';
 require_once __DIR__.'/includes/managers/config_manager.php';
 require_once 'includes/models/keg.php';
 require_once 'includes/models/kegType.php';

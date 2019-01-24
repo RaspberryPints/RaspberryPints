@@ -92,6 +92,9 @@ class CommandTCPHandler(SocketServer.StreamRequestHandler):
             if ( reading[1] == "tare" ):
                 debug("Requesting Load Cells to check tare")
                 self.server.pintdispatch.flowmonitor.tareRequest()
+            if ( reading[1] == "tempProbe" ):
+                debug("Requesting Reset of Temp Probes")
+                self.server.pintdispatch.flowmonitor.reconfigTempProbes()
         
         self.wfile.write("RPACK\n")
 
@@ -173,6 +176,16 @@ class PintDispatch(object):
         rows = cursor.fetchall()
         con.close()
         return rows
+    
+    def getConfigValueByName(self, name):
+        con = self.connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        cursor.execute("SELECT configValue from config WHERE configName='"+name+"'")
+        rows = cursor.fetchall()
+        con.close()
+        if len(rows) == 0:
+            return None
+        return rows[0]['configValue']
 
     def getTapConfig(self):
         con = self.connectDB()
@@ -229,6 +242,59 @@ class PintDispatch(object):
         result = cursor.execute(sql)
         con.commit()
         con.close()
+        
+    def addTempProbeAsNeeded(self, probe):
+        sql = "SELECT * FROM tempProbes WHERE name='"+probe+"';"
+        con = self.connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        result = cursor.execute(sql)
+        if(cursor.rowcount <= 0):
+            cursor.execute("INSERT INTO tempProbes (name, type) VALUES('"+probe+"', 0)")
+        con.commit()
+        con.close()        
+    def saveTemp(self, probe, temp):
+        insertLogSql = "INSERT INTO tempLog (probe, temp, takenDate) "
+        insertLogSql += "VALUES('"+probe+"',"+str(temp)+"+ (SELECT COALESCE(manualAdj, 0) FROM tempProbes WHERE name = '"+probe+"'), NOW());"
+        con = self.connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        result = cursor.execute(insertLogSql)
+        con.commit()
+        con.close()
+        self.archiveTemp()
+        
+    def getTempProbeConfig(self):
+        useTempProbes = self.getConfigValueByName("useTempProbes")
+        if(useTempProbes is not None and int(useTempProbes) == 1):
+            return True
+        return False  
+    #set to -1 so on startup archive is checked
+    lastArchiveCheck = -1
+    #Combine all readings older than 2 months into 1 average for the month to reduce rows in the table
+    def archiveTemp(self):
+        #only archive if the month has changed
+        if self.lastArchiveCheck == datetime.datetime.now().month:
+            return
+        insertLogSql = """INSERT INTO tempLog (takenDate, probe, temp, humidity) 
+            (SELECT CAST(DATE_FORMAT(takenDate,'%Y-%m-01') as DATE), 'History', TRUNCATE(AVG(temp), 2), TRUNCATE(hl.humidity, 2) 
+                FROM tempLog tl
+                    LEFT JOIN (SELECT CAST(DATE_FORMAT(takenDate,'%Y-%m-01') AS DATE) as takenMonth, AVG(humidity) AS humidity
+                                        FROM tempLog
+                                        WHERE probe != 'History' AND humidity IS NOT NULL AND
+                                                takenDate < CAST(DATE_FORMAT(NOW() ,'%Y-%m-01') as DATE) 
+                                        GROUP BY MONTH(takenDate)) hl    ON CAST(DATE_FORMAT(tl.takenDate,'%Y-%m-01') as DATE) = hl.takenMonth
+                WHERE probe != 'History' AND
+                        takenDate < CAST(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH) ,'%Y-%m-01') as DATE) 
+                GROUP BY MONTH(takenDate));"""
+        deleteSQL = """DELETE FROM tempLog 
+                WHERE probe != 'History' AND
+                        takenDate < CAST(DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH) ,'%Y-%m-01') as DATE) ;"""
+        con = self.connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        result = cursor.execute(insertLogSql)
+        result = cursor.execute(deleteSQL)
+        con.commit()
+        con.close()
+        self.lastArchiveCheck = datetime.datetime.now().month
     
     def getFanConfig(self):
         pin = self.getFanPin()
