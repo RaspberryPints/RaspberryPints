@@ -138,7 +138,9 @@ include 'top_menu.php';
 					</tr>
 					<tr>
 						<td><b>Admin:</b></td>
-						<td><input type="checkbox" id="isAdmin" class="xsmallbox"
+						<td>
+							<input type="hidden" name="isAdmin" value="0" />
+							<input type="checkbox" id="isAdmin" class="xsmallbox"
 							name="isAdmin" value="1"
 							<?php if($user->get_isAdmin() != 0)echo "checked" ?> /></td>
 					</tr>

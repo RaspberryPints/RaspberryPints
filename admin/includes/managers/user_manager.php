@@ -33,8 +33,9 @@ class UserManager extends Manager{
 		}
 		$ret = parent::Save($user, $new);
 		if(!$user->get_id()){
+		    $password = $user->get_password();
 			$user = $this->GetByUserName($user->get_username());
-			$ret = $ret && $this->ChangePassword($user->get_id(), $user->get_password());
+			$ret = $ret && $this->ChangePassword($user->get_id(), $password);
 		}
 		return $ret;
 	}

@@ -774,11 +774,11 @@ CREATE TABLE IF NOT EXISTS `bottles` (
 CREATE TABLE `users` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`username` varchar(65) CHARACTER SET utf8 NOT NULL,
-	`password` varchar(65) CHARACTER SET utf8 NOT NULL,
+	`password` varchar(65) CHARACTER SET utf8 NOT NULL DEFAULT '',
 	`active` tinyint(1) NOT NULL,
 	`nameFirst` varchar(65) CHARACTER SET utf8 NULL,
 	`nameLast` varchar(65) CHARACTER SET utf8 NULL,
-	`mugId` int(11) NULL,
+	`mugId` text NULL,
 	`email` varchar(65) CHARACTER SET utf8 NULL,
 	`unTapAccessToken` text NULL,
 	`isAdmin` tinyint(1) NOT NULL DEFAULT 0,
