@@ -440,12 +440,14 @@ AS
     k.weight,
     k.beerId,
     k.onTapId,
-    k.tapNumber,
+    t.tapNumber,
     k.active,
     CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeight ELSE k.emptyWeight END AS emptyWeight,
     CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmount ELSE k.maxVolume END AS maxVolume
  FROM kegs k LEFT JOIN kegTypes kt 
-        ON k.kegTypeId = kt.id;
+        ON k.kegTypeId = kt.id
+      LEFT JOIN taps t 
+        ON k.onTapId = t.id;
 
         
 CREATE OR REPLACE VIEW vwGetActiveTaps
@@ -532,5 +534,5 @@ INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOn
 ('useTempProbes', '0', 'Use Temperature Probes', 0, NOW(), NOW() ),
 ('tempProbeDelay', '1', 'Seconds between checking temp Probes', 0, NOW(), NOW() ),
 ('tempProbeBoundLow', '0', 'Lower bound of valid Temperature', 0, NOW(), NOW() ),
-('tempProbeBoundHigh', '212', 'High bound of valid Temperature', 0, NOW(), NOW() )
+('tempProbeBoundHigh', '212', 'High bound of valid Temperature', 0, NOW(), NOW() ),
 ('showTempOnMainPage', '1', 'Show Avg Temperature on home page', 1, NOW(), NOW() );
