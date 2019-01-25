@@ -76,10 +76,10 @@ table td.name{
 	vertical-align: middle;	
 }
 .beerimg{ 
-	width:50px;
+	width:500px;
 }
 .breweryimg{ 
-	width: 50px;
+	width: 500px;
 }
 html, body {
 	background-image: url(img/background.jpg);

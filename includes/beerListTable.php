@@ -95,21 +95,21 @@
 			
 				<?php if($config[ConfigNames::ShowSrmCol]){ ?>
 					<td class="srm">
-					<?php if(isset($beer) && $beer['beername'] ){ ?>						
+					<?php if(isset($beer) && $beer['beername'] && $beer['srm'] > 0){ ?>						
 						<div class="srm-container">
 							<?php echo '<div class="srm-indicator" style="background-color:'.$htmlHelper->CreateRGB($beer['srmRgb']).'"></div>'?>
 							<div class="srm-stroke"></div> 
 						</div>
 						
 						<h2><?php echo $beer['srm']; ?> SRM</h2>
-					<?php } ?>
+					<?php }elseif(isset($beer) && $beer['beername']){ echo "<h2>N/A</h2>"; } ?>
 					</td>
 				<?php } ?>
 			
 				<?php if($config[ConfigNames::ShowIbuCol]){ ?>
 					<td class="ibu">
 					<?php if(isset($beer) && $beer['beername']){ ?>
-						<?php if($config[ConfigNames::ShowBuGuValue]){ ?>
+						<?php if($config[ConfigNames::ShowBuGuValue] && $beer['ibu'] != ''){ ?>
 						<h3>
 							<?php 
 								if( $beer['og'] > 1 ){
@@ -122,24 +122,26 @@
 						</h3>
 						<?php } ?>
 						
-						<div class="ibu-container">
-							<div class="ibu-indicator"><div class="ibu-full" style="height:<?php echo $beer['ibu'] > 100 ? 100 : $beer['ibu']; ?>%"></div></div>
-						</div>
-						<h2><?php echo $beer['ibu']; ?> IBU</h2>
+						<?php if($beer['ibu'] != ''){ ?>
+    						<div class="ibu-container">
+    							<div class="ibu-indicator"><div class="ibu-full" style="height:<?php echo $beer['ibu'] > 100 ? 100 : $beer['ibu']; ?>%"></div></div>
+    						</div>
+    						<h2><?php echo $beer['ibu']; ?> IBU</h2>
+						<?php }else{ echo "<h2>N/A</h2>"; } ?>
 					<?php } ?>
 					</td>
 				<?php } ?>
 			
 				<?php if($config[ConfigNames::ShowBreweryImages]){ ?>
-					<td style="width:50px" >
+					<td style="<?php if($beerColSpan > 1){ echo 'border-left: none;'; } ?>" class="breweryimg" >
 					<?php if(isset($beer) && $beer['beername']){ ?>
-						<img class="breweryimg" src="<?php echo $beer['breweryImage']; ?>" />
+						<img style="border:0;width:100%" src="<?php echo $beer['breweryImage']; ?>" />
 					<?php } ?>
 					</td>
 				<?php } ?>
 				
 				<?php if($config[ConfigNames::ShowBeerImages]){ ?>
-					<td style="width:50px <?php if($beerColSpan > 1){ echo ';border-left: none;'; } ?>" class="beerimg">
+					<td style="<?php if($beerColSpan > 1){ echo 'border-left: none;'; } ?>" class="beerimg">
 					<?php if(isset($beer) && $beer['beername']){ ?>
 						<?php 
 							beerImg($config, $beer['untID']);
@@ -177,11 +179,12 @@
         			<?php if(isset($beer) && $beer['beername']){?>
     					<?php 
     						$abv = $beer['abv'];
-    						if(!isset($abv)) $abv = ($beer['og'] - $beer['fg']) * 131; 
+    						if(!isset($abv) && $beer['og'] && $beer['fg']) $abv = ($beer['og'] - $beer['fg']) * 131; 
     					?>	
     					<?php if(($config[ConfigNames::ShowAbvImg])) { ?>
     						<div class="abv-container">
     							<?php
+    							if($abv > 0){
     								$numCups = 0;
     								$remaining = $abv * 20;
     								do{
@@ -190,15 +193,22 @@
     									}else{
     											$level = 100;
     									}
-    									?><div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div><?php
+    									?>
+    									<div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div>
+    									<?php
     									
     									$remaining = $remaining - $level;
     									$numCups++;
     								}while($remaining > 0 && $numCups < 2);
     								
     								if( $remaining > 0 ){
-    									?><div class="abv-offthechart"></div><?php
+    								?>
+    								<div class="abv-offthechart"></div>
+    								<?php
     								}
+            					}else{
+                                    echo "N/A";
+            					}
     							?>
     						</div>
     					<?php } else { ?>
@@ -207,13 +217,17 @@
     					<?php if(isset($beer)){ ?>
     						<?php if($config[ConfigNames::ShowCalories]){ ?>
     						<h3><?php
+    						if( $beer['og'] > 0 && $beer['fg'] > 0){
     							$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
     							$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
     							if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
     								$calfromalc = 0;
     								$calfromcarbs = 0;
-    								}
+    							}
     							echo number_format($calfromalc + $calfromcarbs), " kCal";
+    						}else{
+    						    echo "N/A";
+    						}
     							?>
     						</h3>
     						<?php } ?>
@@ -234,47 +248,49 @@
 						<h3><?php echo number_format(($beer['volume'])); ?> oz</h3> 
 					<?php } ?>
 					<?php 
-						$kegImgClass = "";
-						$percentRemaining = 0.0;
-						if($beer['startAmount'] && $beer['startAmount'] > 0)$percentRemaining = ($beer['remainAmount'] / $beer['startAmount']) * 100;
-						if( $beer['remainAmount'] <= 0 ) {
-							$kegImgClass = $tapOrBottle."-empty";
-							$percentRemaining = 100; 
-						} else if( $percentRemaining < 15 ) {
-							$kegImgClass = "-red";
-						} else if( $percentRemaining < 25 ) {
-							$kegImgClass = "-orange";
-						} else if( $percentRemaining < 45 ) {
-							$kegImgClass = "-yellow";
-						} else if ( $percentRemaining < 100 ) {
-							$kegImgClass = "-green";
-						} else if( $percentRemaining >= 100 ) {
-							$kegImgClass = "-full";
-						}
-						$kegImgClass = strtolower($tapOrBottle).$kegImgClass;
-						$kegOn = "";
-						if($config[ConfigNames::UseTapValves]){
-						    if ( $tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG &&
-						        $beer['valvePinState'] == $config[ConfigNames::RelayTrigger] ) 
-								$kegOn = "keg-enabled";
-							else
-								$kegOn = "keg-disabled";
-						}
+    					if($config[ConfigNames::ShowKegImg]){
+    						$kegImgClass = "";
+    						$percentRemaining = 0.0;
+    						if($beer['startAmount'] && $beer['startAmount'] > 0)$percentRemaining = ($beer['remainAmount'] / $beer['startAmount']) * 100;
+    						if( $beer['remainAmount'] <= 0 ) {
+    							$kegImgClass = $tapOrBottle."-empty";
+    							$percentRemaining = 100; 
+    						} else if( $percentRemaining < 15 ) {
+    							$kegImgClass = "-red";
+    						} else if( $percentRemaining < 25 ) {
+    							$kegImgClass = "-orange";
+    						} else if( $percentRemaining < 45 ) {
+    							$kegImgClass = "-yellow";
+    						} else if ( $percentRemaining < 100 ) {
+    							$kegImgClass = "-green";
+    						} else if( $percentRemaining >= 100 ) {
+    							$kegImgClass = "-full";
+    						}
+    						$kegImgClass = strtolower($tapOrBottle).$kegImgClass;
+    						$kegOn = "";
+    						if($config[ConfigNames::UseTapValves]){
+    						    if ( $tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG &&
+    						        $beer['valvePinState'] == $config[ConfigNames::RelayTrigger] ) 
+    								$kegOn = "keg-enabled";
+    							else
+    								$kegOn = "keg-disabled";
+    						}
 					?>
-					<div class="keg-container">
-						<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
-							<div class="keg-indicator">
-								<div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%; width: 100%" >
-								       <div class="<?php echo $kegOn ?>"></div>
-								</div>
-							</div>
-						<?php } else { ?>
-							<div class="bottle-indicator">
-								<div class="bottle-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%">
-								</div>
-							</div>
-						<?php } ?>
-					</div>
+    					<div class="keg-container">
+    						<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
+    							<div class="keg-indicator">
+    								<div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%; width: 100%" >
+    								       <div class="<?php echo $kegOn ?>"></div>
+    								</div>
+    							</div>
+    						<?php } else { ?>
+    							<div class="bottle-indicator">
+    								<div class="bottle-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%">
+    								</div>
+    							</div>
+    						<?php } ?>
+    					</div>
+    					<?php }?>
 						<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
 							<h3><?php echo number_format((($beer['remainAmount']) * 128)); ?> fl oz left</h3>
 						<?php } ?>
