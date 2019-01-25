@@ -2,9 +2,11 @@
 require_once __DIR__.'/config_manager.php';
 require_once __DIR__.'/tap_manager.php';
 require_once __DIR__.'/keg_manager.php';
+require_once __DIR__.'/beer_manager.php';
 require_once __DIR__.'/user_manager.php';
 require_once __DIR__.'/manager.php';
 require_once __DIR__.'/../models/pour.php';
+require_once __DIR__.'/../../../includes/Pintlabs/Service/Untappd.php';
 
 class PourManager extends Manager{
 	
@@ -99,27 +101,25 @@ class PourManager extends Manager{
 		$tap->set_currentAmount($tap->get_currentAmount() - $amount);
 		$tapManager->save($tap);
 	
-		if ($beerId && $beerId != '' && $beerId != '0') {
-			$client_id = $config[ConfigNames::ClientID];
-			$client_secret = $config[ConfigNames::ClientSecret];
-			$redirect_uri = "";
+		if ($beerId && $beerId != '' && $beerId != '0' && $user) {
 			$access_token = ($user?$user->get_unTapAccessToken():null);
-			//echo $access_token;
+			$beer = null;
 			if ($access_token) {
+			    $beerManager = new BeerManager();
+			    $beer = $beerManager->GetByID($beerId);
+			}
+			//echo $access_token;
+			if ($access_token && $beer && $beer->get_untID()) {
 				// create your UT instance		
-				$ut = new UntappdPHP($client_id, $client_secret, $redirect_uri);		
-				$ut->setToken($access_token);
-				$checkins = array(
-				'gmt_offset' => '-5',
-				'timezone' => 'EST',
-				'bid' => $beerID,
-				'twitter' => 'on',
-				'shout' => 'Poured with love by @raspberrypints'
-				 );
-				//Update Checkin
-				$checkin = $ut->post("/checkin/add", $checkins);
-				$checkinr = $checkin->response->result;
-				//print_r ($checkinr);
+			    $ut = new Pintlabs_Service_Untappd(getAllConfigs());
+			    //          $access_token, $gmtOffset, $timezone, $beerId, 			    
+			    $ut->checkin($access_token, date('Z')/60/60, date('T'), $beer->get_untID(), 
+			        //$foursquareId, $userLat, $userLong, 
+			        '', '', '', 
+			        //$shout, 
+			        'Poured with love by @raspberrypints', 
+			        //$facebook, $twitter, $foursquare , $rating
+			        false, false, false, '');
 			}
 		}
 	}	

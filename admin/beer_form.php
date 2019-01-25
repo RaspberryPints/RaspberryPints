@@ -1,25 +1,58 @@
 <?php
 require_once __DIR__.'/header.php';
+require_once __DIR__.'/../includes/Pintlabs/Service/Untappd.php';
+require_once __DIR__.'/../includes/functions.php';
+
 $htmlHelper = new HtmlHelper();
 $beerManager = new BeerManager();
 $beerStyleManager = new BeerStyleManager();
 $breweryManager = new BreweryManager();
 $srmManager = new SrmManager();
-
+$beer = null;
+$config = getAllConfigs();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$beer = new Beer();
-	$beer->setFromArray($_POST);
-	if($beerManager->Save($beer))
-		redirect('beer_list.php');
+	if(isset($_POST["fromUntapped"])){
+	    $breweryList = $breweryManager->GetAllActive();
+	    $ut = new Pintlabs_Service_Untappd($config);
+	    try{
+	       $feed = $ut->beerInfo($_POST["untID"]);
+    	    if($feed){
+        	    $beer = new Beer();
+        	    $beer->set_name($feed->response->beer->beer_name);
+        	    $beer->set_untID($feed->response->beer->bid);
+        	    $beer->set_notes($feed->response->beer->beer_description);
+        	    $beer->set_abv($feed->response->beer->beer_abv);
+        	    $beer->set_ibu($feed->response->beer->beer_ibu);
+        	    $brewery = $breweryManager->GetOrAdd($feed->response->beer->brewery->brewery_name, $feed->response->beer->brewery->brewery_label);
+        	    if($brewery) $beer->set_breweryId($brewery->get_id());
+        	    
+        	    $style = $beerStyleManager->GetFirstByName($feed->response->beer->beer_style);
+        	    if( $style ) $beer->set_beerStyleId($style->get_id());
+    	    }else{
+    	        $_SESSION['errorMessage'] = "Unable to find Untappd ID =".$_POST["untID"];
+    	    }
+	    }catch(Exception $e){
+	        $_SESSION['errorMessage'] = $e->__toString();
+	    }
+	}else{
+    	$beer->setFromArray($_POST);
+    	if($beerManager->Save($beer)){
+    	    beerRATING($config, $beer->get_untID(), FALSE);
+    	    redirect('beer_list.php');
+    	}
+	}
 }
 
-if( isset($_GET['id'])){
-	$beer = $beerManager->GetById($_GET['id']);
-}else{
-	$beer = new Beer();
-	$beer->setFromArray($_POST);
+if( null === $beer ){
+    if( isset($_GET['id'])){
+    	$beer = $beerManager->GetById($_GET['id']);
+    }else{
+    	$beer = new Beer();
+    	$beer->setFromArray($_POST);
+    }
 }
 
 $breweryList = $breweryManager->GetAllActive();

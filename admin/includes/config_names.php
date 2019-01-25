@@ -12,6 +12,8 @@ abstract class ConfigNames
 	const BreweryID = 'BreweryID';
 	const ClientID = 'ClientID';
 	const ClientSecret = 'ClientSecret';
+	const RedirectUri = 'RedirectUri';
+	const AccessToken = 'AccessToken';
 	const CONTAINER_TYPE_BOTTLE = 'Bottle';
 	const CONTAINER_TYPE_KEG = 'Keg';
 	const DisplayUnits = 'displayUnits';

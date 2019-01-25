@@ -4,7 +4,7 @@ $htmlHelper = new HtmlHelper();
 $beerManager = new BeerManager();
 $beerStyleManager = new BeerStyleManager();
 $breweryManager = new BreweryManager();
-
+$config = getAllConfigs();
 if (isset($_POST['inactivateBeer'])) {
 	$beerManager->Inactivate($_POST['id']);		
 }
@@ -43,6 +43,9 @@ include 'top_menu.php';
 			
 			<input type="submit" class="btn" value="Add a Beer" onClick="window.location='beer_form.php'" />
 			<input type="submit" class="btn" value="Add with BeerXML" onClick="window.location='beer_form_xml.php'" />
+			<?php if($config[ConfigNames::ClientID] && $config[ConfigNames::ClientSecret]){?>
+				<input type="submit" class="btn" value="Add with Untappd Id" onClick="window.location='beer_form_untappd.php'" />
+			<?php }?>
 			<br/><br/>
 			
 			<table style="width:770px; padding:0px" class="outerborder">
@@ -219,6 +222,9 @@ include 'top_menu.php';
 			</table><br>
 			<input type="submit" class="btn" value="Add a Beer" onClick="window.location='beer_form.php'" />
 			<input type="submit" class="btn" value="Add a Beer with XML" onClick="window.location='beer_form_xml.php'" />
+			<?php if($config[ConfigNames::ClientID] && $config[ConfigNames::ClientSecret]){?>
+				<input type="submit" class="btn" value="Add with Untappd Id" onClick="window.location='beer_form_untappd.php'" />
+			<?php }?>
 		</div>
 	</div>
 	<!-- Start Footer -->   

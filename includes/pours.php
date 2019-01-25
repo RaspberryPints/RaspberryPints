@@ -22,8 +22,6 @@ if( isset($_GET['tapId'])){
   redirect('../../index.php');
 } else{
 	echo 'Pour';
-//Unused at the moment will call untappdPHP library to post to Untappd
-//include __DIR__."/app/library/UntappdPHP/lib/untappdPHP.php";
 
 //This will be used to choose between CSV or MYSQL DB
 	$db = true;

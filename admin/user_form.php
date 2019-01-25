@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/header.php';
 require_once __DIR__ . '/includes/managers/user_manager.php';
+require_once __DIR__.'/../includes/Pintlabs/Service/Untappd.php';
+
 $config = getAllConfigs();
 $htmlHelper = new HtmlHelper();
 $userManager = new UserManager();
@@ -15,6 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if ($redirect)
         redirect('user_list.php');
+}elseif(isset($_GET["untappd"])){
+    $ut = new Pintlabs_Service_Untappd($config);
+    redirect($ut->authenticateUri());
 }
 if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != '')
     $_SESSION['HTTP_REFERER'] = $_SERVER['HTTP_REFERER'];
@@ -23,6 +28,12 @@ if (isset($_GET['id'])) {
 } else {
     $user = new user();
     $user->setFromArray($_POST);
+}
+
+if(isset($_GET["code"])){
+    $ut = new Pintlabs_Service_Untappd($config);
+    $a = $ut->getAccessToken($_GET["code"]);
+    $user->set_unTapAccessToken($a->response->access_token);
 }
 
 ?>
@@ -115,7 +126,10 @@ include 'top_menu.php';
 						<td><b>UnTapped Access Token:</b></td>
 						<td><input type="text" id="unTapAccessToken" class="largebox"
 							name="unTapAccessToken"
-							value="<?php echo $user->get_unTapAccessToken() ?>" /></td>
+							value="<?php echo $user->get_unTapAccessToken() ?>" />
+							<?php if($config[ConfigNames::ClientID] && $config[ConfigNames::ClientSecret]){?>
+								<a class="btn" href="user_form.php?untappd=true" target="_blank">Retreive</a></td>
+							<?php }?>
 					</tr>
 					<tr>
 						<td><b>Mug Id:</b></td>

@@ -29,4 +29,9 @@ class BeerStyleManager extends Manager{
 		$sql="SELECT DISTINCT beerStyleList FROM beerStyles ORDER BY beerStyleList";
 		return $this->executeNonObjectQueryWithSingleResults($sql);
 	}
+	
+	function GetFirstByName($name){
+	    $sql="SELECT * FROM beerStyles WHERE name = '$name' ORDER BY beerStyleList";
+	    return $this->executeQueryWithSingleResult($sql);
+	}
 }
