@@ -5,10 +5,10 @@ class BeerStyleManager{
 
 	function GetAll(){
 		$sql="SELECT * FROM beerStyles ORDER BY name";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($sql);
 		
 		$beerStyles = array();
-		while($i = mysql_fetch_array($qry)){
+		while($i = mysqli_fetch_array($qry)){
 			$beerStyle = new beerStyle();
 			$beerStyle->setFromArray($i);
 			$beerStyles[$beerStyle->get_id()] = $beerStyle;		
@@ -21,9 +21,9 @@ class BeerStyleManager{
 		
 	function GetById($id){
 		$sql="SELECT * FROM beerStyles WHERE id = $id";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($sql);
 		
-		if( $i = mysql_fetch_array($qry) ){		
+		if( $i = mysqli_fetch_array($qry) ){
 			$beerStyle = new beerStyle();
 			$beerStyle->setFromArray($i);
 			return $beerStyle;

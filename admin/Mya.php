@@ -49,26 +49,26 @@ include 'header.php';
  <?php
   
   $sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
-  $result=mysql_query($sql);
+  $result=mysqli_query($sql);
 
-echo mysql_result($result, 0, 'name');
+echo mysqli_result($result, 0, 'name');
 ?><br />
  <font size="2" Color="Black" font-family="Impact">Username:</font>
    <?php
   
   $sql="SELECT `username` FROM `users` WHERE username='$_SESSION[myusername]'";
-$result=mysql_query($sql);
+$result=mysqli_query($sql);
 
-echo mysql_result($result, 0, 'username');
+echo mysqli_result($result, 0, 'username');
 
 ?><br />
 <font size="2" Color="Black" font-family="Impact"> Email:</font>
   <?php
   
   $sql="SELECT `email` FROM `users` WHERE username='$_SESSION[myusername]'";
-$result=mysql_query($sql);
+$result=mysqli_query($sql);
 
-echo mysql_result($result, 0, 'email');
+echo mysqli_result($result, 0, 'email');
 
 ?>
 <br />

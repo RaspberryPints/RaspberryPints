@@ -8,10 +8,10 @@ class TapManager{
 		$sql = "";
 		
 		$sql="UPDATE kegs k SET k.kegStatusCode = 'SERVING' WHERE id = " . $tap->get_kegId();
-		mysql_query($sql);
+		mysqli_query($sql);
 	
 		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE active = 1 AND tapNumber = " . $tap->get_tapNumber();
-		mysql_query($sql);		
+		mysqli_query($sql);
 		
 		if($tap->get_id()){
 			$sql = 	"UPDATE taps " .
@@ -35,16 +35,16 @@ class TapManager{
 		
 		//echo $sql; exit();
 		
-		mysql_query($sql);
+		mysqli_query($sql);
 	}
 	
 	function GetById($id){
 		$id = (int) preg_replace('/\D/', '', $id);
 	
 		$sql="SELECT * FROM taps WHERE id = $id";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($sql);
 		
-		if( $i = mysql_fetch_array($qry) ){
+		if( $i = mysqli_fetch_array($qry) ){
 			$tap = new Tap();
 			$tap->setFromArray($i);
 			return $tap;
@@ -55,17 +55,17 @@ class TapManager{
 
 	function updateTapNumber($newTapNumber){
 		$sql="UPDATE config SET configValue = $newTapNumber WHERE configName = '".ConfigNames::NumberOfTaps."'";
-		mysql_query($sql);
+		mysqli_query($sql);
 		
 		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE active = 1 AND tapNumber > $newTapNumber";
-		mysql_query($sql);
+		mysqli_query($sql);
 	}
 
 	function getTapNumber(){
 		$sql="SELECT configValue FROM config WHERE configName = '".ConfigNames::NumberOfTaps."'";
 
-		$qry = mysql_query($sql);
-		$config = mysql_fetch_array($qry);
+		$qry = mysqli_query($sql);
+		$config = mysqli_fetch_array($qry);
 		
 		if( $config != false ){
 			return $config['configValue'];
@@ -74,10 +74,10 @@ class TapManager{
 
 	function getActiveTaps(){
 		$sql="SELECT * FROM taps WHERE active = 1";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($sql);
 		
 		$taps = array();
-		while($i = mysql_fetch_array($qry)){
+		while($i = mysqli_fetch_array($qry)){
 			$tap = new Tap();
 			$tap->setFromArray($i);
 			$taps[$tap->get_tapNumber()] = $tap;
@@ -88,9 +88,9 @@ class TapManager{
 	
 	function closeTap($id){
 		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE id = $id";
-		mysql_query($sql);
+		mysqli_query($sql);
 		
 		$sql="UPDATE kegs k, taps t SET k.kegStatusCode = 'NEEDS_CLEANING' WHERE t.kegId = k.id AND t.Id = $id";
-		mysql_query($sql);
+		mysqli_query($sql);
 	}
 }
