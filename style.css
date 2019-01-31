@@ -292,14 +292,14 @@ img {
 .abv-container{
 	position: relative;
 	height: 100px;
-	width: 115px;
+	width: 125px;
 	margin: 8px auto;
 }	
 .abv-indicator{
 	display: inline-block;
 	position: relative;
 	height:100%;
-	width:50%;
+	width:45%;
 	background: url(img/abv/stroke.png) no-repeat bottom left;
 }
 .abv-indicator .abv-full{
