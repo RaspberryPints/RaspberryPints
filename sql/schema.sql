@@ -1512,7 +1512,7 @@ AS
     f.*,
     srm.rgb
  FROM fermentables f LEFT JOIN srmRgb srm
-        ON f.srm = srm.srm
+        ON f.srm = srm.srm;
 
 -- --------------------------------------------------------
 
