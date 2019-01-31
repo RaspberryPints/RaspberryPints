@@ -15,7 +15,7 @@ abstract class Manager {
 	protected function getUpdateColumns(){return $this->getColumns();}
 	protected function getInsertColumns(){return $this->getColumns();}
 	
-	function Save($dbObject, $new=false){
+	function Save(&$dbObject, $new=false){
 		$sql = "";
 		if($dbObject->get_id() && !$new){
 			$columns = "";
@@ -34,6 +34,7 @@ abstract class Manager {
 					" SET ".$columns.
 					$where;
 		}else{		
+		    $new = true;
 			$columns = "";
 			foreach($this->getInsertColumns() as $col){
 				if(strlen($columns) > 0) $columns.= ', ';
@@ -58,7 +59,12 @@ abstract class Manager {
 			$sql = 	"INSERT INTO ".$this->getTableName()."($columns)".
 					"VALUES($values)";
 		}
-		return $this->executeQueryNoResult($sql);
+		$success = $this->executeQueryNoResult($sql);
+		if($new){
+		    global $mysqli;
+		    $dbObject->set_id($mysqli->insert_id);
+		}
+		return $success;
 	}
 	
 	protected function getWhereClause($dbObject){
@@ -204,4 +210,5 @@ abstract class Manager {
 		}
 		return $this->executeQueryNoResult($sql);
 	}
+	
 }

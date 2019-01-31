@@ -32,6 +32,14 @@
 			<li><a href="user_list.php" title="drinker-acct">Drinker Accounts</a></li>
 		</ul>
 	</li>
+	<li>
+		<a class="expanded heading">Ingredients</a>
+		<ul class="navigation">
+			<li><a href="hops_list.php">Hops</a></li>
+			<li><a href="fermentables_list.php">Fermentables</a></li>
+			<li><a href="yeasts_list.php">Yeasts</a></li>
+		</ul>
+	</li>
     <li>
 		<a class="expanded heading">Personalization</a>
 		<ul class="navigation">

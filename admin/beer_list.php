@@ -167,28 +167,28 @@ include 'top_menu.php';
 										
 									</td>
 									<td colspan="3">
-										<p><b  style="text-decoration: underline;">Fermentables:</b></p><p>
+										<p style="padding-bottom: 1px"><b  style="text-decoration: underline;">Fermentables:</b></p><p>
 						                    <?php
 						                      $fermentables = $beerManager->GetFermentables($beer->get_id());
 						                      foreach($fermentables as $fermentable){
-						                      	 echo $fermentable . "<br>";
+						                      	 echo $fermentable->get_name(). "<br>";
 						                      }
 						                    ?>
 										</p>
 										
-										<p><b style="text-decoration: underline;">Hops:</b></p><p>
+										<p style="padding-bottom: 1px"><b style="text-decoration: underline;">Hops:</b></p><p>
 						                    <?php
 						                      $hops = $beerManager->GetHops($beer->get_id());
 						                      foreach($hops as $hop){
-						                      	 echo $hop . "<br>";
+						                          echo $hop->get_name() . "<br>";
 						                      }
 						                    ?>
 										</p>
-										<p><b style="text-decoration: underline;">Yeast:</b></p><p>
+										<p style="padding-bottom: 1px"><b style="text-decoration: underline;">Yeast:</b></p><p>
 						                    <?php 
 						                      $yeasts = $beerManager->GetYeasts($beer->get_id());
 						                      foreach($yeasts as $yeast){
-						                      	 echo $yeast . "<br>";
+						                          echo $yeast->get_name() . "<br>";
 						                      }
 						                    ?>
 										</p>

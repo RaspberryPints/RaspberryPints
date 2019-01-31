@@ -1,20 +1,20 @@
 <?php
 require_once __DIR__.'/../managers/manager.php';
-require_once __DIR__.'/../models/beerHop.php';
+require_once __DIR__.'/../models/beerYeast.php';
 require_once __DIR__.'/../conn.php';
 
-class BeerHopManager extends Manager{
+class BeerYeastManager extends Manager{
     protected function getPrimaryKeys(){
         return ["id"];
     }
     protected function getColumns(){
-        return ["beerId", "hopsId", "amount", "time"];
+        return ["beerId", "yeastsId", "amount"];
     }
     protected function getTableName(){
-        return "beerHops";
+        return "beerYeasts";
     }
     protected function getDBObject(){
-        return new BeerHop();
+        return new BeerYeast();
     }
     protected function hasModifiedColumn(){return false;}
     protected function hasCreatedColumn(){return false;}    

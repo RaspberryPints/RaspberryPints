@@ -2,15 +2,26 @@
 require_once __DIR__.'/header.php';
 require_once __DIR__.'/../includes/Pintlabs/Service/Untappd.php';
 require_once __DIR__.'/../includes/functions.php';
+require_once __DIR__.'/includes/managers/beerFermentable_manager.php';
+require_once __DIR__.'/includes/managers/beerHop_manager.php';
+require_once __DIR__.'/includes/managers/beerYeast_manager.php';
+require_once __DIR__.'/includes/models/beerFermentable.php';
+require_once __DIR__.'/includes/models/beerHop.php';
+require_once __DIR__.'/includes/models/beerYeast.php';
 
 $htmlHelper = new HtmlHelper();
 $beerManager = new BeerManager();
 $beerStyleManager = new BeerStyleManager();
+$FermentableManager = new FermentableManager();
+$HopManager= new HopManager();
+$YeastManager = new YeastManager();
+$beerFermentableManager = new BeerFermentableManager();
+$beerHopManager= new BeerHopManager();
+$beerYeastManager = new BeerYeastManager();
 $breweryManager = new BreweryManager();
 $srmManager = new SrmManager();
 $beer = null;
 $config = getAllConfigs();
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$beer = new Beer();
@@ -41,6 +52,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     	$beer->setFromArray($_POST);
     	if($beerManager->Save($beer)){
     	    beerRATING($config, $beer->get_untID(), FALSE);
+    	    
+    	    $beerFermentableManager->DeleteAllByBeerId($beer->get_id());
+    	    $beerHopManager->DeleteAllByBeerId($beer->get_id());
+    	    $beerYeastManager->DeleteAllByBeerId($beer->get_id());
+    	    
+    	    if(isset($_POST['fermId'])){
+    	        $ii = 0;
+        	    while(isset($_POST['fermId'][$ii])){
+        	        if($_POST['fermId'][$ii] != ''){
+            	        $id = explode("~", $_POST['fermId'][$ii])[0];
+            	        $item = new BeerFermentable();
+            	        //$item->set_id($_POST['beerFermId'][$ii]);
+            	        $item->set_beerID($beer->get_id());
+            	        $item->set_fermentablesID($id);
+            	        $item->set_amount($_POST['fermAmount'][$ii]);
+            	        $item->set_time($_POST['fermTime'][$ii]);
+            	        $beerFermentableManager->Save($item); 
+        	        }
+        	        $ii++;
+        	    }
+    	    }
+    	    if(isset($_POST['hopId'])){
+    	        $ii = 0;
+    	        while(isset($_POST['hopId'][$ii])){
+    	            if($_POST['hopId'][$ii] != ''){
+    	                $id = explode("~", $_POST['hopId'][$ii])[0];
+        	            $item = new BeerHop();
+    	               // $item->set_id($_POST['beerHopId'][$ii]);
+        	            $item->set_beerID($beer->get_id());
+        	            $item->set_hopsID($id);
+        	            $item->set_amount($_POST['hopAmount'][$ii]);
+        	            $item->set_time($_POST['hopTime'][$ii]);
+        	            $beerHopManager->Save($item);
+    	            }
+    	            $ii++;
+    	        }
+    	    }
+    	    if(isset($_POST['yeastId'])){
+    	        $ii = 0;
+    	        while(isset($_POST['yeastId'][$ii])){
+    	            if($_POST['yeastId'][$ii] != ''){
+        	            $id = explode("~", $_POST['yeastId'][$ii])[0];
+        	            $item = new BeerYeast();
+        	           // $item->set_id($_POST['beerYeastId'][$ii]);
+        	            $item->set_beerID($beer->get_id());
+        	            $item->set_yeastsID($id);
+        	            $item->set_amount($_POST['yeastAmount'][$ii]);
+        	            $beerYeastManager->Save($item);
+    	            }
+    	            $ii++;
+    	        }
+    	    }
     	    redirect('beer_list.php');
     	}
 	}
@@ -54,6 +117,14 @@ if( null === $beer ){
     	$beer->setFromArray($_POST);
     }
 }
+
+$fementableList = $FermentableManager->GetAllActive();
+$hopList = $HopManager->GetAllActive();
+$yeastList = $YeastManager->GetAllActive();
+
+$beerFermentables = $beerFermentableManager->GetAllByBeerId($beer->get_id());
+$beerHops = $beerHopManager->GetAllByBeerId($beer->get_id());
+$beerYeasts  = $beerYeastManager->GetAllByBeerId($beer->get_id());
 
 $breweryList = $breweryManager->GetAllActive();
 $srmList = $srmManager->getAll();
@@ -227,32 +298,63 @@ include 'top_menu.php';
 			</tr>
 			<tr>
 				<td colspan="4">
-					<table style="width:100%">
+					<table style="width:100%" id="fermentableList">
 						<tr style="width:100%">
 							<td><strong>Name</strong></td>
-							<td><strong>Type</strong></td>
 							<td><strong>Amount</strong></td>
+							<td><strong>Time</strong></td>
+							<td><strong>Type</strong></td>
 							<td><strong>SRM</strong></td>
+							<td></td>
 						</tr>
-					<?php 
-						if( !isset($beerFermentables) || count($beerFermentables) == 0 ){  
-					?>
-							<tr><td class="no-results" colspan="99">No Fermentables :( Add some?</td></tr>
-					<?php 
-						}else{
+						
+                            <?php
+                            if(count($beerFermentables) == 0){
+                                $beerFermentables[] = new BeerFermentable();
+                            } 
+                            $ii = 0;
 							foreach ($beerFermentables as $beerFermentable){
 							?>
 							<tr style="width:100%">
-							<td><?php echo $beerFermentable->get_name() ?></td>
-							<td><?php echo $beerFermentable->get_type() ?></td>
-							<td><?php echo $beerFermentable->get_amount() ?></td>
-							<td><?php echo $beerFermentable->get_srm() ?></td>
+							<td>         
+								<input type="hidden" id="beerFermId" name="beerFermId[]" value="<?php echo $beerFermentable->get_id(); ?>"/>                   
+							<?php 
+							    $selectedItem = null;
+							    $str = "<select id='fermId".$ii."' name='fermId[]' class='' onChange='toggleDisplay(this, 3)'>\n";
+                                $str .= "<option value=''>Select One</option>\n";
+                                foreach($fementableList as $item){
+                                    if( !$item ) continue;
+                                    $sel = "";
+                                    if( $beerFermentable && $beerFermentable->get_fermentablesID() == $item->get_id() ){
+                                        $sel .= "selected ";
+                                        $beerFermentable->set_fermentable($item);
+                                    }
+                                    $desc = $item->get_name();
+									$str .= "<option value='".$item->get_id()."~".$item->get_name()."~".$item->get_type()."~".$item->get_srm()."|".$item->get_rgb()."' ".$sel.">".$desc."</option>\n";
+                                }					
+                                $str .= "</select>\n";
+                                                        
+                                echo $str;
+                            ?>
+							</td>
+							<td><input type="text" id="fermAmount" class="meddiumbox" name="fermAmount[]" value="<?php echo $beerFermentable->get_amount() ?>"/></td>
+							<td><input type="text" id="fermTime" class="meddiumbox" name="fermTime[]" value="<?php echo $beerFermentable->get_time() ?>"/></td>
+							<td><input type="text" disabled id="fermtype" class="meddiumbox" name="fermtype[]" value="<?php echo $beerFermentable->get_fermentable()->get_type() ?>"/></td>
+							<td><input type="text" disabled id="fermSrm" class="meddiumbox" name="fermSrm[]" value="<?php echo $beerFermentable->get_fermentable()->get_srm() ?>" style="background-color:rgb(<?php echo $beerFermentable->get_fermentable()->get_rgb() ?>)"/></td>
+                            <td style="width:10%;vertical-align: middle;">
+                                <button name="delete" type="button" class="btn" style="white-space:nowrap" value="<?php echo $beer->get_id()?>" onClick="removeRow(this)">Delete</button>
+                            </td>
 						</tr>
 						<?php
+						      $ii++;
 							}
-						}
 					?>
 					</table>
+				</td>
+			</tr>
+			<tr> 
+				<td>	
+	 				<input type="button" id="newRow1" name="newRow2" class="btn" value="Add Fermentable" onclick="addRow('fermentableList')" />
 				</td>
 			</tr>
 			<tr>
@@ -262,67 +364,59 @@ include 'top_menu.php';
 			</tr>
 			<tr>
 				<td colspan="4">
-					<table style="width:100%">
+					<table style="width:100%"  id="hopList">
 						<tr style="width:100%">
-							<td><strong>Name</strong></td>
-							<td><strong>Alpha</strong></td>
+							<td>Name</td>
 							<td><strong>Amount</strong></td>
 							<td><strong>Time</strong></td>
+							<td><strong>Alpha</strong></td>
+							<td><strong>Beta</strong></td>
+							<td></td>
 						</tr>
 					<?php 
-						if( !isset($beerHops) || count($beerHops) == 0 ){  
-					?>
-							<tr><td class="no-results" colspan="99">No Hops :( Add some?</td></tr>
-					<?php 
-						}else{
-							foreach ($beerHops as $beerHop){
-							?>
-							<tr style="width:100%">
-							<td><?php echo $beerHop->get_name() ?></td>
-							<td><?php echo $beerHop->get_alpha() ?></td>
-							<td><?php echo $beerHop->get_amount() ?></td>
-							<td><?php echo $beerHop->get_time() ?></td>
-						</tr>
-						<?php
-							}
+						if( count($beerHops) == 0 ){  
+						    $beerHops[] = new BeerHop(); 
 						}
-					?>
-					</table>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="4">
-					<h3 style="align-content:center">Misc</h3>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="4">
-					<table>
+						foreach ($beerHops as $beerHop){
+						?>
 						<tr style="width:100%">
-							<td><strong>Name</strong></td>
-							<td><strong>Type</strong></td>
-							<td><strong>Use</strong></td>
-							<td><strong>Time</strong></td>
-						</tr>
-                        <?php 
-						if( !isset($beerMiscs) || count($beerMiscs) == 0 ){  
-						?>
-							<!--<tr><td class="no-results" colspan="99">No Misc :( Add some?</td></tr>-->
-						<?php 
-						}else{
-							foreach ($beerMiscs as $beerMisc){
-							?>
-							<tr style="width:100%">
-							<td><?php echo $beerMisc->get_name() ?></td>
-							<td><?php echo $beerMisc->get_type() ?></td>
-							<td><?php echo $beerMisc->get_use() ?></td>
-							<td><?php echo $beerMisc->get_time() ?></td>
-						</tr>
-						<?php
+						<td>        
+							<input type="hidden" id="beerHopId" name="beerHopId[]" value="<?php echo $beerHop->get_id(); ?>"/>              
+							<?php 					
+							    $str = "<select id='hopId".$ii."' name='hopId[]' class='' onChange='toggleDisplay(this, 3)'>\n";
+                                $str .= "<option value=''>Select One</option>\n";
+                                foreach($hopList as $item){
+                                    if( !$item ) continue;
+                                    $sel = "";
+                                    if( $beerHop && $beerHop->get_hopsID() == $item->get_id() ){
+                                        $sel .= "selected ";
+                                        $beerHop->set_hop($item);
+                                    }
+                                    $desc = $item->get_name();
+									$str .= "<option value='".$item->get_id()."~".$item->get_name()."~".$item->get_alpha()."~".$item->get_beta()."' ".$sel.">".$desc."</option>\n";
+                                }					
+                                $str .= "</select>\n";
+                                                        
+                                echo $str;
+                            ?>
+                        </td>
+						<td><input type="text" id="hopAmount" class="meddiumbox" name="hopAmount[]" value="<?php echo $beerHop->get_amount() ?>"/></td>
+						<td><input type="text" id="hopTime" class="meddiumbox" name="hopTime[]" value="<?php echo $beerHop->get_time() ?>"/></td>
+						<td><input type="text" disabled id="hopAlpha" class="meddiumbox" name="fermtype[]" value="<?php echo $beerHop->get_hop()->get_alpha() ?>"/></td>
+						<td><input type="text" disabled id="hopBeta" class="meddiumbox" name="fermtype[]" value="<?php echo $beerHop->get_hop()->get_beta() ?>"/></td>
+						<td style="width:10%;vertical-align: middle;">
+                            <button name="delete" type="button" class="btn" style="white-space:nowrap" value="<?php echo $beer->get_id()?>" onClick="removeRow(this)">Delete</button>
+                        </td>
+					</tr>
+					<?php
 							}
-						}
-						?>
+					?>
 					</table>
+				</td>
+			</tr>
+			<tr> 
+				<td>	
+	 				<input type="button" id="newRow1" name="newRow2" class="btn" value="Add Hop" onclick="addRow('hopList')" />
 				</td>
 			</tr>
 			<tr>
@@ -332,32 +426,53 @@ include 'top_menu.php';
 			</tr>
 			<tr>
 				<td colspan="4">
-					<table>
+					<table id="yeastList">
 						<tr style="width:100%">
 							<td><strong>Name</strong></td>
-							<td><strong>Type</strong></td>
-							<td><strong>Form</strong></td>
-							<td><strong>Code</strong></td>
+							<td><strong>Amount</strong></td>
+							<td><strong>Strand</strong></td>
+							<td><strong>Format</strong></td>
 						</tr>
                         <?php 
-						if( !isset($beerYeasts) || count($beerYeasts) == 0 ){  
-						?>
-							<!--<tr><td class="no-results" colspan="99">No Misc :( Add some?</td></tr>-->
-						<?php 
-						}else{
-							foreach ($beerYeasts as $beerYeast){
-							?>
-							<tr style="width:100%">
-							<td><?php echo $beerYeast->get_name() ?></td>
-							<td><?php echo $beerYeast->get_type() ?></td>
-							<td><?php echo $beerYeast->get_form() ?></td>
-							<td><?php echo $beerYeast->get_code() ?></td>
-						</tr>
-						<?php
-							}
+						if( count($beerYeasts) == 0 ){  
+						  $beerYeasts[] = new BeerYeast();
 						}
+						foreach ($beerYeasts as $beerYeast){
 						?>
+    						<tr style="width:100%">
+    						<td>
+							<input type="hidden" id="beerYeastId" name="beerYeastId[]" value="<?php echo $beerYeast->get_id(); ?>"/>                     
+							<?php 					
+							    $str = "<select id='yeastId".$ii."' name='yeastId[]' class='' onChange='toggleDisplay(this, 2)'>\n";
+                                $str .= "<option value=''>Select One</option>\n";
+                                foreach($yeastList as $item){
+                                    if( !$item ) continue;
+                                    $sel = "";
+                                    if( $beerYeast && $beerYeast->get_yeastsID() == $item->get_id() ){
+                                        $sel .= "selected ";
+                                        $beerYeast->set_yeast($item);
+                                    }
+                                    $desc = $item->get_name();
+									$str .= "<option value='".$item->get_id()."~".$item->get_name()."~".$item->get_strand()."~".$item->get_format()."' ".$sel.">".$desc."</option>\n";
+                                }					
+                                $str .= "</select>\n";
+                                                        
+                                echo $str;
+                            ?>
+                            </td>
+    						<td><input type="text" id="yeastAmount" class="meddiumbox" name="yeastAmount[]" value="<?php echo $beerYeast->get_amount() ?>"/></td>
+    						<td><input type="text" disabled id="hopBeta" class="meddiumbox" name="fermtype[]" value="<?php echo $beerYeast->get_yeast()->get_strand() ?>"/></td>
+    						<td><input type="text" disabled id="hopBeta" class="meddiumbox" name="fermtype[]" value="<?php echo $beerYeast->get_yeast()->get_format() ?>"/></td>
+    					</tr>
+					<?php
+						}
+					?>
 					</table>
+				</td>
+			</tr>
+			<tr> 
+				<td>	
+	 				<input type="button" id="newRow1" name="newRow2" class="btn" value="Add Yeast" onclick="addRow('yeastList')" />
 				</td>
 			</tr>
 			<tr>
@@ -428,6 +543,46 @@ require __DIR__.'/scripts.php';
 	function setInputValue(inputId, selectElem)
 	{
 		document.getElementById(inputId).value = selectElem.value;
+	}
+
+	function toggleDisplay(selectObject, numConfigs) {
+		var selArr = selectObject.value.split("~");
+		var curTD = $(selectObject).parent().get(0);
+		for(ii = 0; ii < numConfigs; ii++){
+			curTD = $(curTD).next('td');
+			if(curTD == null) break;
+		}
+		//Select array is id~name~data1~data2...
+		for(ii = 2; ii < selArr.length; ii++){
+			var inputs = $(curTD).find("input");
+			if(inputs.length == 0)break;
+			$(inputs).each(function() {
+		        var valArr = selArr[ii].split("|");
+		        this.value = valArr[0];
+		        if(valArr.length > 1){
+					this.style.backgroundColor = "rgb("+valArr[1]+")";
+		        }
+		    });
+
+			curTD = $(curTD).next('td');
+			if(curTD == null) break;
+		}
+	}
+
+	function getRowStructure(tableName){
+        	var rowStructure = $('#'+tableName).find('tr:eq(1)').clone();
+        	rowStructure.find('input, select').each(function(){this.value="";});
+        	rowStructure.find('select').each(function(){this.value=-1; this.style.backgroundColor=""});
+        	return rowStructure;
+	}
+	function addRow(tableName){		
+		var $table = $('#'+tableName)
+		$table.append(getRowStructure(tableName).clone());
+		if($("#pendingChangesDiv")[0] != null)$("#pendingChangesDiv")[0].style.display="";
+	}
+	function removeRow(btn){		
+		$(btn).closest('tr').remove();
+		if($("#pendingChangesDiv")[0] != null)$("#pendingChangesDiv")[0].style.display="";
 	}
 </script>
 

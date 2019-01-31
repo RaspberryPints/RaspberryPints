@@ -41,10 +41,10 @@ class Yeast
 	public function set_maxAttenuation($_maxAttenuation){ $this->_maxAttenuation = $_maxAttenuation; }
 	
 	public function get_flocculation(){ return $this->_flocculation; } 
-	public function set_flocculation($_flocculation){ $this->_format = $_flocculation; }
+	public function set_flocculation($_flocculation){ $this->_flocculation = $_flocculation; }
 	
 	public function get_notes(){ return $this->_notes; }
-	public function set_notes($_time){ $this->_notes = $_notes; }
+	public function set_notes($_notes){ $this->_notes = $_notes; }
 
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -64,33 +64,45 @@ class Yeast
 		else
 			$this->set_name(null);
 			
+		if( isset($postArr['strand']) )
+		    $this->set_strand($postArr['strand']);
+	    else
+	        $this->set_strand(null);
+	        
+        if( isset($postArr['format']) )
+            $this->set_format($postArr['format']);
+        else
+            $this->set_format(null);
+        
 		if( isset($postArr['minTemp']) )
-			$this->set_alpha($postArr['minTemp']);
+			$this->set_minTemp($postArr['minTemp']);
 		else
-			$this->set_alpha(null);
+		    $this->set_minTemp(null);
+		
 		if( isset($postArr['maxTemp']) )
-			$this->set_alpha($postArr['maxTemp']);
+			$this->set_maxTemp($postArr['maxTemp']);
 		else
-			$this->set_alpha(null);
+		    $this->set_maxTemp(null);
 			
 		if( isset($postArr['minAttenuation']) )
-			$this->set_alpha($postArr['minAttenuation']);
+			$this->set_minAttenuation($postArr['minAttenuation']);
 		else
-			$this->set_alpha(null);
+		    $this->set_minAttenuation(null);
+		
 		if( isset($postArr['maxAttenuation']) )
-			$this->set_alpha($postArr['maxAttenuation']);
+		    $this->set_maxAttenuation($postArr['maxAttenuation']);
 		else
-			$this->set_alpha(null);
+		    $this->set_maxAttenuation(null);
 			
-		if( isset($postArr['flocculation']) )
-			$this->set_amount($postArr['flocculation']);
+	    if( isset($postArr['flocculation']) )
+	        $this->set_flocculation($postArr['flocculation']);
 		else
-			$this->set_amount(null);
+		    $this->set_flocculation(null);
 			
 		if( isset($postArr['notes']) )
-			$this->set_time($postArr['notes']);
+			$this->set_notes($postArr['notes']);
 		else
-			$this->set_time(null);
+			$this->set_notes(null);
 			
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);

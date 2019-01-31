@@ -26,7 +26,7 @@ class Hop
 	public function set_beta($_beta){ $this->_beta = $_beta; }
 	
 	public function get_notes(){ return $this->_notes; }
-	public function set_notes($_time){ $this->_notes = $_notes; }
+	public function set_notes($_notes){ $this->_notes = $_notes; }
 
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -52,14 +52,14 @@ class Hop
 			$this->set_alpha(null);
 			
 		if( isset($postArr['beta']) )
-			$this->set_amount($postArr['beta']);
+			$this->set_beta($postArr['beta']);
 		else
-			$this->set_amount(null);
+		    $this->set_beta(null);
 			
 		if( isset($postArr['notes']) )
-			$this->set_time($postArr['notes']);
+			$this->set_notes($postArr['notes']);
 		else
-			$this->set_time(null);
+		    $this->set_notes(null);
 			
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);
@@ -75,11 +75,10 @@ class Hop
 	function toJson(){
 		return "{" . 
 			"id: " . $this->get_id() . ", " .
-			"beerID: '" . encode($this->get_beerID()) . "', " .
 			"name: " . $this->get_name() . ", " .
 			"alpha: '" . encode($this->get_alpha()) . "', " .
-			"amount: '" . $this->get_amount() . "', " .
-			"time: '" . $this->get_time() . "', " .
+			"beta: '" . $this->get_beta() . "', " .
+			"notes: '" . $this->get_notes() . "', " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  
 		"}";

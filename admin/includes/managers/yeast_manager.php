@@ -8,7 +8,7 @@ class YeastManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["name", "strand", "format", "style", "minTemp", "maxTemp", "minAttenuation", "maxAttenuation", "flocculation", "notes"];
+		return ["name", "strand", "format", "minTemp", "maxTemp", "minAttenuation", "maxAttenuation", "flocculation", "notes"];
 	}
 	protected function getTableName(){
 		return "yeasts";
@@ -19,6 +19,11 @@ class YeastManager extends Manager{
 	
 	function GetAllForBeer($id){
 		$sql="SELECT * FROM ".$this->getTableName()." t left join beer".ucwords($this->getTableName())." tb on (t.id = tb.".$this->getTableName()."Id) WHERE tb.beerId = $id";
+		return $this->executeQueryWithResults($sql);
+	}
+	
+	function GetDistinctForBeer($id){
+		$sql="SELECT DISTINCT t.* FROM ".$this->getTableName()." t left join beer".ucwords($this->getTableName())." tb on (t.id = tb.".$this->getTableName()."Id) WHERE tb.beerId = $id";
 		return $this->executeQueryWithResults($sql);
 	}
 }

@@ -7,7 +7,8 @@ class Fermentable
 	private $_name;
 	private $_type;
 	private $_srm;  
-	private $_notes;  
+	private $_rgb; 
+	private $_notes;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
@@ -25,9 +26,12 @@ class Fermentable
 	public function get_srm(){ return $this->_srm; }
 	public function set_srm($_srm){ $this->_srm = $_srm; }
 	
+	public function get_rgb(){ return $this->_rgb; }
+	public function set_rgb($_rgb){ $this->_rgb = $_rgb; }
+	
 	public function get_notes(){ return $this->_notes; }
-	public function set_notes($_time){ $this->_notes = $_notes; }
-
+	public function set_notes($_notes){ $this->_notes = $_notes; }
+		
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
 	
@@ -54,12 +58,17 @@ class Fermentable
 		if( isset($postArr['srm']) )
 			$this->set_srm($postArr['srm']);
 		else
-			$this->set_srm(null);
+		    $this->set_srm(null);
+		    
+	    if( isset($postArr['rgb']) )
+	        $this->set_rgb($postArr['rgb']);
+        else
+            $this->set_rgb(null);
 			
 		if( isset($postArr['notes']) )
-			$this->set_time($postArr['notes']);
+			$this->set_notes($postArr['notes']);
 		else
-			$this->set_time(null);
+		    $this->set_notes(null);
 			
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);

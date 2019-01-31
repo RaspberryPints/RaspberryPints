@@ -40,16 +40,16 @@ class BeerManager extends Manager{
 
   function GetFermentables($id){
 	$manager = new FermentableManager();
-	return $manager->GetAllForBeer($id);
+	return $manager->GetDistinctForBeer($id);
   }
 
   function GetHops($id){
 	$manager = new HopManager();
-	return $manager->GetAllForBeer($id);
+	return $manager->GetDistinctForBeer($id);
   }
 
   function GetYeasts($id){
 	$manager = new yeastManager();
-	return $manager->GetAllForBeer($id);
+	return $manager->GetDistinctForBeer($id);
   }
 }

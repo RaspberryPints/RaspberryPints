@@ -633,10 +633,13 @@ CREATE TABLE IF NOT EXISTS `fermentables` (
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `beerFermentables` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`beerId` int(11) NOT NULL,
-    `fermentablesId`int(11) NOT NULL,
+  `fermentablesId`int(11) NOT NULL,
+	`amount` tinytext NULL,
+	`time` tinytext NULL,
 	
-	PRIMARY KEY (`beerId`, `fermentablesId`),
+	PRIMARY KEY (`id`),
 	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
 	FOREIGN KEY (`fermentablesId`) REFERENCES fermentables(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
@@ -659,10 +662,13 @@ CREATE TABLE IF NOT EXISTS `hops` (
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `beerHops` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`beerId` int(11) NOT NULL,
-    `hopsId`  int(11) NOT NULL,
+  `hopsId`  int(11) NOT NULL,
+	`amount` tinytext NULL,
+	`time` tinytext NULL,
 	
-	PRIMARY KEY (`beerId`, `hopsId`),
+	PRIMARY KEY (`id`),
 	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
 	FOREIGN KEY (`hopsId`) REFERENCES hops(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
@@ -688,10 +694,12 @@ CREATE TABLE IF NOT EXISTS `yeasts` (
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `beerYeasts` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`beerId` int(11) NOT NULL,
-    `yeastsId`int(11) NOT NULL,
+  `yeastsId`int(11) NOT NULL,
+	`amount` tinytext NULL,
 	
-	PRIMARY KEY (`beerId`, `yeastsId`),
+	PRIMARY KEY (`id`),
 	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
 	FOREIGN KEY (`yeastsId`) REFERENCES yeasts(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
@@ -1498,6 +1506,13 @@ ON ((CONVERT(io.shield USING utf8) = hard.shield OR (LOWER(io.shield) != 'pi' AN
 WHERE (io.shield = 'Pi' OR '1' = (SELECT DISTINCT '1' FROM vwIoHardwarePins WHERE shield = ''))
 GROUP BY shield, pin;
 
+CREATE OR REPLACE VIEW `vwFermentables` 
+AS
+ SELECT 
+    f.*,
+    srm.rgb
+ FROM fermentables f LEFT JOIN srmRgb srm
+        ON f.srm = srm.srm
 
 -- --------------------------------------------------------
 

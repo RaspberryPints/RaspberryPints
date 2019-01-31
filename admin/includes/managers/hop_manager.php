@@ -21,4 +21,9 @@ class HopManager extends Manager{
 		$sql="SELECT * FROM ".$this->getTableName()." t left join beer".ucwords($this->getTableName())." tb on (t.id = tb.".$this->getTableName()."Id) WHERE tb.beerId = $id";
 		return $this->executeQueryWithResults($sql);
 	}
+	
+	function GetDistinctForBeer($id){
+	    $sql="SELECT DISTINCT t.* FROM ".$this->getTableName()." t left join beer".ucwords($this->getTableName())." tb on (t.id = tb.".$this->getTableName()."Id) WHERE tb.beerId = $id";
+	    return $this->executeQueryWithResults($sql);
+	}
 }
