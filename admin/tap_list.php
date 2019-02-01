@@ -367,8 +367,21 @@ include 'top_menu.php';
                         if(null == $beer)unset($beer);
                     ?>
                         <td>
-                            <?php if(isset($tap) ) { ?>
-                                <input type="text" id="tapNumber<?php echo $tap->get_id();?>" class="smallbox" name="tapNumber[]" value="<?php echo $tap->get_tapNumber(); ?>" />
+                            <?php 
+                            if(isset($tap) ) { 
+
+                                
+                                $imgs = glob ( '../img/tap/tap'.$tap->get_id().'.*' );
+                                $img = "";
+                                if(count($imgs) > 0){
+                                   $img = $imgs[0];
+                                }
+                                
+                            ?>
+                            <div style="width:105px">
+                                <input type="text" id="tapNumber<?php echo $tap->get_id();?>" class="smallbox" name="tapNumber[]" value="<?php echo $tap->get_tapNumber(); ?>" <?php echo ($img != ""?'style="background:url('.$img.') no-repeat bottom left; background-size:cover"':''); ?> />
+                                <a href="image_prompt.php?tapId=<?php echo $tap->get_id();?>" target="_blank"><span class="tooltip"><img src="img/icons/upload.png" /><span class="tooltiptext">Upload Tap Image</span></span></a>
+                            </div>
                             <?php } ?>
                         </td>
                         <td>                            
@@ -473,6 +486,7 @@ include 'top_menu.php';
             <input type="submit" name="revert"        class="btn" value="Revert" />
         </form>	
         <br />
+        <div id="dialog"></div>
         <div>
             &nbsp; &nbsp; 
         </div>
@@ -495,7 +509,6 @@ include 'left_bar.php';
 <?php
 include 'scripts.php';
 ?>
-
 <script>
 <?php 
     foreach($activeTaps as $tap){

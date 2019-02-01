@@ -581,7 +581,7 @@ CREATE TABLE IF NOT EXISTS `tapconfig` (
 CREATE TABLE IF NOT EXISTS `taps` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`kegId` int(11) NULL,
-	`tapNumber` int(11) NOT NULL,
+	`tapNumber` int(11) NULL,
 	`tapRgba` varchar(16) NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`startAmount` decimal(7,5) NULL,

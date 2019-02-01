@@ -581,3 +581,5 @@ AS
     srm.rgb
  FROM fermentables f LEFT JOIN srmRgb srm
         ON f.srm = srm.srm;
+
+ALTER TABLE taps CHANGE COLUMN `tapNumber` `tapNumber` INT(11) NULL ;
