@@ -106,15 +106,21 @@ function beerRATING($config, $untID, $display=TRUE ) {
 		$filetimemod = filemtime($cachefile)+86400;
 	}
 	//If display then only use the cache file otherwise we are saving the beer and want to update the cache
-	if ($display && $filetimemod > 0) {
+	if ($display && false) {
 		include $cachefile;
 	} elseif($filetimemod == 0 || time()<$filetimemod) {
 		ob_start();
 		if($config[ConfigNames::ClientID] && $beer->untID!='0'){ 
 			$ut = new Pintlabs_Service_Untappd($config);
-			$feed = $ut->beerInfo($untID)->response->beer;
-			$img = $feed->beer_label;
-			$imgs = "<img src=".$img." style=\"border:0;width:100%\">";
+			try {
+    			$feed = $ut->beerInfo($untID)->response->beer;
+    			$img = $feed->beer_label;
+    			$imgs = "<img src=".$img." style=\"border:0;width:100%\">";
+			} catch (Exception $e) {
+			    echo 'N/A';
+			    ob_end_flush();
+			    return;
+			}
 		} else {
 			$imgs = "<img src='https:\/\/d1c8v1qci5en44.cloudfront.net/site/assets/images/temp/badge-beer-default.png' border=0 width=75 height=75>";
 		}
