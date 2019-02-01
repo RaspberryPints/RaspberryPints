@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/header.php';
 $configs = getAllConfigs();
+$htmlHelper = new HtmlHelper();
 ?> 
 <!-- Start Header  -->
 <?php
@@ -25,6 +26,7 @@ include 'top_menu.php';
 			<h2>Personalize </h2>
 		</div>
 		<div class="contentbox">
+		<?php $htmlHelper->ShowMessage(); ?>
 		<a id="columns"></a> 
 <div id="success" style="display:none;  z-index: 99 !important;">
 Configuration Updated
