@@ -21,7 +21,7 @@ class BreweryManager extends Manager{
 	protected function hasModifiedColumn(){return false;}
 	protected function hasCreatedColumn(){return false;}
 
-	function Save($brewery, $new=false){
+	function Save(&$brewery, $new=false){
 		// download the image so we have it locally
 		if ($brewery->get_imageUrl() && filter_var($brewery->get_imageUrl(), FILTER_VALIDATE_URL) ) {
 			$imagepath =  __DIR__."../../includes/cache/img/".uniqid("brewery-").".png";
