@@ -10,6 +10,7 @@ import socket
 import struct
 import select
 import sys
+import datetime
 from pprint import pprint
 from mod_pywebsocket import common
 from mod_pywebsocket import handshake
