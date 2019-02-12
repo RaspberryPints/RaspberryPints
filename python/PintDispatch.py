@@ -146,6 +146,7 @@ class PintDispatch(object):
         
         self.commandserver = CommandTCPServer(('localhost', MCAST_PORT), CommandTCPHandler)
         self.commandserver.pintdispatch = self
+        self.fanControl = FanControlThread("fanControl1", self)
         self.flowmonitor = FlowMonitor(self)
     
     def parseConnFile(self):
@@ -296,87 +297,28 @@ class PintDispatch(object):
         con.close()
         self.lastArchiveCheck = datetime.datetime.now().month
     
-    def getFanConfig(self):
-        pin = self.getFanPin()
-        if (pin < 0):
-            return
-        fanOnTimeItem = self.getConfigItem("fanOnTime")
-        if(fanOnTimeItem is None):
-            return None
-        fanIntervalItem = self.getConfigItem("fanInterval")
-        if(fanIntervalItem is None):
-            return None
-        interval = int(fanIntervalItem["configValue"])
-        onTime = int(fanOnTimeItem["configValue"])
-        return pin, interval, onTime
-    
-    def fanStart(self):
-        pin = self.getFanPin()
-        if pin < 1:
-            return
-        if self.updatepin(pin, 1):
-            self.sendfanupdate(pin, 1)
-        
-    def fanStartTimer(self):
-        debug( "starting fan timer" )
-        
-        fanConfig = self.getFanConfig()
-        if fanConfig is None:
-            debug( "starting fan timer - no config?" )
-            return
-        
-        if self.fanTimer is not None:
-            debug( "starting fan timer - cancelling running timer" )
-            self.fanTimer.cancel()
-        
-        #all times are in minutes
-        time = fanConfig[2]
-        #don't turn on if no time set (set to 0 or less)
-        if (time < 1):
-            return
-        pin = fanConfig[0]
-        self.fanTimer = Timer(time * 60, self.fanStopTimer)
-        self.fanTimer.daemon=True
-        self.fanTimer.start()
-        debug( "starting fan timer - updating pin" )
-        self.fanStart()
-        
-    def fanStop(self):
-        pin = self.getFanPin()
-        if pin < 1:
-            return
-        if self.updatepin(pin, 0):
-            self.sendfanupdate(pin, 0)
-                
-    def fanStopTimer(self):
-        debug( "stopping fan timer" )
-        fanConfig = self.getFanConfig()
-        if fanConfig is None:
-            debug( "stopping fan timer - no config?" )
-            return
-        
-        #all times are in minutes
-        pin = fanConfig[0]
-        interval = fanConfig[1]
-        time = fanConfig[2]
-        
-        # don't turn off 
-        if(interval <= time):
-            debug( "stopping fan timer - interval less than time, exiting" )
-            return
-        
-        if self.fanTimer is not None:
-            debug( "stopping fan timer - cancelling running timer" )
-            self.fanTimer.cancel()
-        self.fanTimer = Timer((interval - time) * 60, self.fanStartTimer)
-        self.fanTimer.daemon=True
-        self.fanTimer.start()
-        debug( "stopping fan timer - updating pin" )
-        self.fanStop()
-    
-    def resetFanConfig(self):
-        self.fanStartTimer()
+    def useFanControl(self):
+        useFanControl = self.getConfigValueByName("useFanControl")
+        if(useFanControl is None or int(useFanControl) == 0):
+            return False
+        return True    
             
+    def getFanPin(self):
+        fanPin = self.getConfigValueByName("useFanPin")
+        if fanPin is not None:
+            return int(fanPin)
+        return -1
+    def getFanOnTime(self):
+        fanPin = self.getConfigValueByName("fanOnTime")
+        if fanPin is not None:
+            return int(fanPin)
+        return 0
+    def getFanOffTime(self):
+        fanPin = self.getConfigValueByName("fanInterval")
+        if fanPin is not None:
+            return int(fanPin)
+        return 0
+    
     # check if we're exceeding the pour threshold
     def sendflowupdate(self, pin, count):
         return
@@ -466,16 +408,13 @@ class PintDispatch(object):
         else:
             log("tap flow meters not enabled")
             
-        if self.useOption("useFanControl"):
-            log("starting kegerator fan control...")
-            self.fanStartTimer()
-        else:
-            log("kegerator fan control not enabled")
-
         log("starting command server")
         t = threading.Thread(target=self.commandserver.serve_forever)
         t.setDaemon(True)
         t.start()
+        
+        log("starting fan control")
+        self.fanControl.start()
         
         signal.pause()
         debug( "exiting...")
@@ -609,14 +548,7 @@ class PintDispatch(object):
         if(int(cfUse) == 1):
             return True
         return False
-    
-    def getFanPin(self):
-        if self.useOption("useFanControl"):
-            fanItem = self.getConfigItem("useFanPin")
-            if fanItem is not None:
-                return int(fanItem["configValue"])
-        return -1
-        
+            
     def getValvesPowerPin(self):
         if self.useOption("useTapValves"):
             valveItem = self.getConfigItem("valvesPowerPin")
@@ -630,7 +562,50 @@ class PintDispatch(object):
             if valveItem is not None:
                 return int(valveItem["configValue"])
         return -1
-		
+
+class FanControlThread (threading.Thread):
+    def __init__(self, threadID, dispatch):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.dispatch = dispatch
+        self.shutdown_required = False
+      
+    def exit(self):
+        self.shutdown_required = True
+        
+
+    def run(self):
+        log("Fan Control " + self.threadID + " is Running")
+        logNotEnable = True
+        try:
+            while not self.shutdown_required:
+                fanConfig = self.dispatch.useFanControl()
+                if not fanConfig:
+                    if logNotEnable:
+                        #only log this once during the disabled period, if enabled then disabled log again
+                        log("Not Configured to run Fan")
+                        logNotEnable = False
+                    #wait 60 seconds then check if fan config changed
+                    time.sleep(60)
+                    continue
+                logNotEnable = True
+                pin = self.dispatch.getFanPin()
+                if pin < 1:
+                    log("Fan pin not configured correctly (currently "+str(pin)+")")
+                    time.sleep(60)
+                    continue
+                offTime = self.dispatch.getFanOffTime()
+                onTime = self.dispatch.getFanOnTime()
+                if self.dispatch.updatepin(pin, 1):
+                    self.dispatch.sendfanupdate(pin, 1)
+                time.sleep(onTime)
+                if self.dispatch.updatepin(pin, 0):
+                    self.dispatch.sendfanupdate(pin, 0)
+                time.sleep(offTime)
+        except:
+            log("Unable to run Fan Control Thread")
+            return
+        
 dispatch = PintDispatch()
 dispatch.setup()
 dispatch.start()
