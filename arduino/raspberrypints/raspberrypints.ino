@@ -186,6 +186,7 @@ void setup() {
 
 
   setPinsMode(numSensors, pulsePin, INPUT);
+  writePins(numSensors, pulsePin, HIGH); //Enable pull-up resistors
   if(useValves > 0) setPinsMode(numSensors, valvesPin, OUTPUT);
   for( unsigned int i = 0; i < numSensors; i++ ) {    
     resetTap(i);
@@ -313,7 +314,6 @@ void piStatusCheck(){
   int ii;
   char *command = NULL;
   char *rfidState = NULL;
-  char *curPart = readMsg;
   char *tagValue = NULL;
   char *reconfigReq = NULL;
   char *valveState = NULL;
