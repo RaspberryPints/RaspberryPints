@@ -262,13 +262,13 @@ include 'top_menu.php';
 					</tr>
 					<tr>
 						<td><b>Fan Setup:</b></td>
-						<td><b>Fan Interval (mins):</b><br/>The interval with which the fan will be triggered<br/>(every x minutes, turn the fan on).</td>
+						<td><b>Fan Interval (mins):</b><br/>The interval with which the fan will be triggered<br/>(every x minutes, turn the fan on).<br/>If zero or less, the fan always runs.</td>
 						<td><input type="text" name="fanInterval" class="smallbox"
 							value="<?php echo $config[ConfigNames::FanInterval] ?>" /></td>
 					</tr>
 					<tr>
 						<td><b>Fan Setup:</b></td>
-						<td><b>Fan Duration (mins):</b><br/>The duration the fan will run after it has been triggered.<br/>If Interval is less than Duration, the fan always runs. If Duration is zero or less, the fan never runs.</td>
+						<td><b>Fan Duration (mins):</b><br/>The duration the fan will run after it has been triggered.<br/>If zero or less, the fan never runs.</td>
 						<td><input type="text" name="fanOnTime" class="smallbox" value="<?php echo $config[ConfigNames::FanOnTime] ?>" /></td>
 					</tr>
 	<?php } ?>
