@@ -414,7 +414,8 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'useDefWeightSettings', '0', 'Do not allow individual tap configurations', '1', NOW(), NOW() ),
 ( 'breweryAltitude', '0', 'Feet Above Sea Level', '0', NOW(), NOW() ),
 ( 'defaultFermPSI', '0', 'Default pressure of fermentation (0 if not pressure ferment)', '0', NOW(), NOW() ),
-( 'defaultKeggingTemp', '56', 'Default Temperature of beer when kegging', '0', NOW(), NOW() );
+( 'defaultKeggingTemp', '56', 'Default Temperature of beer when kegging', '0', NOW(), NOW() ),
+( 'allowSamplePour', '1', 'Allow Sample Pour from List', '1', NOW(), NOW() );
 
 INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
 ('autoKickKegs', '1', 'Kick Kegs from Tap when kill is detected', 1, NOW(), NOW() ),

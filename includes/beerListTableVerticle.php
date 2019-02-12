@@ -21,10 +21,13 @@
     			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG  && !isset($beer) ) continue;
     		?>
 				<td class="tap-num">
-				<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
-					<a href ="./includes/pours.php/?tapId=<?php echo $beer['id']; ?>">
-						<?php 
-						$style = "";							
+				<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ 
+					    if($config[ConfigNames::AllowSamplePour]){
+					?>
+						<a href ="./includes/pours.php/?tapId=<?php echo $beer['id']; ?>">
+					<?php 
+				        }
+					   	$style = "";							
 						if(isset($beer) && isset($beer['tapRgba']) && $beer['tapRgba']) $style = "background-color: ".$htmlHelper->CreateRGB($beer['tapRgba']);
 						$imgs = glob ( 'img/tap/tap'.$beer['id'].'.*' );
 						if(count($imgs) > 0) $style .= ($style != ""?";":"").'background:url('.$imgs[0].') no-repeat bottom left; background-size:cover; -webkit-border-radius:0px; -mox-border-radius:0px; width:100%; height:100px';
@@ -32,7 +35,9 @@
 						<span class="tapcircle" style="<?php echo $style; ?>">
 	                    	<?php if(isset($beer['tapNumber']) && $beer['tapNumber'] != 0){echo $beer['tapNumber'];}elseif(count($imgs) == 0){echo $i;}else{echo '&nbsp;';} ?>
                         </span>
+					<?php if($config[ConfigNames::AllowSamplePour]){ ?>
 					</a>
+					<?php } ?>
 				<?php } else { ?>
                     <a href ="./includes/pours.php/?bottleId= <?php echo $beer['id']; ?>">
 	                    <span class="bottlecircle" style="background-color: <?php echo $htmlHelper->CreateRGB($beer['capRgba']); ?>">

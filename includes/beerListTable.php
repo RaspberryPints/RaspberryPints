@@ -76,9 +76,12 @@
 			<tr class="<?php if($i%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beer['id']; ?>">
 				<?php if($config[ConfigNames::ShowTapNumCol]){ ?>
 					<td class="tap-num">
-					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
+					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ 
+					    if($config[ConfigNames::AllowSamplePour]){
+					?>
 						<a href ="./includes/pours.php/?tapId=<?php echo $beer['id']; ?>" style="height:100%">
-							<?php 
+					<?php 
+				        }
 							$style = "";							
 							if(isset($beer) && isset($beer['tapRgba']) && $beer['tapRgba']) $style = "background-color: ".$htmlHelper->CreateRGB($beer['tapRgba']);
 							$imgs = glob ( 'img/tap/tap'.$beer['id'].'.*' );
@@ -87,7 +90,9 @@
 							<span class="tapcircle" style="<?php echo $style; ?>">
 		                    	<?php if(isset($beer['tapNumber']) && $beer['tapNumber'] != 0){echo $beer['tapNumber'];}elseif(count($imgs) == 0){echo $i;}else{echo '&nbsp;';} ?>
                             </span>
+						<?php if($config[ConfigNames::AllowSamplePour]){ ?>
 						</a>
+						<?php }?>
 					<?php } else { ?>
 	                    <a href ="./includes/pours.php/?bottleId= <?php echo $beer['id']; ?>">
 		                    <span class="bottlecircle" style="background-color: <?php echo $htmlHelper->CreateRGB($beer['capRgba']); ?>">

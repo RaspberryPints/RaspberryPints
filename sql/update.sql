@@ -685,3 +685,6 @@ AS
         ON k.kegTypeId = kt.id
       LEFT JOIN taps t 
         ON k.onTapId = t.id;
+
+INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
+( 'allowSamplePour', '1', 'Allow Sample Pour from List', '1', NOW(), NOW() );
