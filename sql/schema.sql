@@ -538,6 +538,10 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 	`weight` decimal(11,4) NULL,
 	`emptyWeight` decimal(11,4) NULL,
 	`maxVolume` decimal(11,4) NULL,
+	`startAmount` decimal(7,5) NULL,
+	`currentAmount` decimal(7,5) NULL,
+	`fermentationPSI` decimal(6,2) DEFAULT NULL,
+	`keggingTemp` decimal(6,2) DEFAULT NULL,
 	`onTapId` int(11) NULL,
 	`beerId` int(11) NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
@@ -562,8 +566,6 @@ CREATE TABLE IF NOT EXISTS `tapconfig` (
   `valvePin` int(11) DEFAULT NULL,
   `valveOn` int(11) DEFAULT NULL,
   `valvePinState` int(11) DEFAULT NULL,
-  `fermentationPSI` decimal(6,2) DEFAULT NULL,
-  `keggingTemp` decimal(6,2) DEFAULT NULL,
   `count` float NOT NULL DEFAULT '1500',
   `loadCellCmdPin` int(11) DEFAULT NULL,
   `loadCellRspPin` int(11) DEFAULT NULL,
@@ -584,8 +586,6 @@ CREATE TABLE IF NOT EXISTS `taps` (
 	`tapNumber` int(11) NULL,
 	`tapRgba` varchar(16) NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
-	`startAmount` decimal(7,5) NULL,
-	`currentAmount` decimal(7,5) NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
@@ -1363,9 +1363,9 @@ SELECT
 	b.fg as fg,
 	b.srm as srm,
 	b.ibu as ibu,
-	t.startAmount,
-	(IFNULL(t.startAmount,0) - IFNULL(t.currentAmount,0)) as amountPoured,
-    IFNULL(t.currentAmount , 0)as remainAmount,
+	k.startAmount,
+	(IFNULL(k.startAmount,0) - IFNULL(k.currentAmount,0)) as amountPoured,
+    IFNULL(k.currentAmount , 0)as remainAmount,
 	t.tapNumber,
 	t.tapRgba,
     tc.flowPin as pinId,
@@ -1453,7 +1453,13 @@ AS
     t.tapNumber,
     k.active,
     CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeight ELSE k.emptyWeight END AS emptyWeight,
-    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmount ELSE k.maxVolume END AS maxVolume
+    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmount ELSE k.maxVolume END AS maxVolume,
+    k.startAmount,
+    k.currentAmount,
+    k.fermentationPSI,
+    k.keggingTemp,
+    k.modifiedDate,
+    k.createdDate
  FROM kegs k LEFT JOIN kegTypes kt 
         ON k.kegTypeId = kt.id
       LEFT JOIN taps t 

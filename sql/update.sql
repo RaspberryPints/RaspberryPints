@@ -264,7 +264,7 @@ ALTER TABLE `raspberrypints`.`taps`
 CHANGE COLUMN `startAmount` `startAmount` DECIMAL(7,5) NULL DEFAULT NULL ,
 CHANGE COLUMN `currentAmount` `currentAmount` DECIMAL(7,5) NULL DEFAULT NULL ;
 
-SET @tablename = "tapconfig";
+SET @tablename = "kegs";
 SET @columnname = "fermentationPSI";
 SET @preparedStatement = (SELECT IF(
   (
@@ -297,6 +297,7 @@ PREPARE alterIfNotExists FROM @preparedStatement;
 EXECUTE alterIfNotExists;
 DEALLOCATE PREPARE alterIfNotExists;
 
+SET @tablename = "tapconfig";
 SET @columnname = "loadCellCmdPin";
 SET @preparedStatement = (SELECT IF(
   (
@@ -583,3 +584,104 @@ AS
         ON f.srm = srm.srm;
 
 ALTER TABLE taps CHANGE COLUMN `tapNumber` `tapNumber` INT(11) NULL ;
+
+
+SET @tablename = "kegs";
+SET @columnname = "startAmount";
+SET @preparedStatement = (SELECT IF(
+  (
+    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE
+      (table_name = @tablename)
+      AND (table_schema = @dbname)
+      AND (column_name = @columnname)
+  ) > 0,
+  "SELECT 1",
+  CONCAT("ALTER TABLE ", @tablename, " ADD ", @columnname, " decimal(7, 5)")
+));
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
+SET @columnname = "currentAmount";
+SET @preparedStatement = (SELECT IF(
+  (
+    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE
+      (table_name = @tablename)
+      AND (table_schema = @dbname)
+      AND (column_name = @columnname)
+  ) > 0,
+  "SELECT 1",
+  CONCAT("ALTER TABLE ", @tablename, " ADD ", @columnname, " decimal(7, 5)")
+));
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
+
+
+CREATE OR REPLACE VIEW vwGetActiveTaps
+AS
+
+SELECT
+	t.id,
+	b.name,
+	b.untID,
+	bs.name as 'style',
+	br.name as 'breweryName',
+	br.imageUrl as 'breweryImageUrl',
+	b.rating,
+	b.notes,
+	b.abv,
+	b.og as og,
+	b.fg as fg,
+	b.srm as srm,
+	b.ibu as ibu,
+	k.startAmount,
+	(IFNULL(k.startAmount,0) - IFNULL(k.currentAmount,0)) as amountPoured,
+    IFNULL(k.currentAmount , 0)as remainAmount,
+	t.tapNumber,
+	t.tapRgba,
+    tc.flowPin as pinId,
+	s.rgb as srmRgb,
+	tc.valveOn,
+	tc.valvePinState
+FROM taps t
+	LEFT JOIN tapconfig tc ON t.id = tc.tapId
+	LEFT JOIN kegs k ON k.id = t.kegId
+	LEFT JOIN beers b ON b.id = k.beerId
+	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
+	LEFT JOIN breweries br ON br.id = b.breweryId
+	LEFT JOIN srmRgb s ON s.srm = b.srm
+WHERE t.active = true
+ORDER BY t.id;
+
+CREATE OR REPLACE VIEW `vwKegs` 
+AS
+ SELECT 
+    k.id,
+    k.label,
+    k.kegTypeId,
+    k.make,
+    k.model,
+    k.serial,
+    k.stampedOwner,
+    k.stampedLoc,
+    k.notes,
+    k.kegStatusCode,
+    k.weight,
+    k.beerId,
+    k.onTapId,
+    t.tapNumber,
+    k.active,
+    CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeight ELSE k.emptyWeight END AS emptyWeight,
+    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmount ELSE k.maxVolume END AS maxVolume,
+    k.startAmount,
+    k.currentAmount,
+    k.fermentationPSI,
+    k.keggingTemp,
+    k.modifiedDate,
+    k.createdDate
+ FROM kegs k LEFT JOIN kegTypes kt 
+        ON k.kegTypeId = kt.id
+      LEFT JOIN taps t 
+        ON k.onTapId = t.id;

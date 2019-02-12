@@ -8,7 +8,7 @@ class TapManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["tapNumber", "kegId", "tapRgba", "startAmount", "currentAmount", "active"];
+		return ["tapNumber", "kegId", "tapRgba", "active"];
 	}
 	//Tap needs more data then whats in the taps table so use a view for getting data but the columns for updating
 	protected function getTableName(){
@@ -120,7 +120,7 @@ class TapManager extends Manager{
 		return $this->executeQueryNoResult($sql);
 	}
 	
-	function saveTapConfig($id, $flowPin, $valvePin, $valveOn, $countpergallon, $fermentationPSI, $keggingTemp) {
+	function saveTapConfig($id, $flowPin, $valvePin, $valveOn, $countpergallon) {
 		$ret = true;
 		$sql="SELECT * FROM tapconfig where tapId = $id";
 		$tap = $this->executeQueryWithSingleResult($sql);
@@ -131,12 +131,10 @@ class TapManager extends Manager{
 			if($tap->get_valvePinId() != $valvePin) 	$updateSql .= ($updateSql!=""?",":"")."valvePin = NULLIF('" . $valvePin . "', '')"; 
 			if($tap->get_valveOn() != $valveOn) 		$updateSql .= ($updateSql!=""?",":"")."valveOn = NULLIF('" . $valveOn . "', '')"; 
 			if($tap->get_count() != $countpergallon) 	$updateSql .= ($updateSql!=""?",":"")."count = NULLIF('" . $countpergallon . "', '')";
-			if($tap->get_fermentationPSI() != $fermentationPSI) 	$updateSql .= ($updateSql!=""?",":"")."fermentationPSI = NULLIF('" . $fermentationPSI . "', '')";
-			if($tap->get_keggingTemp() != $keggingTemp) $updateSql .= ($updateSql!=""?",":"")."keggingTemp = NULLIF('" . $keggingTemp . "', '')";
 			if($updateSql != "")$sql = "UPDATE tapconfig SET ".$updateSql." WHERE tapId = " . $id;
 		} else {
-			$sql = "INSERT INTO tapconfig (tapId, flowPin, valvePin, valveOn, count, fermentationPSI, keggingTemp) VALUES(" . 
-			                             $id.", ".$flowPin.", ".$valvePin. ", ".$valveOn.", ".$countpergallon.", '".$fermentationPSI."', '".$keggingTemp."')";
+			$sql = "INSERT INTO tapconfig (tapId, flowPin, valvePin, valveOn, count) VALUES(" . 
+			                             $id.", ".$flowPin.", ".$valvePin. ", ".$valveOn.", ".$countpergallon."')";
 		}
 		if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
 		return $ret;

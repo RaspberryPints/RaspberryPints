@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__.'/header.php';
+require_once __DIR__.'/updateKeg.php';
 $htmlHelper = new HtmlHelper();
 $kegManager = new KegManager();
 $kegStatusManager = new KegStatusManager();
@@ -23,7 +24,11 @@ if (isset($_POST['editKeg'])) {
 		$keg = $kegManager->GetById($id);
 		if($keg){
 			$keg->set_label($_POST['label'][$ii]);
-			$keg->set_beerId($_POST['beerId'][$ii]);
+			if($keg->get_beerId() != $_POST['beerId'][$ii]){
+			     $keg->set_beerId($_POST['beerId'][$ii]);
+			     $keg->set_startAmount($keg->get_maxVolume());
+			     $keg->set_currentAmount($keg->get_maxVolume());
+			}
 			$keg->set_kegStatusCode($_POST['kegStatusCode'][$ii]);
 			$kegManager->save($keg);
 		}
@@ -39,8 +44,12 @@ if (isset($_POST['saveAll'])) {
 		
 		$keg = $kegManager->GetById($id);
 		if($keg){
-			$keg->set_label($_POST['label'][$ii]);
-			$keg->set_beerId($_POST['beerId'][$ii]);
+		    $keg->set_label($_POST['label'][$ii]);
+		    if($keg->get_beerId() != $_POST['beerId'][$ii]){
+		        $keg->set_beerId($_POST['beerId'][$ii]);
+		        $keg->set_startAmount($keg->get_maxVolume());
+		        $keg->set_currentAmount($keg->get_maxVolume());
+		    }
 			$keg->set_kegStatusCode($_POST['kegStatusCode'][$ii]);
 			$kegManager->save($keg);
 		}
@@ -162,8 +171,8 @@ include 'top_menu.php';
 						</td>			
 						<td  style="padding-bottom: 1px; padding-top: 1px">
 							<b>Location:</b> &nbsp; <?php echo $keg->get_stampedLoc() ?><br>
-							<b>Empty weight:</b> &nbsp; <?php echo $keg->get_emptyWeight() ?><br>
-							<b>Current weight:</b> &nbsp; <?php echo $keg->get_weight() ?><br>
+							<b>Start Amount:</b> &nbsp; <?php echo $keg->get_startAmount() ?><br>
+							<b>Current Amount:</b> &nbsp; <?php echo $keg->get_currentAmount() ?><br>
 						</td>
 						<td style="padding-bottom: 1px; padding-top: 1px">
 						</td>

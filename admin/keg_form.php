@@ -8,6 +8,11 @@ $kegTypeManager = new KegTypeManager();
 $beerManager = new BeerManager();
 $tapManager = new TapManager();
 
+$config = getAllConfigs();
+//Change the beerId value from beerId~fg to just beerId
+if(isset($_POST['beerId'])){
+    $_POST['beerId'] = explode('~', $_POST['beerId'])[0];
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $keg = new Keg();
     $keg->setFromArray($_POST);
@@ -85,7 +90,21 @@ include 'top_menu.php';
 					Beer Name:
 				</td>
 				<td>
-					<?php echo $htmlHelper->ToSelectList("beerId", "beerId", $beerList, "name", "id", $keg->get_beerId(), ($keg->get_onTapId()?null:"Select One")); ?>
+					<?php 
+						$str = "<select id='beerId' name='beerId' class=''>\n";
+						$str .= "<option value=''>Select One</option>\n";
+						foreach($beerList as $item){
+						    if( !$item ) continue;
+						    $sel = "";
+						    if( isset($keg) && $keg->get_beerId() == $item->get_id())  $sel .= "selected ";
+						    $desc = $item->get_name();
+						    $str .= "<option value='".$item->get_id()."~".$item->get_fg()."' ".$sel.">".$desc."</option>\n";
+						}
+						$str .= "</select>\n";
+						
+						echo $str;
+						// echo $htmlHelper->ToSelectList("beerId", "beerId", $beerList, "name", "id", $keg->get_beerId(), ($keg->get_onTapId()?null:"Select One")); 
+					?>
 				</td>
 			</tr>
             <?php if($keg->get_onTapId()) { ?>
@@ -166,7 +185,7 @@ include 'top_menu.php';
 					Current Weight:<br>(not &lt; Empty Weight)
 				</td>
 				<td>
-					<input type="text" id="weight" class="mediumbox" name="weight" value="<?php echo $keg->get_weight() ?>" />
+					<input type="text" id="currentWeight" class="mediumbox" name="weight" value="<?php echo $keg->get_weight() ?>" onchange="updateCurrentAmount()"/>
 				</td>
 			</tr>
 			<tr>
@@ -174,7 +193,7 @@ include 'top_menu.php';
 					Empty Weight: 
 				</td>
 				<td>
-					<input type="text" id="weight" class="mediumbox" name="emptyWeight" value="<?php echo $keg->get_emptyWeight() ?>" />
+					<input type="text" id="emptyWeight" class="mediumbox" name="emptyWeight" value="<?php echo $keg->get_emptyWeight() ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -182,9 +201,47 @@ include 'top_menu.php';
 					Max Volume: 
 				</td>
 				<td>
-					<input type="text" id="weight" class="mediumbox" name="maxVolume" value="<?php echo $keg->get_maxVolume() ?>" />
+					<input type="text" id="maxVolume" class="mediumbox" name="maxVolume" value="<?php echo $keg->get_maxVolume() ?>" />
 				</td>
 			</tr>
+			<tr>
+				<td>
+					Start Amount: 
+				</td>
+				<td>
+					<input type="text" id="startAmount" class="mediumbox" name="startAmount" value="<?php echo $keg->get_startAmount() ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Current Amount: 
+				</td>
+				<td>
+					<input type="text" id="currentAmount" class="mediumbox" name="currentAmount" value="<?php echo $keg->get_currentAmount() ?>" onchange="updateCurrentWeight()" />
+        			<?php if($config[ConfigNames::UseDefWeightSettings]){?>
+            			<input type="hidden" id="fermentationPSI" class="mediumbox" name="fermentationPSI" value="<?php echo $config[ConfigNames::DefaultFermPSI] ?>" />
+        				<input type="hidden" id="keggingTemp" class="mediumbox" name="keggingTemp" value="<?php echo $config[ConfigNames::DefaultKeggingTemp] ?>" />
+    				<?php } ?>
+				</td>
+			</tr>
+			<?php if(!$config[ConfigNames::UseDefWeightSettings]){?>
+    			<tr>
+    				<td>
+    					Fermentation PSI: 
+    				</td>
+    				<td>
+    					<input type="text" id="fermentationPSI" class="mediumbox" name="fermentationPSI" value="<?php echo $keg->get_fermentationPSI() ?>" />
+    				</td>
+    			</tr>
+    			<tr>
+    				<td>
+    					Kegging<br/>Temperature: 
+    				</td>
+    				<td>
+    					<input type="text" id="keggingTemp" class="mediumbox" name="keggingTemp" value="<?php echo $keg->get_keggingTemp() ?>" />
+    				</td>
+    			</tr>
+			<?php } ?>
 			<tr>
 				<td>
 					Notes: 
@@ -229,6 +286,44 @@ include 'scripts.php';
 ?>
 
 <script>
+    updateCurrentWeight();
+	function updateCurrentWeight(){
+		var emptyKegWeight = document.getElementById("emptyWeight").value
+		var beerSelArr = document.getElementById("beerId").value.split("~");
+		var fg = 1.000;
+		if(beerSelArr.length > 1 && beerSelArr[1] != "")
+		{
+			fg = beerSelArr[1];
+		}
+		weight = getWeightByVol(document.getElementById("currentAmount").value,  
+																				emptyKegWeight, 
+																		     	document.getElementById("keggingTemp").value, 
+																		     	<?php echo $config[ConfigNames::BreweryAltitude] ?>,
+																		     	document.getElementById("fermentationPSI").value, 
+																		     	true, 
+																		     	fg, 
+																		     	false).toFixed(5);
+		if(!isNaN(weight))document.getElementById("currentWeight").value = weight;
+	}
+	function updateCurrentAmount(){
+		var emptyKegWeight = document.getElementById("emptyWeight").value;
+		var beerSelArr = document.getElementById("beerId").value.split("~");
+		var fg = 1.000;
+		if(beerSelArr.length > 1 && beerSelArr[1] != "")
+		{
+			fg = beerSelArr[1];
+		}
+		var volume = getVolumeByWeight(document.getElementById("currentWeight").value, 
+																				emptyKegWeight,
+																		     	document.getElementById("keggingTemp").value, 
+																		     	<?php echo $config[ConfigNames::BreweryAltitude] ?>, 
+																		     	document.getElementById("fermentationPSI").value, 
+																				true, 
+																				fg, 
+																				false).toFixed(5);
+		if(!isNaN(volume))document.getElementById("currentAmount").value = volume;
+	}
+
 	$(function() {		
 		
 		$('#keg-form').validate({

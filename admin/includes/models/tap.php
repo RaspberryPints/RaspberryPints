@@ -11,11 +11,7 @@ class Tap
 	private $_valvePinId;
 	private $_valveOn; 
 	private $_valvePinState; 
-	private $_startAmount; 
-	private $_currentAmount;
 	private $_active;
-	private $_fermenationPSI;
-	private $_keggingTemp;
 	private $_loadCellCmdPin;
 	private $_loadCellRspPin;
 	private $_loadCellTareDate;
@@ -53,21 +49,9 @@ class Tap
 	
 	public function get_count(){ return $this->_count; }
 	public function set_count($_count){ $this->_count = $_count; }
-	
-	public function get_startAmount(){ return $this->_startAmount; }
-	public function set_startAmount($_startAmount){ $this->_startAmount = $_startAmount; }
-	
-	public function get_currentAmount(){ return $this->_currentAmount; }
-	public function set_currentAmount($_currentAmount){ $this->_currentAmount = $_currentAmount; }
-	
+		
 	public function get_active(){ return $this->_active; }
 	public function set_active($_active){ $this->_active = $_active; }
-	
-	public function get_fermentationPSI(){ return $this->_fermentationPSI; }
-	public function set_fermentationPSI($_fermentationPSI){ $this->_fermentationPSI = $_fermentationPSI; }
-	
-	public function get_keggingTemp(){ return $this->_keggingTemp; }
-	public function set_keggingTemp($_keggingTemp){ $this->_keggingTemp = $_keggingTemp; }
 	
 	public function get_loadCellCmdPin(){ return $this->_loadCellCmdPin; }
 	public function set_loadCellCmdPin($_loadCellCmdPin){ $this->_loadCellCmdPin = $_loadCellCmdPin; }
@@ -135,31 +119,11 @@ class Tap
 			$this->set_valvePinState($postArr['valvePinState']);
 		else
 			$this->set_valvePinState('0');
-				
-		if( isset($postArr['startAmount']) )
-			$this->set_startAmount($postArr['startAmount']);
-		else
-			$this->set_startAmount(null);
-				
-		if( isset($postArr['currentAmount']) )
-			$this->set_currentAmount($postArr['currentAmount']);
-		else
-			$this->set_currentAmount(null);
 		
 		if( isset($postArr['active']) )
 			$this->set_active($postArr['active']);
 		else
 			$this->set_active(false);
-		
-		if( isset($postArr['fermentationPSI']) )
-			$this->set_fermentationPSI($postArr['fermentationPSI']);
-		else
-			$this->set_fermentationPSI(null);
-		
-		if( isset($postArr['keggingTemp']) )
-			$this->set_keggingTemp($postArr['keggingTemp']);
-		else
-			$this->set_keggingTemp(null);
 			
 		if( isset($postArr['loadCellCmdPin']) )
 		    $this->set_loadCellCmdPin($postArr['loadCellCmdPin']);

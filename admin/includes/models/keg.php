@@ -18,6 +18,10 @@ class Keg
 	private $_tapNumber;
 	private $_emptyWeight;
 	private $_maxVolume;
+	private $_startAmount;
+	private $_currentAmount;
+	private $_fermenationPSI;
+	private $_keggingTemp;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
@@ -79,6 +83,18 @@ class Keg
 	
 	public function get_maxVolume(){ return $this->_maxVolume; }
 	public function set_maxVolume($_maxVolume){ $this->_maxVolume = $_maxVolume; }
+	
+	public function get_startAmount(){ return $this->_startAmount; }
+	public function set_startAmount($_startAmount){ $this->_startAmount = $_startAmount; }
+	
+	public function get_currentAmount(){ return $this->_currentAmount; }
+	public function set_currentAmount($_currentAmount){ $this->_currentAmount = $_currentAmount; }
+	
+	public function get_fermentationPSI(){ return $this->_fermentationPSI; }
+	public function set_fermentationPSI($_fermentationPSI){ $this->_fermentationPSI = $_fermentationPSI; }
+	
+	public function get_keggingTemp(){ return $this->_keggingTemp; }
+	public function set_keggingTemp($_keggingTemp){ $this->_keggingTemp = $_keggingTemp; }
 	
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -172,7 +188,27 @@ class Keg
 			$this->set_maxVolume($postArr['maxVolume']);
 		else
 			$this->set_maxVolume(null);
-		
+			
+		if( isset($postArr['startAmount']) )
+		    $this->set_startAmount($postArr['startAmount']);
+	    else
+	        $this->set_startAmount(null);
+	        
+        if( isset($postArr['currentAmount']) )
+            $this->set_currentAmount($postArr['currentAmount']);
+        else
+            $this->set_currentAmount(null);
+            
+        if( isset($postArr['fermentationPSI']) )
+            $this->set_fermentationPSI($postArr['fermentationPSI']);
+        else
+            $this->set_fermentationPSI(null);
+        
+        if( isset($postArr['keggingTemp']) )
+            $this->set_keggingTemp($postArr['keggingTemp']);
+        else
+            $this->set_keggingTemp(null);
+        
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);
 		else
@@ -202,6 +238,10 @@ class Keg
 			"active: '" . $this->get_active() . "', " .
 			"emptyWeight: " . $this->get_emptyWeight() . ", " .
 			"maxVolume: " . $this->get_maxVolume() . ", " .
+			"startAmount: " . $this->get_startAmount() . ", " .
+			"currentAmount: " . $this->get_currentAmount() . ", " .
+			"fermentationPSI: " . $this->get_fermentationPSI() . ", " .
+			"keggingTemp: " . $this->get_keggingTemp() . ", " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  
 		"}";

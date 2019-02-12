@@ -31,25 +31,24 @@ if( isset($argv) && count($argv) >= 2 ){
             $beer = new Beer();
             $keg = $kegManager->GetByID($tap->get_kegId());
             $keg->set_weight($NEW_WEIGHT);
-            $kegManager->Save($keg);
             
             $beer = $beerManager->GetByID($keg->get_BeerId());
             if($beer){ 
-                $temperature = (!$config[ConfigNames::UseDefWeightSettings] && $tap->get_keggingTemp() && $tap->get_keggingTemp() != ''?$tap->get_keggingTemp():$config[ConfigNames::DefaultKeggingTemp]);
-                $beerCO2PSI = (!$config[ConfigNames::UseDefWeightSettings] && $tap->get_fermentationPSI() && $tap->get_fermentationPSI() != ''?$tap->get_fermentationPSI():$config[ConfigNames::DefaultFermPSI]);
+                $temperature = (!$config[ConfigNames::UseDefWeightSettings] && $keg->get_keggingTemp() && $keg->get_keggingTemp() != ''?$keg->get_keggingTemp():$config[ConfigNames::DefaultKeggingTemp]);
+                $beerCO2PSI = (!$config[ConfigNames::UseDefWeightSettings] && $keg->get_fermentationPSI() && $keg->get_fermentationPSI() != ''?$keg->get_fermentationPSI():$config[ConfigNames::DefaultFermPSI]);
                 $convertToMetric = true; //TODO when units are working change
                 $finalGravity = $beer->get_fg()?$beer->get_fg():'';
                 $convertToGravity = false; //TODO if able to apply brix or plato set to true
     			$vol = getVolumeByWeight($NEW_WEIGHT, $keg->get_emptyWeight(), $temperature, $config[ConfigNames::BreweryAltitude], $beerCO2PSI, $convertToMetric, $finalGravity, $convertToGravity);
     			if($vol && !is_nan($vol)){
-        			$tap->set_currentAmount($vol);
-        			$tapManager->Save($tap);
+    			    $keg->set_currentAmount($vol);
         			// Refreshes connected pages
         			if(isset($config[ConfigNames::AutoRefreshLocal]) && $config[ConfigNames::AutoRefreshLocal]){
         			    exec(__DIR__."/../includes/refresh.sh");
         			}
     			}
             }
+            $kegManager->Save($keg);
         }
     }    
 }

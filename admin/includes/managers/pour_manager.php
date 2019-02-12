@@ -97,9 +97,11 @@ class PourManager extends Manager{
 		$pour->set_userId(($user?$user->get_id():''));
 		$pour->set_beerId($beerId);
 		$this->save($pour);
-	
-		$tap->set_currentAmount($tap->get_currentAmount() - $amount);
-		$tapManager->save($tap);
+		
+		if($keg){
+    		$keg->set_currentAmount($keg->get_currentAmount() - $amount);
+    		$kegManager->save($keg);
+		}
 	
 		if ($beerId && $beerId != '' && $beerId != '0' && $user) {
 			$access_token = ($user?$user->get_unTapAccessToken():null);
@@ -140,7 +142,7 @@ class PourManager extends Manager{
 		$pourCountConversion = $tap->get_count();
 		
 		// Sets the amount to be a fraction of a gallon
-		$amount = .00125;
+		$amount = 1/128;
 		
 		echo "pours.php:Pour: pour on tap: " . $tap->get_tapNumber() . ", count: " . 'Sample' . ", conversion: " . $pourCountConversion . ", amount: " . $amount . "\n" ;
 		// Inserts in to the pours table 
@@ -154,7 +156,9 @@ class PourManager extends Manager{
 		$pour->set_userId((new UserManager)->getUnknownUserId());
 		$this->save($pour);
 	
-		$tap->set_currentAmount($tap->get_currentAmount() - $amount);
-		$tapManager->save($tap);
+		if($keg){
+    		$keg->set_currentAmount($keg->get_currentAmount() - $amount);
+    		$kegManager->save($keg);
+		}
 	}
 }
