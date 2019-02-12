@@ -17,6 +17,7 @@ import socket
 import MySQLdb as mdb
 from FlowMonitor import FlowMonitor
 from threading import Timer
+from threading import Lock
 import SocketServer
 import pprint
 import serial
@@ -332,8 +333,7 @@ class PintDispatch(object):
     # send a mcast flow update
     def sendflowcount(self, rfid, pin, count):
         if OPTION_RESTART_FANTIMER_AFTER_POUR:
-            debug( "restarting fan timer after pour" )
-            self.fanStartTimer()
+            self.fanControl.restartNeeded(True)
         msg = "RPU:FLOW:" + str(pin) + "=" + str(count) +":" + rfid
         debug("count update: "  + msg.rstrip())
         self.mcast.sendto(msg + "\n", (MCAST_GRP, MCAST_PORT))
@@ -564,16 +564,41 @@ class PintDispatch(object):
         return -1
 
 class FanControlThread (threading.Thread):
+    restart = False
     def __init__(self, threadID, dispatch):
         threading.Thread.__init__(self)
         self.threadID = threadID
         self.dispatch = dispatch
         self.shutdown_required = False
+        self.restartLock = Lock()
+        self.restartNeeded(False)
       
     def exit(self):
         self.shutdown_required = True
         
-
+    def restartNeeded(self, restart=None):
+        self.restartLock.acquire()
+        if not restart is None:
+            if not self.restart and restart:
+                debug( "restarting fan timer after pour" )
+            self.restart = restart
+        ret = self.restart
+        self.restartLock.release()
+        
+        return ret
+    
+    def updatePinAndWait(self, pin, value, waitTimeMins):
+        waitTimeSecs = waitTimeMins*60
+        #if check restart is false then apply fan update
+        if not self.restartNeeded() and waitTimeSecs > 0:
+            if self.dispatch.updatepin(pin, value):
+                self.dispatch.sendfanupdate(pin, value)
+            intervalStart = time.time()
+            #Check if restart was requested then seconds till on time is up
+            while not self.restartNeeded() and int(time.time() - intervalStart) < waitTimeSecs:
+                #wait min of what is left of on  time or 5 seconds 
+                time.sleep(min(5, waitTimeSecs - int(time.time() - intervalStart)))
+                
     def run(self):
         log("Fan Control " + self.threadID + " is Running")
         logNotEnable = True
@@ -594,14 +619,10 @@ class FanControlThread (threading.Thread):
                     log("Fan pin not configured correctly (currently "+str(pin)+")")
                     time.sleep(60)
                     continue
-                offTime = self.dispatch.getFanOffTime()
-                onTime = self.dispatch.getFanOnTime()
-                if self.dispatch.updatepin(pin, 1):
-                    self.dispatch.sendfanupdate(pin, 1)
-                time.sleep(onTime)
-                if self.dispatch.updatepin(pin, 0):
-                    self.dispatch.sendfanupdate(pin, 0)
-                time.sleep(offTime)
+                
+                self.restartNeeded(False)
+                self.updatePinAndWait(pin, 1, self.dispatch.getFanOnTime() )
+                self.updatePinAndWait(pin, 0, self.dispatch.getFanOffTime())
         except:
             log("Unable to run Fan Control Thread")
             return
