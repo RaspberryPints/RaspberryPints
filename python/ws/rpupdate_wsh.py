@@ -11,9 +11,11 @@ import struct
 import select
 import sys
 import datetime
+import time
 from pprint import pprint
 from mod_pywebsocket import common
 from mod_pywebsocket import handshake
+from symbol import except_clause
 
 MCAST_GRP = '224.1.1.1'
 MCAST_PORT = 0xBEE2
@@ -63,11 +65,15 @@ def web_socket_transfer_data(request):
                 else:
 #                    line = "RPH \n"
                     line = None
+                    
+                if not line is None:
+                    request.ws_stream.send_message(line, binary=False)
+            except Exception, e:
+                debug(str(e))
+                break
             finally:
                 pass
     
-            if not line is None:
-                request.ws_stream.send_message(line, binary=False)
 
 #            received = request.ws_stream.receive_message()
 #            if (received == "RPK"):
@@ -75,7 +81,10 @@ def web_socket_transfer_data(request):
 #                raise handshake.AbortedByUserException("Aborted connection to " + client)            
     finally:
         debug ("closing WS connection to " + client)
-        sock.close()
+        try:
+            sock.close()
+        except Exception, e:
+            debug(str(e))
 
 def web_socket_passive_closing_handshake(request):
     # Simply echo a close status code
