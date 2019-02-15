@@ -85,7 +85,7 @@ INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampe
 
 INSERT INTO taps(`kegId`, `tapNumber`, `active`, `createdDate`, `modifiedDate`)
 SELECT kegs.id as kegId, kegs.onTapId as tapNumber, 1 as active, NOW() as createdDate, NOW() as modifiedDate
-FROM (SELECT k.*, FROM kegs k LEFT JOIN kegTypes kt ON kt.id = k.kegTypeId WHERE k.beerId IS NOT NULL AND k.onTapId IS NOT NULL ORDER BY Id) as kegs;
+FROM (SELECT k.* FROM kegs k LEFT JOIN kegTypes kt ON kt.id = k.kegTypeId WHERE k.beerId IS NOT NULL AND k.onTapId IS NOT NULL ORDER BY Id) as kegs;
 
 UPDATE kegs k INNER JOIN kegTypes kt ON kt.id = k.kegTypeId SET startAmount=kt.maxAmount, maxAmount=kt.maxAmount, currentAmount=kt.maxAmount
 WHERE k.beerId IS NOT NULL AND k.onTapId IS NOT NULL;
