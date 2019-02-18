@@ -134,7 +134,7 @@ class TapManager extends Manager{
 			if($updateSql != "")$sql = "UPDATE tapconfig SET ".$updateSql." WHERE tapId = " . $id;
 		} else {
 			$sql = "INSERT INTO tapconfig (tapId, flowPin, valvePin, valveOn, count) VALUES(" . 
-			                             $id.", ".$flowPin.", ".$valvePin. ", ".$valveOn.", ".$countpergallon."')";
+			                             $id.", ".$flowPin.", ".$valvePin. ", ".$valveOn.", ".$countpergallon.")";
 		}
 		if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
 		return $ret;
