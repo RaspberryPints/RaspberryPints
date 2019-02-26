@@ -426,11 +426,12 @@ INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`,
 ('useFanPin', '17', 'Fan I/O Pin', 0, NOW(), NOW() ),
 ('fanInterval', '120', 'Fan Interval', 0, NOW(), NOW() ),
 ('fanOnTime', '1', 'Fan On time', 0, NOW(), NOW() ),
+('restartFanAfterPour', '1', 'Restart Fan After pour', 0, NOW(), NOW() ),
 ('useTempProbes', '0', 'Use Temperature Probes', 0, NOW(), NOW() ),
 ('tempProbeDelay', '1', 'Seconds between checking temp Probes', 0, NOW(), NOW() ),
 ('tempProbeBoundLow', '0', 'Lower bound of valid Temperature', 0, NOW(), NOW() ),
 ('tempProbeBoundHigh', '212', 'High bound of valid Temperature', 0, NOW(), NOW() ),
-('showTempOnMainPage', '1', 'Show Avg Temperature on home page', 1, NOW(), NOW() ),
+('showTempOnMainPage', '0', 'Show Avg Temperature on home page', 1, NOW(), NOW() ),
 ('pourShutOffCount', '0', 'pour shutoff amount in counts', 0, NOW(), NOW() ),
 ('pourCountConversion', '1500', 'pour count conversion to gallons', 0, NOW(), NOW() ),
 ('alamodePourMessageDelay', '300', 'Arduino Pour Message Delay', 0, NOW(), NOW() ),
@@ -446,7 +447,7 @@ INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`,
 ( 'showPourBeerName', '1', 'Pours Show Beer Name', '1', NOW(), NOW() ),
 ( 'showPourAmount', '1', 'Pours Show Amount Poured', '1', NOW(), NOW() ),
 ( 'showPourUserName', '1', 'Pours Show User Name', '1', NOW(), NOW() ),
-( 'showPourDate', '1', 'Pours Show Date', '0', NOW(), NOW() ),
+( 'showPourDate', '1', 'Pours Show Date', '1', NOW(), NOW() ),
 ( 'displayUnits', 'oz', 'Units to display on the Beer List', '0', NOW(), NOW() );
 -- --------------------------------------------------------
 
@@ -1474,13 +1475,15 @@ SELECT
 	t.tapRgba,
 	b.name AS beerName, 
 	b.untID AS beerUntID, 
+  bs.name as beerStyle,
 	br.imageUrl AS breweryImageUrl, 
 	COALESCE(u.userName, '') as userName
 FROM pours p 
 	LEFT JOIN taps t ON (p.tapId = t.id) 
 	LEFT JOIN beers b ON (p.beerId = b.id) 
 	LEFT JOIN breweries br ON (b.breweryId = br.id) 
-	LEFT JOIN users u ON (p.userId = u.id);
+	LEFT JOIN users u ON (p.userId = u.id)
+	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId;
   
 CREATE OR REPLACE VIEW vwIoHardwarePins
 AS

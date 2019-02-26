@@ -271,6 +271,14 @@ include 'top_menu.php';
 						<td><b>Fan Duration (mins):</b><br/>The duration the fan will run after it has been triggered.<br/>If zero or less, the fan never runs.</td>
 						<td><input type="text" name="fanOnTime" class="smallbox" value="<?php echo $config[ConfigNames::FanOnTime] ?>" /></td>
 					</tr>
+					<tr>
+						<td><b>Fan Setup:</b></td>
+						<td><b>Restart On Pour:</b><br/>If you want the fan to turn on after a pour</td>
+						<td>
+							<input type="hidden" name="<?php echo ConfigNames::RestartFanAfterPour; ?>" value="0"/>
+							<input type="checkbox" <?php echo $config[ConfigNames::RestartFanAfterPour]?'checked':''; ?> name="<?php echo ConfigNames::RestartFanAfterPour; ?>" value="1">
+						</td>
+					</tr>
 	<?php } ?>
 	<?php if($config[ConfigNames::UseTapValves]) { ?>
 					<tr>

@@ -88,5 +88,6 @@ abstract class ConfigNames
 	const TempProbeBoundHigh = 'tempProbeBoundHigh';
 	const ShowTempOnMainPage = 'showTempOnMainPage';
 	const AllowSamplePour = 'allowSamplePour';
+	const RestartFanAfterPour = 'restartFanAfterPour';
 }
 ?>

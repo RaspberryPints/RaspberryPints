@@ -49,8 +49,6 @@ MCAST_PORT = 0xBEE2
 MCAST_RETRY_ATTEMPTS = 10
 MCAST_RETRY_SLEEP_SEC=5
 
-OPTION_RESTART_FANTIMER_AFTER_POUR = config['dispatch.restart_fan_after_pour']
-
 def debug(msg):
     if(config['dispatch.debug']):
         log(msg)
@@ -109,7 +107,8 @@ class CommandTCPServer(SocketServer.TCPServer):
 class PintDispatch(object):
     
     def __init__(self):
-        self.OPTION_VALVETYPE = self.getConfigItem("use3WireValves")
+        self.OPTION_USE_3_WIRE_VALVES = self.getConfigItem("use3WireValves")
+        self.OPTION_RESTART_FANTIMER_AFTER_POUR = self.getConfigValueByName("restartFanAfterPour")
         setupSocket = MCAST_RETRY_ATTEMPTS
         if GPIO_IMPORT_SUCCESSFUL:
             GPIO.setwarnings(False)
@@ -139,7 +138,7 @@ class PintDispatch(object):
         self.valvesState = []
         self.fanTimer = None
         self.valvePowerTimer = None
-        if self.OPTION_VALVETYPE == 'three_pin_ballvalve':
+        if int(self.OPTION_USE_3_WIRE_VALVES) == 1:
             self.valvePowerTimer = Timer(OPTION_VALVEPOWERON, self.valveStopPower)
     
         self.updateFlowmeterConfig()
@@ -332,7 +331,7 @@ class PintDispatch(object):
             
     # send a mcast flow update
     def sendflowcount(self, rfid, pin, count):
-        if OPTION_RESTART_FANTIMER_AFTER_POUR:
+        if self.OPTION_RESTART_FANTIMER_AFTER_POUR:
             self.fanControl.restartNeeded(True)
         msg = "RPU:FLOW:" + str(pin) + "=" + str(count) +":" + rfid
         debug("count update: "  + msg.rstrip())
@@ -443,6 +442,8 @@ class PintDispatch(object):
             self.updatepin(resetpin, value1)
             time.sleep(1)
             self.updatepin(resetpin, oldValue)
+            
+            self.OPTION_RESTART_FANTIMER_AFTER_POUR = self.getConfigValueByName("restartFanAfterPour")
         
     # update PI gpio pin mode (either input or output), this requires that this is run as root 
     def setpinmode(self, pin, value):
