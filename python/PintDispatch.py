@@ -107,7 +107,7 @@ class CommandTCPServer(SocketServer.TCPServer):
 class PintDispatch(object):
     
     def __init__(self):
-        self.OPTION_USE_3_WIRE_VALVES = self.getConfigItem("use3WireValves")
+        self.OPTION_USE_3_WIRE_VALVES = self.getConfigValueByName("use3WireValves")
         self.OPTION_RESTART_FANTIMER_AFTER_POUR = self.getConfigValueByName("restartFanAfterPour")
         setupSocket = MCAST_RETRY_ATTEMPTS
         if GPIO_IMPORT_SUCCESSFUL:
