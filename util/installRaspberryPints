@@ -516,6 +516,39 @@ then
 	#if [ -d "${DIRECTORY}/arduino/rfid" ]; then
 	#	cp "${DIRECTORY}/arduino/rfid/" "~/sketchbook/libraries/rfid" -R -n
 	#fi
+	if [ -f "${DIRECTORY}/python/Config.py" ]; then
+		FIND_STR="config\['pints.dir'.*"
+		REPL_STR="config\['pints.dir'\] = '${DIRECTORY}/'"
+		sed -i "s_${FIND_STR}_${REPL_STR}_" "${DIRECTORY}/python/Config.py"	
+		
+		
+		CONNECTION_OPTIONS=(1 "Serial"
+				 2 "USB"
+		         3 "Bluetooth")
+		user_choice=$(dialog --clear \
+		                --backtitle "Connection" \
+		                --title "Shield Communication" \
+		                --menu "Choose how Rpints communicates to the sheild" \
+		                20 40 6 \
+		                "${CONNECTION_OPTIONS[@]}" \
+		                2>&1 >/dev/tty);
+		clear
+		comm_option="/dev/ttyS0"
+		case $user_choice in
+				1)
+					comm_option="/dev/ttyS0"
+					;;
+				2)
+					comm_option="/dev/ttyACM0"
+					;;
+				3)
+					comm_option="/dev/rfcomm0"
+					;;
+		esac
+		sed -E -i 's/(.*flowmon.port.*)/#\1/' "${DIRECTORY}/python/Config.py"	
+	  	echo "config['flowmon.port'] = '$comm_option'" >> "${DIRECTORY}/python/Config.py"
+
+	fi
 	if [ -f "${DIRECTORY}/python/flowmon" ];
 	then
 		FIND_STR="DIR=.*"
@@ -535,11 +568,6 @@ then
 			echo "Unable to install flowmon"
 		fi
 		update-rc.d flowmon defaults
-	fi
-	if [ -f "${DIRECTORY}/python/Config.py" ]; then
-		FIND_STR="config\['pints.dir'.*"
-		REPL_STR="config\['pints.dir'\] = '${DIRECTORY}/'"
-		sed -i "s_${FIND_STR}_${REPL_STR}_" "${DIRECTORY}/python/Config.py"	
 	fi
 	mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "UPDATE config SET configValue='1' WHERE configName='useFlowMeter';";
 	read -e -p "For alamode set the 5V_link jumper to on (see page 11 of the Alamode Manual). Enter to continue" ANSWER
