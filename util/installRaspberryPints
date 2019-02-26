@@ -316,7 +316,7 @@ if $MONITOR = true ; then
 		  echo '@xset s noblank' >> $START_CONFIG_FILE
 		fi
 	fi
-	read -e -p "Do you want to start with Chromium in Kiosk MOde? (Y:N) (default is: Y): " ANSWER
+	read -e -p "Do you want to start with Chromium in Kiosk Mode? (Y:N) (default is: Y): " ANSWER
 	if [ "$ANSWER" = "" ]; then
 	   ANSWER="Y"
 	fi
@@ -513,9 +513,9 @@ then
 	
 	popd
 	
-	if [ -d "${DIRECTORY}/arduino/rfid" ]; then
-		cp "${DIRECTORY}/arduino/rfid/" "~/sketchbook/libraries/rfid" -R -n
-	fi
+	#if [ -d "${DIRECTORY}/arduino/rfid" ]; then
+	#	cp "${DIRECTORY}/arduino/rfid/" "~/sketchbook/libraries/rfid" -R -n
+	#fi
 	if [ -f "${DIRECTORY}/python/flowmon" ];
 	then
 		FIND_STR="DIR=.*"
@@ -543,24 +543,13 @@ then
 	fi
 	mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "UPDATE config SET configValue='1' WHERE configName='useFlowMeter';";
 	read -e -p "For alamode set the 5V_link jumper to on (see page 11 of the Alamode Manual). Enter to continue" ANSWER
-	read -e -p "Restarted needed to use alamode. Restart Now? Note Installation will NOT resume on startup(default is: Y): " ANSWER
-	if [ "$ANSWER" = "" ]; then
-	   ANSWER="Y"
-	fi
-	if echo "$ANSWER" | grep -iq "^y" ;then
-		reboot
-	fi
 fi
 
 if [ "$USE_RFID" = "true" ];
 then
 	RFID_SPI_DIRECTORY=${DIRECTORY}/python/SPI-Py
 	pushd .
-	
-	if [ -d "${RFID_SPI_DIRECTORY}/" ]; then
-		rm "${RFID_SPI_DIRECTORY}/" -r
-	fi
-	git clone https://github.com/lthiery/SPI-Py "${RFID_SPI_DIRECTORY}"
+
 	cd ${RFID_SPI_DIRECTORY}
 	python setup.py install 
 	
@@ -613,6 +602,19 @@ if echo "$ANSWER" | grep -iq "^y" ;then
 	fi
 fi
 
+echo "All Done!"
+
+if [ "$USE_FLOW_METERS" = "true" ];
+then
+	read -e -p "Restarted needed to use alamode. Restart Now? Note Installation will NOT resume on startup(default is: Y): " ANSWER
+	if [ "$ANSWER" = "" ]; then
+	   ANSWER="Y"
+	fi
+	if echo "$ANSWER" | grep -iq "^y" ;then
+		reboot
+	fi
+fi
+
 read -e -p "Open RaspberryPints? (default is: Y): " ANSWER
 if [ "$ANSWER" = "" ]; then
    ANSWER="Y"
@@ -627,5 +629,5 @@ fi
 if echo "$ANSWER" | grep -iq "^y" ; then
 	su pi chromium-browser http://localhost/admin/index.php
 fi
-echo "All Done!"
+
 
