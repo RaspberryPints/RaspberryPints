@@ -16,9 +16,4 @@ config['flowmon.debug' ] = False#True
 config['dispatch.debug' ] = False#True
 #Use fake monitoring to report flow
 config['dispatch.debugMonitoring' ] = False
-# restart line cooling timer if a pour happens
-config['dispatch.restart_fan_after_pour'] = False
-# valve types, in here for now
-config['dispatch.valve_type'] = 'two_pin_solenoid'
-#config['dispatch.valve_type'] = 'three_pin_ballvalve'
 
