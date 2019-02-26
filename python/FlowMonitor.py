@@ -155,6 +155,20 @@ class FlowMonitor(object):
         cfgmsg = cfgmsg + ("1" if self.alamodeUseRFID else "0")
         cfgmsg = cfgmsg + "|"
         return cfgmsg
+                  
+    def serialResetInputBuffer(self):
+        #depending on python version (3.0 and newer) different calls are needed
+        if sys.system_info >= (3,0):
+            self.arduino.reset_input_buffer
+        else:
+            self.arduino.flushInput()
+                     
+    def serialInWaiting(self):
+        #depending on python version (3.0 and newer) different calls are needed
+        if sys.system_info >= (3,0):
+            return self.arduino.in_waiting
+        else:
+            return self.arduino.inWaiting()
                             
     def reconfigAlaMode(self):
 
@@ -169,7 +183,7 @@ class FlowMonitor(object):
                 debug( "Sending "+ msg )
                 self.arduino.write(msg)
             msg = self.readline_notimeout()
-        self.arduino.reset_input_buffer()
+        self.serialResetInputBuffer()
         
         debug( "alamode alive..." )
         self.alaIsAlive = True
@@ -180,13 +194,13 @@ class FlowMonitor(object):
         while(ii < len(cfgmsg)):
             self.arduino.write(cfgmsg[ii:ii+1]) # send config message, this will make it send pulses
             if cfgmsg[ii:ii+1] == "~":
-                while self.arduino.in_waiting == 0:
+                while self.serialInWaiting() == 0:
                     time.sleep(.005)
                 reply = self.arduino.readline()
             ii += 1
         debug("Waiting for Config Response")
-        while self.arduino.in_waiting == 0:
-                time.sleep(.005)
+        while self.serialInWaiting() == 0:
+            time.sleep(.005)
         reply = self.arduino.readline()
         debug( "alamode says: " + reply )
         
@@ -430,51 +444,61 @@ class RFIDCheckThread (threading.Thread):
     def run(self):
         log("RFID Reader " + self.threadID + " is Running")
         while not self.shutdown_required:
-            self.checkRFID(self.rfidSPISSPin)
-            time.sleep(self.delay)
+            try:
+                self.checkRFID(self.rfidSPISSPin)
+            except Exception, e:
+                debug("RFID Reader: " +str(e))
+            finally:
+                time.sleep(self.delay)
 
     def checkRFID(self, rfidSPISSPin):
-        MIFAREReader = MFRC522.MFRC522(pin=rfidSPISSPin)
-        # Scan for cards    
-        (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
-        #debug("status %s; tagtype %d;" % (status, TagType ))
-        
-        # If a card is found
-        if status == MIFAREReader.MI_OK:
-            #debug("Card detected")
-            (status,uid) = MIFAREReader.MFRC522_Anticoll()
-            #debug(str(status))
+        try:
+            MIFAREReader = MFRC522.MFRC522(pin=rfidSPISSPin)
+            
+            # Scan for cards    
+            (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
+            #debug("status %s; tagtype %d;" % (status, TagType ))
+            
+            # If a card is found
             if status == MIFAREReader.MI_OK:
-                #debug(str(uid))
-                rfidTag = ""
-                i = 0
-                while i<len(uid):
-                    rfidTag = rfidTag + str(uid[i])
-                    i = i + 1
-                #debug(rfidTag)
-                proc = subprocess.check_output(["php", self.rfiddir, rfidTag])
-                usrId = int(proc)
-                if usrId > -1:
-                    if usrId <> self.lastUserId or self.rfidTag <> rfidTag:
-                        debug("RFID "+rfidTag+" User Id "+ proc)
-                    self.userId = usrId
-                    self.lastUserId = usrId
-                self.rfidTag = rfidTag
-    
-                # This is the default key for authentication
-                #key = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
-                
-                # Select the scanned tag
-                #MIFAREReader.MFRC522_SelectTag(uid)
-    
-                # Authenticate
-                #status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
-    
-                # Check if authenticated                           
-                #if status == MIFAREReader.MI_OK:
-                #    MIFAREReader.MFRC522_Read(8)
-                #    MIFAREReader.MFRC522_StopCrypto1()
-        MIFAREReader.Close_MFRC522()
+                #debug("Card detected")
+                (status,uid) = MIFAREReader.MFRC522_Anticoll()
+                #debug(str(status))
+                if status == MIFAREReader.MI_OK:
+                    #debug(str(uid))
+                    rfidTag = ""
+                    i = 0
+                    while i<len(uid):
+                        rfidTag = rfidTag + str(uid[i])
+                        i = i + 1
+                    #debug(rfidTag)
+                    proc = subprocess.check_output(["php", self.rfiddir, rfidTag])
+                    usrId = int(proc)
+                    if usrId > -1:
+                        if usrId <> self.lastUserId or self.rfidTag <> rfidTag:
+                            debug("RFID "+rfidTag+" User Id "+ proc)
+                        self.userId = usrId
+                        self.lastUserId = usrId
+                    self.rfidTag = rfidTag
+        
+                    # This is the default key for authentication
+                    #key = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
+                    
+                    # Select the scanned tag
+                    #MIFAREReader.MFRC522_SelectTag(uid)
+        
+                    # Authenticate
+                    #status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
+        
+                    # Check if authenticated                           
+                    #if status == MIFAREReader.MI_OK:
+                    #    MIFAREReader.MFRC522_Read(8)
+                    #    MIFAREReader.MFRC522_StopCrypto1()
+                    
+        except Exception, e:
+            debug("RFID Reader: " +str(e))
+        finally:
+            MIFAREReader.Close_MFRC522()
                 
     def getLastUserId(self):
         ret = self.userId
