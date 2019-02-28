@@ -37,42 +37,6 @@ PREPARE alterIfNotExists FROM @preparedStatement;
 EXECUTE alterIfNotExists;
 DEALLOCATE PREPARE alterIfNotExists;
 
-CREATE OR REPLACE VIEW vwGetActiveTaps
-AS
-
-SELECT
-	t.id,
-	b.name,
-	b.untID,
-	bs.name as 'style',
-	br.name as 'breweryName',
-	br.imageUrl as 'breweryImageUrl',
-	b.rating,
-	b.notes,
-	b.abv,
-	b.og as og,
-	b.fg as fg,
-	b.srm as srm,
-	b.ibu as ibu,
-	t.startAmount,
-	(IFNULL(t.startAmount,0) - IFNULL(t.currentAmount,0)) as amountPoured,
-    IFNULL(t.currentAmount , 0)as remainAmount,
-	t.tapNumber,
-	t.tapRgba,
-    tc.flowPin as pinId,
-	s.rgb as srmRgb,
-	tc.valveOn,
-	tc.valvePinState
-FROM taps t
-	LEFT JOIN tapconfig tc ON t.id = tc.tapId
-	LEFT JOIN kegs k ON k.id = t.kegId
-	LEFT JOIN beers b ON b.id = k.beerId
-	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
-	LEFT JOIN breweries br ON br.id = b.breweryId
-	LEFT JOIN srmRgb s ON s.srm = b.srm
-WHERE t.active = true
-ORDER BY t.id;
-
 -- --------------------------------------------------------
 
 --
@@ -259,11 +223,6 @@ ON ((CONVERT(io.shield USING utf8) = hard.shield OR (LOWER(io.shield) != 'pi' AN
 WHERE (io.shield = 'Pi' OR '1' = (SELECT DISTINCT '1' FROM vwIoHardwarePins WHERE shield = ''))
 GROUP BY shield, pin;
 
-
-ALTER TABLE `raspberrypints`.`taps` 
-CHANGE COLUMN `startAmount` `startAmount` DECIMAL(7,5) NULL DEFAULT NULL ,
-CHANGE COLUMN `currentAmount` `currentAmount` DECIMAL(7,5) NULL DEFAULT NULL ;
-
 SET @tablename = "kegs";
 SET @columnname = "fermentationPSI";
 SET @preparedStatement = (SELECT IF(
@@ -449,46 +408,6 @@ AS
         ON k.kegTypeId = kt.id
       LEFT JOIN taps t 
         ON k.onTapId = t.id;
-
-        
-CREATE OR REPLACE VIEW vwGetActiveTaps
-AS
-
-SELECT
-	t.id,
-	b.name,
-	b.untID,
-	bs.name as 'style',
-	br.name as 'breweryName',
-	br.imageUrl as 'breweryImageUrl',
-	b.rating,
-	b.notes,
-	b.abv,
-	b.og as og,
-	b.fg as fg,
-	b.srm as srm,
-	b.ibu as ibu,
-	t.startAmount,
-	(IFNULL(t.startAmount,0) - IFNULL(t.currentAmount,0)) as amountPoured,
-    IFNULL(t.currentAmount , 0)as remainAmount,
-	t.tapNumber,
-	t.tapRgba,
-    tc.flowPin as pinId,
-	s.rgb as srmRgb,
-	tc.valveOn,
-	tc.valvePinState,
-	tc.fermentationPSI,
-  tc.keggingTemp
-FROM taps t
-	LEFT JOIN tapconfig tc ON t.id = tc.tapId
-	LEFT JOIN kegs k ON k.id = t.kegId
-	LEFT JOIN beers b ON b.id = k.beerId
-	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
-	LEFT JOIN breweries br ON br.id = b.breweryId
-	LEFT JOIN srmRgb s ON s.srm = b.srm
-WHERE t.active = true
-ORDER BY t.id;
-
 
 CREATE OR REPLACE VIEW `vwTaps` 
 AS
