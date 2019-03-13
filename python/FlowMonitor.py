@@ -158,14 +158,14 @@ class FlowMonitor(object):
                   
     def serialResetInputBuffer(self):
         #depending on python version (3.0 and newer) different calls are needed
-        if sys.system_info >= (3,0):
+        if sys.version_info >= (3,0):
             self.arduino.reset_input_buffer
         else:
             self.arduino.flushInput()
                      
     def serialInWaiting(self):
         #depending on python version (3.0 and newer) different calls are needed
-        if sys.system_info >= (3,0):
+        if sys.version_info >= (3,0):
             return self.arduino.in_waiting
         else:
             return self.arduino.inWaiting()
