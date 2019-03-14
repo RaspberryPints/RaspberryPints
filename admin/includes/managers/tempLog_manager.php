@@ -26,7 +26,7 @@ class TempLogManager extends Manager{
 	   return false;
 	}
 	
-	function getLastTempsFiltered($count, $startTime, $endTime, $probe){
+	function getLastTempsFiltered($page, $limit, &$totalRows, $startTime, $endTime, $probe){
 	    $sql="SELECT * FROM ".$this->getViewName()." ";
 	    $where = "";
 	    if($startTime && $startTime != "" && $startTime != " ") $where = $where.($where != ""?"AND ":"")."takenDate >= '$startTime' ";
@@ -34,7 +34,13 @@ class TempLogManager extends Manager{
 	    if($probe)  $where = $where.($where != ""?"AND ":"")."probe = $probe ";
 	    if($where != "") $sql = $sql."WHERE $where ";
 	    $sql = $sql."ORDER BY takenDate DESC ";
-	    if($count && $count > 0) $sql = $sql."LIMIT $count ";
+	    $totalRows = 0;
+	    if($results = $this->executeQueryWithResults($sql)){
+	        $totalRows = count($results);
+	    }
+	    $limitClause = $this->getLimitClause($limit, $page);
+	    if($limitClause == "") return $results;
+	    $sql = $sql.$limitClause;
 	    return $this->executeQueryWithResults($sql);
 	}
 }

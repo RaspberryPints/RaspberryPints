@@ -301,3 +301,38 @@ right:800px;
   width: 33px; 
 }
 
+
+.poursbeername{
+	width: 400px;
+	text-align: center;
+	vertical-align: middle;	
+}
+.poursbeerimg{
+	width:50px ;
+	height:auto;
+}
+.poursbreweryimg{
+	width:50px ;
+}
+.poursdate{
+	width: 310px;
+	text-align: center;
+	vertical-align: middle;	
+}
+
+.poursamount{
+	width: 100px;
+	text-align: center;
+	vertical-align: middle;	
+}
+.poursuser{
+	width: 200px;
+	text-align: center;
+	vertical-align: middle;	
+}
+
+.pourstap-num{
+	width: 25px;
+	text-align: center;
+	vertical-align: middle;	
+}

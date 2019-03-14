@@ -87,6 +87,17 @@ abstract class Manager {
 		return $order;
 	}
 	
+	protected function getLimitClause($limit=0, $page=1){
+	    $sql = "";
+	    if(!$page)$page = 1;
+	    if($limit && $limit > 0){
+	        $limitLow = (($page-1)*$limit);
+	        $limitHigh = $limit; //DB syntax is Limit <startRow>, <numRowsToReturn>
+	        $sql = " LIMIT $limitLow, $limitHigh ";
+	    }
+	    return $sql;
+	}
+	
 	protected function executeQueryNoResult($sql){
 		return $this->executeQuery($sql) != null;
 	}

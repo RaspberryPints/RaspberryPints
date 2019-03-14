@@ -3,7 +3,7 @@
 	require_once __DIR__.'/functions.php';
 	require_once __DIR__.'/../admin/includes/managers/config_manager.php';	
 	require_once __DIR__.'/../admin/includes/html_helper.php';	
-	$config = getAllConfigs();
+	if(!isset($config)) $config = getAllConfigs();
 	$htmlHelper = new HtmlHelper();
 	$pourManager = new PourManager();
 	$beerColSpan = 1;
@@ -29,9 +29,9 @@
                     if($config[ConfigNames::ShowPourBeerImages]){ $beerColSpan++; }
                 ?> 
 				<th <?php if($beerColSpan > 1){ echo 'colspan="'.$beerColSpan.'"';}?> class="poursbeername">
-					<?php if($config[ConfigNames::ShowPourBeerName]){ ?>
-						BEER 
-					<?php } ?>
+					<?php if($config[ConfigNames::ShowPourBeerName]){ 
+					    echo (isset($config[ConfigNames::PourBeerCol])?$config[ConfigNames::PourBeerCol]:"BEER");
+					} ?>
 				</th>
 			<?php } ?>						
 			<?php if($config[ConfigNames::ShowPourAmount]){ ?>

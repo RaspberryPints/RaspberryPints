@@ -631,3 +631,48 @@ FROM pours p
 	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId;
 
   update config set showOnPanel = '1' WHERE configName = 'showPourDate';
+
+CREATE TABLE IF NOT EXISTS `tapEvents` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` int(11) NOT NULL,
+  `tapId` int(11) NOT NULL,
+  `kegId` int(11) NOT NULL,
+  `beerId` int(11) NOT NULL,
+  `amount` decimal(7,5) DEFAULT NULL,
+  `userId` int(11) NOT NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+CREATE OR REPLACE VIEW vwTapEvents
+AS
+SELECT
+  te.id,
+  te.type as type,
+  CASE te.type 
+    WHEN 1 THEN 'Tapped'
+    WHEN 2 THEN 'Removed'
+    ELSE 'N/A'
+  END as 'typeDesc',
+  te.tapId,
+  te.kegId,
+  te.beerId,
+  te.amount,
+  CASE WHEN te.type = 2 THEN (SELECT amount FROM tapEvents WHERE id = (SELECT MAX(id) FROM tapEvents WHERE id < te.id AND type = 1 AND tapId = te.tapId AND kegId = te.kegId AND beerId = te.beerId)) ELSE NULL END AS newAmount,
+  te.userId,
+	t.tapNumber as 'tapNumber',
+  t.tapRgba   as 'tapRgba',
+  k.label as 'kegName',
+	b.name  as 'beerName',
+	bs.name as 'beerStyle',
+	CASE WHEN u.username IS NULL THEN 'System' ELSE u.userName END  as 'userName',
+  te.createdDate
+FROM tapEvents te
+  LEFT JOIN taps t ON t.id = te.tapId
+	LEFT JOIN kegs k ON k.id = te.kegId
+	LEFT JOIN beers b ON b.id = te.beerId
+	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
+	LEFT JOIN users u ON u.id = te.userId
+WHERE t.active = true
+ORDER BY te.id;

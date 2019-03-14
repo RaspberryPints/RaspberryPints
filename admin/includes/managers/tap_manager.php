@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__.'/manager.php';
 require_once __DIR__.'/../models/tap.php';
+require_once __DIR__.'/tapEvent_manager.php';
+require_once __DIR__.'/../models/tapEvent.php';
 
 class TapManager extends Manager{
 	
@@ -79,15 +81,29 @@ class TapManager extends Manager{
 	}
 
 	function tapKeg(&$tap, $kegId, $beerId){
+	    $ret = true;
+	    if($tap->get_kegId())$this->closeTap($tap, false);
 		if($tap->get_kegId() != $kegId){
-		$tap->set_kegId($kegId);
-		$sql="UPDATE taps SET kegId = $kegId, modifiedDate = NOW() WHERE id = ".$tap->get_id();
-		$ret = $this->executeQueryNoResult($sql);
-		if(!$ret)return false;
+    		$tap->set_kegId($kegId);
+    		$sql="UPDATE taps SET kegId = $kegId, modifiedDate = NOW() WHERE id = ".$tap->get_id();
+    		$ret = $this->executeQueryNoResult($sql);
+    		if(!$ret)return false;
 		}
 		$kegManager = new KegManager();
-		if(!$kegManager->Tap($tap->get_id(), $kegId, $beerId)) return false;
-		return true;
+		$ret = $kegManager->Tap($tap->get_id(), $kegId, $beerId);
+		
+		$tapEvent = new TapEvent();
+		$tapEvent->set_type(TAP_EVENT_TYPE_TAP);
+		$tapEvent->set_tapId($tap->get_id());
+		$tapEvent->set_kegId($kegId);
+		$tapEvent->set_beerId($beerId);
+		$tapEvent->set_userId($_SESSION['myuserid']);
+		$keg = $kegManager->GetByID($kegId);
+		if($keg) $tapEvent->set_amount($keg->get_currentAmount());
+		//If ret is false keep it false even if the save is successful
+		$ret = $ret && (new TapEventManager)->Save($tapEvent); 
+		
+		return $ret;
 	}
 	
 	function closeTapById($id){
@@ -96,16 +112,26 @@ class TapManager extends Manager{
 		return false;
 	}
 	function closeTap(&$tap, $saveTap = true){
+	    $kegId = $tap->get_kegId();
+	    $beerId = $tap->get_beerId();
+	    
 		$kegManager = new KegManager();
 		$ret = $kegManager->Kick($tap->get_kegId());
 		if(!$ret) return $ret;
 		
 		$tap->set_kegId(null);
-
-		$sql="UPDATE tapconfig SET valveOn = 0 WHERE tapId = ".$tap->get_id();
-		$ret = $ret && $this->executeQueryNoResult($sql);
-		
 		if($saveTap)$ret = $ret && $this->Save($tap);
+		
+		$tapEvent = new TapEvent();
+		$tapEvent->set_type(TAP_EVENT_TYPE_UNTAP);
+		$tapEvent->set_tapId($tap->get_id());
+		$tapEvent->set_kegId($kegId);
+		$tapEvent->set_beerId($beerId);
+		$tapEvent->set_userId($_SESSION['myuserid']);
+		$keg = $kegManager->GetByID($kegId);
+		if($keg) $tapEvent->set_amount($keg->get_currentAmount());
+		//If ret is false keep it false even if the save is successful
+		$ret = $ret && (new TapEventManager)->Save($tapEvent); 
 		
 		return $ret;
 	}

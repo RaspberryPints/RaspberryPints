@@ -4,7 +4,8 @@
 	require_once __DIR__.'/includes/managers/pour_manager.php'; 
 	require_once __DIR__.'/includes/managers/tap_manager.php'; 
 	require_once __DIR__.'/includes/managers/beer_manager.php'; 
-	require_once __DIR__.'/includes/managers/user_manager.php'; 
+	require_once __DIR__.'/includes/managers/user_manager.php';
+	require_once __DIR__.'/../includes/functions.php';
 	$htmlHelper = new HtmlHelper();
 	$config = getAllConfigs();
 	$beerColSpan = 1;
@@ -23,6 +24,26 @@
 	$tapId		= (isset($_POST['tapId'])?$_POST['tapId']:"");
 	$beerId 	= (isset($_POST['beerId'])?$_POST['beerId']:"");
 	$userId 	= (isset($_POST['userId'])?$_POST['userId']:"");
+	
+	$changed = (isset($_POST['queryChanged'])?$_POST['queryChanged']:FALSE);
+	
+	$totalRows = (isset($_POST['totalRows'])?$_POST['totalRows']:0);
+	$page = (isset($_POST['page'])?$_POST['page']:1);
+	$maxPage =  (isset($_POST['maxPage'])?$_POST['maxPage']:1);
+	$page = min($page, $maxPage);
+	if($changed)$page = 1;
+	$rowsPerPage = $config[ConfigNames::DefaultRowsPerPage] ;
+	$pourManager = new PourManager();
+	$pours = $pourManager->getLastPoursFiltered($page, $rowsPerPage, $totalRows, $startTime, $endTime, $tapId, $beerId, $userId);
+	$numberOfPours = count($pours);
+	$maxPage = ceil(($totalRows)/$rowsPerPage);
+	
+	
+	$config[ConfigNames::ShowPourTapNumCol] = TRUE;
+	$config[ConfigNames::ShowPourDate] = TRUE;
+	$config[ConfigNames::ShowPourAmount] = TRUE;
+	$config[ConfigNames::ShowPourBeerName] = TRUE;
+	$config[ConfigNames::ShowPourUserName] = TRUE;
 ?>
 <body>
 	<!-- Start Header  -->
@@ -46,25 +67,26 @@ include 'top_menu.php';
 		<div class="contentcontainer left">
 			<?php $htmlHelper->ShowMessage(); ?>
 			<div id="settingsDiv">
-			<form method="POST">
+			<form name="statForm" method="POST">
             	<table>
+					<?php include "includes/paginateTableRow.php"; ?> 
                     <tr>
                         <td>Start Date:</td>
                         <td><input type="date" name="startDate" value="<?php echo $startTime; ?>"></td>
                         <td>End Date:</td>
                         <td><input type="date" name="endDate" value="<?php echo $endTime; ?>"></td>
-                    </tr>    
+                    </tr>   
                     <tr>
                         <td>Tap Number:</td>
                         <td>
                         	<?php 
-								echo $htmlHelper->ToSelectList("tapId", "tapId", $tapList, "tapNumber", "id", $tapId, "Select One");
+								echo $htmlHelper->ToSelectList("tapId", "tapId", $tapList, "tapNumber", "id", $tapId, "All");
 							?>
                         </td>
                         <td>Beer:</td>
                         <td>
                         	<?php 
-								echo $htmlHelper->ToSelectList("beerId", "beerId", $beerList, "name", "id", $beerId, "Select One");
+								echo $htmlHelper->ToSelectList("beerId", "beerId", $beerList, "name", "id", $beerId, "All");
 							?>
                         </td>
                     </tr>
@@ -72,12 +94,13 @@ include 'top_menu.php';
                         <td>UserName:</td>
                         <td>
                         	<?php 
-								echo $htmlHelper->ToSelectList("userId", "userId", $userList, "userName", "id", $userId, "Select One");
+								echo $htmlHelper->ToSelectList("userId", "userId", $userList, "userName", "id", $userId, "All");
 							?>
                         </td>
                         <td></td>
                         <td></td>
                     </tr>
+                    
               	</table>
                 <input type="submit" name="filter" class="btn" value="Apply" />
 			</form>
@@ -88,117 +111,11 @@ include 'top_menu.php';
 			<!-- Start On Keg Section -->
 			
             <?php
-				$pourManager = new PourManager();
-				$poursList = $pourManager->getLastPoursFiltered(100, $startTime, $endTime, $tapId, $beerId, $userId);
+				include  __DIR__.'/../includes/pourListTable.php';
 			?>
-            <table style="width:100%">
-            <thead>
-                <tr>
-                    <?php if($config[ConfigNames::ShowPourDate]){ ?>
-                        <th class="poursdate">
-                            Date
-                        </th>
-                    <?php } ?>	
-                    <?php if($config[ConfigNames::ShowPourTapNumCol]){ ?>
-                        <th class="pourstap-num">
-                            TAP
-                        </th>
-                    <?php } ?>					
-                    <?php if($config[ConfigNames::ShowPourBeerName]){ ?>
-                        <?php 
-                            if($config[ConfigNames::ShowPourBreweryImages]){ $beerColSpan++; }
-                            if($config[ConfigNames::ShowPourBeerImages]){ $beerColSpan++; }
-                        ?> 
-                        <th <?php if($beerColSpan > 1){ echo 'colspan="$beerColSpan"';}?> class="poursbeername">
-                            <?php if($config[ConfigNames::ShowPourBeerName]){ ?>
-                                BEER 
-                            <?php } ?>
-                        </th>
-                    <?php } ?>			
-                    <?php if($config[ConfigNames::ShowPourAmount]){ ?>
-                        <th class="poursamount">
-                            Amount (<?php echo getConfigValue(ConfigNames::DisplayUnits) ?>)
-                        </th>
-                    <?php } ?>
-                    <?php if($config[ConfigNames::ShowPourUserName]){ ?>
-                        <th class="poursuser">
-                            User
-                        </th>
-                    <?php } ?>	
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach($poursList as $pour) {
-                    $i++;
-                ?>
-                	<tr>
-                        <td style="vertical-align: middle;">
-                            <?php echo $pour->get_createdDate(); ?>
-                        </td>
-                        
-                        <td style="vertical-align: middle;">
-                            <?php echo $pour->get_tapNumber(); ?>
-                        </td>
-                            
-                        <?php if($config[ConfigNames::ShowPourBreweryImages]){ ?>
-                            <td style="width:150px" >
-                            <?php if(isset($pour->get_breweryImageUrl)){ ?>
-                                <img class="poursbreweryimg" src="<?php echo $pour->get_beerBreweryImage(); ?>" />
-                            <?php } ?>
-                            </td>
-                        <?php } ?>
-                                
-                        <?php if($config[ConfigNames::ShowPourBeerImages]){ ?>
-                            <td <?php if($beerColSpan > 1){ echo 'style="border-left: none;"'; } ?>>	
-                            <?php beerImg($config, $pour->get_beerUntID()); ?>
-                            </td>
-                        <?php } ?>
-                            
-                        <td <?php if($beerColSpan > 1){ echo 'style="border-left: none;"'; } ?>>	
-                            <?php echo $pour->get_beerName(); ?>
-                        </td>
-                        
-                    	<?php $totalPoured += $pour->get_amountPoured(); ?>	  
-                        <td style="vertical-align: middle;">
-                            <?php echo $pourManager->getDisplayAmount($pour->get_amountPoured()) ; ?>
-                        </td>
-                        
-                        <td class="poursuser">
-                            <h2><?php echo $pour->get_userName(); ?></h2>
-                        </td>
-                    </tr>
-                        
-                <?php } ?>
-                	<tr>
-                        <td style="vertical-align: middle;">
-                        </td>
-                        
-                        <td style="vertical-align: middle;">
-                        </td>
-                    
-                        <?php if($config[ConfigNames::ShowPourBreweryImages]){ ?>
-                            <td style="width:150px" >
-                            </td>
-                        <?php } ?>
-                                
-                        <?php if($config[ConfigNames::ShowPourBeerImages]){ ?>
-                            <td>	
-                            </td>
-                        <?php } ?>
-                                                  
-                        <td style="vertical-align: middle;">
-                            <?php echo "$totalPoured Gals"; ?>
-                        </td>
-                                                            
-                        <td style="vertical-align: middle;">
-                            <?php echo $pourManager->getDisplayAmount($totalPoured); ?>
-                        </td>
-                    
-                        <td class="poursuser">
-                        </td>
-                    </tr>
-            </tbody>
-            </table>            
+            <table>
+					<?php include "includes/paginateTableRow.php"; ?> 
+          	</table>         
 			<!-- Start Footer -->   
 			<?php
 				include 'footer.php';
@@ -215,6 +132,18 @@ include 'left_bar.php';
 ?>
 	<!-- End Left Bar Menu -->  
 	<!-- Start Js  -->
+	<script type="text/javascript">
+    	$("input[type!='hidden']").change(inputChanged);
+    	$("select").change(inputChanged);
+        function inputChanged(){
+        	$("input[name='queryChanged']").val(1)
+        }
+      	function changePage(newPage){
+    		$("input[name='page']").val(newPage);
+    		$("input[name^=last]").remove();
+    		$(statForm).submit();
+    	}
+    </script>
     <!-- End Js -->
 </body>
 </html>

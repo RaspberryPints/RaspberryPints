@@ -51,6 +51,7 @@ abstract class ConfigNames
 	const ShowPourAmount= 'showPourAmount';
 	const ShowPourBeerImages = 'showPourBeerImages';
 	const ShowPourBeerName = 'showPourBeerName';
+	const PourBeerCol = 'pourBeerCol';
 	const ShowPourBreweryImages = 'showPourBreweryImages';
 	const ShowPourDate= 'showPourDate';
 	const ShowPourTapNumCol = 'showPourTapNumCol';
@@ -89,5 +90,6 @@ abstract class ConfigNames
 	const ShowTempOnMainPage = 'showTempOnMainPage';
 	const AllowSamplePour = 'allowSamplePour';
 	const RestartFanAfterPour = 'restartFanAfterPour';
+	const DefaultRowsPerPage = 'DefaultRowsPerPage';
 }
 ?>

@@ -26,22 +26,174 @@ class PourManager extends Manager{
 		return new Pour();
 	}
 		
-	function getLastPours($count){
-		return $this->getLastPoursFiltered($count, null, null, null, null, null);
+	function getLastPours($page, $limit, &$totalRows){
+	    return $this->getLastPoursFiltered($page, $limit, $totalRows, null, null, null, null, null);
 	}
 
-	function getLastPoursFiltered($count, $startTime, $endTime, $tapId, $beerId, $userId){
+	function getLastPoursFiltered($page, $limit, &$totalRows, $startTime, $endTime, $tapId, $beerId, $userId){
 		$sql="SELECT * FROM ".$this->getViewName()." ";
 		$where = "";
 		if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '$startTime' ";
-		if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."endTime < '$endTime' ";
+		if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '$endTime' ";
 		if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
 		if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
 		if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
 		if($where != "") $sql = $sql."WHERE $where ";
 		$sql = $sql."ORDER BY createdDate DESC ";
-		if($count && $count > 0) $sql = $sql."LIMIT $count ";
+		$totalRows = 0;
+		if($results = $this->executeQueryWithResults($sql)){
+		    $totalRows = count($results);
+		}
+		$limitClause = $this->getLimitClause($limit, $page);
+		if($limitClause == "") return $results;
+		$sql = $sql.$limitClause;
 		return $this->executeQueryWithResults($sql);
+	}
+	
+	function getPoursByDrinker($page, $limit, &$totalRows, $groupBy){
+	    return $this->getPoursByDrinkerFiltered($page, $limit, $totalRows, $groupBy, null, null, null, null, null, null);
+	}	
+	function getPoursByDrinkerFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $userId, $style){
+	    $sql="SELECT (@row_number:=@row_number + 1) AS id, userName, SUM(amountPoured) as amountPoured ";
+	    if($groupBy)  {
+	        $sql = $sql.", ";
+	        switch ($groupBy){
+	            case 'tapId':
+	                $sql = $sql."MAX(tapNumber) as tapNumber";
+	                break;
+	            case 'beerId':
+	                $sql = $sql."MAX(beerName) as beerName";
+	                break;
+	            case 'beerStyle':
+	                $sql = $sql."CASE WHEN beerStyle = '' OR beerStyle IS NULL THEN 'undefined' ELSE beerStyle END as beerName";
+	                break;
+	            default:
+	                $tempGroupBy = $groupBy;
+	                $groupBy = "CASE WHEN ".$groupBy." IS NULL THEN -1 ELSE ".$groupBy." END";
+	                $sql = $sql.$groupBy." AS ".$tempGroupBy;
+	        }
+	        $sql = $sql." ";
+	    }
+	    $sql = $sql."FROM ".$this->getViewName().",(SELECT @row_number:=0) AS t ";
+	    $where = "";
+	    if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '$startTime' ";
+	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '$endTime' ";
+	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
+	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
+	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
+	    if($style) $where = $where.($where != ""?"AND ":"")."beerStyle = '$style' ";
+	    if($where != "") $sql = $sql."WHERE $where ";
+	    $sql = $sql."GROUP BY userName";
+	    if($groupBy) $sql = $sql.", ".$groupBy;
+	    $totalRows = 0;
+	    if($results = $this->executeQueryWithResults($sql)){
+	        $totalRows = count($results);
+	    }
+	    $limitClause = $this->getLimitClause($limit, $page);
+	    if($limitClause == "") return $results;
+	    $sql = $sql.$limitClause;
+	    return $this->executeQueryWithResults($sql);
+	}
+	
+	function getPoursByTap($page, $limit, &$totalRows, $groupBy){
+	    return $this->getPoursByTapFiltered($page, $limit, $totalRows, $groupBy, null, null, null, null, null, null);
+	}	
+	function getPoursByTapFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $userId, $style){
+	    $sql="SELECT (@row_number:=@row_number + 1) AS id, tapNumber, tapId, SUM(amountPoured) as amountPoured ";
+	    if($groupBy)  {
+	        $sql = $sql.", ";
+	        switch ($groupBy){
+	            case 'userId':
+	                $sql = $sql."MAX(userName) as userName";
+	                $groupBy = "CASE WHEN ".$groupBy." IS NULL THEN -1 ELSE ".$groupBy." END";
+	                break;
+	            case 'beerId':
+	                $sql = $sql."MAX(beerName) as beerName";
+	                break;
+	            case 'beerStyle':
+	                $sql = $sql."CASE WHEN beerStyle = '' OR beerStyle IS NULL THEN 'undefined' ELSE beerStyle END as beerName";
+	                break;
+	            default:
+	                $tempGroupBy = $groupBy;
+	                $groupBy = "CASE WHEN ".$groupBy." IS NULL THEN -1 ELSE ".$groupBy." END";
+	                $sql = $sql.$groupBy." AS ".$tempGroupBy;
+	        }
+	        $sql = $sql." ";
+	    }
+	    $sql = $sql."FROM ".$this->getViewName().",(SELECT @row_number:=0) AS t ";
+	    $where = "";
+	    if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '$startTime' ";
+	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '$endTime' ";
+	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
+	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
+	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
+	    if($style) $where = $where.($where != ""?"AND ":"")."beerStyle = '$style' ";
+	    if($where != "") $sql = $sql."WHERE $where ";
+	    $sql = $sql."GROUP BY tapNumber, tapId";
+	    if($groupBy) $sql = $sql.", ".$groupBy;
+	    $totalRows = 0;
+	    if($results = $this->executeQueryWithResults($sql)){
+	        $totalRows = count($results);
+	    }
+	    $limitClause = $this->getLimitClause($limit, $page);
+	    if($limitClause == "") return $results;
+	    $sql = $sql.$limitClause;
+	    return $this->executeQueryWithResults($sql);
+	}
+	
+	function getPoursByBeer($page, $limit, &$totalRows, $groupBy){
+	    return $this->getPoursByBeerFiltered($page, $limit, $totalRows, $groupBy, null, null, null, null, null, null);
+	}
+	function getPoursByBeerFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $userId, $style){
+	    $sql="SELECT (@row_number:=@row_number + 1) AS id, SUM(amountPoured) as amountPoured ";
+	    if($groupBy != 'beerStyle')$sql = $sql.", beerName, beerId";
+	    if($groupBy)  {
+	        $sql = $sql.", ";
+	        switch ($groupBy){
+	            case 'tapId':
+	                $sql = $sql."MAX(tapNumber) as tapNumber";
+	                break;
+	            case 'userId':
+	                $sql = $sql."MAX(userName) as userName";
+	                $groupBy = "CASE WHEN ".$groupBy." IS NULL THEN -1 ELSE ".$groupBy." END";
+	                break;
+	            case 'beerId':
+	                $sql = $sql."MAX(beerName) as beerName";
+	                break;
+	            case 'beerStyle':
+	                $sql = $sql."CASE WHEN beerStyle = '' OR beerStyle IS NULL THEN 'undefined' ELSE beerStyle END as beerName";
+	                $sql = $sql.", MAX(beerId) as beerId";
+	                break;
+	            default:
+	                $tempGroupBy = $groupBy;
+	                $groupBy = "CASE WHEN ".$groupBy." IS NULL THEN -1 ELSE ".$groupBy." END";
+	                $sql = $sql.$groupBy." AS ".$tempGroupBy;
+	        }
+	        $sql = $sql." ";
+	    }
+	    $sql = $sql."FROM ".$this->getViewName().",(SELECT @row_number:=0) AS t ";
+	    $where = "";
+	    if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '$startTime' ";
+	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '$endTime' ";
+	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
+	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
+	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
+	    if($style) $where = $where.($where != ""?"AND ":"")."beerStyle = '$style' ";
+	    if($where != "") $sql = $sql."WHERE $where ";
+	    $sql = $sql."GROUP BY ";
+	    if(!$groupBy || $groupBy != 'beerStyle'){
+	        $sql = $sql."beerName, beerId";
+	    }else if($groupBy){
+	        $sql = $sql.($groupBy == 'beerStyle'?"":", ").$groupBy;
+	    }
+	    $totalRows = 0;
+	    if($results = $this->executeQueryWithResults($sql)){
+	        $totalRows = count($results);
+	    }
+	    $limitClause = $this->getLimitClause($limit, $page);
+	    if($limitClause == "") return $results;
+	    $sql = $sql.$limitClause;
+	    return $this->executeQueryWithResults($sql);
 	}
 	
 	function getDisplayAmount($gal){ 
@@ -94,7 +246,7 @@ class PourManager extends Manager{
 		$pour->set_amountPoured($amount);
 		$pour->set_pulses($PULSE_COUNT);
 		$pour->set_conversion($pourCountConversion);
-		$pour->set_userId(($user?$user->get_id():-1));
+		$pour->set_userId(($user?$user->get_id():(new UserManager)->getUnknownUserId()));
 		$pour->set_beerId($beerId);
 		$this->save($pour);
 		

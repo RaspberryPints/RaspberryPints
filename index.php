@@ -95,8 +95,10 @@
 		
 		
 		$poursManager = new PourManager();
+		$page = 1;
 		$limit = $config[ConfigNames::NumberOfDisplayPours];
-		$poursList = $poursManager->getLastPours($limit);
+		$totalRows = 0;
+		$poursList = $poursManager->getLastPours($page, $limit, $totalRows);
 		$numberOfPours = count($poursList);
 	}
 		

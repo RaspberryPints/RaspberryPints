@@ -34,4 +34,8 @@ class BeerStyleManager extends Manager{
 	    $sql="SELECT * FROM beerStyles WHERE name = '$name' ORDER BY beerStyleList";
 	    return $this->executeQueryWithSingleResult($sql);
 	}
+	function GetDistinctNamesFromPours(){
+	    $sql="SELECT (@row_number:=@row_number + 1) AS id, beerStyle as name FROM (SELECT DISTINCT beerStyle FROM vwPours WHERE beerStyle IS NOT NULL) beerStyles,(SELECT @row_number:=0) AS t ORDER BY name";
+	    return $this->executeQueryWithResults($sql);
+	}
 }

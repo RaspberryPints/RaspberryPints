@@ -21,6 +21,7 @@
 		    $config[ConfigNames::UseRFID] = True;
 		    break;
 		}
+		$config[ConfigNames::DefaultRowsPerPage] = 100;
 		return $config;
 	}
 	

@@ -721,6 +721,14 @@ CREATE TABLE IF NOT EXISTS `bottleTypes` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `bottleTypes`
+--
+
+INSERT INTO `bottleTypes` ( displayName, volume, total, used, createdDate, modifiedDate ) VALUES
+( 'standard (12oz)', '12.0', '40', '0', NOW(), NOW() ),
+( 'flip top (16oz)', '16.0', '5', '0', NOW(), NOW() );
+
 CREATE TABLE IF NOT EXISTS `rfidReaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
   `name` text NULL,
@@ -744,13 +752,20 @@ CREATE TABLE IF NOT EXISTS `motionDetectors` (
 	
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
---
--- Dumping data for table `bottleTypes`
---
 
-INSERT INTO `bottleTypes` ( displayName, volume, total, used, createdDate, modifiedDate ) VALUES
-( 'standard (12oz)', '12.0', '40', '0', NOW(), NOW() ),
-( 'flip top (16oz)', '16.0', '5', '0', NOW(), NOW() );
+
+CREATE TABLE IF NOT EXISTS `tapEvents` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` int(11) NOT NULL,
+  `tapId` int(11) NOT NULL,
+  `kegId` int(11) NOT NULL,
+  `beerId` int(11) NOT NULL,
+  `amount` decimal(7,5) DEFAULT NULL,
+  `userId` int(11) NOT NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1523,7 +1538,38 @@ AS
     srm.rgb
  FROM fermentables f LEFT JOIN srmRgb srm
         ON f.srm = srm.srm;
-
+        
+CREATE OR REPLACE VIEW vwTapEvents
+AS
+SELECT
+  te.id,
+  te.type as type,
+  CASE te.type 
+    WHEN 1 THEN 'Tapped'
+    WHEN 2 THEN 'Removed'
+    ELSE 'N/A'
+  END as 'typeDesc',
+  te.tapId,
+  te.kegId,
+  te.beerId,
+  te.amount,
+  CASE WHEN te.type = 2 THEN (SELECT amount FROM tapEvents WHERE id = (SELECT MAX(id) FROM tapEvents WHERE id < te.id AND type = 1 AND tapId = te.tapId AND kegId = te.kegId AND beerId = te.beerId)) ELSE NULL END AS newAmount,
+  te.userId,
+	t.tapNumber as 'tapNumber',
+  t.tapRgba   as 'tapRgba',
+  k.label as 'kegName',
+	b.name  as 'beerName',
+	bs.name as 'beerStyle',
+	CASE WHEN u.username IS NULL THEN 'System' ELSE u.userName END  as 'userName',
+  te.createdDate
+FROM tapEvents te
+  LEFT JOIN taps t ON t.id = te.tapId
+	LEFT JOIN kegs k ON k.id = te.kegId
+	LEFT JOIN beers b ON b.id = te.beerId
+	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
+	LEFT JOIN users u ON u.id = te.userId
+WHERE t.active = true
+ORDER BY te.id;
 -- --------------------------------------------------------
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

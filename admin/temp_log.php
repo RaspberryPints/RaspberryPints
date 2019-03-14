@@ -27,6 +27,17 @@
 	    $startTime = date('H:i:s', strtotime('-'.$interval.' hour'));
 	}
 	$probe   	= (isset($_POST['probe'])?$_POST['probe']:"");
+	
+	$changed = (isset($_POST['queryChanged'])?$_POST['queryChanged']:FALSE);
+	
+	$totalRows = (isset($_POST['totalRows'])?$_POST['totalRows']:0);
+	$page = (isset($_POST['page'])?$_POST['page']:1);
+	$maxPage =  (isset($_POST['maxPage'])?$_POST['maxPage']:1);
+	$page = min($page, $maxPage);
+	if($changed) $page = 1;
+	$rowsPerPage = $config[ConfigNames::DefaultRowsPerPage] ;
+	$tempList = $tempLogManager->getLastTempsFiltered($page, $rowsPerPage, $totalRows, $startDate.' '.$startTime, $endDate.' '.$endTime, $probe);
+	$maxPage = ceil(($totalRows)/$rowsPerPage);
 ?>
 <body>
 	<!-- Start Header  -->
@@ -50,8 +61,9 @@ include 'top_menu.php';
 		<div class="contentcontainer left">
 			<?php $htmlHelper->ShowMessage(); ?>
 			<div id="settingsDiv">
-			<form method="POST">
+			<form name="statForm" method="POST">
             	<table>
+					<?php include "includes/paginateTableRow.php"; ?> 
                     <tr id="manDates" <?php echo $interval!=0?'style="display:none;"':''; ?>>
                         <td>Start Date:</td>
                         <td><input type="date" name="startDate" value="<?php echo $startDate; ?>"></td>
@@ -98,7 +110,6 @@ include 'top_menu.php';
 			<!-- Start On Keg Section -->
 			
             <?php
-                $tempList = $tempLogManager->getLastTempsFiltered(100, $startDate.' '.$startTime, $endDate.' '.$endTime, $probe);
                 $displayedProbes = array();
                 $displayedProbeTemps = array();
                 $displayedDateTemps = array();
@@ -224,6 +235,7 @@ include 'top_menu.php';
                 		
                 	</tr>                	
                 	<?php } ?>
+					<?php include "includes/paginateTableRow.php"; ?> 
                </tbody>
             </table>            
 			<!-- Start Footer -->   
@@ -248,6 +260,19 @@ include 'left_bar.php';
 				document.getElementById("manTimes").style.display = (intervalSel.value == 0?'':"none");
 			}
 		</script>
+		
+    	<script type="text/javascript">
+        	$("input[type!='hidden']").change(inputChanged);
+        	$("select").change(inputChanged);
+            function inputChanged(){
+            	$("input[name='queryChanged']").val(1)
+            }
+          	function changePage(newPage){
+        		$("input[name='page']").val(newPage);
+        		$("input[name^=last]").remove();
+        		$(statForm).submit();
+        	}
+        </script>
     	<?php if(count($tempList) > 0){ ?>
         	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
             <script type="text/javascript">

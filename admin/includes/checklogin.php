@@ -15,6 +15,7 @@ $user = $userManager->checklogin($myusername, $mypassword);
 
 // If result matched $myusername and $mypassword, 
 if($user){
+	$_SESSION['myuserid']  =$user->get_id();
 	$_SESSION['myusername'] =$myusername;
 	$_SESSION['mypassword'] =$mypassword;
 	$_SESSION['showadmin'] =false;
