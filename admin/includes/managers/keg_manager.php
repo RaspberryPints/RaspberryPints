@@ -40,12 +40,10 @@ class KegManager extends Manager{
 	}
 	function Inactivate($id){
 		$tapManager = new TapManager();
-		$taps = $tapManager->GetByKegId($id);	
-		foreach($taps as $tap){	
-			$_SESSION['errorMessage'] = "Keg was associated with an active tap ".$tap->getTapNumber().". Tap Set empty.";
-			$tap->set_kegId("NULL");
-			$tap->set_startAmount(0);
-			$tap->set_currentAmount(0);
+		$tap = $tapManager->GetByKegId($id);	
+		if($tap){
+		    $_SESSION['errorMessage'] = "Keg was associated with an active tap ".$tap->get_tapNumber().". Tap Set empty.";
+			$tap->set_kegId(null);
 			$tapManager->Save($tap);			
 		}
 	
