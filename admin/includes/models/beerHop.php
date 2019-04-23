@@ -31,7 +31,7 @@ class BeerHop
     public function set_time($_time){ $this->_time = $_time; }
     
     public function get_hop(){ return $this->_hop; }
-    public function set_hop($_hop){ $this->_hop = $_hop; }
+    public function set_hop($_hop){ $this->_hop = $_hop; if($_hop)$this->set_hopsID($_hop->get_id()); }
     
     public function setFromArray($postArr)
     {

@@ -27,7 +27,7 @@ class BeerYeast
 	public function set_amount($_amount){ $this->_amount = $_amount; }
 	
 	public function get_yeast(){ return $this->_yeast; }
-	public function set_yeast($_yeast){ $this->_yeast = $_yeast; }
+	public function set_yeast($_yeast){ $this->_yeast = $_yeast; if($_yeast)$this->set_yeastsID($_yeast->get_id()); }
 	
     public function setFromArray($postArr)  
     {

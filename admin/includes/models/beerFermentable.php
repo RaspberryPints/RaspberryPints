@@ -31,7 +31,7 @@ class BeerFermentable
     public function set_time($_time){ $this->_time = $_time; }
     
     public function get_fermentable(){ return $this->_fermentable; }
-    public function set_fermentable($_fermentable){ $this->_fermentable = $_fermentable; }
+    public function set_fermentable($_fermentable){ $this->_fermentable = $_fermentable; if($_fermentable)$this->set_fermentablesID($_fermentable->get_id()); }
     
     public function setFromArray($postArr)
     {
