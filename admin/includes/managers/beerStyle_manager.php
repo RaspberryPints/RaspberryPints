@@ -38,4 +38,19 @@ class BeerStyleManager extends Manager{
 	    $sql="SELECT (@row_number:=@row_number + 1) AS id, beerStyle as name FROM (SELECT DISTINCT beerStyle FROM vwPours WHERE beerStyle IS NOT NULL) beerStyles,(SELECT @row_number:=0) AS t ORDER BY name";
 	    return $this->executeQueryWithResults($sql);
 	}
+	function GetByNameOrCatNum($styleName, $catNum){
+        $sql = "SELECT id from beerStyles where name='" . $styleName . "' and catNum='" . $catNum . "';";
+        $style = $this->executeQueryWithSingleResult($sql);
+        if ($style) return $style;
+        
+        $sql = "SELECT id from beerStyles where name='" . $styleName . "';";
+        $style = $this->executeQueryWithSingleResult($sql);
+        if ($style) return $style;
+        
+        $sql = "SELECT id from beerStyles where catNum='" . $catNum . "';";
+        $style = $this->executeQueryWithSingleResult($sql);
+        if ($style) return $style;
+        
+        return null;
+	}
 }
