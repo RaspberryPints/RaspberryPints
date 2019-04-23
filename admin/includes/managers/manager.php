@@ -22,7 +22,7 @@ abstract class Manager {
 			foreach($this->getUpdateColumns() as $col){
 				if(strlen($columns) > 0) $columns.= ', ';
 				$value = $dbObject->{'get_'.$col}();
-				if(is_string($value)){
+				if($value && (is_string($value) || preg_match("/[^0-9]/", $value) || $value == '')){
 					$columns.= "$col = NULLIF('$value','')";
 				}else{
 					$columns.= "$col = ".($value?$value:"null");				
@@ -48,7 +48,7 @@ abstract class Manager {
 				$value = $dbObject->{'get_'.$col}();
 				if($col == $this->getActiveColumnName()){
 					$values.= "1";				
-				}else if(is_string($value)){
+				}else if($value && (is_string($value) || preg_match("/[^0-9]/", $value) || $value == '')){
 					$values.= "NULLIF('$value','')";
 				}else{
 					$values.= ($value?$value:"null");				
