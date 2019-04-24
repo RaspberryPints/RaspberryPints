@@ -191,7 +191,7 @@ class PintDispatch(object):
     def getTapConfig(self):
         con = self.connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)
-        cursor.execute("SELECT tapId,flowPin,valvePin,valveOn FROM tapconfig ORDER BY tapId")
+        cursor.execute("SELECT tc.tapId,tc.flowPin,tc.valvePin,tc.valveOn FROM tapconfig tc LEFT JOIN taps t ON tc.tapId = t.id WHERE t.active = 1 ORDER BY tc.tapId")
         rows = cursor.fetchall()
         con.close()
         return rows
