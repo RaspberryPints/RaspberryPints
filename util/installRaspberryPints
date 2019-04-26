@@ -630,6 +630,22 @@ if echo "$ANSWER" | grep -iq "^y" ;then
 	fi
 fi
 
+USE_TEMP_PROBES=Y
+# ask the user if they want to use temp probes
+read -e -p "Do you want to use Temp Probes? (Y:N) (default is: ${USE_TEMP_PROBES}): " ANSWER
+if [ "$ANSWER" = "" ]; then
+   ANSWER="${USE_TEMP_PROBES}"
+fi
+if echo "$ANSWER" | grep -iq "^y" ;then
+	USE_TEMP_PROBES=true
+fi
+if [ "$USE_TEMP_PROBES" = "true" ];
+then
+	if ! grep -q '^\s*dtoverlay=w1-gpio' $BOOT_CONFIG_FILE; then
+	  echo 'dtoverlay=w1-gpio' >> $BOOT_CONFIG_FILE
+	fi
+fi
+
 echo "All Done!"
 
 if [ "$USE_FLOW_METERS" = "true" ];
