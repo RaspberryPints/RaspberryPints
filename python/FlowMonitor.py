@@ -661,18 +661,17 @@ class OneWireTemperatureThread (threading.Thread):
         lastWeight = -1
         firstTime = True
         try:
-            while not self.shutdown_required:
-                # enable kernel modules
-                os.system('sudo modprobe w1-gpio')
-                os.system('sudo modprobe w1-therm')
+            # enable kernel modules
+            os.system('sudo modprobe w1-gpio')
+            os.system('sudo modprobe w1-therm')
             
+            while not self.shutdown_required:
                 # search for a device file that starts with 28
                 devicelist = glob.glob('/sys/bus/w1/devices/28*')
                 for probeDir in devicelist:
-                    probeName = ''
+                    probeName = os.path.basename(probeDir)
                     if(firstTime):
                         self.dispatch.addTempProbeAsNeeded(probeName)
-                    firstTime = False
                     # append /w1slave to the device file
                     device = probeDir + '/w1_slave'
                     temp = self.get_temp(device)
@@ -685,6 +684,7 @@ class OneWireTemperatureThread (threading.Thread):
                         self.dispatch.saveTemp(probeName, temp)
                         
                 time.sleep(self.delay)
+                firstTime = False
         except Exception, e:
             log("Unable to Run 1Wire Temperature")
             return

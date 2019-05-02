@@ -1354,8 +1354,8 @@ CREATE TABLE IF NOT EXISTS `tempProbes` (
 CREATE TABLE IF NOT EXISTS `tempLog` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
   `probe` text NULL,
-	`temp` decimal(4,2) NOT NULL,
-	`humidity` decimal(4,2) NULL,
+	`temp` decimal(6,2) NOT NULL,
+	`humidity` decimal(6,2) NULL,
 	`takenDate` TIMESTAMP NOT NULL,	
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;

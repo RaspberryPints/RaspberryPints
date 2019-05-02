@@ -676,3 +676,7 @@ FROM tapEvents te
 	LEFT JOIN users u ON u.id = te.userId
 WHERE t.active = true
 ORDER BY te.id;
+
+
+ALTER TABLE tempLog CHANGE COLUMN `temp` `temp` decimal(6,2) NULL ;
+ALTER TABLE tempLog CHANGE COLUMN `humidity` `humidity` decimal(6,2) NULL ;
