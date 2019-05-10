@@ -277,10 +277,8 @@ if ($action == 'install')
 	$error = false;
 	$sql = "DROP DATABASE `" . $databasename . "`;";
 	$result = $mysqli->query($sql);
-	if($mysqli->error != ""){
-	    $validerror .= "<br><strong>Cannot DROP existing Database[".$databasename."]: " . $mysqli->error . "</strong>";
-	    $error = true;
-	}
+	// ignore errors
+	
 	$sql = "CREATE DATABASE `" . $databasename . "` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;";
 	$result = $mysqli->query($sql);
 	if($mysqli->error != ""){
@@ -363,14 +361,13 @@ if ($action == 'install')
     	    echo "Success!<br>";
     	}
     	flush();
-    	
-    	if ($validerror !=''){
-    	    echo "<html><body>";
-    	    echo $validerror;
-    	    echo "<br /><br />Please press the back button on your browser to fix these errors";
-    	    echo "</body></html>";
-    	    die();
-    	}
+	}
+	if ($validerror !=''){
+	    echo "<html><body>";
+	    echo $validerror;
+	    echo "<br /><br />Please press the back button on your browser to fix these errors";
+	    echo "</body></html>";
+	    die();
 	}
     	
 	//-----------------Delete the index.html page, if it exists -----------------
