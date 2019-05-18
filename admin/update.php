@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 if(!isset( $_SESSION['myusername'] )){
@@ -10,9 +11,11 @@ $beerid=$_GET['beerid'];
 
 // Retrieve data from database
 $sql="SELECT * FROM $tbl_name WHERE beerid='$beerid'";
-$result=mysql_query($sql);
+//$result=mysql_query($sql);
+$result=mysqli_query($con, $sql);
 
-$rows=mysql_fetch_array($result);
+//$rows=mysql_fetch_array($result);
+$rows=mysqli_fetch_assoc($result);
 ?>
 
 <head>
@@ -67,5 +70,6 @@ $rows=mysql_fetch_array($result);
 
 <?php
 // close connection
-mysql_close();
+//mysql_close();
+mysqli_close($con);
 ?>

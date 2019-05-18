@@ -7,16 +7,19 @@ $email_to=$_POST['email_to'];
 
 
 $sql="SELECT password FROM $tbl_name WHERE email='$email_to'";
-$result=mysql_query($sql);
+//$result=mysql_query($sql);
+$result=mysqli_query($con, $sql);
 
 // if found this e-mail address, row must be 1 row
 // keep value in variable name "$count"
-$count=mysql_num_rows($result);
+//$count=mysql_num_rows($result);
+$count=mysqli_num_rows($result);
 
 // compare if $count =1 row
 if($count==1){
 
-$rows=mysql_fetch_array($result);
+//$rows=mysql_fetch_array($result);
+$rows=mysqli_fetch_assoc($result);
 
 $your_password=$rows['password'];
 

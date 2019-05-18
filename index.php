@@ -13,19 +13,23 @@
 	
 	if($db){
 		// Connect to the database
-		db();
+		$con = db();
 		
 		
 		$config = array();
 		$sql = "SELECT * FROM config";
-		$qry = mysql_query($sql);
-		while($c = mysql_fetch_array($qry)){
+		//$qry = mysql_query($sql);
+        $qry = mysqli_query($con, $sql);
+		//while($c = mysql_fetch_array($qry)){
+        while($c = mysqli_fetch_assoc($qry)){
 			$config[$c['configName']] = $c['configValue'];
 		}
 		
 		$sql =  "SELECT * FROM vwGetActiveTaps";
-		$qry = mysql_query($sql);
-		while($b = mysql_fetch_array($qry))
+		//$qry = mysql_query($sql);
+        $qry = mysqli_query($con, $sql);
+		//while($b = mysql_fetch_array($qry))
+        while($b = mysqli_fetch_assoc($qry))
 		{
 			$beeritem = array(
 				"id" => $b['id'],
