@@ -53,8 +53,10 @@
 			require '../includes/config.php';
 			db();
 			$sql = 'SELECT id,configName,configValue FROM config where configname = "version"';
-			$qry = mysql_query($sql);	
-			$dbversion = mysql_result($qry,0,2);
+            //$qry = mysql_query($sql);
+            $qry = mysqli_query($con, $sql);
+            //$dbversion = mysql_result($qry,0,2);
+            $dbversion = $qry['configValue'];
 		
 			echo '<br><select name="selectaction">';
 			if ($dbversion != $rpintsversion) {

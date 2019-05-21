@@ -164,7 +164,8 @@ require_once __DIR__.'/config_files.php';
 	$sql_query = split_sql_file($sql_query, ';');
 
 
-	mysql_connect($servername,'root',$rootpass) or die('error connection');
+	//mysql_connect($servername,'root',$rootpass) or die('error connection');
+	$con=mysqli_connect($servername,"root",$rootpass);	
 
 	$i=1;
 	foreach($sql_query as $sql){
@@ -172,10 +173,11 @@ require_once __DIR__.'/config_files.php';
 	//echo "	";
 	//echo $sql;
 	//echo "<br>";
-	mysql_query($sql) or die('error in query');
+	mysqli_query($con, $sql);
 	}
 
 	echo "Success!<br>";
+	mysqli_close($con);
 	flush();
 
 	//-----------------Add the admin user to the Users DB----------
@@ -211,13 +213,15 @@ require_once __DIR__.'/config_files.php';
 			$sql_query = split_sql_file($sql_query, ';');
 
 
-			mysql_connect($servername,'root',$rootpass) or die('error connection');
+			//mysql_connect($servername,'root',$rootpass) or die('error connection');
+            $con=mysqli_connect($servername,'root',$rootpass);
 
 			$i=1;
 			foreach($sql_query as $sql){
 			//echo $i++;
 			//echo "	";
-			mysql_query($sql) or die('error in query');
+            //mysql_query($sql) or die('error in query');
+                mysqli_query($con, $sql);
 			}
 
 			

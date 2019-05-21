@@ -49,26 +49,35 @@ include 'header.php';
  <?php
   
   $sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
-  $result=mysql_query($sql);
+  //$result=mysql_query($sql);
+  $result=mysqli_query($con, $sql);
+  $row=mysqli_fetch_assoc($result);
 
-echo mysql_result($result, 0, 'name');
+//echo mysql_result($result, 0, 'name');
+echo $row['name'];
 ?><br />
  <font size="2" Color="Black" font-family="Impact">Username:</font>
    <?php
   
   $sql="SELECT `username` FROM `users` WHERE username='$_SESSION[myusername]'";
-$result=mysql_query($sql);
+  //$result=mysql_query($sql);
+  $result=mysqli_query($con, $sql);
+  $row=mysqli_fetch_assoc($result);
 
-echo mysql_result($result, 0, 'username');
+//echo mysql_result($result, 0, 'username');
+echo $row['username'];
 
 ?><br />
 <font size="2" Color="Black" font-family="Impact"> Email:</font>
   <?php
   
   $sql="SELECT `email` FROM `users` WHERE username='$_SESSION[myusername]'";
-$result=mysql_query($sql);
+  //$result=mysql_query($sql);
+  $result=mysqli_query($con, $sql);
+  $row=mysqli_fetch_assoc($result);
 
-echo mysql_result($result, 0, 'email');
+//echo mysql_result($result, 0, 'email');
+echo $row['email'];
 
 ?>
 <br />
