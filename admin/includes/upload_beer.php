@@ -171,7 +171,6 @@ else
                   $dbYeast->set_maxTemp(preg_replace("/[^0-9|.]/", "", $yeast->MAX_TEMPERATURE));
                   
                   $yeastManager->Save($dbYeast);
-              exit;
               }
               $beerYeast = new BeerYeast();
               $beerYeast->set_beerID($beerId);
