@@ -342,6 +342,8 @@ ALTER TABLE taps CHANGE COLUMN `tapNumber` `tapNumber` INT(11) NULL ;
 CALL addColumnIfNotExist(DATABASE(), 'kegs', 'startAmount', 'decimal(7, 5)' );
 CALL addColumnIfNotExist(DATABASE(), 'kegs', 'currentAmount', 'decimal(7, 5)' );
 
+UPDATE kegs k INNER JOIN taps t ON k.onTapId = t.id SET k.startAmount = t.startAmount, k.currentAmount = t.currentAmount 
+
 CREATE OR REPLACE VIEW vwGetActiveTaps
 AS
 
@@ -531,7 +533,7 @@ UPDATE kegs SET weightUnit ='lb', emptyWeightUnit ='lb', maxVolumeUnit ='oz',
 				startAmountUnit ='oz', currentAmountUnit ='oz', fermentationPSIUnit ='psi', keggingTempUnit = 'F' 
 				WHERE weightUnit IS NULL;
 UPDATE kegTypes SET maxAmountUnit = 'oz', emptyWeightUnit = 'lb' WHERE emptyWeightUnit IS NULL;
-UPDATE pours set amountPouredUnit = 'oz' WHERE amountPouredUnit IS NULL;
+UPDATE pours set amountPouredUnit = 'gal' WHERE amountPouredUnit IS NULL;
 UPDATE yeasts set minTempUnit = 'F', maxTempUnit = 'F' WHERE maxTempUnit IS NULL;
 UPDATE tempLog set tempUnit = 'F' WHERE tempUnit IS NULL;
 UPDATE bottleTypes set volumeUnit = 'oz' WHERE volumeUnit IS NULL;

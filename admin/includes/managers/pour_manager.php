@@ -244,7 +244,7 @@ class PourManager extends Manager{
 		$pour->set_tapId($tapId);
 		$pour->set_pinId($PIN);
 		$pour->set_amountPoured($amount);
-		$pour->set_amountPouredUnit($tap->get_countUnit());
+		$pour->set_amountPouredUnit(is_unit_imperial($tap->get_countUnit())?UnitsOfMeasure::VolumeGallon:UnitsOfMeasure::VolumeLiter);
 		$pour->set_pulses($PULSE_COUNT);
 		$pour->set_conversion($pourCountConversion);
 		$pour->set_userId(($user?$user->get_id():(new UserManager)->getUnknownUserId()));
