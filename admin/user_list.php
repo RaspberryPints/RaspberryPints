@@ -112,7 +112,10 @@ include 'top_menu.php';
                                         </td>
                                     <?php } ?>
 									<td style="text-align: center; vertical-align: middle; margin: 0; padding: 0; padding-right:5px">
-										<input name="edituser" type="button" class="btn" value="Edit" style="text-align: center; margin: 0;" onClick="window.location='user_form.php?id=<?php echo $user->get_id()?>'" />
+                                    	<form method="POST" action="user_form.php">
+                                    		<input type="hidden" name="id" value="<?php echo $user->get_id()?>">
+											<input name="edituser" type="submit" class="btn" value="Edit" style="text-align: center; margin: 0;" />
+										</form>
 									</td>
                                     <?php if( count($users) > 1 ){ ?>
 									<td style="text-align: center; vertical-align: middle; margin: 0; padding: 0; padding-right:5px">
@@ -125,7 +128,10 @@ include 'top_menu.php';
 									</td>
                                     <?php } ?>
 									<td style="text-align: center; vertical-align: middle; margin: 0; padding: 0; padding-right:5px">
-										<input class="btn" style="text-align: center; margin: 0;" name="changeToken" type="submit" value="Change Password" onClick="window.location='user_form.php?changeToken&amp;id=<?php echo $user->get_id()?>'" />
+                                    	<form method="POST" action="user_form.php">
+                                    		<input type="hidden" name="id" value="<?php echo $user->get_id()?>">
+											<input class="btn" style="text-align: center; margin: 0;" name="changeToken" type="submit" value="Change Password" />
+										</form>
 									</td>
 								</tr>
 					<?php

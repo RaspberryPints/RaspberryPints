@@ -4,6 +4,10 @@ require_once __DIR__.'/header.php';
 	<!-- Start Header  -->
 <?php
 include 'top_menu.php';
+
+$sql="SELECT * FROM `users` WHERE id='$_SESSION[myuserid]'";
+$result = $mysqli->query($sql);
+if($result) $user = $result->fetch_array();
 ?>
 	<!-- End Header -->
 		
@@ -26,39 +30,32 @@ include 'top_menu.php';
 				<h2>Account Info</h2>
 			</div>
 			<div class="contentbox">
-			<p style="padding:0px;margin:0px">
-<font size="2" Color="Black" style="font-family:Impact">Name:</font>
-<?php
-
-$sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
-$result=$mysqli->query($sql);
-
-echo $result->fetch_field()->name;
-?><br />
-<font size="2" Color="Black" style="font-family:Impact">Username:</font>
-<?php
-
-$sql="SELECT `name` FROM `users` WHERE username='".$_SESSION['myusername']."'";
-$qry=$mysqli->query($sql);
-if($qry && $user = $qry->fetch_array())
-	echo $user[0];
-else
-	echo $_SESSION['myusername'];
-
-?><br />
-<font size="2" Color="Black" style="font-family:Impact"> Email:</font>
-<?php
-
-$sql="SELECT `email` FROM `users` WHERE username='$_SESSION[myusername]'";
-$result=$mysqli->query($sql);
-
-echo $result->fetch_field()->email;
-
-?>
-<br />
-<br />
-
-	</div>
+			<form method="POST" id="user-form" action="user_form.php">
+				<table style="width:800px" id="tableList">
+					<tr>
+						<td style="width:80px">User Name:</td>
+						<td><?php  echo $user?$user['username']:$_SESSION['myusername'];?></td>
+					</tr>
+					<tr>
+						<td>Name:</td>
+						<td><?php if($user) echo $user['name'];?></td>
+					</tr>
+					<tr>
+						<td>Email:</td>
+						<td><?php if($user) echo $user['email'];?></td>
+					</tr>
+					
+					<tr>
+					<?php if($user){?>
+						<td style="text-align: left; vertical-align: middle; margin: 0; padding: 0; padding-right:5px" colspan="2">
+							<input type="hidden" name="id" value="<?php echo $user["id"]?>">
+							<input class="btn" style="text-align: center; margin: 0;" name="changeToken" type="submit" value="Change Password" onClick="window.location='user_form.php'" />
+						</td>
+					<?php }?>
+					</tr>
+				</table>
+			</form>
+			</div>
 
 	<!-- Start Footer -->   
 <?php 

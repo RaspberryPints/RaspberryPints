@@ -7,28 +7,36 @@ $config = getAllConfigs();
 $htmlHelper = new HtmlHelper();
 $userManager = new UserManager();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user = new User();
-    $user->setFromArray($_POST);
-    $redirect = false;
-    if (! isset($_POST['changeToken'])) {
-        $redirect = $userManager->Save($user);
+    if (isset($_POST['changeToken']) && $_POST['changeToken'] != 'save' && isset($_POST['id'])) {
+        $user = $userManager->GetById($_POST['id']);
+        if(isset($_POST['changeToken']) && $user->get_id() != $_SESSION['myuserid'] && !$_SESSION['showadmin']){
+            $_SESSION['errorMessage'] = "You do not have permission to change passwords";
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+    } else if(isset($_POST['edituser'])){
+        $user = $userManager->GetById($_POST['id']);
     } else {
-        $redirect = $userManager->ChangePassword($user->get_id(), $user->get_password());
+        $user = new User();
+        $user->setFromArray($_POST);
+        $redirect = false;
+        if (! isset($_POST['changeToken'])) {
+            $redirect = $userManager->Save($user);
+        } else {
+            $redirect = $userManager->ChangePassword($user->get_id(), $user->get_password());
+        }
+        if ($redirect)
+            redirect('user_list.php');
     }
-    if ($redirect)
-        redirect('user_list.php');
 }elseif(isset($_GET["untappd"])){
     $ut = new Pintlabs_Service_Untappd($config);
     redirect($ut->authenticateUri());
-}
-if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != '')
-    $_SESSION['HTTP_REFERER'] = $_SERVER['HTTP_REFERER'];
-if (isset($_GET['id'])) {
-    $user = $userManager->GetById($_GET['id']);
 } else {
     $user = new user();
     $user->setFromArray($_POST);
 }
+if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != '')
+    $_SESSION['HTTP_REFERER'] = $_SERVER['HTTP_REFERER'];
+
 
 if(isset($_GET["code"])){
     $ut = new Pintlabs_Service_Untappd($config);
@@ -85,16 +93,16 @@ include 'top_menu.php';
                                 
                         </td>
 					</tr>
-    				<?php if(!$user->get_id() || isset($_GET['changeToken']) || $user->get_active() == 0){ ?>
+    				<?php if(!$user->get_id() || isset($_POST['changeToken']) || $user->get_active() == 0){ ?>
     					<tr>
     						<td width="100"><b>Password:<font color="red">*</font></b>
-        						<?php if(isset($_GET['changeToken'])) { ?>
-                                	<input type="hidden" name="changeToken" value="1" />
+        						<?php if(isset($_POST['changeToken'])) { ?>
+                                	<input type="hidden" name="changeToken" value="save" />
                                 <?php } ?>
                             </td>
     						<td><input type="password" id="password" class="largebox"
     							name="password"
-    							value="<?php if(!isset($_GET['changeToken']) &&  $user->get_active() != 0)echo $user->get_password() ?>" />
+    							value="<?php if(!isset($_POST['changeToken']) &&  $user->get_active() != 0)echo $user->get_password() ?>" />
     						</td>
     					</tr>
     					<tr>
@@ -105,7 +113,7 @@ include 'top_menu.php';
     							<div class="alert" id="divCheckPasswordMatch"></div></td>
     					</tr>
 					<?php } ?>
-					<?php if(!isset($_GET['changeToken'])){ ?>
+					<?php if(!isset($_POST['changeToken'])){ ?>
                         <tr>
 						<td><b>First Name:</b></td>
 						<td><input type="text" id="nameFirst" class="largebox"
@@ -148,14 +156,14 @@ include 'top_menu.php';
                     <tr>
 						<td colspan="2"><input name="save" type="submit" class="btn"
 							value="Save" /> <input type="button" class="btn" value="Cancel"
-							onClick="window.location='user_list.php'" /></td>
+							onClick="window.location='<?php echo $_SERVER['HTTP_REFERER'] ?>'" /></td>
 					</tr>
 				</table>
 				<br />
 				<div align="right">&nbsp; &nbsp;</div>
 
 			</form>   
-            <?php if(!isset($_GET['changeToken']) && $config[ConfigNames::UseRFID] && $user->get_id()){ ?> 
+            <?php if(!isset($_POST['changeToken']) && $config[ConfigNames::UseRFID] && $user->get_id()){ ?> 
             <h1>RFID</h1>
 			<table style="width: 500; border: 0; cellspacing: 1; cellpadding: 0;"
 				class="outerborder">
@@ -295,7 +303,7 @@ require __DIR__ . '/scripts.php';
 		$('#user-form').validate({
 			rules: {
 				username: { required: true }
-				<?php if(!$user || !$user->get_id() || isset($_GET['changeToken']) || ($user && $user->get_active() == 0)){ ?>
+				<?php if(!$user || !$user->get_id() || isset($_POST['changeToken']) || ($user && $user->get_active() == 0)){ ?>
 					,password1: { passwordMatch:true}
 				<?php } ?>
 			}			
