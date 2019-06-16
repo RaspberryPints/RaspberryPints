@@ -328,7 +328,7 @@ class FlowMonitor(object):
                     RFIDState = "NOTOK"
                     userId = -1
                     if self.alamodeUseRFID == True:
-                        for item in readers:
+                        for item in self.readers:
                             if not item.isAlive():
                                 item.start() 
     
