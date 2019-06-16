@@ -232,13 +232,17 @@ void loop() {
         activeUserId = INVALID_USER_ID;
         if( useValves ) shutNonPouring = true;
       }
-      //If we have enough pulses for a pour and no new pulses have come in we have a complete pour
-      if ( (pulseCount[i] > pourTriggerValue && 
-           (nowTime - lastPourTime[i]) > pourMsgDelay) )
+      //If no new pulses have come in awhile
+      if ( (nowTime - lastPourTime[i]) > pourMsgDelay )
       {
-        //filter out tiny bursts
-        sendPulseCount(userIdForPin[i], pulsePin[i], pulseCount[i]);
-        reset = true;
+        //only save pours that meet the trigger to filter out tiny bursts
+    	if(pulseCount[i] > pourTriggerValue )
+    	{
+    		sendPulseCount(userIdForPin[i], pulsePin[i], pulseCount[i]);
+    	}
+    	//Reset no matter what, if there was not enough pulses to save the pour
+    	//we want to reset to 0 so we dont accumulate until there is
+    	reset = true;
         if( useValves ) shutNonPouring = true;
       }
       //If we have too many pulses for the valve to be open shut off the tap which will trigger a pour eventually
