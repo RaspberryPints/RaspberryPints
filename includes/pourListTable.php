@@ -36,7 +36,7 @@
 			<?php } ?>						
 			<?php if($config[ConfigNames::ShowPourAmount]){ ?>
 				<th class="poursamount">
-					Amount (<?php echo getConfigValue(ConfigNames::DisplayUnits) ?>)
+					Amount (<?php echo $config[ConfigNames::DisplayUnitVolume] ?>)
 				</th>
 			<?php } ?>
 			<?php if($config[ConfigNames::ShowPourUserName]){ ?>
@@ -86,7 +86,7 @@
 							
 				<?php if($config[ConfigNames::ShowPourAmount]){ ?>
                     <td class="poursamount">
-                        <h2><?php echo $pourManager->getDisplayAmount($pour->get_amountPoured()) ; ?></h2>
+                        <h2><?php echo $pour->get_amountPouredDisplay(); ?></h2>
                     </td>
                 <?php } ?>
                 

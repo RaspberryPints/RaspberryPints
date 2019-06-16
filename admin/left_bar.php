@@ -47,8 +47,9 @@
 			<li><a href="personalize.php#header">Headers</a></li>
 			<li><a href="personalize.php#tapListLogo">Brewery Logo</a></li>
 			<li><a href="personalize.php#tapListBackground">Background Image</a></li>
+			<li><a href="personalize.php#weightCalculation">Brewery Defaults</a></li>
 			<li><a href="themes.php">Theme Options</a></li>
-			<li><a href="#" title="personalize">Units of Measure <small>(coming v3.5.0)</small></a></li>
+			<li><a href="units_of_measure.php" title="personalize">Units of Measure</a></li>
 		</ul>
 	</li>
 	<li>

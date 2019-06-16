@@ -11,7 +11,7 @@ class KegManager extends Manager{
 		return array_push($this->getUpdateColumns(), "tapNumber");
 	}
 	protected function getInsertColumns(){
-	    return ["label", "kegTypeId", "make", "model", "serial", "stampedOwner", "stampedLoc", "notes", "kegStatusCode", "weight", "beerId", "onTapId", "active", "emptyWeight", "maxVolume", "startAmount", "currentAmount", "fermentationPSI", "keggingTemp"];
+	    return ["label", "kegTypeId", "make", "model", "serial", "stampedOwner", "stampedLoc", "notes", "kegStatusCode", "weight", "weightUnit", "beerId", "onTapId", "active", "emptyWeight", "emptyWeightUnit", "maxVolume", "maxVolumeUnit", "startAmount", "startAmountUnit", "currentAmount", "currentAmountUnit", "fermentationPSI", "fermentationPSIUnit", "keggingTemp", "keggingTempUnit"];
 	}	    
 	protected function getUpdateColumns(){return $this->getInsertColumns();}
 	protected function getTableName(){

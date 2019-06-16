@@ -9,8 +9,10 @@ class Beer
 	private $_beerStyleId;
 	private $_notes;
 	private $_abv;
-	private $_og; 
+	private $_og;
+	private $_ogUnit;
 	private $_fg;  
+	private $_fgUnit;  
 	private $_srm;  
 	private $_ibu;
 	private $_rating;
@@ -42,8 +44,14 @@ class Beer
 	public function get_og(){ return $this->_og; } 
 	public function set_og($_og){ $this->_og = $_og; }
 	
+	public function get_ogUnit(){ return $this->_ogUnit; } 
+	public function set_ogUnit($_ogUnit){ $this->_ogUnit = $_ogUnit; }
+	
 	public function get_fg(){ return $this->_fg; }
 	public function set_fg($_fg){ $this->_fg = $_fg;}
+	
+	public function get_fgUnit(){ return $this->_fgUnit; }
+	public function set_fgUnit($_fgUnit){ $this->_fgUnit = $_fgUnit;}
 
 	public function get_srm(){ return $this->_srm; }
 	public function set_srm($_srm){ $this->_srm = $_srm; }
@@ -117,6 +125,11 @@ class Beer
 		else
 			$this->set_og(null);
 			
+		if( isset($postArr['ogUnit']) )
+		    $this->set_ogUnit($postArr['ogUnit']);
+		else
+		    $this->set_ogUnit(null);
+			
 		if( isset($postArr['fgAct']) )
 			$this->set_fg($postArr['fgAct']);
 		else if( isset($postArr['fgEst']) )
@@ -125,6 +138,11 @@ class Beer
 			$this->set_fg($postArr['fg']);
 		else
 			$this->set_fg(null);
+		
+		if( isset($postArr['fgUnit']) )
+		    $this->set_fgUnit($postArr['fgUnit']);
+		else
+		    $this->set_fgUnit(null);
 			
 		if( isset($postArr['srmAct']) )
 			$this->set_srm($postArr['srmAct']);

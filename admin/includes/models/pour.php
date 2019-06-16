@@ -10,6 +10,7 @@ class Pour
 	private $_beerUntID;
 	private $_breweryImageUrl;
 	private $_amountPoured;
+	private $_amountPouredUnit;
 	private $_userName;
 	private $_tapId;
 	private $_pinId;
@@ -41,7 +42,11 @@ class Pour
 	public function set_breweryImageUrl($_breweryImageUrl){ $this->_breweryImageUrl = $_breweryImageUrl; }
 	
 	public function get_amountPoured(){ return $this->_amountPoured; }
+	public function get_amountPouredDisplay($useLargeUnits = FALSE){ return (new PourManager())->getDisplayAmount($this->_amountPoured, $this->_amountPouredUnit, $useLargeUnits); }
 	public function set_amountPoured($_amountPoured){ $this->_amountPoured = $_amountPoured; }
+	
+	public function get_amountPouredUnit(){ return $this->_amountPouredUnit; }
+	public function set_amountPouredUnit($_amountPouredUnit){ $this->_amountPouredUnit = $_amountPouredUnit; }
 
 	public function get_userName(){ return $this->_userName; } 
 	public function set_userName($_userName){ $this->_userName = $_userName; }
@@ -104,6 +109,11 @@ class Pour
 		else
 			$this->set_amountPoured(null);
 			
+		if( isset($postArr['amountPouredUnit']) )
+		    $this->set_amountPouredUnit($postArr['amountPouredUnit']);
+		else
+		    $this->set_amountPouredUnit(null);
+		
 		if( isset($postArr['userName']) )
 			$this->set_userName($postArr['userName']);
 		else
@@ -154,6 +164,7 @@ class Pour
 			"beerUntID: " . $this->get_beerUntID() . ", " .
 			"breweryImageUrl: " . $this->get_breweryImageUrl() . ", " .
 			"amountPoured: '" . encode($this->get_amountPoured()) . "', " .
+			"amountPouredUnit: '" . encode($this->get_amountPouredUnit()) . "', " .
 			"userName: '" . $this->get_userName() . "', " .
 			"tapId: '" . encode($this->get_tapId()) . "', " .
 			"pinId: '" . encode($this->get_pinId()) . "', " .

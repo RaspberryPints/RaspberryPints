@@ -33,7 +33,7 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 			$tap->set_tapNumber($_POST ['tapNumber'][$ii]);
 		}
 		$kegSelArr = explode("~", $_POST['kegId'][$ii]);
-		//Select array is kegid~beerid(in keg)~tapId(keg is on)
+		//Select array is kegid~beerid(in keg)~tapId(keg is on)~etc
 		$kegId = null;
 		if(count($kegSelArr) > 0 && isset($kegSelArr[0]))$kegId = $kegSelArr[0];
 		if($kegId){			
@@ -43,28 +43,35 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 			        $tapManager->tapKeg($tap, $kegId, $selectedBeerId);		
 			}
 			$keg = $kegManager->GetById($kegId);
-			$keg->set_startAmount($_POST['startAmount'][$ii]);
-			$keg->set_currentAmount($_POST['currentAmount'][$ii]);
-			if($keg->get_maxVolume() < ($_POST['startAmount'][$ii])){;
-			    $keg->set_maxVolume($_POST['startAmount'][$ii]);
+			if( $_POST ['startAmount'][$ii] != $_POST ['startAmountOriginal'][$ii]) {
+			    $keg->set_startAmount($_POST['startAmount'][$ii]);
+			    $keg->set_startAmountUnit($_POST['startAmountUnit'][$ii]);
+			    if(convert_volume($keg->get_maxVolume(), $keg->get_maxVolumeUnit(), $_POST['startAmountUnit'][$ii], TRUE) < ($_POST['startAmount'][$ii])){;
+    			    $keg->set_maxVolume($_POST['startAmount'][$ii]);
+    			    $keg->set_maxVolumeUnit($_POST['startAmountUnit'][$ii]);
+    			}
 			}
-    		$fermentationPSI = '';
-    		$keggingTemp = '';
+			if( $_POST ['currentAmount'][$ii] != $_POST ['currentAmountOriginal'][$ii]) {
+			     $keg->set_currentAmount($_POST['currentAmount'][$ii]);
+			     $keg->set_currentAmountUnit($_POST['currentAmountUnit'][$ii]);
+			}
+			if( $_POST ['currentWeight'][$ii] != $_POST ['currentWeightOriginal'][$ii]) {
+			     $keg->set_Weight($_POST['currentWeight'][$ii]);
+			     $keg->set_WeightUnit($_POST['currentWeightUnit'][$ii]);
+			}
     		if (isset ( $_POST ['fermentationPSI'][$ii] ) && 
-    		    (!isset ( $_POST['defaultFermentiationPSI'][$ii] ) ||
-    		        $_POST['defaultFermentiationPSI'][$ii] == 0 ||
-    		        $_POST ['fermentationPSI'][$ii] != $config[ConfigNames::DefaultFermPSI]) ) {
-    		    $fermentationPSI = $_POST ['fermentationPSI'][$ii];
+    		    $_POST['defaultFermentiationPSI'][$ii] != 0 &&
+    		    $_POST ['fermentationPSI'][$ii] != $_POST ['fermentationPSIOriginal'][$ii]) {
+    		    $keg->set_fermentationPSI($_POST ['fermentationPSI'][$ii]);
+    		    $keg->set_fermentationPSIUnit($_POST ['fermentationPSIUnit'][$ii]);
     		}
     		
     	    if (isset ( $_POST ['keggingTemp'][$ii] ) &&
-    	        (!isset ( $_POST['defaultKeggingTemp'][$ii] ) ||
-    	            $_POST['defaultKeggingTemp'][$ii] == 0 ||
-    	            $_POST ['keggingTemp'][$ii] != $config[ConfigNames::DefaultKeggingTemp]) ) {
-    		    $keggingTemp = $_POST ['keggingTemp'][$ii];
+    	        $_POST['defaultKeggingTemp'][$ii] != 0 &&
+    	        $_POST ['keggingTemp'][$ii] != $_POST ['keggingTempOriginal'][$ii]) {
+    		    $keg->set_keggingTemp($_POST ['keggingTemp'][$ii]);
+    		    $keg->set_keggingTempUnit($_POST ['keggingTempUnit'][$ii]);
     		}
-    		$keg->set_fermentationPSI($fermentationPSI);
-    		$keg->set_keggingTemp($keggingTemp);
 			$kegManager->Save($keg);
 		}else if($tap->get_kegId()){
 			//User indicated the tap was untapped
@@ -77,6 +84,7 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 		$valveon = 0;
 		$valvepin = 0;
 		$countpergallon = 0;
+		$countpergallonUnit = UnitsOfMeasure::VolumeGallon;
 	
 		if (isset ( $_POST ['flowpin'][$ii] )) {
 			$flowpin = $_POST ['flowpin'][$ii];
@@ -90,11 +98,22 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 		    $valveon = $_POST ['tapOverride'][$ii];
 		}
 	
-		if (isset ( $_POST ['countpergallon'][$ii] )) {
-			$countpergallon = $_POST ['countpergallon'][$ii];
+		if( isset ( $_POST ['countpergallonOriginal'][$ii] ) &&
+		    $_POST ['countpergallon'][$ii] ==  $_POST ['countpergallonOriginal'][$ii] &&
+		    $tap->get_count() > 0)
+		{
+		    $countpergallon = $tap->get_count();
+		    $countpergallonUnit = $tap->get_countUnit();
+		}else{
+    		if (isset ( $_POST ['countpergallon'][$ii] )) {
+    			$countpergallon = $_POST ['countpergallon'][$ii];
+    		}
+    		if (isset ( $_POST ['countpergallonUnit'][$ii] )) {
+    			$countpergallonUnit = $_POST ['countpergallonUnit'][$ii];
+    		}
 		}
 	
-		$tapManager->saveTapConfig ( $id, $flowpin, $valvepin, $valveon, $countpergallon );
+		$tapManager->saveTapConfig ( $id, $flowpin, $valvepin, $valveon, $countpergallon, $countpergallonUnit );
 		$ii++;
 	}
 	$reconfig = true;
@@ -177,8 +196,11 @@ include 'top_menu.php';
     				<tbody>
     					<tr>
     						<td><b>Weight Calculator:</b></td>
-    						<td><b>Brewery Altitude:</b><br/>The altitude (ft) above see level</td>
-    						<td><input type="text" name="breweryAltitude" class="smallbox" value="<?php echo ($config[ConfigNames::BreweryAltitude]) ?>"></td>
+    						<td><b>Brewery Altitude:</b><br/>The altitude (<?php echo $config[ConfigNames::DisplayUnitDistance]?>) above see level</td>
+    						<td>
+    							<input type="text" name="breweryAltitude" class="smallbox" value="<?php echo (convert_distance($config[ConfigNames::BreweryAltitude], $config[ConfigNames::BreweryAltitudeUnit], $config[ConfigNames::DisplayUnitDistance])) ?>">
+    							<input type="hidden" name="breweryAltitudeUnit" value="<?php echo $config[ConfigNames::DisplayUnitDistance];?>" >
+    						</td>
     					</tr>
     					<tr>
     						<td><b>Weight Calculator:</b></td>
@@ -190,13 +212,19 @@ include 'top_menu.php';
     					</tr>
     					<tr>
     						<td><b>Weight Calculator:</b></td>
-    						<td><b>Default Fermentation Pressure:</b><br/>The PSI of fermentation<br/>0 if not fermenting under pressure</td>
-    						<td><input type="text" name="defaultFermPSI" class="smallbox" value="<?php echo ($config[ConfigNames::DefaultFermPSI]) ?>"></td>
+    						<td><b>Default Fermentation Pressure:</b><br/>The <?php echo $config[ConfigNames::DisplayUnitPressure]?> of fermentation<br/>0 if not fermenting under pressure</td>
+    						<td>
+    							<input type="text" name="defaultFermPSI" class="smallbox" value="<?php echo (convert_pressure($config[ConfigNames::DefaultFermPSI], $config[ConfigNames::DefaultFermPSIUnit], $config[ConfigNames::DisplayUnitPressure])) ?>">
+    							<input type="hidden" name="defaultFermPSIUnit" value="<?php echo $config[ConfigNames::DisplayUnitPressure];?>" >
+    						</td>
     					</tr>
     					<tr>
     						<td><b>Weight Calculator:</b></td>
-    						<td><b>Default Kegging Temperature:</b><br/>The Temperature (F) when transfering into the Keg.<br/>This is used to calculate the CO2 in the beer at that time</td>
-    						<td><input type="text" name="defaultKeggingTemp" class="smallbox" value="<?php echo ($config[ConfigNames::DefaultKeggingTemp]) ?>"></td>
+    						<td><b>Default Kegging Temperature:</b><br/>The Temperature (<?php echo $config[ConfigNames::DisplayUnitTemperature]?>) when transfering into the Keg.<br/>This is used to calculate the CO2 in the beer at that time</td>
+    						<td>
+    							<input type="text" name="defaultKeggingTemp" class="smallbox" value="<?php echo (convert_temperature($config[ConfigNames::DefaultKeggingTemp], $config[ConfigNames::DefaultKeggingTempUnit], $config[ConfigNames::DisplayUnitTemperature])) ?>">
+    							<input type="hidden" name="defaultKeggingTempUnit" value="<?php echo $config[ConfigNames::DisplayUnitTemperature];?>" >
+    						</td>
     					</tr>
     					<tr>
     						<td colspan="3">
@@ -343,10 +371,10 @@ include 'top_menu.php';
                     <th>Tap<br>Description</th>
                     <th>Keg<br>(OnTap Number)</th>
                     <th style="width:10%">Beer</th>
-                    <th>Start<br>Amount (Gal)</th>
-                    <th>Current<br>Amount(Gal)</th>
+                    <th>Start<br>Amount (<?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L");?>)</th>
+                    <th>Current<br>Amount(<?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L");?>)</th>
 					<?php if($config[ConfigNames::UseKegWeightCalc]) { ?>
-                        <th>Current<br>Weight(lbs)</th>
+                        <th>Current<br>Weight(<?php echo $config[ConfigNames::DisplayUnitWeight]?>)</th>
     					<?php if(!$config[ConfigNames::UseDefWeightSettings]) { ?>
                             <th><div class="tooltip">Fermenter<br>PSI<span class="tooltiptext">0 If not fermenting under pressure</span></div></th>
                             <th><div class="tooltip">Kegging<br>Temp<span class="tooltiptext">Temperature of Beer when kegged<br>room temp if not cold crashing or keg conditioning</span></div></th>
@@ -354,7 +382,7 @@ include 'top_menu.php';
                     <?php } ?>
                     <?php if($config[ConfigNames::UseFlowMeter]) { ?>
                         <th>Flow Pin</th>
-                        <th>Count<br>Per Gal</th>
+                        <th>Count<br>Per <?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L");?></th>
                     <?php } ?>
                     <?php if($config[ConfigNames::UseTapValves]) { ?>
                         <th>Valve Pin</th>
@@ -410,10 +438,17 @@ include 'top_menu.php';
                                             $desc.="(".$item->get_onTapId().")";                                        
                                         }
                                     }
-									$val = $item->get_id()."~".$item->get_beerId()."~".$item->get_ontapId()."~".$item->get_emptyWeight()."~";
-									$val .= $item->get_maxVolume()."~".$item->get_startAmount()."~".$item->get_currentAmount()."~";
+                                    //do not change this line (php line)
+                                    $val = $item->get_id()."~".$item->get_beerId()."~".$item->get_ontapId()."~";
+                                    //Change these lines for Javascript)
+                                    $val .= $item->get_emptyWeight().'~'.$item->get_emptyWeightUnit()."~";
+                                    $val .= convert_volume($item->get_maxVolume(), $item->get_maxVolumeUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE)."~".$config[ConfigNames::DisplayUnitVolume]."~";
+                                    $val .= convert_volume($item->get_startAmount(), $item->get_startAmountUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE)."~".$config[ConfigNames::DisplayUnitVolume]."~";
+                                    $val .= convert_volume($item->get_currentAmount(), $item->get_currentAmountUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE)."~".$config[ConfigNames::DisplayUnitVolume]."~";
 									$val .= ($item->get_fermentationPSI() != ''?$item->get_fermentationPSI():$config[ConfigNames::DefaultFermPSI])."~";
-									$val .= ($item->get_keggingTemp() != ''?$item->get_keggingTemp():$config[ConfigNames::DefaultKeggingTemp]);
+									$val .= ($item->get_fermentationPSI() != ''?$item->get_fermentationPSIUnit():$config[ConfigNames::DefaultFermPSIUnit])."~";
+									$val .= ($item->get_keggingTemp() != ''?$item->get_keggingTemp():$config[ConfigNames::DefaultKeggingTemp])."~";
+									$val .= ($item->get_keggingTemp() != ''?$item->get_keggingTempUnit():$config[ConfigNames::DefaultKeggingTempUnit]);
 									$str .= "<option value='".$val."' ".$sel.">".$desc."</option>\n";
                                 }					
                                 $str .= "</select>\n";
@@ -430,7 +465,7 @@ include 'top_menu.php';
 								    $sel = "";
 								    if( isset($tap) && $tap->get_beerId() == $item->get_id())  $sel .= "selected ";
 								    $desc = $item->get_name();
-								    $str .= "<option value='".$item->get_id()."~".$item->get_fg()."' ".$sel.">".$desc."</option>\n";
+								    $str .= "<option value='".$item->get_id()."~".$item->get_fg()."~".$item->get_fgUnit()."' ".$sel.">".$desc."</option>\n";
 								}
 								$str .= "</select>\n";
 								
@@ -439,26 +474,46 @@ include 'top_menu.php';
 							?>
                         </td>             
                         <td>
-							<input type="text" id="startAmount<?php echo $tap->get_id();?>" class="smallbox" name="startAmount[]" value="<?php echo (isset($keg)?$keg->get_startAmount():'') ?>" />
-                        </td>  
+							<input type="text" id="startAmount<?php echo $tap->get_id();?>" class="smallbox" name="startAmount[]" value="<?php echo (isset($keg)?convert_volume($keg->get_startAmount(), $keg->get_startAmountUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE):'') ?>" />
+                        	<input type="hidden" id="startAmountOriginal<?php echo $tap->get_id();?>" class="smallbox" name="startAmountOriginal[]" value="<?php echo (isset($keg)?convert_volume($keg->get_startAmount(), $keg->get_startAmountUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE):'-1') ?>" />
+                        	<input type="hidden" id="startAmountUnit<?php echo $tap->get_id();?>" class="smallbox" name="startAmountUnit[]" value="<?php echo $config[ConfigNames::DisplayUnitVolume]; ?>" />
+                    	</td>  
                     	<td>
-							<input type="text" id="currentAmount<?php echo $tap->get_id();?>" class="smallbox" name="currentAmount[]" value="<?php echo (isset($keg)?$keg->get_currentAmount():'') ?>" onchange="updateCurrentWeight(<?php echo $tap->get_id();?>);"/>
+							<input type="text" id="currentAmount<?php echo $tap->get_id();?>" class="smallbox" name="currentAmount[]" value="<?php echo (isset($keg)?convert_volume($keg->get_currentAmount(), $keg->get_currentAmountUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE):'') ?>" onchange="updateCurrentWeight(<?php echo $tap->get_id();?>);"/>
+                        	<input type="hidden" id="currentAmountOriginal<?php echo $tap->get_id();?>" class="smallbox" name="currentAmountOriginal[]" value="<?php echo (isset($keg)?convert_volume($keg->get_currentAmount(), $keg->get_currentAmountUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE):'-1') ?>" />
+                            <input type="hidden" id="currentAmountUnit<?php echo $tap->get_id();?>" class="smallbox" name="currentAmountUnit[]" value="<?php echo $config[ConfigNames::DisplayUnitVolume]; ?>" />
                         </td>
 						<?php if($config[ConfigNames::UseKegWeightCalc]) { ?>  
                         <td>
-							<input type="text" id="currentWeight<?php echo $tap->get_id();?>" class="smallbox" name="startWeight[]" value="" onchange="updateCurrentAmount(<?php echo $tap->get_id();?>);"/>
+							<input type="text" id="currentWeight<?php echo $tap->get_id();?>" class="smallbox" name="currentWeight[]" value="<?php echo (isset($keg)?convert_weight($keg->get_weight(), $keg->get_weightUnit(), $config[ConfigNames::DisplayUnitWeight]):'') ?>" onchange="updateCurrentAmount(<?php echo $tap->get_id();?>);"/>
+							<input type="hidden" id="currentWeightOriginal<?php echo $tap->get_id();?>" class="smallbox" name="currentWeightOriginal[]" value="<?php echo (isset($keg)?convert_weight($keg->get_weight(), $keg->get_weightUnit(), $config[ConfigNames::DisplayUnitWeight]):'') ?>" />
+                            <input type="hidden" id="currentWeightUnit<?php echo $tap->get_id();?>" class="smallbox" name="currentWeightUnit[]" value="<?php echo $config[ConfigNames::DisplayUnitWeight]; ?>" />
+                        <?php if(!$config[ConfigNames::UseDefWeightSettings]) { ?> 
+						</td>            
+                        <td>
+						<?php } ?>
+						<?php 
+						  $useKegPSI      = (!$config[ConfigNames::UseDefWeightSettings] && isset($keg) && $keg->get_fermentationPSI() && $keg->get_fermentationPSI() != ''); 
+						  $keggingPSIUnit = $useKegPSI?$keg->get_fermentationPSIUnit():$config[ConfigNames::DefaultFermPSIUnit];
+						  $keggingPSI     = convert_pressure($useKegPSI?$keg->get_fermentationPSI():$config[ConfigNames::DefaultFermPSI], $keggingPSIUnit, $config[ConfigNames::DisplayUnitPressure]);
+						?>  
+							<input type="<?php echo $config[ConfigNames::UseDefWeightSettings]?'hidden':'text';  ?>" id="fermentationPSI<?php echo $tap->get_id();?>" class="smallbox" name="fermentationPSI[]" value="<?php echo $keggingPSI;?>" onchange="updateCurrentAmount(<?php echo $tap->get_id();?>);"/>
+							<input type="hidden" id="fermentationPSIOriginal<?php echo $tap->get_id();?>" class="smallbox" name="fermentationPSIOriginal[]" value="<?php echo $keggingPSI;?>"/>
+							<input type="hidden" id="fermentationPSIUnit<?php echo $tap->get_id();?>" class="smallbox" name="fermentationPSIUnit[]" value="<?php echo $config[ConfigNames::DisplayUnitPressure]; ?>" />
+                        	<input type="hidden" id="defaultFermentationPSI<?php echo $tap->get_id();?>" name="defaultFermentiationPSI[]" value="<?php echo (!isset($keg) || !$keg->get_fermentationPSI() || $keg->get_fermentationPSI() == '')?"1":"0"; ?>"/>
 						<?php if(!$config[ConfigNames::UseDefWeightSettings]) { ?> 
 						</td>            
                         <td>
 						<?php } ?>  
-							<input type="<?php echo $config[ConfigNames::UseDefWeightSettings]?'hidden':'text';  ?>" id="fermentationPSI<?php echo $tap->get_id();?>" class="smallbox" name="fermentationPSI[]" value="<?php echo (!$config[ConfigNames::UseDefWeightSettings] && isset($keg) && $keg->get_fermentationPSI() && $keg->get_fermentationPSI() != ''?$keg->get_fermentationPSI():$config[ConfigNames::DefaultFermPSI]);?>" onchange="updateCurrentAmount(<?php echo $tap->get_id();?>);"/>
-							<input type="hidden" id="defaultFermentationPSI<?php echo $tap->get_id();?>" name="defaultFermentiationPSI[]" value="<?php echo (!isset($keg) || !$keg->get_fermentationPSI() || $keg->get_fermentationPSI() == '')?"1":"0"; ?>"/>
-						<?php if(!$config[ConfigNames::UseDefWeightSettings]) { ?> 
-						</td>            
-                        <td>
-						<?php } ?>  
-							<input type="<?php echo $config[ConfigNames::UseDefWeightSettings]?'hidden':'text';  ?>" id="keggingTemp<?php echo $tap->get_id();?>" class="smallbox" name="keggingTemp[]" value="<?php echo (!$config[ConfigNames::UseDefWeightSettings] && isset($keg) && $keg->get_keggingTemp() && $keg->get_keggingTemp() != ''?$keg->get_keggingTemp():$config[ConfigNames::DefaultKeggingTemp]);?>" onchange="updateCurrentAmount(<?php echo $tap->get_id();?>);"/>
-							<input type="hidden" id="defaultKeggingTemp<?php echo $tap->get_id();?>" name="defaultKeggingTemp[]" value="<?php echo (!isset($keg) || !$keg->get_keggingTemp() || $keg->get_keggingTemp() == '')?"1":"0"; ?>"/>						
+						<?php 
+						  $useKegKeggingTemp = (!$config[ConfigNames::UseDefWeightSettings] && isset($keg) && $keg->get_keggingTemp() && $keg->get_keggingTemp() != ''); 
+						  $keggingTempUnit   = $useKegKeggingTemp?$keg->get_keggingTempUnit():$config[ConfigNames::DefaultKeggingTempUnit];
+						  $keggingTemp       = convert_temperature($useKegKeggingTemp?$keg->get_keggingTemp():$config[ConfigNames::DefaultKeggingTemp], $keggingTempUnit, $config[ConfigNames::DisplayUnitTemperature]);						  
+						?>  
+							<input type="<?php echo $config[ConfigNames::UseDefWeightSettings]?'hidden':'text';  ?>" id="keggingTemp<?php echo $tap->get_id();?>" class="smallbox" name="keggingTemp[]" value="<?php echo $keggingTemp;?>" onchange="updateCurrentAmount(<?php echo $tap->get_id();?>);"/>
+							<input type="hidden" id="keggingTempOriginal<?php echo $tap->get_id();?>" class="smallbox" name="keggingTempOriginal[]" value="<?php echo $keggingTemp;?>"/>
+							<input type="hidden" id="keggingTempUnit<?php echo $tap->get_id();?>" class="smallbox" name="keggingTempUnit[]" value="<?php echo $config[ConfigNames::DisplayUnitTemperature]; ?>" />
+                        	<input type="hidden" id="defaultKeggingTemp<?php echo $tap->get_id();?>" name="defaultKeggingTemp[]" value="<?php echo (!isset($keg) || !$keg->get_keggingTemp() || $keg->get_keggingTemp() == '')?"1":"0"; ?>"/>						
 						</td>      
 						<?php } ?>      
                         <?php if($config[ConfigNames::UseFlowMeter]) { ?>
@@ -469,7 +524,9 @@ include 'top_menu.php';
                                 </td>
                                 <td>
                                     <?php if( isset($tap) ) { ?>
-                                        <input type="text" id="countpergallon<?php echo $tap->get_id();?>" class="smallbox" name="countpergallon[]" value="<?php echo $tap->get_count(); ?>" />
+                                        <input type="text" id="countpergallon<?php echo $tap->get_id();?>" class="smallbox" name="countpergallon[]" value="<?php echo convert_count($tap->get_count(), $tap->get_countUnit(), $config[ConfigNames::DisplayUnitVolume]); ?>" />
+                                        <input type="hidden" id="countpergallonOriginal<?php echo $tap->get_id();?>" class="smallbox" name="countpergallonOriginal[]" value="<?php echo convert_count($tap->get_count(), $tap->get_countUnit(), $config[ConfigNames::DisplayUnitVolume]); ?>" />
+                                	    <input type="hidden" id="countpergallonUnit<?php echo $tap->get_id();?>" class="smallbox" name="countpergallonUnit[]" value="<?php echo $config[ConfigNames::DisplayUnitVolume]; ?>" />
                                     <?php } ?>
                                 </td>
                         <?php } ?>
@@ -537,50 +594,67 @@ include 'scripts.php';
 ?>
 	function updateCurrentWeight(tapId){
 		var kegSelArr = document.getElementById("kegId"+tapId).value.split("~");
-		var beerSelArr = document.getElementById("kegId"+tapId).value.split("~");
 		var emptyKegWeight = 0;
+		var emptyKegWeightUnit = '';
 		if(kegSelArr.length > 4 && kegSelArr[3] != "")
 		{
 			emptyKegWeight = kegSelArr[3];
+			if(kegSelArr.length > 5) emptyKegWeightUnit = kegSelArr[4];
 		}
 		var beerSelArr = document.getElementById("beerId"+tapId).value.split("~");
 		var fg = 1.000;
+		var fgUnit = 'sg';
 		if(beerSelArr.length > 1 && beerSelArr[1] != "")
 		{
 			fg = beerSelArr[1];
+			if(beerSelArr.length > 2)fgUnit = beerSelArr[2];
 		}
 		weight = getWeightByVol(document.getElementById("currentAmount"+tapId).value,  
+																				document.getElementById("currentAmountUnit"+tapId).value,
 																				emptyKegWeight, 
+																				emptyKegWeightUnit,
 																		     	document.getElementById("keggingTemp"+tapId).value, 
+																		     	document.getElementById("keggingTempUnit"+tapId).value, 
 																		     	<?php echo $config[ConfigNames::BreweryAltitude] ?>,
+																		     	'<?php echo $config[ConfigNames::BreweryAltitudeUnit] ?>',
 																		     	document.getElementById("fermentationPSI"+tapId).value, 
-																		     	true, 
+																		     	document.getElementById("fermentationPSIUnit"+tapId).value, 
 																		     	fg, 
-																		     	false).toFixed(5);
-		if(!isNaN(weight))document.getElementById("currentWeight"+tapId).value = weight;
+																		     	fgUnit,
+																				'<?php echo $config[ConfigNames::DisplayUnitWeight]?>');
+		if(!isNaN(weight))document.getElementById("currentWeight"+tapId).value = parseFloat(weight).toFixed(5);
 	}
 	function updateCurrentAmount(tapId){
 		var kegSelArr = document.getElementById("kegId"+tapId).value.split("~");
 		var emptyKegWeight = 0;
+		var emptyKegWeightUnit = '';
 		if(kegSelArr.length > 4 && kegSelArr[3] != "")
 		{
 			emptyKegWeight = kegSelArr[3];
+			if(kegSelArr.length > 5) emptyKegWeightUnit = kegSelArr[4];
 		}
 		var beerSelArr = document.getElementById("beerId"+tapId).value.split("~");
 		var fg = 1.000;
+		var fgUnit = 'sg';
 		if(beerSelArr.length > 1 && beerSelArr[1] != "")
 		{
 			fg = beerSelArr[1];
+			if(beerSelArr.length > 2)fgUnit = beerSelArr[2];
 		}
 		var volume = getVolumeByWeight(document.getElementById("currentWeight"+tapId).value, 
+																			    document.getElementById("currentWeightUnit"+tapId).value,
 																				emptyKegWeight,
+																				emptyKegWeightUnit,
 																		     	document.getElementById("keggingTemp"+tapId).value, 
+																		     	document.getElementById("keggingTempUnit"+tapId).value, 
 																		     	<?php echo $config[ConfigNames::BreweryAltitude] ?>, 
+																				'<?php echo $config[ConfigNames::BreweryAltitudeUnit] ?>', 
 																		     	document.getElementById("fermentationPSI"+tapId).value, 
-																				true, 
+																		     	document.getElementById("fermentationPSIUnit"+tapId).value, 
 																				fg, 
-																				false).toFixed(5);
-		if(!isNaN(volume))document.getElementById("currentAmount"+tapId).value = volume;
+																				fgUnit,
+																				'<?php echo $config[ConfigNames::DisplayUnitVolume]?>');
+		if(!isNaN(volume))document.getElementById("currentAmount"+tapId).value = parseFloat(volume).toFixed(5);
 	}
 	function validateBeerSelected(kegSelectStart, beerSelectStart) {
 		var ii = 1;
@@ -667,16 +741,35 @@ include 'scripts.php';
 			if(secOtherTapBeerSelect != null)secOtherTapBeerSelect.selectedIndex = 0;
 			if(secOtherTapKegSelect != null)secOtherTapKegSelect.selectedIndex = 0;		
 
-			moveKegAttribute("startAmount", kegSelArr[2], tapId);
-			moveKegAttribute("currentAmount", kegSelArr[2], tapId);
-			moveKegAttribute("currentWeight", kegSelArr[2], tapId);
-			moveKegAttribute("fermentationPSI", kegSelArr[2], tapId);
-			moveKegAttribute("keggingTemp", kegSelArr[2], tapId);
+			moveKegAttribute("startAmount", kegSelArr[2], tapId, "text");
+			moveKegAttribute("startAmountOriginal", kegSelArr[2], tapId, "hidden");
+			moveKegAttribute("startAmountUnit", kegSelArr[2], tapId, "hidden");
+			moveKegAttribute("currentAmount", kegSelArr[2], tapId, "text");
+			moveKegAttribute("currentAmountOriginal", kegSelArr[2], tapId, "hidden");
+			moveKegAttribute("currentAmountUnit", kegSelArr[2], tapId, "hidden");
+			moveKegAttribute("currentWeight", kegSelArr[2], tapId, "text");
+			moveKegAttribute("currentWeightOriginal", kegSelArr[2], tapId, "hidden");
+			moveKegAttribute("currentWeightUnit", kegSelArr[2], tapId, "hidden");
+			moveKegAttribute("fermentationPSI", kegSelArr[2], tapId, "text");
+			moveKegAttribute("fermentationPSIOriginal", kegSelArr[2], tapId, "hidden");
+			moveKegAttribute("fermentationPSIUnit", kegSelArr[2], tapId, "hidden");
+			moveKegAttribute("keggingTemp", kegSelArr[2], tapId, "text");
+			moveKegAttribute("keggingTempOriginal", kegSelArr[2], tapId, "hidden");
+			moveKegAttribute("keggingTempUnit", kegSelArr[2], tapId, "hidden");
 		}else{
-			$("#startAmount"+tapId).val(kegSelArr[5]);
-			$("#currentAmount"+tapId).val(kegSelArr[6]);
-			if($("#fermentationPSI"+tapId+"[type='text']").length > 0)$("#fermentationPSI"+tapId).val(kegSelArr[7]);
-			if($("#keggingTemp"+tapId+"[type='text']").length > 0)$("#keggingTemp"+tapId).val(kegSelArr[8]);
+			var ii = 7; // Use this incase the start value changes. Note the original is the same so dont increment until after original
+			$("#startAmount"+tapId).val(kegSelArr[ii]); 
+			$("#startAmountOriginal"+tapId).val(kegSelArr[ii]);
+			$("#startAmountUnit"+tapId).val(kegSelArr[++ii]); 
+			$("#currentAmount"+tapId).val(kegSelArr[++ii]);
+			$("#currentAmountOriginal"+tapId).val(kegSelArr[ii]);
+			$("#currentAmountUnit"+tapId).val(kegSelArr[++ii]);
+			if($("#fermentationPSI"+tapId+"[type='text']").length > 0)$("#fermentationPSI"+tapId).val(kegSelArr[++ii]); 
+			if($("#fermentationPSIOriginal"+tapId+"[type='hidden']").length > 0)$("#fermentationPSI"+tapId).val(kegSelArr[ii]);
+			if($("#fermentationPSIUnit"+tapId+"[type='hidden']").length > 0)$("#fermentationPSIUnit"+tapId).val(kegSelArr[++ii]); 
+			if($("#keggingTemp"+tapId+"[type='text']").length > 0)$("#keggingTemp"+tapId).val(kegSelArr[++ii]); 
+			if($("#keggingTempOriginal"+tapId+"[type='hidden']").length > 0)$("#keggingTemp"+tapId).val(kegSelArr[ii]);
+			if($("#keggingTempUnit"+tapId+"[type='hidden']").length > 0)$("#keggingTempUnit"+tapId).val(kegSelArr[++ii]); 
 			updateCurrentWeight(tapId)
 		}	
 
@@ -700,9 +793,9 @@ include 'scripts.php';
 		}
 	}
 
-	function moveKegAttribute(attribute, fromTapId, toTapId){
-		//Only modify text inputs
-		if($("#"+attribute+toTapId+"[type='text']").length > 0) return;
+	function moveKegAttribute(attribute, fromTapId, toTapId, inputType=''){
+		//Only modify the correct type
+		if(inputType != '' && $("#"+attribute+toTapId+"[type='"+inputType+"']").length == 0) return;
 		$("#"+attribute+toTapId).val($("#"+attribute+fromTapId).val());
 		$("#"+attribute+fromTapId).val("");
 	}
@@ -728,6 +821,12 @@ include 'scripts.php';
                    }
              });
   	}
+
+	$("input[name='countpergallon[]']").change(inputChanged);
+    function inputChanged(){
+        var changeInput = this.id + "changed"
+    	$("input[id='"+changeInput+"']").val(1)
+    }
 </script>
 	<!-- End Js -->
 

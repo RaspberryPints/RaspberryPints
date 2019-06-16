@@ -21,7 +21,7 @@ if (isset ( $_POST ['save'] )) {
 	        $ii++;
 	        continue;
 	    }
-	    if(!$tapManager->saveTapLoadCellInfo($_POST ['id'][$ii], $_POST['loadCellCmdPin'][$ii], $_POST['loadCellRspPin'][$ii]))$error=true;
+	    if(!$tapManager->saveTapLoadCellInfo($_POST ['id'][$ii], $_POST['loadCellCmdPin'][$ii], $_POST['loadCellRspPin'][$ii], $_POST['loadCellUnit'][$ii]))$error=true;
 	    $ii++;
 	    $reconfig = true;
 	}
@@ -86,6 +86,7 @@ include 'top_menu.php';
                             <th style="vertical-align: middle;">Tap</th>
                             <th style="vertical-align: middle;">Command Pin</th>
                             <th style="vertical-align: middle;">Response Pin</th>
+                            <th style="width:200px;vertical-align: middle;">Unit</th>
                             <th style="width:50px; vertical-align: middle;">Tare Date</th>
                             <th>
                         </tr>
@@ -110,6 +111,18 @@ include 'top_menu.php';
                                     <td style="vertical-align: middle;">
                                         <input type="text" id="loadCellRspPin<?php echo $tap->get_id();?>" class="smallbox" name="loadCellRspPin[]" value="<?php echo $tap->get_loadCellRspPin() ?>" />
                                     </td>
+                                    <td style="vertical-align: middle;">
+                                    <select name="loadCellUnit[]">
+                                    <?php
+                                        $result = getConfigByName(ConfigNames::DisplayUnitWeight);
+                        				foreach($result as $row) {
+                        				    $options = explode('|', $row['validation']);
+                        				    foreach($options as $option){
+                        				        echo '<option ' . ($tap->get_loadCellUnit()==$option?'selected':'') . ' value="'.$option.'">'.$option.'</option>'; 
+                        					}
+                        			} ?>
+                        			</select>
+                        			</td>
                                     <td style="vertical-align: middle;">
                                         <span><?php echo $tap->get_loadCellTareDate() ?></span>
                                     </td>

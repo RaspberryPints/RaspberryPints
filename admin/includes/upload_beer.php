@@ -168,7 +168,9 @@ else
                   $dbYeast->set_maxAttenuation(preg_replace("/[^0-9|.]/", "", $yeast->ATTENUATION));
                   $dbYeast->set_flocculation(preg_replace("/[^0-9|.]/", "", $yeast->FLOCCULATION));
                   $dbYeast->set_minTemp(preg_replace("/[^0-9|.]/", "", $yeast->MIN_TEMPERATURE));
+                  $dbYeast->set_minTempUnit(isset($yeast->MIN_TEMPERATURE_UNIT) && $yeast->MIN_TEMPERATURE_UNIT != ""?$yeast->MIN_TEMPERATURE_UNIT:UnitsOfMeasure::TemperatureCelsius);
                   $dbYeast->set_maxTemp(preg_replace("/[^0-9|.]/", "", $yeast->MAX_TEMPERATURE));
+                  $dbYeast->set_maxTempUnit(isset($yeast->MAX_TEMPERATURE_UNIT) && $yeast->MAX_TEMPERATURE_UNIT != ""?$yeast->MAX_TEMPERATURE_UNIT:UnitsOfMeasure::TemperatureCelsius);
                   
                   $yeastManager->Save($dbYeast);
               }

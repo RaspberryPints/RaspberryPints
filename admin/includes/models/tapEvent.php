@@ -11,7 +11,9 @@ class TapEvent
     private $_kegId;
     private $_beerId;
     private $_amount;
+    private $_amountUnit;
     private $_newAmount;
+    private $_newAmountUnit;
     private $_userId;
     private $_userName;
     private $_tapNumber;
@@ -43,6 +45,11 @@ class TapEvent
     public function set_amount($_amount){ $this->_amount = $_amount; }
     public function get_newAmount(){ return $this->_newAmount; }
     public function set_newAmount($_newAmount){ $this->_newAmount = $_newAmount; }
+    
+    public function get_amountUnit(){ return $this->_amountUnit; }
+    public function set_amountUnit($_amountUnit){ $this->_amountUnit = $_amountUnit; }
+    public function get_newAmountUnit(){ return $this->_newAmountUnit; }
+    public function set_newAmountUnit($_newAmountUnit){ $this->_newAmountUnit = $_newAmountUnit; }
     
     public function get_userId(){ return $this->_userId; }
     public function set_userId($_userId){ $this->_userId = $_userId; } 
@@ -98,7 +105,7 @@ class TapEvent
         else
             $this->set_beerId(null);            
             
-        if( isset($postArr['amount']) )
+        if( isset($postArr['amountUnit']) )
             $this->set_amount($postArr['amount']);
         else
             $this->set_amount(null);
@@ -107,6 +114,16 @@ class TapEvent
             $this->set_newAmount($postArr['newAmount']);
         else
             $this->set_newAmount(null);
+            
+        if( isset($postArr['amountUnit']) )
+            $this->set_amountUnit($postArr['amountUnit']);
+        else
+            $this->set_amountUnit(null);
+            
+        if( isset($postArr['newAmountUnit']) )
+            $this->set_newAmountUnit($postArr['newAmountUnit']);
+        else
+            $this->set_newAmountUnit(null);
             
         if( isset($postArr['userId']) )
             $this->set_userId($postArr['userId']);
@@ -158,6 +175,7 @@ class TapEvent
             "kegId: "  . $this->get_kegId()  . ", " .
             "beerId: " . $this->get_beerId() . ", " .
             "amount: " . $this->get_amount() . ", " .
+            "amountUnit: " . $this->get_amountUnit() . ", " .
             "userId: " . $this->get_userId() . " " .
             "}";
     }

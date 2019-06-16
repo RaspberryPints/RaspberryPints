@@ -10,6 +10,7 @@ class Keg
 	private $_stampedOwner; 
 	private $_stampedLoc; 
 	private $_weight; 
+	private $_weightUnit; 
 	private $_notes; 
 	private $_kegStatusCode;
 	private $_beerId;
@@ -17,11 +18,17 @@ class Keg
 	private $_onTapId;
 	private $_tapNumber;
 	private $_emptyWeight;
+	private $_emptyWeightUnit;
 	private $_maxVolume;
+	private $_maxVolumeUnit;
 	private $_startAmount;
+	private $_startAmountUnit;
 	private $_currentAmount;
+	private $_currentAmountUnit;
 	private $_fermenationPSI;
+	private $_fermenationPSIUnit;
 	private $_keggingTemp;
+	private $_keggingTempUnit;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
@@ -56,6 +63,9 @@ class Keg
 	    $this->_weight = $_weight;
 	    if($this->_emptyWeight > $this->_weight) $this->_weight = $this->_emptyWeight;
 	}
+	
+	public function get_weightUnit(){ return $this->_weightUnit; }
+	public function set_weightUnit($_weightUnit){ $this->_weightUnit = $_weightUnit;	}
 
 	public function get_notes(){ return $this->_notes; }
 	public function set_notes($_notes){ $this->_notes = $_notes; }
@@ -81,20 +91,38 @@ class Keg
 	    if($this->_emptyWeight > $this->_weight) $this->_weight = $this->_emptyWeight;
 	}
 	
+	public function get_emptyWeightUnit(){ return $this->_emptyWeightUnit; }
+	public function set_emptyWeightUnit($_emptyWeightUnit){ $this->_emptyWeightUnit = $_emptyWeightUnit; }
+	
 	public function get_maxVolume(){ return $this->_maxVolume; }
 	public function set_maxVolume($_maxVolume){ $this->_maxVolume = $_maxVolume; }
+	
+	public function get_maxVolumeUnit(){ return $this->_maxVolumeUnit; }
+	public function set_maxVolumeUnit($_maxVolumeUnit){ $this->_maxVolumeUnit = $_maxVolumeUnit; }
 	
 	public function get_startAmount(){ return $this->_startAmount; }
 	public function set_startAmount($_startAmount){ $this->_startAmount = $_startAmount; }
 	
+	public function get_startAmountUnit(){ return $this->_startAmountUnit; }
+	public function set_startAmountUnit($_startAmountUnit){ $this->_startAmountUnit = $_startAmountUnit; }
+	
 	public function get_currentAmount(){ return $this->_currentAmount; }
 	public function set_currentAmount($_currentAmount){ $this->_currentAmount = $_currentAmount; }
+	
+	public function get_currentAmountUnit(){ return $this->_currentAmountUnit; }
+	public function set_currentAmountUnit($_currentAmountUnit){ $this->_currentAmountUnit = $_currentAmountUnit; }
 	
 	public function get_fermentationPSI(){ return $this->_fermentationPSI; }
 	public function set_fermentationPSI($_fermentationPSI){ $this->_fermentationPSI = $_fermentationPSI; }
 	
+	public function get_fermentationPSIUnit(){ return $this->_fermentationPSIUnit; }
+	public function set_fermentationPSIUnit($_fermentationPSIUnit){ $this->_fermentationPSIUnit = $_fermentationPSIUnit; }
+	
 	public function get_keggingTemp(){ return $this->_keggingTemp; }
 	public function set_keggingTemp($_keggingTemp){ $this->_keggingTemp = $_keggingTemp; }
+	
+	public function get_keggingTempUnit(){ return $this->_keggingTempUnit; }
+	public function set_keggingTempUnit($_keggingTempUnit){ $this->_keggingTempUnit = $_keggingTempUnit; }
 	
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -149,6 +177,11 @@ class Keg
 		else
 			$this->set_weight(null);
 			
+		if( isset($postArr['weightUnit']) )
+		    $this->set_weightUnit($postArr['weightUnit']);
+		else
+		    $this->set_weightUnit(null);
+		
 		if( isset($postArr['notes']) )
 			$this->set_notes($postArr['notes']);
 		else
@@ -184,30 +217,60 @@ class Keg
 		else
 			$this->set_emptyWeight(null);
 		
+		if( isset($postArr['emptyWeightUnit']) )
+		    $this->set_emptyWeightUnit($postArr['emptyWeightUnit']);
+		else
+		    $this->set_emptyWeightUnit(null);
+		
 		if( isset($postArr['maxVolume']) )
 			$this->set_maxVolume($postArr['maxVolume']);
 		else
 			$this->set_maxVolume(null);
+		
+		if( isset($postArr['maxVolumeUnit']) )
+		    $this->set_maxVolumeUnit($postArr['maxVolumeUnit']);
+		else
+		    $this->set_maxVolumeUnit(null);
 			
 		if( isset($postArr['startAmount']) )
 		    $this->set_startAmount($postArr['startAmount']);
 	    else
 	        $this->set_startAmount(null);
 	        
+		if( isset($postArr['startAmountUnit']) )
+		    $this->set_startAmountUnit($postArr['startAmountUnit']);
+	    else
+	        $this->set_startAmountUnit(null);
+	        
         if( isset($postArr['currentAmount']) )
             $this->set_currentAmount($postArr['currentAmount']);
         else
             $this->set_currentAmount(null);
+            
+        if( isset($postArr['currentAmountUnit']) )
+            $this->set_currentAmountUnit($postArr['currentAmountUnit']);
+        else
+            $this->set_currentAmountUnit(null);
             
         if( isset($postArr['fermentationPSI']) )
             $this->set_fermentationPSI($postArr['fermentationPSI']);
         else
             $this->set_fermentationPSI(null);
         
+        if( isset($postArr['fermentationPSIUnit']) )
+            $this->set_fermentationPSIUnit($postArr['fermentationPSIUnit']);
+        else
+            $this->set_fermentationPSIUnit(null);
+        
         if( isset($postArr['keggingTemp']) )
             $this->set_keggingTemp($postArr['keggingTemp']);
         else
             $this->set_keggingTemp(null);
+        
+        if( isset($postArr['keggingTempUnit']) )
+            $this->set_keggingTempUnit($postArr['keggingTempUnit']);
+        else
+            $this->set_keggingTempUnit(null);
         
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);
@@ -231,17 +294,24 @@ class Keg
 			"stampedOwner: " . $this->get_stampedOwner() . ", " .
 			"stampedLoc: " . $this->get_stampedLoc() . ", " .
 			"weight: " . $this->get_weight() . ", " .
+			"weightUnit: " . $this->get_weightUnit() . ", " .
 			"notes: " . $this->get_notes() . ", " .
 			"kegStatusCode: " . $this->get_kegStatusCode() . ", " .
 			"onTapId: " . $this->get_onTapId() . ", " .
 			"beerId: " . $this->get_beerId() . ", " .
 			"active: '" . $this->get_active() . "', " .
 			"emptyWeight: " . $this->get_emptyWeight() . ", " .
+			"emptyWeightUnit: " . $this->get_emptyWeightUnit() . ", " .
 			"maxVolume: " . $this->get_maxVolume() . ", " .
+			"maxVolumeUnit: " . $this->get_maxVolumeUnit() . ", " .
 			"startAmount: " . $this->get_startAmount() . ", " .
+			"startAmountUnit: " . $this->get_startAmountUnit() . ", " .
 			"currentAmount: " . $this->get_currentAmount() . ", " .
+			"currentAmountUnit: " . $this->get_currentAmountUnit() . ", " .
 			"fermentationPSI: " . $this->get_fermentationPSI() . ", " .
+			"fermentationPSIUnit: " . $this->get_fermentationPSIUnit() . ", " .
 			"keggingTemp: " . $this->get_keggingTemp() . ", " .
+			"keggingTempUnit: " . $this->get_keggingTempUnit() . ", " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  
 		"}";

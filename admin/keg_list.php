@@ -7,6 +7,8 @@ $kegStatusManager = new KegStatusManager();
 $kegTypeManager = new KegTypeManager();
 $beerManager = new BeerManager();
 
+$config = getAllConfigs();
+
 if (isset($_POST['inactivateKeg'])) {
 	$kegManager->Inactivate($_POST['inactivateKeg']);		
 }
@@ -59,7 +61,7 @@ if (isset($_POST['saveAll'])) {
 }
 $kegs = $kegManager->GetAllActive();
 $kegStatusList = $kegStatusManager->GetAll();
-$kegTypeList = $kegTypeManager->GetAll();
+//$kegTypeList = $kegTypeManager->GetAll();
 $beerList = $beerManager->GetAllActive();
 ?>
 <body>
@@ -167,12 +169,12 @@ include 'top_menu.php';
 						<td style="padding-bottom: 1px; padding-top: 1px">
 							<b>Stamped Owner:</b> &nbsp; <?php echo $keg->get_stampedOwner() ?><br>
 							<b>Serial Number:</b> &nbsp; <?php echo $keg->get_serial() ?><br>
-							<b>Max Volume:</b> &nbsp; <?php echo $keg->get_maxVolume() ?><br>
+							<b>Max Volume(<?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L")?>):</b> &nbsp; <?php echo convert_volume($keg->get_maxVolume(), $keg->get_maxVolumeUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE) ?><br>
 						</td>			
 						<td  style="padding-bottom: 1px; padding-top: 1px">
 							<b>Location:</b> &nbsp; <?php echo $keg->get_stampedLoc() ?><br>
-							<b>Start Amount:</b> &nbsp; <?php echo $keg->get_startAmount() ?><br>
-							<b>Current Amount:</b> &nbsp; <?php echo $keg->get_currentAmount() ?><br>
+							<b>Start Amount(<?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L")?>):</b> &nbsp; <?php echo convert_volume($keg->get_startAmount(), $keg->get_startAmountUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE) ?><br>
+							<b>Current Amount(<?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L")?>):</b> &nbsp; <?php echo convert_volume($keg->get_currentAmount(), $keg->get_currentAmountUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE) ?><br>
 						</td>
 						<td style="padding-bottom: 1px; padding-top: 1px">
 						</td>

@@ -8,7 +8,7 @@ class YeastManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["name", "strand", "format", "minTemp", "maxTemp", "minAttenuation", "maxAttenuation", "flocculation", "notes"];
+	    return ["name", "strand", "format", "minTemp", "minTempUnit", "maxTemp", "maxTempUnit", "minAttenuation", "maxAttenuation", "flocculation", "notes"];
 	}
 	protected function getTableName(){
 		return "yeasts";

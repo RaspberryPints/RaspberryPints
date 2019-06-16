@@ -110,6 +110,19 @@ INSERT INTO `bottles` ( bottleTypeId, beerId, capRgba, capNumber, startAmount, c
 UPDATE `config` SET configValue='10' WHERE configname='numberOfTaps';
 
 
+UPDATE tapconfig set countUnit = 'oz' WHERE countUnit IS NULL;
+UPDATE tapconfig set loadCellUnit = 'lb' WHERE loadCellUnit IS NULL;
+UPDATE beers set ogUnit = 'sg', fgUnit = 'sg' WHERE ogUnit IS NULL;
+UPDATE kegs SET weightUnit ='lb', emptyWeightUnit ='lb', maxVolumeUnit ='oz', 
+				startAmountUnit ='oz', currentAmountUnit ='oz', fermentationPSIUnit ='psi', keggingTempUnit = 'F' 
+				WHERE weightUnit IS NULL;
+UPDATE kegTypes SET maxAmountUnit = 'oz', emptyWeightUnit = 'lb' WHERE emptyWeightUnit IS NULL;
+UPDATE pours set amountPouredUnit = 'oz' WHERE amountPouredUnit IS NULL;
+UPDATE yeasts set minTempUnit = 'F', maxTempUnit = 'F' WHERE maxTempUnit IS NULL;
+UPDATE tempLog set tempUnit = 'F' WHERE tempUnit IS NULL;
+UPDATE bottleTypes set volumeUnit = 'oz' WHERE volumeUnit IS NULL;
+UPDATE tapEvents set amountUnit = 'gal' WHERE amountUnit IS NULL;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

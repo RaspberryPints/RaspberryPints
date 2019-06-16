@@ -120,7 +120,7 @@ include 'top_menu.php';
                     if(!isset($displayedProbeTemps[$temp->get_probe()])){
                         $displayedProbeTemps[$temp->get_probe()] = array();
                     }
-                    $displayedProbeTemps[$temp->get_probe()][$temp->get_takenDate()] = $temp->get_temp();
+                    $displayedProbeTemps[$temp->get_probe()][$temp->get_takenDate()] = convert_temperature($temp->get_temp(), $temp->get_tempUnit(), $config[ConfigNames::DisplayUnitTemperature]);
                     
                     if(!isset($displayedDateTemps[$temp->get_takenDate()])){
                         $displayedDateTemps[$temp->get_takenDate()] = array();
@@ -181,29 +181,38 @@ include 'top_menu.php';
             	?>
                 <?php 
                     $minTemp = $minHum = 99999;
+                    $minTempUnit = null;
                     $maxTemp = $maxHum = -99999;
+                    $maxTempUnit = null;
                     $sumTemp = $sumHum = 0;
+                    $sumTempUnit = null;
                     $countHum = 0;
                     foreach($tempList as $temp) {
-                    $i++;
-                    
-                    $minTemp = min($minTemp, $temp->get_temp());
-                    $maxTemp = max($maxTemp, $temp->get_temp());
-                    $sumTemp += $temp->get_temp();
-                    
-                    if($temp->get_humidity()){
-                        $minHum = min($minHum, $temp->get_humidity());
-                        $maxHum = max($maxHum, $temp->get_humidity());
-                        $sumHum += $temp->get_humidity();
-                        $countHum++;
-                    }
+                        $i++;
+                        //Gather min/max/sum and convert to the correct units for each one using the first unit as the unit for all
+                        if(!$minTempUnit) $minTempUnit = $temp->get_tempUnit();
+                        if($minTempUnit != $temp->get_tempUnit()) {$temp->set_temp(convert_temperature($temp->get_temp(), $temp->get_tempUnit(), $minTempUnit));$temp->set_tempUnit($minTempUnit);}
+                        $minTemp = min($minTemp, $temp->get_temp());
+                        if(!$maxTempUnit) $maxTempUnit = $temp->get_tempUnit();
+                        if($maxTempUnit != $temp->get_tempUnit()) {$temp->set_temp(convert_temperature($temp->get_temp(), $temp->get_tempUnit(), $maxTempUnit));$temp->set_tempUnit($maxTempUnit);}
+                        $maxTemp = max($maxTemp, $temp->get_temp());
+                        if(!$sumTempUnit) $sumTempUnit = $temp->get_tempUnit();
+                        if($sumTempUnit != $temp->get_tempUnit()) {$temp->set_temp(convert_temperature($temp->get_temp(), $temp->get_tempUnit(), $sumTempUnit));$temp->set_tempUnit($sumTempUnit);}
+                        $sumTemp += $temp->get_temp();
+                        
+                        if($temp->get_humidity()){
+                            $minHum = min($minHum, $temp->get_humidity());
+                            $maxHum = max($maxHum, $temp->get_humidity());
+                            $sumHum += $temp->get_humidity();
+                            $countHum++;
+                        }
                 ?>
                 	<tr>
                         <td style="vertical-align: middle;">
                             <?php echo $temp->get_probe(); ?>
                         </td>                       
                         <td style="vertical-align: middle;">
-                            <?php echo $temp->get_temp(); ?>
+                            <?php echo number_format(convert_temperature($temp->get_temp(), $temp->get_tempUnit(), $config[ConfigNames::DisplayUnitTemperature]), 2); ?>
                         </td>
                         <?php if($showHumidity){?> 
                             <td style="vertical-align: middle;">
@@ -220,15 +229,15 @@ include 'top_menu.php';
                 	<tr>
                 		<td></td>
                 		<td>
-                			Min: <?php echo $minTemp; ?><br/>
-                			Max: <?php echo $maxTemp; ?><br/>
-                			Avg: <?php echo $sumTemp/count($tempList); ?><br/>
+                			Min: <?php echo number_format(convert_temperature($minTemp, $minTempUnit, $config[ConfigNames::DisplayUnitTemperature]), 2); ?><br/>
+                			Max: <?php echo number_format(convert_temperature($maxTemp, $maxTempUnit, $config[ConfigNames::DisplayUnitTemperature]), 2); ?><br/>
+                			Avg: <?php echo number_format(convert_temperature($sumTemp, $sumTempUnit, $config[ConfigNames::DisplayUnitTemperature])/count($tempList), 2); ?><br/>
                 		</td>
                         <?php if($showHumidity){?> 
                     		<td>
-                    			Min: <?php echo $minHum; ?><br/>
-                    			Max: <?php echo $maxHum; ?><br/>
-                    			Avg: <?php echo $sumHum/$countHum; ?><br/>
+                    			Min: <?php echo number_format($minHum, 2); ?><br/>
+                    			Max: <?php echo number_format($maxHum, 2); ?><br/>
+                    			Avg: <?php echo number_format($sumHum/$countHum, 2); ?><br/>
                     		</td>
                         <?php } ?>
                 		<td></td>

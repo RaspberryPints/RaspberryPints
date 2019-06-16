@@ -27,7 +27,7 @@
 *   functions into this file.  JLH
 *
 \***************************************************************************/
-
+const DELIMITER = "delimiter";
 //
 // remove_comments will strip the sql comment lines out of an uploaded sql file
 // specifically for mssql and postgres type files in the install....
@@ -150,6 +150,27 @@ for ($i = 0; $i < $token_count; $i++)
 	// Don't wanna add an empty string as the last thing in the array.
 	if (($i != ($token_count - 1)) || (strlen($tokens[$i] > 0)))
 	{
+	    $tokens[$i] = ltrim($tokens[$i]);
+	    //Delimiter command doesnt end with the split delimiter instead it creates a new delimiter
+	    $containsDelimiter = strpos(strtolower($tokens[$i]), DELIMITER);
+	    if( $containsDelimiter !== FALSE && $containsDelimiter == 0){
+	        $tokens_temp = preg_split('/\r\n|\r|\n/', $tokens[$i]);
+	        //Split DELIMITER ?? into DELIMITER, [ ]?? (incase there are multiple spaces between the comannd and arg)
+	        //Dont save DELIMITER as mysqli->query doesnt need it
+	        $newDelimiter = ltrim(explode(' ', $tokens_temp[0], 2)[1]);
+	        $tokens[$i] = '';
+	        for($j = 1; $j < count($tokens_temp); $j++) $tokens[$i] .= $tokens_temp[$j];
+	        if($tokens[$i] == '') $i++;
+	        for(;$i < $token_count; $i++) {
+	            if(strpos($tokens[$i], $newDelimiter) === FALSE){
+	                $tokens[$i+1] = $tokens[$i].$delimiter.$tokens[$i+1];
+	            } else {
+	                $tokens_temp = explode($newDelimiter, $tokens[$i]);
+	                $tokens[$i] = $tokens_temp[0];
+	                break;
+	            }
+	        }
+	    }
 		// This is the total number of single quotes in the token.
 		$total_quotes = preg_match_all("/'/", $tokens[$i], $matches);
 		// Counts single quotes that are preceded by an odd number of backslashes,

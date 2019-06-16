@@ -442,6 +442,12 @@ if ($action == 'upgrade')
         //echo $sql;
         //echo "<br>";
         $mysqli->query($sql) or die('error in query '.$i.'['.substr($sql,0,80).'] ['.$mysqli->error.']');
+        while( $mysqli->more_results() && $mysqli->next_result()){
+            $rs = $mysqli->use_result();
+            if( $rs instanceof \mysqli_result ) {
+                $rs->free();
+            }
+        }
         //echo "<br>";
         $i++;
     }

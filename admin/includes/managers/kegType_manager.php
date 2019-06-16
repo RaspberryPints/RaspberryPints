@@ -8,7 +8,7 @@ class KegTypeManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["displayName", "maxAmount"];
+		return ["displayName", "maxAmount", "maxAmountUnit", "emptyWeight", "emptyWeightUnit"];
 	}
 	protected function getTableName(){
 		return "kegTypes";

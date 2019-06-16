@@ -136,24 +136,25 @@ Configuration Updated
 		<hr />
 	<a id="weightCalculation"></a> 
 		<h2>Default Configuration for Calculating Weight</h2><br><br>
-		<p><b>Altitude Above Sea Level (Feet):</b></p>
+		<p><b>Altitude Above Sea Level (<?php echo $configs[ConfigNames::DisplayUnitDistance]; ?>):</b></p>
 			<form method="post" action="includes/config_update.php">
-				<input type="text" class="largebox" value="<?php echo $configs[ConfigNames::BreweryAltitude]; ?>" name="configValue"> &nbsp; 
+				<input type="text" class="largebox" value="<?php echo (convert_distance($configs[ConfigNames::BreweryAltitude], $configs[ConfigNames::BreweryAltitudeUnit], $configs[ConfigNames::DisplayUnitDistance])); ?>" name="configValue"> &nbsp; 
+								
 				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::BreweryAltitude.'"/>'; ?>
 				<?php echo '<input type="hidden" name="jumpto" value="#weightCalculation"/>'; ?>
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form><br><br>
-		<p><b>Default Fermenation Pressure (PSI):</b></p>
+		<p><b>Default Fermenation Pressure (<?php echo $configs[ConfigNames::DisplayUnitPressure]; ?>):</b></p>
 		<p>0 if not fermenting under pressure</p>
 			<form method="post" action="includes/config_update.php">
-				<input type="text" class="largebox" value="<?php echo $configs[ConfigNames::DefaultFermPSI]; ?>" name="configValue"> &nbsp; 
+				<input type="text" class="largebox" value="<?php echo convert_pressure($configs[ConfigNames::DefaultFermPSI], $configs[ConfigNames::DefaultFermPSIUnit], $configs[ConfigNames::DisplayUnitPressure]); ?>" name="configValue"> &nbsp; 
 				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::DefaultFermPSI.'"/>'; ?>
-				<?php echo '<input type="hidden" name="jumpto" value="#weightCalculation"/>'; ?>
+				<?php echo '<input type="hidden" name="jumpto" value="#weightCalculation"/>'; ?> 
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form><br><br>
-		<p><b>Default Beer Temperature During Kegging (F):</b></p>
+		<p><b>Default Beer Temperature During Kegging (<?php echo $configs[ConfigNames::DisplayUnitTemperature]; ?>):</b></p>
 			<form method="post" action="includes/config_update.php">
-				<input type="text" class="largebox" value="<?php echo $configs[ConfigNames::DefaultKeggingTemp]; ?>" name="configValue"> &nbsp; 
+				<input type="text" class="largebox" value="<?php echo convert_temperature($configs[ConfigNames::DefaultKeggingTemp], $configs[ConfigNames::DefaultKeggingTempUnit], $configs[ConfigNames::DisplayUnitTemperature]); ?>" name="configValue"> &nbsp; 
 				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::DefaultKeggingTemp.'"/>'; ?>
 				<?php echo '<input type="hidden" name="jumpto" value="#weightCalculation"/>'; ?>
 				<input type="submit" class="btn" name="Submit" value="Submit">

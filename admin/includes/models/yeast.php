@@ -7,8 +7,10 @@ class Yeast
 	private $_name;
 	private $_strand;
 	private $_format; 
-	private $_minTemp;  
-	private $_maxTemp;  
+	private $_minTemp; 
+	private $_minTempUnit;  
+	private $_maxTemp;   
+	private $_maxTempUnit;  
 	private $_minAttenuation;  
 	private $_maxAttenuation;  
 	private $_flocculation;  
@@ -34,6 +36,11 @@ class Yeast
 	public function set_minTemp($_minTemp){ $this->_minTemp = $_minTemp; }
 	public function get_maxTemp(){ return $this->_maxTemp; } 
 	public function set_maxTemp($_maxTemp){ $this->_maxTemp = $_maxTemp; }
+	
+	public function get_minTempUnit(){ return $this->_minTempUnit; }
+	public function set_minTempUnit($_minTempUnit){ $this->_minTempUnit = $_minTempUnit; }
+	public function get_maxTempUnit(){ return $this->_maxTempUnit; }
+	public function set_maxTempUnit($_maxTempUnit){ $this->_maxTempUnit = $_maxTempUnit; }
 	
 	public function get_minAttenuation(){ return $this->_minAttenuation; } 
 	public function set_minAttenuation($_minAttenuation){ $this->_minAttenuation = $_minAttenuation; }
@@ -78,11 +85,21 @@ class Yeast
 			$this->set_minTemp($postArr['minTemp']);
 		else
 		    $this->set_minTemp(null);
-		
-		if( isset($postArr['maxTemp']) )
-			$this->set_maxTemp($postArr['maxTemp']);
+		    
+	    if( isset($postArr['minTempUnit']) )
+	        $this->set_minTempUnit($postArr['minTempUnit']);
+        else
+            $this->set_minTempUnit(null);
+            
+        if( isset($postArr['maxTemp']) )
+            $this->set_maxTemp($postArr['maxTemp']);
+        else
+            $this->set_maxTemp(null);
+        
+		if( isset($postArr['maxTempUnit']) )
+			$this->set_maxTempUnit($postArr['maxTempUnit']);
 		else
-		    $this->set_maxTemp(null);
+		    $this->set_maxTempUnit(null);
 			
 		if( isset($postArr['minAttenuation']) )
 			$this->set_minAttenuation($postArr['minAttenuation']);

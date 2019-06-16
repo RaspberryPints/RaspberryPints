@@ -34,6 +34,7 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 		$valveon = 0;
 		$valvepin = 0;
 		$countpergallon = $tap->get_count();
+		$countpergallonunit = $tap->get_countUnit();
 		
 		if (isset ( $_POST ['valvepin'][$ii] )) {
 			$valvepin = $_POST ['valvepin'][$ii] * ($_POST ['valvepinPi'][$id]?-1:1);
@@ -43,7 +44,7 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 		    $valveon = $_POST ['tapOverride'][$ii];
 		}
 	
-		$tapManager->saveTapConfig ( $id, $flowpin, $valvepin, $valveon, $countpergallon );
+		$tapManager->saveTapConfig ( $id, $flowpin, $valvepin, $valveon, $countpergallon, $countpergallonunit );
 		$ii++;
 	}
 	$reconfig = true;

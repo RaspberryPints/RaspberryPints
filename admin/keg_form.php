@@ -98,7 +98,7 @@ include 'top_menu.php';
 						    $sel = "";
 						    if( isset($keg) && $keg->get_beerId() == $item->get_id())  $sel .= "selected ";
 						    $desc = $item->get_name();
-						    $str .= "<option value='".$item->get_id()."~".$item->get_fg()."' ".$sel.">".$desc."</option>\n";
+						    $str .= "<option value='".$item->get_id()."~".$item->get_fg()."~".$item->get_fgUnit()."' ".$sel.">".$desc."</option>\n";
 						}
 						$str .= "</select>\n";
 						
@@ -182,63 +182,72 @@ include 'top_menu.php';
 			</tr>
 			<tr>
 				<td>
-					Current Weight:<br>(not &lt; Empty Weight)
+					Current Weight(<?php echo $config[ConfigNames::DisplayUnitWeight]; ?>):<br>(not &lt; Empty Weight)
 				</td>
 				<td>
-					<input type="text" id="currentWeight" class="mediumbox" name="weight" value="<?php echo $keg->get_weight() ?>" onchange="updateCurrentAmount()"/>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Empty Weight: 
-				</td>
-				<td>
-					<input type="text" id="emptyWeight" class="mediumbox" name="emptyWeight" value="<?php echo $keg->get_emptyWeight() ?>" />
+					<input type="text" id="weight" class="mediumbox" name="weight" value="<?php echo convert_weight($keg->get_weight(), $keg->get_weightUnit(), $config[ConfigNames::DisplayUnitWeight]); ?>" onchange="updateCurrentAmount()"/>
+					<input type="hidden" id="weightUnit" name="weightUnit" value="<?php echo $config[ConfigNames::DisplayUnitWeight]; ?>" />
 				</td>
 			</tr>
 			<tr>
 				<td>
-					Max Volume: 
+					Empty Weight(<?php echo $config[ConfigNames::DisplayUnitWeight]; ?>): 
 				</td>
 				<td>
-					<input type="text" id="maxVolume" class="mediumbox" name="maxVolume" value="<?php echo $keg->get_maxVolume() ?>" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Start Amount: 
-				</td>
-				<td>
-					<input type="text" id="startAmount" class="mediumbox" name="startAmount" value="<?php echo $keg->get_startAmount() ?>" />
+					<input type="text" id="emptyWeight" class="mediumbox" name="emptyWeight" value="<?php echo convert_weight($keg->get_emptyWeight(), $keg->get_emptyWeightUnit(), $config[ConfigNames::DisplayUnitWeight]); ?>" />
+					<input type="hidden" id="emptyWeightUnit" name="emptyWeightUnit" value="<?php echo $config[ConfigNames::DisplayUnitWeight]; ?>" />
 				</td>
 			</tr>
 			<tr>
 				<td>
-					Current Amount: 
+					Max Volume (<?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L"); ?>): 
 				</td>
 				<td>
-					<input type="text" id="currentAmount" class="mediumbox" name="currentAmount" value="<?php echo $keg->get_currentAmount() ?>" onchange="updateCurrentWeight()" />
-        			<?php if($config[ConfigNames::UseDefWeightSettings]){?>
-            			<input type="hidden" id="fermentationPSI" class="mediumbox" name="fermentationPSI" value="<?php echo $config[ConfigNames::DefaultFermPSI] ?>" />
-        				<input type="hidden" id="keggingTemp" class="mediumbox" name="keggingTemp" value="<?php echo $config[ConfigNames::DefaultKeggingTemp] ?>" />
+					<input type="text" id="maxVolume" class="mediumbox" name="maxVolume" value="<?php echo convert_Volume($keg->get_maxVolume(), $keg->get_maxVolumeUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE); ?>" />
+					<input type="hidden" id="maxVolumeUnit" name="maxVolumeUnit" value="<?php echo $config[ConfigNames::DisplayUnitVolume]; ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Start Amount (<?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L"); ?>): 
+				</td>
+				<td>
+					<input type="text" id="startAmount" class="mediumbox" name="startAmount" value="<?php echo convert_Volume($keg->get_startAmount(), $keg->get_startAmountUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE); ?>" />
+					<input type="hidden" id="startAmountUnit" name="startAmountUnit" value="<?php echo $config[ConfigNames::DisplayUnitVolume]; ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Current Amount (<?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L"); ?>): 
+				</td>
+				<td>
+					<input type="text" id="currentAmount" class="mediumbox" name="currentAmount" value="<?php echo convert_Volume($keg->get_currentAmount(), $keg->get_currentAmountUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE) ?>" onchange="updateCurrentWeight()" />
+        			<input type="hidden" id="currentAmountUnit" name="currentAmountUnit" value="<?php echo $config[ConfigNames::DisplayUnitVolume]; ?>" />
+					<?php if($config[ConfigNames::UseDefWeightSettings]){?>
+            			<input type="hidden" id="fermentationPSI" class="mediumbox" name="fermentationPSI" value="<?php echo convert_pressure($config[ConfigNames::DefaultFermPSI], $config[ConfigNames::DefaultFermPSIUnit], $config[ConfigNames::DisplayUnitPressure]); ?>" />
+        				<input type="hidden" id="fermentationPSIUnit" name="fermentationPSIUnit" value="<?php echo $config[ConfigNames::DisplayUnitPressure]; ?>" />
+						<input type="hidden" id="keggingTemp" class="mediumbox" name="keggingTemp" value="<?php echo convert_temperature($config[ConfigNames::DefaultKeggingTemp], $config[ConfigNames::DefaultKeggingTempUnit], $config[ConfigNames::DisplayUnitTemperature]); ?>" />
+						<input type="hidden" id="keggingTempUnit" name="keggingTempUnit" value="<?php echo $config[ConfigNames::DisplayUnitTemperature]; ?>" />
     				<?php } ?>
 				</td>
 			</tr>
 			<?php if(!$config[ConfigNames::UseDefWeightSettings]){?>
     			<tr>
     				<td>
-    					Fermentation PSI: 
+    					Fermentation<br/>Pressure(<?php echo $config[ConfigNames::DisplayUnitPressure]?>): 
     				</td>
     				<td>
-    					<input type="text" id="fermentationPSI" class="mediumbox" name="fermentationPSI" value="<?php echo $keg->get_fermentationPSI() ?>" />
+    					<input type="text" id="fermentationPSI" class="mediumbox" name="fermentationPSI" value="<?php echo convert_pressure($keg->get_fermentationPSI(), $keg->get_fermentationPSIUnit(), $config[ConfigNames::DisplayUnitPressure]); ?>" onchange="updateCurrentAmount()" />
+        				<input type="hidden" id="fermentationPSIUnit" name="fermentationPSIUnit" value="<?php echo $config[ConfigNames::DisplayUnitPressure]; ?>" />
     				</td>
     			</tr>
     			<tr>
     				<td>
-    					Kegging<br/>Temperature: 
+    					Kegging<br/>Temperature(<?php echo $config[ConfigNames::DisplayUnitTemperature]?>): 
     				</td>
     				<td>
-    					<input type="text" id="keggingTemp" class="mediumbox" name="keggingTemp" value="<?php echo $keg->get_keggingTemp() ?>" />
+    					<input type="text" id="keggingTemp" class="mediumbox" name="keggingTemp" value="<?php echo convert_temperature($keg->get_keggingTemp(), $keg->get_keggingTempUnit(), $config[ConfigNames::DisplayUnitTemperature]); ?>" onchange="updateCurrentAmount()" />
+        				<input type="hidden" id="keggingTempUnit" name="keggingTempUnit" value="<?php echo $config[ConfigNames::DisplayUnitTemperature]; ?>" />
     				</td>
     			</tr>
 			<?php } ?>
@@ -288,40 +297,52 @@ include 'scripts.php';
 <script>
     updateCurrentWeight();
 	function updateCurrentWeight(){
-		var emptyKegWeight = document.getElementById("emptyWeight").value
 		var beerSelArr = document.getElementById("beerId").value.split("~");
 		var fg = 1.000;
+		var fgUnit = 'sg';
 		if(beerSelArr.length > 1 && beerSelArr[1] != "")
 		{
 			fg = beerSelArr[1];
+			fgUnit = beerSelArr[2];
 		}
 		weight = getWeightByVol(document.getElementById("currentAmount").value,  
-																				emptyKegWeight, 
+																				document.getElementById("currentAmountUnit").value,
+																				document.getElementById("emptyWeight").value, 
+																				document.getElementById("emptyWeightUnit").value,
 																		     	document.getElementById("keggingTemp").value, 
+																		     	document.getElementById("keggingTempUnit").value, 
 																		     	<?php echo $config[ConfigNames::BreweryAltitude] ?>,
+																		     	'<?php echo $config[ConfigNames::BreweryAltitudeUnit] ?>',
 																		     	document.getElementById("fermentationPSI").value, 
-																		     	true, 
+																		     	document.getElementById("fermentationPSIUnit").value, 
 																		     	fg, 
-																		     	false).toFixed(5);
-		if(!isNaN(weight))document.getElementById("currentWeight").value = weight;
+																		     	fgUnit,
+																				'<?php echo $config[ConfigNames::DisplayUnitWeight]?>');
+		if(!isNaN(weight))document.getElementById("weight").value = parseFloat(weight).toFixed(5);
 	}
 	function updateCurrentAmount(){
-		var emptyKegWeight = document.getElementById("emptyWeight").value;
 		var beerSelArr = document.getElementById("beerId").value.split("~");
 		var fg = 1.000;
+		var fgUnit = 'sg';
 		if(beerSelArr.length > 1 && beerSelArr[1] != "")
 		{
 			fg = beerSelArr[1];
+			fgUnit = beerSelArr[2];
 		}
-		var volume = getVolumeByWeight(document.getElementById("currentWeight").value, 
-																				emptyKegWeight,
+		var volume = getVolumeByWeight(document.getElementById("weight").value, 
+																				document.getElementById("weightUnit").value, 
+																				document.getElementById("emptyWeight").value,
+																				document.getElementById("emptyWeightUnit").value,
 																		     	document.getElementById("keggingTemp").value, 
+																		     	document.getElementById("keggingTempUnit").value, 
 																		     	<?php echo $config[ConfigNames::BreweryAltitude] ?>, 
+																		     	'<?php echo $config[ConfigNames::BreweryAltitudeUnit] ?>', 
 																		     	document.getElementById("fermentationPSI").value, 
-																				true, 
-																				fg, 
-																				false).toFixed(5);
-		if(!isNaN(volume))document.getElementById("currentAmount").value = volume;
+																		     	document.getElementById("fermentationPSIUnit").value, 
+																				fg,
+																				fgUnit,
+																				'<?php echo $config[ConfigNames::DisplayUnitVolume]?>');
+		if(!isNaN(volume))document.getElementById("currentAmount").value = parseFloat(volume).toFixed(5);
 	}
 
 	$(function() {		

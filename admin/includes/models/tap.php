@@ -8,12 +8,14 @@ class Tap
 	private $_tapRgba;
 	private $_flowPinId;
 	private $_count; 
+	private $_countUnit; 
 	private $_valvePinId;
 	private $_valveOn; 
 	private $_valvePinState; 
 	private $_active;
 	private $_loadCellCmdPin;
 	private $_loadCellRspPin;
+	private $_loadCellUnit;
 	private $_loadCellTareDate;
 	private $_createdDate; 
 	private $_modifiedDate; 
@@ -49,6 +51,9 @@ class Tap
 	
 	public function get_count(){ return $this->_count; }
 	public function set_count($_count){ $this->_count = $_count; }
+	
+	public function get_countUnit(){ return $this->_countUnit; }
+	public function set_countUnit($_countUnit){ $this->_countUnit = $_countUnit; }
 		
 	public function get_active(){ return $this->_active; }
 	public function set_active($_active){ $this->_active = $_active; }
@@ -59,9 +64,12 @@ class Tap
 	public function get_loadCellRspPin(){ return $this->_loadCellRspPin; }
 	public function set_loadCellRspPin($_loadCellRspPin){ $this->_loadCellRspPin = $_loadCellRspPin; }
 	
+	public function get_loadCellUnit(){ return $this->_loadCellUnit; }
+	public function set_loadCellUnit($_loadCellUnit){ $this->_loadCellUnit = $_loadCellUnit; }
+	
 	public function get_loadCellTareDate(){ return $this->_loadCellTareDate; }
 	public function set_loadCellTareDate($_loadCellTareDate){ $this->_loadCellTareDate = $_loadCellTareDate; }
-	
+		
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
 	
@@ -105,6 +113,11 @@ class Tap
 		else
 			$this->set_count('0');
 		
+		if( isset($postArr['countUnit']) )
+		    $this->set_countUnit($postArr['countUnit']);
+		else
+		    $this->set_countUnit(null);
+		
 		if( isset($postArr['valvePin']) )
 			$this->set_valvePinId($postArr['valvePin']);
 		else
@@ -134,6 +147,11 @@ class Tap
             $this->set_loadCellRspPin($postArr['loadCellRspPin']);
         else
             $this->set_loadCellRspPin(null);
+		            
+        if( isset($postArr['loadCellUnit']) )
+            $this->set_loadCellUnit($postArr['loadCellUnit']);
+        else
+            $this->set_loadCellUnit(null);
 		            
         if( isset($postArr['loadCellTareDate']) )
             $this->set_loadCellTareDate($postArr['loadCellTareDate']);

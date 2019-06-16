@@ -131,7 +131,7 @@ include 'top_menu.php';
             					BEER
             				</th>
             				<th class="poursamount">
-            					Amount In Keg<br/> (<?php echo getConfigValue(ConfigNames::DisplayUnits) ?>)
+            					Amount In Keg<br/> (<?php echo $config[ConfigNames::DisplayUnitVolume]; ?>)
             				</th>
             				<th class="poursuser">
             					User
@@ -163,9 +163,9 @@ include 'top_menu.php';
 						<h1><?php echo $event->get_beerName(); ?></h1>
 					</td>							
                     <td class="poursamount">
-                        <h2><?php echo $tapEventManager->getDisplayAmount($event->get_amount()) ; ?></h2>
+                        <h2><?php echo $tapEventManager->getDisplayAmount($event->get_amount(), $event->get_amountUnit()) ; ?></h2>
                         <?php if($event->get_newAmount()){?>
-                        <h2>(<?php echo $tapEventManager->getDisplayAmount($event->get_amount()-$event->get_newAmount()) ; ?>)</h2>
+                        <h2>(<?php echo $tapEventManager->getDisplayAmount($event->get_amount(), $event->get_amountUnit())-$tapEventManager->getDisplayAmount($event->get_newAmount(), $event->get_newAmountUnit()) ; ?>)</h2>
                         <?php } ?>
                     </td>              
 					<td class="poursuser">
@@ -289,7 +289,7 @@ include 'left_bar.php';
                         echo ",[";
                         echo $events["-99"];
                         foreach ($groups as $group){
-                            echo ", ".($events&&$events[$group]?$events[$group]->get_amountPoured():"0");
+                            echo ", ".number_format($pours&&$pours[$group]?floatval(preg_replace("/[^0-9|^\.]/", "", $pours[$group]->get_amountPouredDisplay(TRUE))):0, 2, '.', '');
                         }
                         echo "]";
                     }

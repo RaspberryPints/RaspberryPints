@@ -11,7 +11,7 @@ class TapEventManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["type", "tapId", "kegId", "beerId", "amount", "userId"];
+		return ["type", "tapId", "kegId", "beerId", "amount", "amountUnit", "userId"];
 	}
 	protected function getTableName(){
 		return "tapEvents";
@@ -62,14 +62,8 @@ class TapEventManager extends Manager{
 	    return $this->executeNonObjectQueryWithArrayResults($sql);
 	}
 	
-	function getDisplayAmount($gal){
-	    $displayUnit = getConfigValue(ConfigNames::DisplayUnits);
-	    $ret = 0;
-	    switch($displayUnit)
-	    {
-	        default:
-	            $ret = $gal*128;
-	    }
-	    return number_format($ret, 1);
+	function getDisplayAmount($value, $currentUnit, $useLargeUnits = FALSE){
+	    $ret = convert_volume($value, $currentUnit, getConfigValue(ConfigNames::DisplayUnitVolume), $useLargeUnits);
+	    return number_format($ret, 2);
 	}
 }

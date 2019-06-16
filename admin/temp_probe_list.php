@@ -94,6 +94,14 @@ include 'top_menu.php';
 					echo '	<input type="hidden" name="' . $row['configName'] . '" value="0"/>';
 					echo '	<input type="checkbox" ' . ($row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="1" onClick="this.form.submit()">'.$row['displayName']."&nbsp;\n";
 					echo '</td>';
+					//If using temp probes add option to show avg temp on home page
+					if($row['configValue']){
+        			    $row = getConfig(ConfigNames::ShowTempOnMainPage);
+    					echo '<td>';
+    					echo '	<input type="hidden" name="' . $row['configName'] . '" value="0"/>';
+    					echo '	<input type="checkbox" ' . ($row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="1" onClick="this.form.submit()">'.$row['displayName']."&nbsp;\n";
+    					echo '</td>';
+					}
     			?>     
                 	</tr>
                 	<tr>

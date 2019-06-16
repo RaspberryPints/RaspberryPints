@@ -215,7 +215,7 @@ class PintDispatch(object):
     def getLoadCellConfig(self):
         con = self.connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)
-        cursor.execute("SELECT tapId,loadCellCmdPin,loadCellRspPin FROM tapconfig WHERE loadCellCmdPin IS NOT NULL ORDER BY tapId")
+        cursor.execute("SELECT tapId,loadCellCmdPin,loadCellRspPin,loadCellUnit FROM tapconfig WHERE loadCellCmdPin IS NOT NULL ORDER BY tapId")
         rows = cursor.fetchall()
         con.close()
         return rows
@@ -253,9 +253,9 @@ class PintDispatch(object):
             cursor.execute("INSERT INTO tempProbes (name, type) VALUES('"+probe+"', 0)")
         con.commit()
         con.close()        
-    def saveTemp(self, probe, temp):
-        insertLogSql = "INSERT INTO tempLog (probe, temp, takenDate) "
-        insertLogSql += "VALUES('"+probe+"',"+str(temp)+"+ (SELECT COALESCE(manualAdj, 0) FROM tempProbes WHERE name = '"+probe+"'), NOW());"
+    def saveTemp(self, probe, temp, tempUnit):
+        insertLogSql = "INSERT INTO tempLog (probe, temp, tempUnit, takenDate) "
+        insertLogSql += "VALUES('"+probe+"',"+str(temp)+"+ (SELECT COALESCE(manualAdj, 0) FROM tempProbes WHERE name = '"+probe+"'), '"+str(tempUnit)+"'NOW());"
         con = self.connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)
         result = cursor.execute(insertLogSql)

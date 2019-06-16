@@ -12,7 +12,7 @@ class BeerManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["name", "untID", "beerStyleId", "breweryId", "notes", "abv", "og", "fg", "srm", "ibu", "rating", "active"];
+		return ["name", "untID", "beerStyleId", "breweryId", "notes", "abv", "og", "ogUnit", "fg", "fgUnit", "srm", "ibu", "rating", "active"];
 	}
 	protected function getTableName(){
 		return "beers";

@@ -90,11 +90,12 @@
     		?>
     			<td class="ibu">
 				<?php if(isset($beer) && $beer['beername']){ ?>
-					<?php if($config[ConfigNames::ShowBuGuValue]){ ?>
+					<?php if($config[ConfigNames::ShowBuGuValue] && $beer['ibu'] != '' && $beer['og']){ ?>
 					<h3>
 						<?php 
-							if( $beer['og'] > 1 ){
-								echo number_format((($beer['ibu'])/(($beer['og']-1)*1000)), 2, '.', '');
+							$sgOg = convert_gravity($beer['og'], $beer['ogUnit'], UnitsOfMeasure::GravitySG);
+							if( $sgOg > 1 ){
+							    echo number_format((($beer['ibu'])/(($sgOg-1)*1000)), 2, '.', '');
 							}else{
 								echo '0.00';
 							}
@@ -199,12 +200,15 @@
     			$beer = null;
     			if( isset($beers[$i]) ) $beer = $beers[$i];
     			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG  && !isset($beer) ) continue;
+    			
+    			$sgOg = $beer['og']?convert_gravity($beer['og'], $beer['ogUnit'], UnitsOfMeasure::GravitySG):NULL;
+    			$sgFg = $beer['fg']?convert_gravity($beer['fg'], $beer['fgUnit'], UnitsOfMeasure::GravitySG):NULL;
     		?>
 				<td class="abv">
 				<?php if(isset($beer) && $beer['beername']){ ?>
 					<?php 
 						$abv = $beer['abv'];
-						if(!isset($abv) && $beer['og'] && $beer['fg']) $abv = ($beer['og'] - $beer['fg']) * 131; 
+						if(!isset($abv) && $sgOg && $sgFg) $abv = ($sgOg - $sgFg) * 131; 
 					?>	
 					<?php if(($config[ConfigNames::ShowAbvImg])) { ?>
 						<div class="abv-container">
@@ -241,10 +245,10 @@
 					<?php } ?>
 					<?php if($config[ConfigNames::ShowCalories]){ ?>
 					<h3><?php
-    					if($beer['og'] > 0 && $beer['fg'] > 0){
-    						$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
-    						$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
-    						if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
+					   if($sgOg > 0 && $sgFg > 0){
+    						$calfromalc = (1881.22 * ($sgFg * ($sgOg - $sgFg)))/(1.775 - $sgOg);
+    						$calfromcarbs = 3550.0 * $sgFg * ((0.1808 * $sgOg) + (0.8192 * $sgFg) - 1.0004);
+    						if ( ($sgOg == 1) && ($sgFg == 1 ) ) {
     							$calfromalc = 0;
     							$calfromcarbs = 0;
     							}
@@ -256,8 +260,8 @@
 					</h3>
 					<?php } ?>
 					<?php if($config[ConfigNames::ShowGravity] && $beer['og'] > 0){ ?>
-						<h3><?php echo $beer['og']; ?> OG</h3>
-					<?php } ?>
+						<h3>OG:<?php echo convert_gravity($beer['og'], $beer['ogUnit'], $config[ConfigNames::DisplayUnitGravity]); echo $config[ConfigNames::DisplayUnitGravity] != UnitsOfMeasure::GravitySG?$config[ConfigNames::DisplayUnitGravity]:''; ?></h3>
+    				<?php } ?>
 				<?php } ?>
 			</td>		
 			<?php } ?>	
@@ -277,10 +281,17 @@
     		?>
 				<td class="keg">
 				<?php if(isset($beer) && $beer['beername']){ ?>
+				<?php 
+				//Convert to the correct units (use gal and l)
+				    $beer['startAmount']  = convert_volume($beer['startAmount'], $beer['startAmountUnit'], $config[ConfigNames::DisplayUnitVolume], TRUE);
+					$beer['startAmountUnit'] = $config[ConfigNames::DisplayUnitVolume];
+				    $beer['remainAmount'] = convert_volume($beer['remainAmount'], $beer['remainAmountUnit'], $config[ConfigNames::DisplayUnitVolume], TRUE);
+					$beer['remainAmountUnit'] = $config[ConfigNames::DisplayUnitVolume]; 
+				?>
 					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
-						<h3><?php echo number_format((($beer['startAmount'] - $beer['remainAmount']) * 128)); ?> fl oz poured</h3>
+						<h3><?php echo number_format($beer['startAmount'] - $beer['remainAmount'], 1); echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L"); ?> poured</h3>
 					<?php } else { ?>
-						<h3><?php echo number_format(($beer['volume'])); ?> oz</h3> 
+						<h3><?php echo $beer['remainAmount'].' x '.number_format(convert_volume($beer['volume'], $beer['volumeUnit'], $config[ConfigNames::DisplayUnitVolume]), 1); echo $config[ConfigNames::DisplayUnitVolume];?></h3> 
 					<?php } ?>
 					<?php 
     				if($config[ConfigNames::ShowKegImg]){
@@ -327,7 +338,7 @@
 					</div>
 					<?php }?>
 						<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
-							<h3><?php echo number_format((($beer['remainAmount']) * 128)); ?> fl oz left</h3>
+							<h3><?php echo number_format($beer['remainAmount'], 1); echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L"); ?> left</h3>
 						<?php } ?>
 				<?php } ?>
 				</td>

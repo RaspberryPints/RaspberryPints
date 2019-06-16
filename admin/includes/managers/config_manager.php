@@ -2,6 +2,7 @@
 
     require_once __DIR__.'/../conn.php';
     require_once __DIR__.'/../config_names.php';
+    require_once __DIR__.'/../units_of_measures.php';
 	$stylesheet = getConfigValue(ConfigNames::AdminThemeColor);
 
 	function getAllConfigs()
@@ -72,6 +73,14 @@
 	    return $mysqli->query($sql);
 	}
 	
+	function getDisplayUnitConfigs()
+	{	
+		global $mysqli;
+		$config = array();
+		$sql = "SELECT * FROM config WHERE configName like 'displayUnit%' ORDER BY displayName";
+		return $mysqli->query($sql);
+	}
+	
 	function saveConfigValue($configName, $configValue, $insert = false)
 	{
 	    global $mysqli;
@@ -102,11 +111,18 @@
 	{
 	    global $mysqli;
 	    $config = array();
-	    $sql = "SELECT * FROM config WHERE configName LIKE $name";
+	    $sql = "SELECT * FROM config WHERE configName LIKE '$name'";
 	    $qry = $mysqli->query($sql);
 	    while($c = $qry->fetch_array()){
 	        $config[$c['configName']] = $c['configValue'];
 	    }
 	    return $config;
+	}
+	
+	function getConfigByName($name)
+	{
+	    global $mysqli;
+	    $sql = "SELECT * FROM config WHERE configName LIKE '$name'";
+	    return $mysqli->query($sql);
 	}
 ?>

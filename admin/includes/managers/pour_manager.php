@@ -14,7 +14,7 @@ class PourManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["tapId", "amountPoured", "pinId", "pulses", "beerId", "conversion", "userId"];
+	    return ["tapId", "amountPoured", "amountPouredUnit", "pinId", "pulses", "beerId", "conversion", "userId"];
 	}
 	protected function getTableName(){
 		return "pours";
@@ -54,7 +54,9 @@ class PourManager extends Manager{
 	    return $this->getPoursByDrinkerFiltered($page, $limit, $totalRows, $groupBy, null, null, null, null, null, null);
 	}	
 	function getPoursByDrinkerFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $userId, $style){
-	    $sql="SELECT (@row_number:=@row_number + 1) AS id, userName, SUM(amountPoured) as amountPoured ";
+	    $sql="SELECT (@row_number:=@row_number + 1) AS id, userName, ";
+	    $sql .= "SUM(CASE WHEN amountPouredUnit IN ('oz', 'gal', 'Imperial') THEN amountPoured ELSE amountPoured* 0.2641720000000005 END) as amountPoured ";
+	    $sql .= ", 'gal' AS amountPouredUnit ";
 	    if($groupBy)  {
 	        $sql = $sql.", ";
 	        switch ($groupBy){
@@ -99,7 +101,9 @@ class PourManager extends Manager{
 	    return $this->getPoursByTapFiltered($page, $limit, $totalRows, $groupBy, null, null, null, null, null, null);
 	}	
 	function getPoursByTapFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $userId, $style){
-	    $sql="SELECT (@row_number:=@row_number + 1) AS id, tapNumber, tapId, SUM(amountPoured) as amountPoured ";
+	    $sql="SELECT (@row_number:=@row_number + 1) AS id, tapNumber, tapId, ";
+	    $sql .= "SUM(CASE WHEN amountPouredUnit IN ('oz', 'gal', 'Imperial') THEN amountPoured ELSE amountPoured* 0.2641720000000005 END) as amountPoured ";
+	    $sql .= ", 'gal' AS amountPouredUnit ";
 	    if($groupBy)  {
 	        $sql = $sql.", ";
 	        switch ($groupBy){
@@ -145,7 +149,9 @@ class PourManager extends Manager{
 	    return $this->getPoursByBeerFiltered($page, $limit, $totalRows, $groupBy, null, null, null, null, null, null);
 	}
 	function getPoursByBeerFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $userId, $style){
-	    $sql="SELECT (@row_number:=@row_number + 1) AS id, SUM(amountPoured) as amountPoured ";
+	    $sql="SELECT (@row_number:=@row_number + 1) AS id, ";
+	    $sql .= "SUM(CASE WHEN amountPouredUnit IN ('oz', 'gal', 'Imperial') THEN amountPoured ELSE amountPoured* 0.2641720000000005 END) as amountPoured ";
+	    $sql .= ", 'gal' AS amountPouredUnit ";
 	    if($groupBy != 'beerStyle')$sql = $sql.", beerName, beerId";
 	    if($groupBy)  {
 	        $sql = $sql.", ";
@@ -196,15 +202,9 @@ class PourManager extends Manager{
 	    return $this->executeQueryWithResults($sql);
 	}
 	
-	function getDisplayAmount($gal){ 
-		$displayUnit = getConfigValue(ConfigNames::DisplayUnits);
-		$ret = 0;
-		switch($displayUnit)
-		{
-			default:
-			$ret = $gal*128;
-		}
-		return number_format($ret, 1);
+	function getDisplayAmount($value, $currentUnit, $useLargeUnits = FALSE){ 
+	    $ret = convert_volume($value, $currentUnit, getConfigValue(ConfigNames::DisplayUnitVolume), $useLargeUnits);
+		return number_format($ret, 2);
 	}
 	
 	function pour($USERID, $PIN, $PULSE_COUNT){
@@ -228,22 +228,23 @@ class PourManager extends Manager{
 		if($keg) $beerId = $keg->get_beerId();
 		$pourCountConversion = $tap->get_count();
 		
-		// Sets the amount to be a fraction of a gallon
+		// Sets the amount to be a fraction of a gallon/Liter
 		$amount = 0;
 		if( $pourCountConversion > 0 ) {
 		    $amount = $PULSE_COUNT / $pourCountConversion;
 		}else{
-		    echo "pours.php: No Count Per Gallon Configured for pin " .$PIN. " Please update from Admin->Taps\n";
+		    echo "pours.php: No Count Per ".is_unit_imperial($tap->get_countUnit())?"Gallon":"Liter"." Configured for pin " .$PIN. " Please update from Admin->Taps\n";
 		}
 		
 		echo "pour on pin: " . $PIN . ", count: " . $PULSE_COUNT . 
-			", conversion: " . $pourCountConversion . ", amount: " . $amount . 
+		    ", conversion: " . $pourCountConversion . ", amount: " . $amount . ", amountUnit: " . $tap->get_countUnit() .
 			", user: " . ($user?$user->get_id():'N/A') . "\n" ;
 		// Inserts in to the pours table 
 		$pour = new Pour();
 		$pour->set_tapId($tapId);
 		$pour->set_pinId($PIN);
 		$pour->set_amountPoured($amount);
+		$pour->set_amountPouredUnit($tap->get_countUnit());
 		$pour->set_pulses($PULSE_COUNT);
 		$pour->set_conversion($pourCountConversion);
 		$pour->set_userId(($user?$user->get_id():(new UserManager)->getUnknownUserId()));
@@ -293,24 +294,35 @@ class PourManager extends Manager{
 		if($keg) $beerId = $keg->get_beerId();
 		$pourCountConversion = $tap->get_count();
 		
-		// Sets the amount to be a fraction of a gallon
-		$amount = 1/128;
-		
-		echo "pour on tap: " . $tap->get_tapNumber() . ", count: " . 'Sample' . ", conversion: " . $pourCountConversion . ", amount: " . $amount . "\n" ;
+		// Sets the amount to be a fraction of a gallon/liter
+		if( is_unit_imperial($tap->get_countUnit()) ){
+		  $amount = 1/128; //1/128 gallon = 1 oz
+		  $amountUnit = UnitsOfMeasure::VolumeGallon;
+		}else{
+		    $amount = 30/1000; //ml
+		    $amountUnit = UnitsOfMeasure::VolumeLiter;
+		}
+		echo "pour on tap: " . $tap->get_tapNumber() . ", count: " . 'Sample' . 
+		     ", conversion: " . $pourCountConversion . 
+		     ", amount: " . $amount . ", amountUnit: " . $tap->get_countUnit() . "\n" ;
 		// Inserts in to the pours table 
 		$pour = new Pour();
 		$pour->set_tapId($tapId);
 		$pour->set_pinId($tap->get_flowPinId());
 		$pour->set_amountPoured($amount);
+		$pour->set_amountPouredUnit($amountUnit);
 		$pour->set_pulses(-1);
 		$pour->set_conversion($pourCountConversion);
 		$pour->set_beerId($beerId);
 		$pour->set_userId((new UserManager)->getUnknownUserId());
-		$this->save($pour);
-	
-		if($keg){
-    		$keg->set_currentAmount($keg->get_currentAmount() - $amount);
-    		$kegManager->save($keg);
+		if(!$this->save($pour)){
+		    global $mysqli;
+		    $_SESSION['errorMessage'] = 'Unable To Save Pour:'.$mysqli->error;
+		} else{
+    		if($keg){
+        		$keg->set_currentAmount($keg->get_currentAmount() - $amount);
+        		$kegManager->save($keg);
+    		}
 		}
 	}
 }

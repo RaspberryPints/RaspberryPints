@@ -24,4 +24,8 @@ class TempProbeManager extends Manager{
         $sql="SELECT AVG(temp) AS AVGTemp, MAX(takenDate) AS takenDate FROM tempLog WHERE takenDate = (SELECT MAX(takenDate) FROM tempLog)";
         return $this->executeNonObjectQueryWithArrayResults($sql)[0];
 	}
+	function get_lastTemp(){
+        $sql="SELECT temp, tempUnit, probe, takenDate AS takenDate FROM tempLog WHERE takenDate = (SELECT MAX(takenDate) FROM tempLog)";
+        return $this->executeNonObjectQueryWithArrayResults($sql);
+	}
 }

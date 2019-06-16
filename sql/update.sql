@@ -19,65 +19,33 @@ INSERT INTO rfidReaders(`name`, `type`, `pin`, `priority`)
 DELETE FROM `config` WHERE `configName` = 'rfidSSPin';
 DELETE FROM `config` WHERE `configName` = 'useRFID';
 
-SET @dbname = DATABASE();
-SET @tablename = "tapconfig";
-SET @columnname = "valvePinState";
-SET @preparedStatement = (SELECT IF(
-  (
-    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE
-      (table_name = @tablename)
-      AND (table_schema = @dbname)
-      AND (column_name = @columnname)
-  ) > 0,
-  "SELECT 1",
-  CONCAT("ALTER TABLE ", @tablename, " ADD ", @columnname, " INT(11)")
-));
-PREPARE alterIfNotExists FROM @preparedStatement;
-EXECUTE alterIfNotExists;
-DEALLOCATE PREPARE alterIfNotExists;
+DROP PROCEDURE IF EXISTS addColumnIfNotExist;
+DELIMITER //
+CREATE PROCEDURE `addColumnIfNotExist` (dbname tinytext, tableName tinytext, columnName tinytext, columnType tinytext)
+BEGIN
+	SET @preparedStatement = (
+        SELECT IF(
+          (
+            SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE
+              (lower(table_name) = lower(tablename))
+              AND (lower(table_schema) = lower(dbname))
+              AND (lower(column_name) = lower(columnname))
+          ) > 0,
+          "SELECT 1",
+          CONCAT("ALTER TABLE ", tablename, " ADD ", columnname, " ", columnType)
+        )
+    );
+	PREPARE alterIfNotExists FROM @preparedStatement;
+	EXECUTE alterIfNotExists;
+	DEALLOCATE PREPARE alterIfNotExists;
+END//
+DELIMITER ;
+
+CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'valvePinState', 'INT(11)' );
 
 -- --------------------------------------------------------
 
---
--- Create View `vwGetFilledBottles`
---
-
-CREATE OR REPLACE VIEW vwGetFilledBottles
-AS
-
-SELECT
-	t.id,
-	b.name,
-	b.untID,
-	bs.name as 'style',
-	br.name as 'breweryName',
-	br.imageUrl as 'breweryImageUrl',
-	b.rating,
-	b.notes,
-	b.abv,
-	b.og as og,
-	b.fg as fg,
-	b.srm as srm,
-	b.ibu as ibu,
-	bt.volume,
-	t.startAmount,
-	IFNULL(null, 0) as amountPoured,
-	t.currentAmount as remainAmount,
-	t.capNumber,
-	t.capRgba,
-    NULL as pinId,
-	s.rgb as srmRgb,
-	1 as valveOn,
-	1 as valvePinState
-FROM bottles t
-	LEFT JOIN beers b ON b.id = t.beerId
-	LEFT JOIN bottleTypes bt ON bt.id = t.bottleTypeId
-	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
-	LEFT JOIN breweries br ON br.id = b.breweryId
-	LEFT JOIN srmRgb s ON s.srm = b.srm
-WHERE t.active = true
-ORDER BY t.id;
 
 INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
 ('use3WireValves', '0', 'Use Three Wire Valves', 1, NOW(), NOW()),
@@ -223,150 +191,15 @@ ON ((CONVERT(io.shield USING utf8) = hard.shield OR (LOWER(io.shield) != 'pi' AN
 WHERE (io.shield = 'Pi' OR '1' = (SELECT DISTINCT '1' FROM vwIoHardwarePins WHERE shield = ''))
 GROUP BY shield, pin;
 
-SET @tablename = "kegs";
-SET @columnname = "fermentationPSI";
-SET @preparedStatement = (SELECT IF(
-  (
-    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE
-      (table_name = @tablename)
-      AND (table_schema = @dbname)
-      AND (column_name = @columnname)
-  ) > 0,
-  "SELECT 1",
-  CONCAT("ALTER TABLE ", @tablename, " ADD ", @columnname, " decimal(6, 2)")
-));
-PREPARE alterIfNotExists FROM @preparedStatement;
-EXECUTE alterIfNotExists;
-DEALLOCATE PREPARE alterIfNotExists;
-
-SET @columnname = "keggingTemp";
-SET @preparedStatement = (SELECT IF(
-  (
-    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE
-      (table_name = @tablename)
-      AND (table_schema = @dbname)
-      AND (column_name = @columnname)
-  ) > 0,
-  "SELECT 1",
-  CONCAT("ALTER TABLE ", @tablename, " ADD ", @columnname, " decimal(6, 2)")
-));
-PREPARE alterIfNotExists FROM @preparedStatement;
-EXECUTE alterIfNotExists;
-DEALLOCATE PREPARE alterIfNotExists;
-
-SET @tablename = "tapconfig";
-SET @columnname = "loadCellCmdPin";
-SET @preparedStatement = (SELECT IF(
-  (
-    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE
-      (table_name = @tablename)
-      AND (table_schema = @dbname)
-      AND (column_name = @columnname)
-  ) > 0,
-  "SELECT 1",
-  CONCAT("ALTER TABLE ", @tablename, " ADD ", @columnname, " int(11)")
-));
-PREPARE alterIfNotExists FROM @preparedStatement;
-EXECUTE alterIfNotExists;
-DEALLOCATE PREPARE alterIfNotExists;
-SET @columnname = "loadCellRspPin";
-SET @preparedStatement = (SELECT IF(
-  (
-    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE
-      (table_name = @tablename)
-      AND (table_schema = @dbname)
-      AND (column_name = @columnname)
-  ) > 0,
-  "SELECT 1",
-  CONCAT("ALTER TABLE ", @tablename, " ADD ", @columnname, " int(11)")
-));
-PREPARE alterIfNotExists FROM @preparedStatement;
-EXECUTE alterIfNotExists;
-DEALLOCATE PREPARE alterIfNotExists;
-
-SET @columnname = "loadCellTareReq";
-SET @preparedStatement = (SELECT IF(
-  (
-    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE
-      (table_name = @tablename)
-      AND (table_schema = @dbname)
-      AND (column_name = @columnname)
-  ) > 0,
-  "SELECT 1",
-  CONCAT("ALTER TABLE ", @tablename, " ADD ", @columnname, " int(11)")
-));
-PREPARE alterIfNotExists FROM @preparedStatement;
-EXECUTE alterIfNotExists;
-DEALLOCATE PREPARE alterIfNotExists;
-SET @columnname = "loadCellTareDate";
-SET @preparedStatement = (SELECT IF(
-  (
-    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE
-      (table_name = @tablename)
-      AND (table_schema = @dbname)
-      AND (column_name = @columnname)
-  ) > 0,
-  "SELECT 1",
-  CONCAT("ALTER TABLE ", @tablename, " ADD ", @columnname, " TIMESTAMP")
-));
-PREPARE alterIfNotExists FROM @preparedStatement;
-EXECUTE alterIfNotExists;
-DEALLOCATE PREPARE alterIfNotExists;
-
-SET @tablename = "kegTypes";
-SET @columnname = "emptyWeight";
-SET @preparedStatement = (SELECT IF(
-  (
-    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE
-      (table_name = @tablename)
-      AND (table_schema = @dbname)
-      AND (column_name = @columnname)
-  ) > 0,
-  "SELECT 1",
-  CONCAT("ALTER TABLE ", @tablename, " ADD ", @columnname, " decimal(11, 4)")
-));
-PREPARE alterIfNotExists FROM @preparedStatement;
-EXECUTE alterIfNotExists;
-DEALLOCATE PREPARE alterIfNotExists;
-
-SET @tablename = "kegs";
-SET @preparedStatement = (SELECT IF(
-  (
-    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE
-      (table_name = @tablename)
-      AND (table_schema = @dbname)
-      AND (column_name = @columnname)
-  ) > 0,
-  "SELECT 1",
-  CONCAT("ALTER TABLE ", @tablename, " ADD ", @columnname, " decimal(11, 4)")
-));
-PREPARE alterIfNotExists FROM @preparedStatement;
-EXECUTE alterIfNotExists;
-DEALLOCATE PREPARE alterIfNotExists;
-
-SET @columnname = "maxVolume";
-SET @preparedStatement = (SELECT IF(
-  (
-    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE
-      (table_name = @tablename)
-      AND (table_schema = @dbname)
-      AND (column_name = @columnname)
-  ) > 0,
-  "SELECT 1",
-  CONCAT("ALTER TABLE ", @tablename, " ADD ", @columnname, " decimal(11, 4)")
-));
-PREPARE alterIfNotExists FROM @preparedStatement;
-EXECUTE alterIfNotExists;
-DEALLOCATE PREPARE alterIfNotExists;
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'fermentationPSI', 'decimal(6, 2)' );
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'keggingTemp', 'decimal(6, 2)' );
+CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'loadCellCmdPin', 'int(11)' );
+CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'loadCellRspPin', 'int(11)' );
+CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'loadCellTareReq', 'int(11)' );
+CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'loadCellTareDate', 'TIMESTAMP NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'kegTypes', 'emptyWeight', 'decimal(11, 4)' );
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'emptyWeight', 'decimal(11, 4)' );
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'maxVolume', 'decimal(11, 4)' );
 
 UPDATE `kegTypes` SET emptyWeight =  '8.1571'  WHERE displayName = 'Ball Lock (5 gal)' AND emptyWeight IS NULL;
 UPDATE `kegTypes` SET emptyWeight =  '4.0786'  WHERE displayName = 'Ball Lock (2.5 gal)' AND emptyWeight IS NULL;
@@ -424,8 +257,10 @@ INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOn
 ( 'useKegWeightCalc', '1', 'Show weight calc columns', '1', NOW(), NOW() ),
 ( 'useDefWeightSettings', '0', 'Do not allow individual tap configurations', '1', NOW(), NOW() ),
 ( 'breweryAltitude', '0', 'Feet Above Sea Level', '0', NOW(), NOW() ),
+( 'breweryAltitudeUnit', 'ft', '', '0', NOW(), NOW() ),
 ( 'defaultFermPSI', '0', 'Default pressure of fermentation (0 if not pressure ferment)', '0', NOW(), NOW() ),
-( 'defaultKeggingTemp', '56', 'Default Temperature of beer when kegging', '0', NOW(), NOW() );
+( 'defaultKeggingTemp', '56', 'Default Temperature of beer when kegging', '0', NOW(), NOW() ),
+( 'defaultKeggingTempUnit', 'F', 'Default Temperature Unit of beer when kegging', '0', NOW(), NOW() );
 
 CREATE TABLE IF NOT EXISTS `tempProbes` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -504,39 +339,8 @@ AS
 
 ALTER TABLE taps CHANGE COLUMN `tapNumber` `tapNumber` INT(11) NULL ;
 
-
-SET @tablename = "kegs";
-SET @columnname = "startAmount";
-SET @preparedStatement = (SELECT IF(
-  (
-    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE
-      (table_name = @tablename)
-      AND (table_schema = @dbname)
-      AND (column_name = @columnname)
-  ) > 0,
-  "SELECT 1",
-  CONCAT("ALTER TABLE ", @tablename, " ADD ", @columnname, " decimal(7, 5)")
-));
-PREPARE alterIfNotExists FROM @preparedStatement;
-EXECUTE alterIfNotExists;
-DEALLOCATE PREPARE alterIfNotExists;
-SET @columnname = "currentAmount";
-SET @preparedStatement = (SELECT IF(
-  (
-    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE
-      (table_name = @tablename)
-      AND (table_schema = @dbname)
-      AND (column_name = @columnname)
-  ) > 0,
-  "SELECT 1",
-  CONCAT("ALTER TABLE ", @tablename, " ADD ", @columnname, " decimal(7, 5)")
-));
-PREPARE alterIfNotExists FROM @preparedStatement;
-EXECUTE alterIfNotExists;
-DEALLOCATE PREPARE alterIfNotExists;
-
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'startAmount', 'decimal(7, 5)' );
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'currentAmount', 'decimal(7, 5)' );
 
 CREATE OR REPLACE VIEW vwGetActiveTaps
 AS
@@ -680,3 +484,246 @@ ORDER BY te.id;
 
 ALTER TABLE tempLog CHANGE COLUMN `temp` `temp` decimal(6,2) NULL ;
 ALTER TABLE tempLog CHANGE COLUMN `humidity` `humidity` decimal(6,2) NULL ;
+
+
+CALL addColumnIfNotExist(DATABASE(), 'config', 'validation', 'varchar(65)' );
+
+
+DELETE FROM config where configName like 'displayUnit%';
+
+INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `validation`, `createdDate`, `modifiedDate`) VALUES
+( 'displayUnitVolume', 'oz', 'Volume Units', '0', 'Imperial;oz|Metric;ml', NOW(), NOW() ),
+( 'displayUnitPressure', 'psi', 'Pressure Units', '0', 'psi|Pa', NOW(), NOW() ),
+( 'displayUnitDistance', 'ft', 'Distance Units', '0', 'ft|m', NOW(), NOW() ),
+( 'displayUnitGravity', 'sg', 'Gravity Units', '0', 'sg|b|p', NOW(), NOW() ),
+( 'displayUnitTemperature', 'F', 'Temperature Units', '0', 'F|C', NOW(), NOW() ),
+( 'displayUnitWeight', 'lb', 'Weight Units', '0', 'lb|kg', NOW(), NOW() ),
+( 'defaultFermPSIUnit', 'psi', 'Default pressure of fermentation Unit', '0', NULL, NOW(), NOW() ),
+( 'defaultKeggingTempUnit', 'F', 'Default Temperature Unit of beer when kegging', '0', NULL, NOW(), NOW() );
+
+
+CALL addColumnIfNotExist(DATABASE(), 'beers', 'ogUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'beers', 'fgUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'weightUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'emptyWeightUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'maxVolumeUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'startAmountUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'currentAmountUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'fermentationPSIUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'keggingTempUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'kegTypes', 'maxAmountUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'kegTypes', 'emptyWeightUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'pours', 'amountPouredUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'yeasts', 'minTempUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'yeasts', 'maxTempUnit', 'tinytext' );
+UPDATE pours set amountPouredUnit = 'oz' WHERE amountPouredUnit IS NULL;
+CALL addColumnIfNotExist(DATABASE(), 'tempLog', 'tempUnit', 'varchar(1) null' );
+UPDATE tempLog set tempUnit = 'F' WHERE tempUnit IS NULL;
+CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'countUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'loadCellUnit', 'tinytext DEFAULT NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'bottleTypes', 'volumeUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'tapEvents', 'amountUnit', 'tinytext' );
+
+UPDATE tapconfig set countUnit = 'oz' WHERE countUnit IS NULL;
+UPDATE tapconfig set loadCellUnit = 'lb' WHERE loadCellUnit IS NULL;
+UPDATE beers set ogUnit = 'sg', fgUnit = 'sg' WHERE ogUnit IS NULL;
+UPDATE kegs SET weightUnit ='lb', emptyWeightUnit ='lb', maxVolumeUnit ='oz', 
+				startAmountUnit ='oz', currentAmountUnit ='oz', fermentationPSIUnit ='psi', keggingTempUnit = 'F' 
+				WHERE weightUnit IS NULL;
+UPDATE kegTypes SET maxAmountUnit = 'oz', emptyWeightUnit = 'lb' WHERE emptyWeightUnit IS NULL;
+UPDATE pours set amountPouredUnit = 'oz' WHERE amountPouredUnit IS NULL;
+UPDATE yeasts set minTempUnit = 'F', maxTempUnit = 'F' WHERE maxTempUnit IS NULL;
+UPDATE tempLog set tempUnit = 'F' WHERE tempUnit IS NULL;
+UPDATE bottleTypes set volumeUnit = 'oz' WHERE volumeUnit IS NULL;
+UPDATE tapEvents set amountUnit = 'gal' WHERE amountUnit IS NULL;
+
+ALTER TABLE beers CHANGE COLUMN `og` `og` decimal(7,3) NULL ;
+ALTER TABLE beers CHANGE COLUMN `fg` `fg` decimal(7,3) NULL ;
+ALTER TABLE kegs CHANGE COLUMN `startAmount` `startAmount` decimal(10,5) NULL ;
+ALTER TABLE kegs CHANGE COLUMN `currentAmount` `currentAmount` decimal(10,5) NULL ;
+ALTER TABLE kegs CHANGE COLUMN `fermentationPSI` `fermentationPSI` decimal(14,2) NULL ;
+ALTER TABLE pours CHANGE COLUMN `amountPoured` `amountPoured` decimal(9,7) NULL ;
+
+
+CREATE OR REPLACE VIEW `vwTaps` 
+AS
+ SELECT 
+	t.*, 
+	tc.*, 
+	k.beerId 
+ FROM taps t 
+ LEFT JOIN tapconfig tc ON (t.id = tc.tapId) 
+ LEFT JOIN kegs k ON (t.kegId = k.id);
+
+CREATE OR REPLACE VIEW `vwKegs` 
+AS
+ SELECT 
+    k.id,
+    k.label,
+    k.kegTypeId,
+    k.make,
+    k.model,
+    k.serial,
+    k.stampedOwner,
+    k.stampedLoc,
+    k.notes,
+    k.kegStatusCode,
+    k.weight,
+    k.weightUnit,
+    k.beerId,
+    k.onTapId,
+    t.tapNumber,
+    k.active,
+    CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeight ELSE k.emptyWeight END AS emptyWeight,
+    CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeightUnit ELSE k.emptyWeightUnit END AS emptyWeightUnit,
+    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmount ELSE k.maxVolume END AS maxVolume,
+    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmountUnit ELSE k.maxVolumeUnit END AS maxVolumeUnit,
+    k.startAmount,
+    k.startAmountUnit,
+    k.currentAmount,
+    k.currentAmountUnit,
+    k.fermentationPSI,
+    k.fermentationPSIUnit,
+    k.keggingTemp,
+    k.keggingTempUnit,
+    k.modifiedDate,
+    k.createdDate
+ FROM kegs k LEFT JOIN kegTypes kt 
+        ON k.kegTypeId = kt.id
+      LEFT JOIN taps t 
+        ON k.onTapId = t.id;
+
+        
+CREATE OR REPLACE VIEW `vwPours`
+AS
+SELECT 
+	p.*, 
+	t.tapNumber, 
+	t.tapRgba,
+	b.name AS beerName, 
+	b.untID AS beerUntID, 
+  bs.name as beerStyle,
+	br.imageUrl AS breweryImageUrl, 
+	COALESCE(u.userName, '') as userName
+FROM pours p 
+	LEFT JOIN taps t ON (p.tapId = t.id) 
+	LEFT JOIN beers b ON (p.beerId = b.id) 
+	LEFT JOIN breweries br ON (b.breweryId = br.id) 
+	LEFT JOIN users u ON (p.userId = u.id)
+	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId;
+	
+	
+CREATE OR REPLACE VIEW vwGetActiveTaps
+AS
+
+SELECT
+	t.id,
+	b.name,
+	b.untID,
+	bs.name as 'style',
+	br.name as 'breweryName',
+	br.imageUrl as 'breweryImageUrl',
+	b.rating,
+	b.notes,
+	b.abv,
+	b.og as og,
+	b.ogUnit as ogUnit,
+	b.fg as fg,
+	b.fgUnit as fgUnit,
+	b.srm as srm,
+	b.ibu as ibu,
+	IFNULL(k.startAmount, 0)        as startAmount,
+	IFNULL(k.startAmountUnit, '')   as startAmountUnit,
+    IFNULL(k.currentAmount, 0)      as remainAmount,
+    IFNULL(k.currentAmountUnit, '') as remainAmountUnit,
+	t.tapNumber,
+	t.tapRgba,
+    tc.flowPin as pinId,
+	s.rgb as srmRgb,
+	tc.valveOn,
+	tc.valvePinState
+FROM taps t
+	LEFT JOIN tapconfig tc ON t.id = tc.tapId
+	LEFT JOIN kegs k ON k.id = t.kegId
+	LEFT JOIN beers b ON b.id = k.beerId
+	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
+	LEFT JOIN breweries br ON br.id = b.breweryId
+	LEFT JOIN srmRgb s ON s.srm = b.srm
+WHERE t.active = true
+ORDER BY t.id;
+	
+
+CREATE OR REPLACE VIEW vwGetFilledBottles
+AS
+
+SELECT
+	t.id,
+	b.name,
+	b.untID,
+	bs.name as 'style',
+	br.name as 'breweryName',
+	br.imageUrl as 'breweryImageUrl',
+	b.rating,
+	b.notes,
+	b.abv,
+	b.og as og,
+	b.ogUnit as ogUnit,
+	b.fg as fg,
+	b.fgUnit as fgUnit,
+	b.srm as srm,
+	b.ibu as ibu,
+	bt.volume,
+	bt.volumeUnit,
+	t.startAmount,
+	IFNULL(null, 0) as amountPoured,
+	t.currentAmount as remainAmount,
+	t.capNumber,
+	t.capRgba,
+    NULL as pinId,
+	s.rgb as srmRgb,
+	1 as valveOn,
+	1 as valvePinState
+FROM bottles t
+	LEFT JOIN beers b ON b.id = t.beerId
+	LEFT JOIN bottleTypes bt ON bt.id = t.bottleTypeId
+	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
+	LEFT JOIN breweries br ON br.id = b.breweryId
+	LEFT JOIN srmRgb s ON s.srm = b.srm
+WHERE t.active = true
+ORDER BY t.id;
+
+CREATE OR REPLACE VIEW vwTapEvents
+AS
+SELECT
+  te.id,
+  te.type as type,
+  CASE te.type 
+    WHEN 1 THEN 'Tapped'
+    WHEN 2 THEN 'Removed'
+    ELSE 'N/A'
+  END as 'typeDesc',
+  te.tapId,
+  te.kegId,
+  te.beerId,
+  te.amount,
+  te.amountUnit,
+  CASE WHEN te.type = 2 THEN (SELECT amount FROM tapEvents WHERE id = (SELECT MAX(id) FROM tapEvents WHERE id < te.id AND type = 1 AND tapId = te.tapId AND kegId = te.kegId AND beerId = te.beerId)) ELSE NULL END AS newAmount,
+  CASE WHEN te.type = 2 THEN (SELECT amountUnit FROM tapEvents WHERE id = (SELECT MAX(id) FROM tapEvents WHERE id < te.id AND type = 1 AND tapId = te.tapId AND kegId = te.kegId AND beerId = te.beerId)) ELSE NULL END AS newAmountUnit,
+  te.userId,
+	t.tapNumber as 'tapNumber',
+  t.tapRgba   as 'tapRgba',
+  k.label as 'kegName',
+	b.name  as 'beerName',
+	bs.name as 'beerStyle',
+	CASE WHEN u.username IS NULL THEN 'System' ELSE u.userName END  as 'userName',
+  te.createdDate
+FROM tapEvents te
+  LEFT JOIN taps t ON t.id = te.tapId
+	LEFT JOIN kegs k ON k.id = te.kegId
+	LEFT JOIN beers b ON b.id = te.beerId
+	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
+	LEFT JOIN users u ON u.id = te.userId
+WHERE t.active = true
+ORDER BY te.id;
+	
+UPDATE `config` SET `configValue` = '3.0.5.0' WHERE `configName` = 'version';

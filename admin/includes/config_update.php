@@ -7,6 +7,18 @@ require_once __DIR__.'/managers/config_manager.php';
 
 $result=saveConfigValue($_POST['configName'], $_POST['configValue']);
 
+//Some values need a unit updated
+$displayUnit = null;
+if($_POST['configName'] == ConfigNames::DefaultFermPSI){
+    $displayUnit = getConfigValue(ConfigNames::DisplayUnitPressure);
+}
+if($_POST['configName'] == ConfigNames::BreweryAltitude){
+    $displayUnit = getConfigValue(ConfigNames::DisplayUnitDistance);
+}
+if($_POST['configName'] == ConfigNames::DefaultKeggingTemp){
+    $displayUnit = getConfigValue(ConfigNames::DisplayUnitTemperature);   
+}
+if($displayUnit) saveConfigValue($_POST['configName'].'Unit', $displayUnit, true);
 // if successfully updated.
 if($result){
 	echo "Successful";

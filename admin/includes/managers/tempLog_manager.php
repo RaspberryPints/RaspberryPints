@@ -8,7 +8,7 @@ class TempLogManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["probe", "temp", "humidity", "takenDate"];
+		return ["probe", "temp", "tempUnit", "humidity", "takenDate"];
 	}
 	protected function getTableName(){
 		return "tempLog";

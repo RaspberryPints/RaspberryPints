@@ -16,7 +16,6 @@ abstract class ConfigNames
 	const AccessToken = 'AccessToken';
 	const CONTAINER_TYPE_BOTTLE = 'Bottle';
 	const CONTAINER_TYPE_KEG = 'Keg';
-	const DisplayUnits = 'displayUnits';
 	const FanInterval = 'fanInterval';
 	const FanOnTime = 'fanOnTime';
 	const HeaderText = 'headerText';
@@ -81,8 +80,11 @@ abstract class ConfigNames
 	const UseKegWeightCalc = 'useKegWeightCalc';
 	const UseDefWeightSettings = 'useDefWeightSettings';
 	const BreweryAltitude = 'breweryAltitude';
+	const BreweryAltitudeUnit = 'breweryAltitudeUnit';
 	const DefaultFermPSI  = 'defaultFermPSI';
+	const DefaultFermPSIUnit  = 'defaultFermPSIUnit';
 	const DefaultKeggingTemp = 'defaultKeggingTemp';
+	const DefaultKeggingTempUnit = 'defaultKeggingTempUnit';
 	const UseTempProbes = 'useTempProbes';
 	const TempProbeDelay = 'tempProbeDelay';
 	const TempProbeBoundLow = 'tempProbeBoundLow';
@@ -91,5 +93,11 @@ abstract class ConfigNames
 	const AllowSamplePour = 'allowSamplePour';
 	const RestartFanAfterPour = 'restartFanAfterPour';
 	const DefaultRowsPerPage = 'DefaultRowsPerPage';
+	const DisplayUnitVolume      = 'displayUnitVolume';
+	const DisplayUnitPressure    = 'displayUnitPressure';
+	const DisplayUnitDistance    = 'displayUnitDistance';
+	const DisplayUnitGravity     = 'displayUnitGravity';
+	const DisplayUnitTemperature = 'displayUnitTemperature';
+	const DisplayUnitWeight      = 'displayUnitWeight';
 }
 ?>

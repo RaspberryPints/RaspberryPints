@@ -218,7 +218,7 @@ include 'left_bar.php';
     	        if(!in_array(getGroupValue($groupBy, $pour), $groups)) array_push($groups, getGroupValue($groupBy, $pour));
     	    }
     	}else{
-    	    array_push($groups, "Gallons");
+    	    array_push($groups, is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?'Gallons':'Liters');
     	}
     	$users = array();
 	    foreach ($pours as $pour){
@@ -253,10 +253,10 @@ include 'left_bar.php';
                         echo "'".$user."'";
                         if($groupBy && $groupBy != '' && $groupBy != 'userId'){
                             foreach ($groups as $group){
-                                echo ", ".($pours&&$pours[$group]?$pours[$group]->get_amountPoured():"0");
+                                echo ", ".number_format($pours&&$pours[$group]?floatval(preg_replace("/[^0-9|^\.]/", "", $pours[$group]->get_amountPouredDisplay(TRUE))):0, 2, '.', '');
                             }
                         }else{
-                            echo ", ".$pours[0]->get_amountPoured();
+                            echo ", ".number_format(preg_replace("/[^0-9|^\.]/", "", $pours[0]->get_amountPouredDisplay(TRUE)), 2, '.', '');
                         }
                         echo "]";
                     }

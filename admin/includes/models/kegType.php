@@ -4,6 +4,9 @@ class KegType
 	private $_id;  
 	private $_name;
 	private $_maxAmount; 
+	private $_maxAmountUnit; 
+	private $_emptyWeight; 
+	private $_emptyWeightUnit; 
 	private $_createdDate; 
 	private $_modifiedDate; 
 
@@ -17,6 +20,15 @@ class KegType
 
 	public function get_maxAmount(){ return $this->_maxAmount; }
 	public function set_maxAmount($_maxAmount){ $this->_maxAmount = $_maxAmount; }
+	
+	public function get_maxAmountUnit(){ return $this->_maxAmountUnit; }
+	public function set_maxAmountUnit($_maxAmountUnit){ $this->_maxAmountUnit = $_maxAmountUnit; }
+	
+	public function get_emptyWeight(){ return $this->_emptyWeight; }
+	public function set_emptyWeight($_emptyWeight){ $this->_emptyWeight = $_emptyWeight; }
+	
+	public function get_emptyWeightUnit(){ return $this->_emptyWeightUnit; }
+	public function set_emptyWeightUnit($_emptyWeightUnit){ $this->_emptyWeightUnit = $_emptyWeightUnit; }
 	
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -43,6 +55,21 @@ class KegType
 		else
 			$this->set_maxAmount(null);
 		
+		if( isset($postArr['maxAmountUnit']) )
+		    $this->set_maxAmountUnit($postArr['maxAmountUnit']);
+		else
+		    $this->set_maxAmountUnit(null);
+		
+		if( isset($postArr['emptyWeight']) )
+			$this->set_emptyWeight($postArr['emptyWeight']);
+		else
+			$this->set_emptyWeight(null);
+		
+		if( isset($postArr['emptyWeightUnit']) )
+		    $this->set_emptyWeightUnit($postArr['emptyWeightUnit']);
+		else
+		    $this->set_emptyWeightUnit(null);
+		
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);
 		else
@@ -59,6 +86,9 @@ class KegType
 			"id: " . $this->get_id() . ", " .
 			"name: '" . $this->get_name() . "', " .
 			"maxAmount: " . $this->get_maxAmount() . ", " .
+			"maxAmountUnit: " . $this->get_maxAmountUnit() . ", " .
+			"emptyWeight: " . $this->get_emptyWeight() . ", " .
+			"emptyWeightUnit: " . $this->get_emptyWeightUnit() . ", " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  
 		"}";

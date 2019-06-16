@@ -40,12 +40,15 @@
 				"notes" => $b['notes'],
 				"abv" => $b['abv'],
 				"og" => $b['og'],
+				"ogUnit" => $b['ogUnit'],
 				"fg" => $b['fg'],
+				"fgUnit" => $b['fgUnit'],
 				"srm" => $b['srm'],
 				"ibu" => $b['ibu'],
-				"startAmount" => $b['startAmount'],
-				"amountPoured" => $b['amountPoured'],
-				"remainAmount" => $b['remainAmount'],
+			    "startAmount" => $b['startAmount'],
+			    "startAmountUnit" => $b['startAmountUnit'],
+			    "remainAmount" => $b['remainAmount'],
+				"remainAmountUnit" => $b['remainAmountUnit'],
 				"tapRgba" => $b['tapRgba'],
 				"tapNumber" => $b['tapNumber'],
 				"rating" => $b['rating'],
@@ -71,12 +74,15 @@
 		        "brewery" => $b['breweryName'],
 		        "breweryImage" => $b['breweryImageUrl'],
 				"notes" => $b['notes'],
-				"abv" => $b['abv'],
-				"og" => $b['og'],
-				"fg" => $b['fg'],
+			    "abv" => $b['abv'],
+			    "og" => $b['og'],
+			    "ogUnit" => $b['ogUnit'],
+			    "fg" => $b['fg'],
+			    "fgUnit" => $b['fgUnit'],
 				"srm" => $b['srm'],
 				"ibu" => $b['ibu'],
-				"volume" => $b['volume'],
+			    "volume" => $b['volume'],
+			    "volumeUnit" => $b['volumeUnit'],
 				"startAmount" => $b['startAmount'],
 				"amountPoured" => $b['amountPoured'],
 				"remainAmount" => $b['remainAmount'],
@@ -158,12 +164,15 @@
           		    $temp = null;
           		    if($config[ConfigNames::ShowTempOnMainPage]) { 
           		       $tempProbeManager = new TempProbeManager();
-          		       $tempInfo = $tempProbeManager->get_lastAvgTemp();
-          		       if($tempInfo){
-              		       $temp = $tempInfo[0];
-              		       $date = $tempInfo[1];
-              		       $tempDisplay = sprintf('%0.1fF &#64;<br/> %s', $temp, str_replace(' ', "<br/>", $date));
+          		       $tempInfos = $tempProbeManager->get_lastTemp();
+          		       foreach($tempInfos as $tempInfo){
+          		           $temp = $tempInfo["temp"];
+          		           $tempUnit = $tempInfo["tempUnit"];
+          		           $probe = $tempInfo["probe"];
+          		           $date = $tempInfo["takenDate"];
+          		           $tempDisplay .= sprintf('%s - %0.1f%s<br/>', $probe, convert_temperature($temp, $tempUnit, $config[ConfigNames::DisplayUnitTemperature]), $config[ConfigNames::DisplayUnitTemperature] );
           		       }
+              		   $tempDisplay .= sprintf('%s', str_replace(' ', "<br/>", $date));
           		    }
           		    echo '<div class="HeaderRight" style="width:15%;text-align:right;vertical-align:middle">'.$tempDisplay.'</div>';           		    
           	     ?>

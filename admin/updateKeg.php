@@ -23,7 +23,7 @@ if( isset($argv) && count($argv) >= 2 ){
         $ii = 1;
         $TAPID = $argv[$ii++];
         $NEW_WEIGHT = $argv[$ii++];
-        //TODO figure out units on weight
+        $NEW_WEIGHT_UNIT = $argv[$ii++];
         
         $tap = $tapManager->GetByID($TAPID);
         if($tap && $tap->get_kegId()){
@@ -34,12 +34,13 @@ if( isset($argv) && count($argv) >= 2 ){
             
             $beer = $beerManager->GetByID($keg->get_BeerId());
             if($beer){ 
-                $temperature = (!$config[ConfigNames::UseDefWeightSettings] && $keg->get_keggingTemp() && $keg->get_keggingTemp() != ''?$keg->get_keggingTemp():$config[ConfigNames::DefaultKeggingTemp]);
+                $keggingTemperature = (!$config[ConfigNames::UseDefWeightSettings] && $keg->get_keggingTemp() && $keg->get_keggingTemp() != ''?$keg->get_keggingTemp():$config[ConfigNames::DefaultKeggingTemp]);
+                $keggingTemperatureUnit = (!$config[ConfigNames::UseDefWeightSettings] && $keg->get_keggingTemp() && $keg->get_keggingTemp() != ''?$keg->get_keggingTempUnit():$config[ConfigNames::DefaultKeggingTempUnit]);
                 $beerCO2PSI = (!$config[ConfigNames::UseDefWeightSettings] && $keg->get_fermentationPSI() && $keg->get_fermentationPSI() != ''?$keg->get_fermentationPSI():$config[ConfigNames::DefaultFermPSI]);
-                $convertToMetric = true; //TODO when units are working change
+                $beerCO2PSIUnit = (!$config[ConfigNames::UseDefWeightSettings] && $keg->get_fermentationPSI() && $keg->get_fermentationPSI() != ''?$keg->get_fermentationPSIUnit():$config[ConfigNames::DefaultFermPSIUnit]);
                 $finalGravity = $beer->get_fg()?$beer->get_fg():'';
-                $convertToGravity = false; //TODO if able to apply brix or plato set to true
-    			$vol = getVolumeByWeight($NEW_WEIGHT, $keg->get_emptyWeight(), $temperature, $config[ConfigNames::BreweryAltitude], $beerCO2PSI, $convertToMetric, $finalGravity, $convertToGravity);
+                $finalGravityUnit = $beer->get_fgUnit()?$beer->get_fgUnit():'';
+                $vol = getVolumeByWeight($NEW_WEIGHT, $NEW_WEIGHT_UNIT, $keg->get_emptyWeight(), $keg->get_emptyWeightUnit(), $keggingTemperature, $keggingTemperatureUnit, $config[ConfigNames::BreweryAltitude], $config[ConfigNames::BreweryAltitudeUnit], $beerCO2PSI, $beerCO2PSIUnit, $finalGravity, $finalGravityUnit, $config[ConfigNames::DisplayUnitVolume]);
     			if($vol && !is_nan($vol)){
     			    $keg->set_currentAmount($vol);
         			// Refreshes connected pages
@@ -55,21 +56,19 @@ if( isset($argv) && count($argv) >= 2 ){
 
 
 
-function getVolumeByWeight($weight, $emptyWeight, $temperature, $altitude, $beerCO2PSI, $convertToMetric, $finalGravity, $convertToGravity)
+function getVolumeByWeight($weight, $weightUnit, $emptyWeight, $emptyWeightUnit, $temperature, $temperatureUnit, $altitude, $altitudeUnit, $beerCO2PSI, $beerCO2PSIUnit, $finalGravity, $finalGravityUnit, $returnUnits)
 {
-    //convertToMetric means the values given are imperial and not metric already.
-    //convertToGravity means the values given are Plato and not gravity already.
-    if($convertToMetric) $weight =  ($weight/2.2046226218);											    //Convert to kg if in lb
-    if($convertToMetric) $emptyWeight =  ($emptyWeight/2.2046226218);									//Convert to kg if in lb
+    $weight = convert_weight($weight, $weightUnit, UnitsOfMeasure::WeightKiloGrams);                    //Convert to kg if in lb
+    $emptyWeight = convert_weight($emptyWeight, $emptyWeightUnit, UnitsOfMeasure::WeightKiloGrams);     //Convert to kg if in lb
     $actGrav = $finalGravity;
-    if($convertToGravity) $actGrav = 259/(259-$actGrav);												//Convert to gravity if in Plato
-    if(!$convertToMetric) $beerCO2PSI = $beerCO2PSI*.145038;		   									//Convert to PSI if in kPa
+    $actGrav = convert_gravity($actGrav, $finalGravityUnit, UnitsOfMeasure::GravitySG);                 //Convert to Specific Gravity
+    $beerCO2PSI = convert_pressure($beerCO2PSI, $beerCO2PSIUnit, UnitsOfMeasure::PressurePSI);			//Convert to PSI
     
-    $actLocalPress = estPressureAtAltitude($altitude, $convertToMetric);								//Barometric pressure based on altitude in PSI
+    $actLocalPress = estPressureAtAltitude($altitude, $altitudeUnit);			    					//Barometric pressure based on altitude in PSI
     $actPress = (($actLocalPress+$beerCO2PSI)*0.0680459639);											//Actual absolute pressure in atmospheres
-    $actH2OMass = estWaterDensity(getTempCelsius($temperature, $convertToMetric));						//Estimated mass of pure water at temp supplied
+    $actH2OMass = estWaterDensity(getTempCelsius($temperature, $temperatureUnit));						//Estimated mass of pure water at temp supplied
     $actH2OMassPress = (($actH2OMass/(1-(($actPress*101325)-101325)/215e7)));							//Actual mass of pure water adjusted for pressure
-    $actCO2Vol = deLangeEquation($actLocalPress, $beerCO2PSI, $temperature, $convertToMetric);			//Estimated Volumes of CO2 in the beer
+    $actCO2Vol = deLangeEquation($actLocalPress, $beerCO2PSI, $temperature, $temperatureUnit);			//Estimated Volumes of CO2 in the beer
     $actBeerWeight = (($weight-$emptyWeight)/$actGrav);													//Estimated weight of beer based on final gravity
     $actBeerVol = ($actBeerWeight/$actH2OMassPress);													//Estimated volume of beer based on final gravity
     $actGravVar = ((($actGrav-1.015)*1000)/3);														    //Actual CO2 variance for final gravity
@@ -77,31 +76,27 @@ function getVolumeByWeight($weight, $emptyWeight, $temperature, $altitude, $beer
     $actCO2GPL = (($actCO2Vol-$actCO2Grav)*1.96);														//Actual grams per litre of CO2
     $actCO2 = (($actCO2GPL*$actBeerVol)*0.001);														    //Actual weight of CO2 in kilograms
     $actBeerWeightCO2 = ((($weight-$actCO2)-$emptyWeight)/$actGrav);									//Actual weight of beer adjusted for CO2
-    $actVolume = (($actBeerWeightCO2/$actH2OMassPress)*(!$convertToMetric?0.264172052:1));	            //Actual volume of beer in units requested
+    $actVolume = ($actBeerWeightCO2/$actH2OMassPress);	                                                //Actual volume of beer in liters
     
-    //if we need to convert the arguments to metric then we need to convert metric to imperial in the return value
-    return $actVolume*($convertToMetric?0.264172052:1);
+ 
+    return convert_volume($actVolume, UnitsOfMeasure::VolumeLiter, $returnUnits);
 }
 
-function estPressureAtAltitude($altitude, $convertToMetric){
-    if($convertToMetric) $altitude = ($altitude)*0.3048;										//Convert altitude to meters if in feet
+function estPressureAtAltitude($altitude, $altitudeUnits){
+    $altitude = convert_distance($altitude, $altitudeUnits, UnitsOfMeasure::DistanceMeter);
     return ((pow((288.15/((288.15+(-65e-4)*($altitude)))),((9.80665*0.0289644)/(8.3144598*(-65e-4)))))*14.6959487755142);
 }
-function deLangeEquation($localPsi, $beerPsi, $temperature, $convertToMetric){
-    return ($localPsi+$beerPsi)*(0.01821+(0.090115*(exp(-(getTempImperial($temperature, $convertToMetric)-32)/43.11))))-3342e-6;
+function deLangeEquation($localPsi, $beerPsi, $temperature, $temperatureUnit){
+    return ($localPsi+$beerPsi)*(0.01821+(0.090115*(exp(-(getTempImperial($temperature, $temperatureUnit)-32)/43.11))))-3342e-6;
 }
 function estWaterDensity($tempCel){
     return (0.99984+$tempCel*(6.7715e-5-$tempCel*(9.0735e-6-$tempCel*(1.015e-7-$tempCel*(1.3356e-9-$tempCel*(1.4421e-11-$tempCel*(1.0896e-13-$tempCel*(4.9038e-16-9.7531e-19*$tempCel))))))));
 }
 
-function getTempImperial($temp, $convertToMetric){
-    //if needing convert to metric we are in farenheit return as is
-    if($convertToMetric) return $temp;
-    return (($temp*9)/5)+32;
+function getTempImperial($temp, $tempUnit){
+    return convert_temperature($temp, $tempUnit, UnitsOfMeasure::TemperatureFahrenheight);
 }
-function getTempCelsius($temp, $convertToMetric){
-    //if NOT needing convert to metric we are in metric return as is
-    if(!$convertToMetric) return $temp;
-    return (($temp-32)*5)/9;
+function getTempCelsius($temp, $tempUnit){
+    return convert_temperature($temp, $tempUnit, UnitsOfMeasure::TemperatureCelsius);
 }
 ?>

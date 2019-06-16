@@ -3,6 +3,8 @@ require_once __DIR__.'/header.php';
 $htmlHelper = new HtmlHelper();
 $manager = new YeastManager();
 
+$config = getAllConfigs();
+
 $activeIds = $manager->GetAllActiveIDs();
 if (isset ( $_POST ['save'] )) {
 	$error = false;
@@ -26,8 +28,14 @@ if (isset ( $_POST ['save'] )) {
 	    $item->set_name($_POST['name'][$ii]);
 	    $item->set_strand($_POST['strand'][$ii]);
 	    $item->set_format($_POST['format'][$ii]);
-	    $item->set_minTemp($_POST['minTemp'][$ii]);
-	    $item->set_maxTemp($_POST['maxTemp'][$ii]);
+	    if($_POST['minTemp'][$ii] != $_POST['minTempOriginal'][$ii]){
+	       $item->set_minTemp($_POST['minTemp'][$ii]);
+	       $item->set_minTempUnit($config[ConfigNames::DisplayUnitTemperature]);
+	    }
+	    if($_POST['maxTemp'][$ii] != $_POST['maxTempOriginal'][$ii]){
+    	    $item->set_maxTemp($_POST['maxTemp'][$ii]);
+    	    $item->set_maxTempUnit($config[ConfigNames::DisplayUnitTemperature]);
+	    }
 	    $item->set_minAttenuation($_POST['minAttenuation'][$ii]);
 	    $item->set_maxAttenuation($_POST['maxAttenuation'][$ii]);
 	    $item->set_flocculation($_POST['flocculation'][$ii]);
@@ -92,8 +100,8 @@ include 'top_menu.php';
                             <th style="width:20%; vertical-align: middle;">Name</th>
                             <th style="width:20%; vertical-align: middle;">Strand</th>
                             <th style="width:10%; vertical-align: middle;">Format</th>
-                            <th style="width:5%; vertical-align: middle;">Minimum<br/>Temperature</th>
-                            <th style="width:5%; vertical-align: middle;">Maximum<br/>Temperature</th>
+                            <th style="width:5%; vertical-align: middle;">Minimum<br/>Temperature(<?php echo $config[ConfigNames::DisplayUnitTemperature]?>)</th>
+                            <th style="width:5%; vertical-align: middle;">Maximum<br/>Temperature(<?php echo $config[ConfigNames::DisplayUnitTemperature]?>)</th>
                             <th style="width:5%; vertical-align: middle;">Minimum<br/>Attenuation</th>
                             <th style="width:5%; vertical-align: middle;">Maximum<br/>Attenuation</th>
                             <th style="width:10%; vertical-align: middle;">Flocculation</th>
@@ -122,10 +130,12 @@ include 'top_menu.php';
 										<input type="text" id="format<?php echo $item->get_id() ?>" class="smallbox" name="format[]" value="<?php echo $item->get_format() ?>" />
                                     </td>
                                     <td style="width:10%;vertical-align: middle;">
-                                        <input type="text" id="minTemp<?php echo $item->get_id() ?>" class="smallbox" name="minTemp[]" value="<?php echo $item->get_minTemp() ?>" />
+                                        <input type="text" id="minTemp<?php echo $item->get_id() ?>" class="smallbox" name="minTemp[]" value="<?php echo convert_temperature($item->get_minTemp(), $item->get_minTempUnit(), $config[ConfigNames::DisplayUnitTemperature]); ?>" />
+                                    	<input type="hidden" id="minTempOriginal<?php echo $item->get_id() ?>" class="smallbox" name="minTempOriginal[]" value="<?php echo convert_temperature($item->get_minTemp(), $item->get_minTempUnit(), $config[ConfigNames::DisplayUnitTemperature]); ?>" />
                                     </td>
                                     <td style="width:10%;vertical-align: middle;">
-										<input type="text" id="maxTemp<?php echo $item->get_id() ?>" class="smallbox" name="maxTemp[]" value="<?php echo $item->get_maxTemp() ?>" />
+										<input type="text" id="maxTemp<?php echo $item->get_id() ?>" class="smallbox" name="maxTemp[]" value="<?php echo convert_temperature($item->get_maxTemp(), $item->get_maxTempUnit(), $config[ConfigNames::DisplayUnitTemperature]) ?>" />
+                                    	<input type="hidden" id="maxTempOriginal<?php echo $item->get_id() ?>" class="smallbox" name="maxTempOriginal[]" value="<?php echo convert_temperature($item->get_maxTemp(), $item->get_maxTempUnit(), $config[ConfigNames::DisplayUnitTemperature]) ?>" />
                                     </td>
                                     <td style="width:10%;vertical-align: middle;">
                                         <input type="text" id="minAttenuation<?php echo $item->get_id() ?>" class="smallbox" name="minAttenuation[]" value="<?php echo $item->get_minAttenuation() ?>" />

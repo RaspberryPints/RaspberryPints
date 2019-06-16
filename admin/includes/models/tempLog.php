@@ -4,6 +4,7 @@ class TempLog
 	private $_id;  
 	private $_probe;
 	private $_temp;
+	private $_tempUnit;
 	private $_humidity;
 	private $_takenDate; 
 
@@ -17,6 +18,9 @@ class TempLog
 
 	public function get_temp(){ return $this->_temp; }
 	public function set_temp($_temp){ $this->_temp = $_temp; }
+
+	public function get_tempUnit(){ return $this->_tempUnit; }
+	public function set_tempUnit($_tempUnit){ $this->_tempUnit = $_tempUnit; }
 	
 	public function get_humidity(){ return $this->_humidity; }
 	public function set_humidity($_humidity){ $this->_humidity = $_humidity; }
@@ -40,6 +44,11 @@ class TempLog
 			$this->set_temp($postArr['temp']);
 		else
 			$this->set_temp(0);
+			
+		if( isset($postArr['tempUnit']) )
+		    $this->set_tempUnit($postArr['tempUnit']);
+		else
+		    $this->set_tempUnit(0);
 			
 		if( isset($postArr['humidity']) )
 			$this->set_humidity($postArr['humidity']);

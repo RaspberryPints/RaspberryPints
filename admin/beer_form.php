@@ -264,7 +264,8 @@ include 'top_menu.php';
 					<b>OG:</b>
 				</td>
 				<td>
-					<input type="text" id="og" class="smallbox" name="og" value="<?php echo $beer->get_og() ?>" />
+					<input type="text" id="og" class="smallbox" name="og" value="<?php echo convert_gravity($beer->get_og(), $beer->get_ogUnit(), $config[ConfigNames::DisplayUnitGravity]); ?>" /> <?php echo $config[ConfigNames::DisplayUnitGravity]; ?>
+					<input type="hidden" name="ogUnit" value="<?php echo $config[ConfigNames::DisplayUnitGravity]; ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -272,7 +273,8 @@ include 'top_menu.php';
 					<b>FG:</b>
 				</td>
 				<td>
-					<input type="text" id="fg" class="smallbox" name="fg" value="<?php echo $beer->get_fg() ?>" />
+					<input type="text" id="fg" class="smallbox" name="fg" value="<?php echo convert_gravity($beer->get_fg(), $beer->get_fgUnit(), $config[ConfigNames::DisplayUnitGravity]); ?>" /> <?php echo $config[ConfigNames::DisplayUnitGravity]; ?>
+					<input type="hidden" name="fgUnit" value="<?php echo $config[ConfigNames::DisplayUnitGravity]; ?>" />
 				</td>
 			</tr>
 			<tr>

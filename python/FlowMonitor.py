@@ -228,7 +228,7 @@ class FlowMonitor(object):
             self.loadCellThreads = []
             configMD = self.dispatch.getLoadCellConfig()
             for item in configMD:
-                loadCell = LoadCellCheckThread( "LC-" + str(item["tapId"]), updateDir=config['pints.dir'], dispatch=self.dispatch, tapId=item["tapId"], commandPin=item["loadCellCmdPin"], responsePin=item["loadCellRspPin"] )
+                loadCell = LoadCellCheckThread( "LC-" + str(item["tapId"]), updateDir=config['pints.dir'], dispatch=self.dispatch, tapId=item["tapId"], commandPin=item["loadCellCmdPin"], responsePin=item["loadCellRspPin"], unit=item["loadCellUnit"] )
                 loadCell.start()
                 self.loadCellThreads.append(loadCell)
             
@@ -557,7 +557,7 @@ class MotionDetectionPIRThread (threading.Thread):
         
         
 class LoadCellCheckThread (threading.Thread):
-    def __init__(self, threadID, dispatch, updateDir, tapId = 1, commandPin = 7, responsePin = 8, delay=1, updateVariance=.01):
+    def __init__(self, threadID, dispatch, updateDir, tapId = 1, commandPin = 7, responsePin = 8, delay=1, updateVariance=.01, unit="lb"):
         threading.Thread.__init__(self)
         self.threadID = threadID
         self.dispatch = dispatch
@@ -567,6 +567,7 @@ class LoadCellCheckThread (threading.Thread):
         self.responsePin = responsePin
         self.delay = delay
         self.updateVariance = updateVariance
+        self.unit = unit
         self.checkTare = False
         self.shutdown_required = False
         
@@ -600,7 +601,7 @@ class LoadCellCheckThread (threading.Thread):
                 #if weight is valid and the difference between the last read is significant enough to update
                 if weight > 0 and abs(lastWeight - weight) > self.updateVariance :
                     #The following 2 lines passes the PIN and WEIGHT to the php script
-                    subprocess.call(["php", self.updateDir + '/admin/updateKeg.php', str(self.tapId), str(weight)])
+                    subprocess.call(["php", self.updateDir + '/admin/updateKeg.php', str(self.tapId), str(weight), self.unit])
                     lastWeight = weight
                 time.sleep(self.delay)
         except:
@@ -649,8 +650,9 @@ class OneWireTemperatureThread (threading.Thread):
         if equals_pos != -1: 
             tempstr = lines[1][equals_pos+2:]
             tempvalue_c=float(tempstr)/1000.0
-            tempvalue_f = tempvalue_c * 9.0 / 5.0 + 32.0
-            tempvalue = round(tempvalue_f,1)
+            tempvalue = round(tempvalue_c,1)
+            #tempvalue_f = tempvalue_c * 9.0 / 5.0 + 32.0
+            #tempvalue = round(tempvalue_f,1)
             return tempvalue
             
         else:
@@ -681,7 +683,7 @@ class OneWireTemperatureThread (threading.Thread):
                         
                     #if valid temp save it to the database
                     if temp != None and temp >= self.bound_lo and temp <= self.bound_hi:
-                        self.dispatch.saveTemp(probeName, temp)
+                        self.dispatch.saveTemp(probeName, temp, 'C')
                         
                 time.sleep(self.delay)
                 firstTime = False

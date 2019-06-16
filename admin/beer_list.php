@@ -151,7 +151,7 @@ include 'top_menu.php';
                                         <b>OG:</b>
 										<?php
 											if ( $beer->get_og() != 1 && $beer->get_og() != 0 )
-												echo $beer->get_og() ;
+											    echo convert_gravity($beer->get_og(), $beer->get_ogUnit(), $config[ConfigNames::DisplayUnitGravity]) ;
 											else
 												echo "N/A";
 										?>
@@ -159,7 +159,7 @@ include 'top_menu.php';
                                         <b>FG:</b>
 										<?php
 											if ( $beer->get_fg() != 1 && $beer->get_fg() != 0 )
-												echo  $beer->get_fg();
+											    echo  convert_gravity($beer->get_fg(), $beer->get_fgUnit(), $config[ConfigNames::DisplayUnitGravity]);
 											else
 												echo "N/A";
 										?>
