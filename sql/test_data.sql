@@ -28,16 +28,16 @@ USE `raspberrypints`;
 --
 
 INSERT INTO `beers` (`name`, `beerStyleId`, `ogEst`, `fgEst`, `srmEst`, `ibuEst`, `notes`, `createdDate`, `modifiedDate`) VALUES
-('Darth Vader', '1', '1.066', '1.016', '38.0', '66.0', 'Rich, toasty malt flavor. Generous amounts of pine, citrus and roasted coffee. Herbal aroma with a punch of IPA hops at the finish.', NOW(), NOW() ),
-('Strong Scotch', '10', '1.074', '1.018', '17.8', '27.0', 'Slightly sweet. Hints of malt and toffee. Finishes with roasted nuts and coffee. Complex and roasty.', NOW(), NOW() ),
-('Cream of Three Crops', '20', '1.040', '1.009', '2.9', '14.3', 'Neutral, muted start. Highly carbonated with a soapy head. Unremarkably mild finish of noble hops. Dry and crisp with no distinguishable graininess.', NOW(), NOW() ),
-('Darth Vader', '30', '1.066', '1.016', '38.0', '66.0', 'Rich, toasty malt flavor. Generous amounts of pine, citrus and roasted coffee. Herbal aroma with a punch of IPA hops at the finish.', NOW(), NOW() ),
-('Haus Pale Ale', '40', '1.051', '1.011', '5.0', '39.0', 'Pale straw-gold color with two fingers of fluffy white head. Bread dough and cracker aromas up front, followed immediately by pine and grapefruit. Clean, crisp and dangerously sessionable.', NOW(), NOW() ),
-('Two Hearted', '50', '1.055', '1.014', '5.6', '52.6', 'American malts and enormous hop additions give this beer a crisp finish and an incredibly floral aroma.', NOW(), NOW() ),
-('Reaper''s Mild', '60', '1.035', '1.012', '19.1', '20.4', 'A full flavored session beer that is both inexpensive to brew and quick to go from grain to glass. Ready to drink in a couple weeks, if you push it.', NOW(), NOW() ),
-('Skeeter Pee', '70', '1.070', '1.009', '0', '0', 'The original, easy to drink, naturally fermented lemon drink. Bitter, sweet, and a kick in the teeth. This hot-weather thirst quencher puts commercialized lemon-flavored malt beverages to shame.', NOW(), NOW() ),
-('Black Peach', '80', '1.000', '1.000', '0', '0', 'Black tea infused with the unmistakable summertime flavor of juicy, orchard-fresh peaches and just the right amount of natural milled cane sugar.', NOW(), NOW() ),
-('Aloha Morning', '90', '1.000', '1.000', '0', '0', 'Children''s strawberry and citrus punch, thinned to suit an adult pallet using only the highest quality dihydrogen monoxide available.', NOW(), NOW() );
+('Darth Vader', '80', '1.066', '1.016', '38.0', '66.0', 'Rich, toasty malt flavor. Generous amounts of pine, citrus and roasted coffee. Herbal aroma with a punch of IPA hops at the finish.', NOW(), NOW() ),
+('Row 2 Hill 56', '33', '1.055', '1.010', '5.1', '40', '100% Simcoe hops make up this beer from start to finish! It is named for the location in the experimental hop yard in Yakima, WA, where it was first created.', NOW(), NOW() ),
+('Loon Lake Porter', '78', '1.050', '1.012', '24', '24.6', 'With a low IBU and a mellow base recipe, this is a beer that can be turned from grain to glass quickly. The smoke aroma is prominent, but not at all overpowering. The sweetness of the malt really balances this beer well.', NOW(), NOW() ),
+('Reaper''s Mild', '36', '1.035', '1.012', '19.1', '20.4', 'A full flavored session beer that is both inexpensive to brew and quick to go from grain to glass. Ready to drink in a couple weeks, if you push it.', NOW(), NOW() ),
+('Deception Cream Stout', '43', '1.058', '1.020', '36', '27', 'Coffee and chocolate hit you up front intermingled with smooth caramel flavors that become noticeable mid-palate. Nice roasty finish rounds it out. Balanced and not cloying at all, but obviously leaning slightly to the sweeter side. Very smooth and creamy.', NOW(), NOW() ),
+('Haus Pale Ale', '33', '1.051', '1.011', '5.0', '39.0', 'Pale straw-gold color with two fingers of fluffy white head. Bread dough and cracker aromas up front, followed immediately by pine and grapefruit. Clean, crisp and dangerously sessionable.', NOW(), NOW() ),
+('Two Hearted Ale', '49', '1.055', '1.014', '5.6', '52.6', 'American malts and enormous hop additions give this beer a crisp finish and an incredibly floral aroma.', NOW(), NOW() ),
+('Skeeter Pee', '100', '1.070', '1.009', '0', '0', 'The original, easy to drink, naturally fermented lemon drink. Bitter, sweet, and a kick in the teeth. This hot-weather thirst quencher puts commercialized lemon-flavored malt beverages to shame.', NOW(), NOW() ),
+('Black Peach Tea', '102', '1.000', '1.000', '0', '0', 'Black tea infused with the unmistakable summertime flavor of juicy, orchard-fresh peaches and just the right amount of natural milled cane sugar.', NOW(), NOW() ),
+('Aloha Morning', '105', '1.000', '1.000', '0', '0', 'Children''s strawberry and citrus punch, thinned to suit an adult pallet using only the highest quality dihydrogen monoxide available.', NOW(), NOW() );
 
 -- --------------------------------------------------------
 
@@ -45,22 +45,32 @@ INSERT INTO `beers` (`name`, `beerStyleId`, `ogEst`, `fgEst`, `srmEst`, `ibuEst`
 -- Dumping data for table `kegTypes`
 --
 
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '1', '1', 'Cornelius', 'Super Champion', '16530387', 'Johnstown Production Center', '(Unknown)', 'One hanndle cracked', 'SERVING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '2', '1', 'Spartanburg', 'Challenger VI', '81175979', 'Joyce Bev', 'Washington D.C.', 'Green handles', 'SERVING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '3', '1', 'Cornelius', 'Super Champion', '75162875', 'Pepi Cola Btlg Co', 'Oskaloosa, IA', 'None', 'SERVING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '4', '1', 'Cornelius', 'Super Champion', '77320513', 'Binghamton Btlg Co', '(Unknown)', 'None', 'DRY_HOPPING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '5', '1', 'Cornelius', 'Super Champion', '80224203', 'Pepsi Btlg Co', 'Southern CA', 'Green handles', 'SERVING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '6', '1', 'Spartanburg', 'Challenger VI', '290880483', 'Pepsi Cola Btlg Co', 'San Diego', 'None', 'SERVING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '7', '1', 'Cornelius', 'Super Champion', '83129068', 'Pepsi Cola Btlg Co', '(Unknown)', 'None', 'SERVING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '8', '1', 'Cornelius', 'Super Champion', '78143233', 'Pepsi Cola Btlg Co', 'Parkersburg WVA', 'None', 'SERVING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '9', '1', 'Spantanburg', 'Challenger VI', '112620585', 'Pepsi Cola Btlg Co', 'Aleghany, NY', 'Blue handles', 'SERVING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '10', '1', 'Cornelius', 'Super Champion', '82217553', 'Pepsi Cola Seven Up', 'Mpls St Paul', 'None', 'SERVING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '11', '1', 'Cornelius', 'Super Champion', '77143229', 'So Conn Seven Up', 'S Norwalk Conn', 'Green handles', 'SERVING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '12', '1', 'Cornelius', 'Super Champion', '86018983', 'Seltzer Rydholm', 'Aub Port Aug', 'None', 'SERVING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '13', '1', 'Cornelius', 'Super Champion', '84405189', 'Pepsi Cola Btlg Co', 'Williamsport, PA', 'None', 'SERVING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '14', '1', 'Cornelius', 'Super Champion', '80273216', 'Pepsi Cola Btlg Co', 'Waterloo, IA', 'None', 'SERVING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '15', '1', 'Cornelius', 'Super Champion', '78225083', 'Pepsi Cola Btlg Co', 'San Diego', 'None', 'SERVING', NOW(), NOW() );
-INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES ( '16', '1', 'Firestone', 'Challenger VI', '103760380', 'Pepsi Cola Btlg Co', 'San Diego', 'None', 'NEEDS_CLEANING', NOW(), NOW() );
+INSERT INTO `kegs` ( label, kegTypeId, make, model, serial, stampedOwner, stampedLoc, notes, kegStatusCode, createdDate, modifiedDate ) VALUES
+( '1', '1', 'Cornelius', 'Super Champion', '16530387', 'Johnstown Production Center', '(Unknown)', 'One hanndle cracked', 'SERVING', NOW(), NOW() ),
+( '2', '1', 'Spartanburg', 'Challenger VI', '81175979', 'Joyce Bev', 'Washington D.C.', 'Green handles', 'SERVING', NOW(), NOW() ),
+( '3', '1', 'Cornelius', 'Super Champion', '75162875', 'Pepi Cola Btlg Co', 'Oskaloosa, IA', '', 'SERVING', NOW(), NOW() ),
+( '4', '1', 'Cornelius', 'Super Champion', '77320513', 'Binghamton Btlg Co', '(Unknown)', '', 'SERVING', NOW(), NOW() ),
+( '5', '1', 'Cornelius', 'Super Champion', '80224203', 'Pepsi Btlg Co', 'Southern CA', 'Green handles', 'SERVING', NOW(), NOW() ),
+( '6', '1', 'Spartanburg', 'Challenger VI', '290880483', 'Pepsi Cola Btlg Co', 'San Diego', '', 'SERVING', NOW(), NOW() ),
+( '7', '1', 'Cornelius', 'Super Champion', '83129068', 'Pepsi Cola Btlg Co', '(Unknown)', '', 'SERVING', NOW(), NOW() ),
+( '8', '1', 'Cornelius', 'Super Champion', '78143233', 'Pepsi Cola Btlg Co', 'Parkersburg WVA', '', 'SERVING', NOW(), NOW() ),
+( '9', '1', 'Spantanburg', 'Challenger VI', '112620585', 'Pepsi Cola Btlg Co', 'Aleghany, NY', 'Blue handles', 'SERVING', NOW(), NOW() ),
+( '10', '1', 'Cornelius', 'Super Champion', '82217553', 'Pepsi Cola Seven Up', 'Mpls St Paul', '', 'SERVING', NOW(), NOW() ),
+( '11', '1', 'Cornelius', 'Super Champion', '77143229', 'So Conn Seven Up', 'S Norwalk Conn', 'Green handles', 'SECONDARY', NOW(), NOW() ),
+( '12', '1', 'Cornelius', 'Super Champion', '86018983', 'Seltzer Rydholm', 'Aub Port Aug', '', 'SECONDARY', NOW(), NOW() ),
+( '13', '1', 'Cornelius', 'Super Champion', '84405189', 'Pepsi Cola Btlg Co', 'Williamsport, PA', '', 'DRY_HOPPING', NOW(), NOW() ),
+( '14', '1', 'Cornelius', 'Super Champion', '80273216', 'Pepsi Cola Btlg Co', 'Waterloo, IA', '', 'DRY_HOPPING', NOW(), NOW() ),
+( '15', '1', 'Cornelius', 'Super Champion', '78225083', 'Pepsi Cola Btlg Co', 'San Diego', '', 'CONDITIONING', NOW(), NOW() ),
+( '16', '1', 'Firestone', 'Challenger VI', '103760380', 'Pepsi Cola Btlg Co', 'San Diego', '', 'CONDITIONING', NOW(), NOW() ),
+( '17', '1', 'Cornelius', 'Super Champion', '85017588', 'Pepsi Cola Btlg Co', 'Fresno, CA', '', 'CLEAN', NOW(), NOW() ),
+( '18', '1', 'Firestone', 'Challenger VI', '214311080', 'Dr Pepper Company', 'Dallas Texas 75265', '', 'CLEAN', NOW(), NOW() ),
+( '19', '1', 'Cornelius', 'Super Champion', '79282429', 'Pepsi Cola Btlg Co', 'San Francisco CA 2 79', '', 'CLEAN', NOW(), NOW() ),
+( '20', '1', 'Cornelius', 'Super Champion', '79629286', 'Pepsi Cola Btlg Co', 'Vickers Rock PA', '', 'CLEAN', NOW(), NOW() ),
+( '21', '1', 'Cornelius', 'Super Champion', '83127465', 'Pepsi Cola Btlg Co', 'Mpls and St Paul', '', 'CLEAN', NOW(), NOW() ),
+( '22', '1', 'Firestone', 'Challenger VI', '071410882', 'Pepsi PBG', '(Unknown)', '', 'NEEDS_CLEANING', NOW(), NOW() ),
+( '23', '1', 'Cornelius', 'Super Champion', '83114663', 'Pepsi Cola Seven Up', 'Mpls and St Paul', 'Leaks at pressure relief valve', 'NEEDS_PARTS', NOW(), NOW() ),
+( '24', '1', 'Cornelius', 'Super Champion', '83295909', 'PBG', '(Unknown)', 'Leaks at lid/body interface when < 15 PSI', 'NEEDS_REPAIRS', NOW(), NOW() );
+
 
 -- --------------------------------------------------------
 
