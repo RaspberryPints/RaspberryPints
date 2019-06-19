@@ -56,22 +56,22 @@ $kegTypeList = $kegTypeManager->GetAll();
 include 'header.php';
 ?>
 	<!-- End Header -->
-        
-    <!-- Top Breadcrumb Start -->
-    <div id="breadcrumb">
-    	<ul>	
-        	<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
-        	<li><strong>Location:</strong></li>
-            <li><a href="keg_list.php">Keg List</a></li>
-            <li>/</li>
-            <li class="current">Keg Form</li>
-        </ul>
-    </div>
-    <!-- Top Breadcrumb End --> 
-     
-    <!-- Right Side/Main Content Start -->
-    <div id="rightside">
-		 <div class="contentcontainer med left">
+		
+	<!-- Top Breadcrumb Start -->
+	<div id="breadcrumb">
+		<ul>	
+			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
+			<li><strong>Location:</strong></li>
+			<li><a href="keg_list.php">Keg List</a></li>
+			<li>/</li>
+			<li class="current">Keg Form</li>
+		</ul>
+	</div>
+	<!-- Top Breadcrumb End --> 
+	
+	<!-- Right Side/Main Content Start -->
+	<div id="rightside">
+		<div class="contentcontainer med left">
 	<p>
 		fields marked with an * are required
 
@@ -97,7 +97,7 @@ include 'header.php';
 			</tr>	
 			<tr>
 				<td>
-					Make:
+					Make: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<input type="text" id="make" class="mediumbox" name="make" value="<?php echo $keg->get_make() ?>" />
@@ -105,7 +105,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Model:
+					Model: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<input type="text" id="model" class="mediumbox" name="model" value="<?php echo $keg->get_model() ?>" />
@@ -113,7 +113,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Serial:
+					Serial: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<input type="text" id="serial" class="mediumbox" name="serial" value="<?php echo $keg->get_serial() ?>" />
@@ -121,7 +121,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Stamped Owner:
+					Stamped Owner: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<input type="text" id="stampedOwner" class="mediumbox" name="stampedOwner" value="<?php echo $keg->get_stampedOwner() ?>" />
@@ -129,7 +129,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Stamped Location:
+					Stamped Location: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<input type="text" id="stampedLoc" class="mediumbox" name="stampedLoc" value="<?php echo $keg->get_stampedLoc() ?>" />
@@ -137,7 +137,7 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Empty Weight:
+					Empty Weight: <b><font color="red">*</color></b>
 				</td>
 				<td>
 					<input type="text" id="weight" class="mediumbox" name="weight" value="<?php echo $keg->get_weight() ?>" />
@@ -145,10 +145,10 @@ include 'header.php';
 			</tr>
 			<tr>
 				<td>
-					Notes:
+					Notes: <b><font color="red">*</color></b>
 				</td>
 				<td>
-					<textarea id="notes" class="text-input textarea" name="notes" style="width:500px;height:100px"><?php echo $keg->get_stampedOwner() ?></textarea>
+					<textarea id="notes" class="text-input textarea" name="notes" style="width:500px;height:100px"><?php echo $keg->get_notes() ?></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -168,22 +168,22 @@ include 'header.php';
 		</table>
 		<br />
 		<div align="right">			
-			 &nbsp &nbsp 
+			&nbsp &nbsp 
 		</div>
 
 	</form>
-    </div>
+	</div>
 	<!-- End On Tap Section -->
 
-    <!-- Start Footer -->   
+	<!-- Start Footer -->   
 <?php 
 include 'footer.php';
 ?>
 
 	<!-- End Footer -->
-          
-    </div>
-    <!-- Right Side/Main Content End -->
+		
+	</div>
+	<!-- Right Side/Main Content End -->
 	<!-- Start Left Bar Menu -->   
 <?php 
 include 'left_bar.php';
@@ -198,23 +198,30 @@ include 'scripts.php';
 	$(function() {		
 		
 		$('#keg-form').validate({
-		  rules: {
-			label: { required: true, number: true },
-			kegTypeId: { required: true },
-			kegStatusCode: { required: true }
-		  }
+			rules: {
+				label: { required: true, number: true },
+				kegTypeId: { required: true },
+				kegStatusCode: { required: true },
+				make: { required: true },
+				model: { required: true },
+				serial: { required: true },
+				stampedOwner: { required: true },
+				stampedLoc: { required: true },
+				weight: { required: true },
+				notes: { required: true }
+			}
 		});
 		
 	});
 </script>
 
 	<!-- End Js -->
-    <!--[if IE 6]>
-    <script type='text/javascript' src='scripts/png_fix.js'></script>
-    <script type='text/javascript'>
-      DD_belatedPNG.fix('img, .notifycount, .selected');
-    </script>
-    <![endif]--> 
+	<!--[if IE 6]>
+	<script type='text/javascript' src='scripts/png_fix.js'></script>
+	<script type='text/javascript'>
+	DD_belatedPNG.fix('img, .notifycount, .selected');
+	</script>
+	<![endif]--> 
 	
 </body>
 </html>

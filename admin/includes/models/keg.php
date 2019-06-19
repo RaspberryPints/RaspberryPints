@@ -1,8 +1,8 @@
 <?php
 class Keg
 {  
-    private $_id;  
-    private $_label;
+	private $_id;  
+	private $_label;
 	private $_kegTypeId;
 	private $_make; 
 	private $_model; 
@@ -17,7 +17,7 @@ class Keg
 	private $_modifiedDate; 
 
 	public function __construct(){}
-  
+
 	public function get_id(){ return $this->_id; }
 	public function set_id($_id){ $this->_id = $_id; }
 
@@ -60,8 +60,8 @@ class Keg
 	public function get_modifiedDate(){ return $this->_modifiedDate; }
 	public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
 	
-    public function setFromArray($postArr)  
-    {  	
+	public function setFromArray($postArr)  
+	{  	
 		if( isset($postArr['id']) )
 			$this->set_id($postArr['id']);
 		else
@@ -131,7 +131,7 @@ class Keg
 			$this->set_modifiedDate($postArr['modifiedDate']);
 		else
 			$this->set_modifiedDate(null);
-    }  
+	}  
 	
 	function toJson(){
 		return "{" . 
