@@ -64,8 +64,10 @@ include 'header.php';
 		<h2>Taplist Header</h2><br><br>
 		<?php
 			$sql="SELECT configValue FROM config WHERE configName ='".ConfigNames::HeaderText."'";
-			$result=mysql_query($sql);
-			$headerText=mysql_fetch_array($result);
+			//$result=mysql_query($sql);
+			$result=mysqli_query($con, $sql);
+			//$headerText=mysql_fetch_array($result);
+			$headerText=mysqli_fetch_assoc($result);
 		?>
 		<p><b>Text to Display:</b></p>
 			<form method="post" action="update_header_text.php">

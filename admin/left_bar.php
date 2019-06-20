@@ -6,8 +6,11 @@
 	&nbsp;
 	<?php
 		$sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
-		$result=mysql_query($sql);
-		echo mysql_result($result, 0, 'name');
+		//$result=mysql_query($sql);
+		$result=mysqli_query($con, $sql);
+		$row=mysqli_fetch_assoc($result);
+		//echo mysql_result($result, 0, 'name');
+		echo $row['name'];
 	?>
 </div>
 

@@ -23,7 +23,8 @@ $beerid=$_POST['beerid'];
 // update data in mysql database
 $sql="UPDATE beers SET name='$name', style='$style', notes='$notes', og='$og', fg='$fg', srm='$srm', 
 ibu='$ibu', active='$active', tapnumber='$tapnumber' WHERE beerid='$beerid'";
-$result=mysql_query($sql);
+//$result=mysql_query($sql);
+$result=mysqli_query($con, $sql);
 
 // if successfully updated.
 if($result){
