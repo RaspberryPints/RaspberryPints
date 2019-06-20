@@ -1,16 +1,19 @@
 <?php
 /***************************************************************************
-* Config files for V1.0.3.395
+* Config files for V2.0.2
 ****************************************************************************/
 	
 	//Main config files - /includes/config.php
 	$mainconfigstring = "<?php \n";
 	$mainconfigstring .= "    function db() {\n";
-	$mainconfigstring .= '        $link = ';
-	$mainconfigstring .= "mysql_connect('" . $servername . "', '" . $dbuser . "', '" . $dbpass1 . "');\n";
-	$mainconfigstring .= "        mysql_select_db('raspberrypints');\n";
+	//$mainconfigstring .= '        $link = ';
+	$mainconfigstring .= '        $con = ';`
+	//$mainconfigstring .= "mysql_connect('" . $servername . "', '" . $dbuser . "', '" . $dbpass1 . "');\n";
+	$mainconfigstring .= "mysqli_connect('" . $servername . "', '" . $dbuser . "', '" . $dbpass1 . "', 'raspberrypints');\n";
+	$mainconfigstring .= '        return $con;' . "\n";
+	//$mainconfigstring .= "        mysql_select_db('raspberrypints');\n";
 	$mainconfigstring .= "	}\n";
-	$mainconfigstring .= '    $rpintsversion="1.0.3.395";' . "\n";
+	$mainconfigstring .= '    $rpintsversion="2.0.2";' . "\n";
 	$mainconfigstring .= "?>";
 	
 	//Admin config file - /admin/conn.php
@@ -21,8 +24,9 @@
 	$adminconfig1 .= '   $db_name="raspberrypints"; // Database name' . "\n";
 	$adminconfig1 .= '   $tbl_name="users";' . "\n";
 	$adminconfig1 .= '   //Connect to server and select databse.' . "\n";
-	$adminconfig1 .= '   mysql_connect("$host", "$username", "$password")or die("cannot connect to server");' . "\n";
-	$adminconfig1 .= '   mysql_select_db("$db_name")or die("cannot select DB");' . "\n";
+	//$adminconfig1 .= '   mysql_connect("$host", "$username", "$password")or die("cannot connect to server");' . "\n";
+	$adminconfig1 .= '   $con=mysqli_connect("$host", "$username", "$password", "$db_name");' . "\n";
+	//$adminconfig1 .= '   mysql_select_db("$db_name")or die("cannot select DB");' . "\n";
 	$adminconfig1 .= '?>';
 	
 	//Admin config file - /admin/configp.php
