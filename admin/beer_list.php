@@ -14,6 +14,39 @@ $breweryList = $breweryManager->GetAll()
 ?>
 	<!-- Start Header  -->
 <body>
+<script >
+function toggleBeerInfo(callingElement, beerId) {
+    var imageTh = document.getElementById("beerImg"+beerId);
+	toggleElementDisplay(imageTh, "beerInfo"+beerId );
+	toggleElementDisplay(imageTh, "beerNotes"+beerId );
+}
+function toggleElementDisplay(callingElement, elementToToggle) {
+	var div = document.getElementById(elementToToggle);
+	if(div != null){
+		if(div.style.display == ""){
+			div.style.display = "none";
+			if(callingElement != null)callingElement.style.backgroundImage = "url(img/bg_expander_plus.png)"
+		}else{
+			div.style.display = "";
+			if(callingElement != null)callingElement.style.backgroundImage = "url(img/bg_expander_minus.png)"
+		}
+	}
+}
+
+function filterBeer(searchTextElement){
+	$("p:not(:contains('"+searchTextElement.value+"'))").parent().map(function() {
+	    if(!$(this).is("th")) return 
+	    $(this).siblings("th[id^=beerImg]").css('background-image', 'url(img/bg_expander_plus.png)')
+	    $(this).parent().hide();
+	    $(this).parent().next("tr").hide();
+	    $(this).parent().next("tr").next("tr").hide();
+	  });
+	$("p:contains('"+searchTextElement.value+"')").parent().map(function() {
+	    if(!$(this).is("th")) return 
+	    $(this).parent().show();
+	  });
+}
+</script>
 <?php
 include 'top_menu.php';
 ?>
@@ -32,7 +65,7 @@ include 'top_menu.php';
 	<!-- Right Side/Main Content Start -->
 <div id="rightside">
 	<div class="contentcontainer lg left">
-		<div class="headings alt">
+    	<div class="headings alt">
 			<h2>Beers</h2>
 		</div>
 		<div class="contentbox">
@@ -47,8 +80,10 @@ include 'top_menu.php';
 				<input type="submit" class="btn" value="Add with Untappd Id" onClick="window.location='beer_form_untappd.php'" />
 			<?php }?>
 			<br/><br/>
-			
-			<table style="width:770px; padding:0px" class="outerborder">
+			<?php if( count($beers) != 0 ){	?>
+        		Search:<input type="text" id="search" class="largebox" name="search" value="" onkeyup="filterBeer(this);" />
+        	<?php } ?>
+			<table style="width:770px; padding:0px" class="outerborder" id="beersTable">
 <!--				<thead>
 					<tr>
 						<th style="width:28%">Name</th>
@@ -66,7 +101,7 @@ include 'top_menu.php';
 						}else{
 							foreach ($beers as $beer){
 					?>
-								<tr class="intborder">
+								<tr class="intborder collapsed heading" onClick="toggleBeerInfo(this, '<?php echo $beer->get_id()?>')" >
 									<th style="width:35%; vertical-align:middle;">
 										<p style="font-size:24px; font-weight:bold"><?php echo $beer->get_name() ?></p>
                                         <?php 
@@ -101,17 +136,20 @@ include 'top_menu.php';
 											echo $style;
 										?>
 									</th>
-									<th style="width:5%; text-align: center; vertical-align: middle; margin: 0; padding: 0;">
+									<th style="width:10%; text-align: center; vertical-align: middle; margin: 0; padding: 0;">
 										<input name="editBeer" type="button" class="btn" value="Edit" style="text-align: center; margin: 0;" onClick="window.location='beer_form.php?id=<?php echo $beer->get_id()?>'" />
 									</th>
-									<th style="width:5%; text-align: center; vertical-align: middle; margin: 0; padding: 0">
+									<th style="width:10%; text-align: center; vertical-align: middle; margin: 0; padding: 0">
 										<form method="POST">
 											<input type='hidden' name='id' value='<?php echo $beer->get_id()?> '/>
 											<input class="inactivateBeer btn" style="text-align: center; margin: 0;" name="inactivateBeer" type="submit" value="Delete" />
 										</form>
 									</th>
+									<th id="beerImg<?php echo $beer->get_id()?>" style="width:10%; text-align: center; vertical-align: middle; margin: 0; padding: 0;
+									      background: url(img/bg_expander_plus.png) no-repeat center; background-size: 100%; background-color: #e0e0e0; background-position: 0 -10px; background-position-y: center; " >
+									</th>
 								</tr>
-								<tr class="intborder thick">
+								<tr class="intborder thick" id="beerInfo<?php echo $beer->get_id() ?>" style="display:none">
 									<td>
 										<p><b style="text-decoration: underline;">Vitals</b></p>
 										<p>
@@ -193,8 +231,9 @@ include 'top_menu.php';
 						                    ?>
 										</p>
 									</td>
+									<td style="width:5%"></td>
 								</tr>
-								<tr class="intborder">
+								<tr class="intborder" id="beerNotes<?php echo $beer->get_id() ?>" style="display:none">
 									<td colspan="2">
 										<?php
 										if(strlen($beer->get_notes()) < 200){
@@ -204,15 +243,16 @@ include 'top_menu.php';
 										}
 										?>
 									</td>
-									<td style="width:50px; text-align: center;">
+									<td style="width:5%; text-align: center;">
 										<input name="editBeer" type="button" class="btn" value="Edit" onClick="window.location='beer_form.php?id=<?php echo $beer->get_id()?>'" />
 									</td>
-									<td  style="width:50px; text-align: center;">
+									<td  style="width:5%; text-align: center;">
 										<form method="POST">
 											<input type='hidden' name='id' value='<?php echo $beer->get_id()?>'/>
 											<input class="inactivateBeer btn" name="inactivateBeer" type="submit" value="Delete" />
 										</form>
 									</td>
+									<td style="width:5%"></td>
 								</tr>
 					<?php 
 							}
