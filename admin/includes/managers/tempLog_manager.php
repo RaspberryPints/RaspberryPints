@@ -13,6 +13,9 @@ class TempLogManager extends Manager{
 	protected function getTableName(){
 		return "tempLog";
 	}
+	protected function getViewName(){
+	    return "vwTempLog";
+	}
 	protected function getDBObject(){
 		return new TempLog();
 	}

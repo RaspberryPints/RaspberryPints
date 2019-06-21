@@ -730,3 +730,16 @@ WHERE t.active = true
 ORDER BY te.id;
 	
 UPDATE `config` SET `configValue` = '3.0.5.0' WHERE `configName` = 'version';
+
+
+CREATE OR REPLACE VIEW vwTempLog
+AS
+SELECT
+    tl.id,
+	IFNULL(tp.notes, tl.probe) AS probe,
+    temp,
+    tempUnit,
+    humidity,
+    takenDate
+FROM tempLog tl 
+LEFT JOIN tempProbes tp ON tl.probe = tp.name;

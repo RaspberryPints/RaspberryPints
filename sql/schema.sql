@@ -1614,6 +1614,18 @@ FROM tapEvents te
 	LEFT JOIN users u ON u.id = te.userId
 WHERE t.active = true
 ORDER BY te.id;
+  
+CREATE OR REPLACE VIEW vwTempLog
+AS
+SELECT
+    tl.id,
+	IFNULL(tp.notes, tl.probe) AS probe,
+    temp,
+    tempUnit,
+    humidity,
+    takenDate
+FROM tempLog tl 
+LEFT JOIN tempProbes tp ON tl.probe = tp.name
 -- --------------------------------------------------------
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

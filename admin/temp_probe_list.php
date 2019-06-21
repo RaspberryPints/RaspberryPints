@@ -15,7 +15,7 @@ if (isset ( $_POST ['save'] )) {
 		}
 	}
 	$ii = 0;
-	while(isset($_POST ['name'][$ii]))
+	while(isset($_POST ['notes'][$ii]))
 	{
 	    $newProbe = false;
 	    if(isset($_POST ['id'][$ii]) && $_POST ['id'][$ii] != "")
@@ -147,7 +147,6 @@ include 'top_menu.php';
                             <!--<th style="width:30%; vertical-align: middle;">Type</th>-->
                             <!--<th style="width:30%; vertical-align: middle;">Pi Pin</th>-->
                             <th style="width:20%; vertical-align: middle;">Adjustment</th>
-                            <th style="width:50%; vertical-align: middle;">Notes</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -157,7 +156,7 @@ include 'top_menu.php';
                                 <tr>
                                     <td style="width:30%; vertical-align: middle;">
             							<input type="hidden" name="id[]" value="<?php echo $probe->get_id()?>" />
-                                        <input type="text" id="name<?php echo $probe->get_id()?>" class="mediumbox" name="name[]" value="<?php echo $probe->get_name() ?>" readonly/>
+                                        <input type="text" id="notes<?php echo $probe->get_id(); ?>" class="largebox" name="notes[]" value="<?php echo $probe->get_notes() ?>" />
                                         <input type="hidden" name="type[]" value="<?php echo $probe->get_type()?>" />
                                     	<input type="hidden" name="pin[]" value="<?php echo $probe->get_pin()?>" />
                                     </td>                                    	
@@ -174,9 +173,6 @@ include 'top_menu.php';
                                     </td>-->
                                     <td style="width:20%; vertical-align: middle;">
                                         <input type="text" id="adjustment<?php echo $probe->get_id(); ?>" class="smallbox" name="Adjustment[]" value="<?php echo $probe->get_manualAdj() ?>" />
-                                    </td>
-                                    <td style="width:50%;vertical-align: middle;">
-                                        <input type="text" id="notes<?php echo $probe->get_id(); ?>" class="largebox" name="notes[]" value="<?php echo $probe->get_notes() ?>" />
                                     </td>
                                 </tr>
                         <?php
