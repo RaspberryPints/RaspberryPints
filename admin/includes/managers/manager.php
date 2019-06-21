@@ -25,7 +25,7 @@ abstract class Manager {
 				if($value && (is_string($value) || preg_match("/[^0-9]/", $value) || $value == '')){
 					$columns.= "$col = NULLIF('$value','')";
 				}else{
-					$columns.= "$col = ".($value?$value:"null");				
+					$columns.= "$col = ".(!is_null($value) && $value != ''?$value:"null");				
 				}
 			}
 			if($this->hasModifiedColumn())$columns.=(strlen($columns) > 0?',':'')." modifiedDate = NOW() ";
@@ -51,7 +51,7 @@ abstract class Manager {
 				}else if($value && (is_string($value) || preg_match("/[^0-9]/", $value) || $value == '')){
 					$values.= "NULLIF('$value','')";
 				}else{
-					$values.= ($value?$value:"null");				
+				    $values.= (!is_null($value) && $value != ''?$value:"null");				
 				}
 			}
 			if($this->hasModifiedColumn())$values.=(strlen($values) > 0?',':'')." NOW()";
