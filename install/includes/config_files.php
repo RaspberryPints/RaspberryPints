@@ -7,7 +7,7 @@
 	$mainconfigstring = "<?php \n";
 	$mainconfigstring .= "    function db() {\n";
 	//$mainconfigstring .= '        $link = ';
-	$mainconfigstring .= '        $con = ';`
+	$mainconfigstring .= '        $con = ';
 	//$mainconfigstring .= "mysql_connect('" . $servername . "', '" . $dbuser . "', '" . $dbpass1 . "');\n";
 	$mainconfigstring .= "mysqli_connect('" . $servername . "', '" . $dbuser . "', '" . $dbpass1 . "', 'raspberrypints');\n";
 	$mainconfigstring .= '        return $con;' . "\n";
