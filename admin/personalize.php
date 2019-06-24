@@ -76,8 +76,10 @@ include 'header.php';
 			</form><br><br>
 		<?php
 			$sql="SELECT configValue FROM config WHERE configName ='".ConfigNames::HeaderTextTruncLen."'";
-			$result=mysql_query($sql);
-			$headerTextTruncLen=mysql_fetch_array($result);
+			//$result=mysql_query($sql);
+			$result=mysqli_query($con, $sql);
+			//$headerTextTruncLen=mysql_fetch_array($result);
+			$headerTextTruncLen=mysqli_fetch_assoc($result);
 		?>
 		<p><b>Truncate To:</b> (# characters)</p>
 			<form method="post" action="update_header_text_trunclen.php">
