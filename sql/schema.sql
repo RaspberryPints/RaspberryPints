@@ -1625,7 +1625,7 @@ SELECT
     humidity,
     takenDate
 FROM tempLog tl 
-LEFT JOIN tempProbes tp ON tl.probe = tp.name
+LEFT JOIN tempProbes tp ON tl.probe = tp.name;
 -- --------------------------------------------------------
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
