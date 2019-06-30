@@ -1,4 +1,10 @@
 <?php
+	if (!file_exists(__DIR__.'/includes/config.php')) {
+		header('Location: install/index.php', true, 303);
+		die();
+	}
+?>
+<?php
 	require_once __DIR__.'/includes/config_names.php';
 
 	require_once __DIR__.'/includes/config.php';
@@ -13,19 +19,23 @@
 	
 	if($db){
 		// Connect to the database
-		db();
+		$con = db();
 		
 		
 		$config = array();
 		$sql = "SELECT * FROM config";
-		$qry = mysql_query($sql);
-		while($c = mysql_fetch_array($qry)){
+		//$qry = mysql_query($sql);
+		$qry = mysqli_query($con, $sql);
+		//while($c = mysql_fetch_array($qry)){
+		while($c = mysqli_fetch_assoc($qry)){
 			$config[$c['configName']] = $c['configValue'];
 		}
 		
 		$sql =  "SELECT * FROM vwGetActiveTaps";
-		$qry = mysql_query($sql);
-		while($b = mysql_fetch_array($qry))
+		//$qry = mysql_query($sql);
+		$qry = mysqli_query($con, $sql);
+		//while($b = mysql_fetch_array($qry))
+		while($b = mysqli_fetch_assoc($qry))
 		{
 			$beeritem = array(
 				"id" => $b['id'],
@@ -42,7 +52,7 @@
 				"tapNumber" => $b['tapNumber'],
 				"srmRgb" => $b['srmRgb']
 			);
-			$beers[$b['tapNumber']] = $beeritem;	
+			$beers[$b['tapNumber']] = $beeritem;
 		}
 		
 		$tapManager = new TapManager();
@@ -50,7 +60,7 @@
 	}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
+"http://www.w3.org/TR/html4/strict.dtd">
 
 <html>
 	<head>
@@ -68,28 +78,36 @@
 	</head> 
 
 	<body>
-    	<div class="bodywrapper">
-        	<!-- Header with Brewery Logo and Project Name -->
-            <div class="header clearfix">
-                <div class="HeaderLeft">
+		<div class="bodywrapper">
+			<!-- Header with Brewery Logo and Project Name -->
+			<div class="header clearfix">
+				<div class="HeaderLeft">
 					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
-						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl]; ?>" height="200" alt=""></a>
+						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="200" alt=""></a>
 					<?php } else { ?>
-						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl]; ?>" height="100" alt=""></a>
+						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="100" alt=""></a>
 					<?php } ?>
-                </div>
-                <div class="HeaderCenter">
-                    <h1 id="HeaderTitle"><? echo $config[ConfigNames::HeaderText]; ?></h1>
-                </div>
-                <div class="HeaderRight">
+				</div>
+				<div class="HeaderCenter">
+					<h1 id="HeaderTitle">
+						<?php
+							if (mb_strlen($config[ConfigNames::HeaderText], 'UTF-8') > ($config[ConfigNames::HeaderTextTruncLen])) {
+								$headerTextTrunced = substr($config[ConfigNames::HeaderText],0,$config[ConfigNames::HeaderTextTruncLen]) . "...";
+								echo $headerTextTrunced ; }
+							else
+								echo $config[ConfigNames::HeaderText];
+						?>
+					</h1>
+				</div>
+				<div class="HeaderRight">
 					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
 						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints-4k.png" height="200" alt=""></a>
 					<?php } else { ?>
 						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints.png" height="100" alt=""></a>
 					<?php } ?>
-                </div>
-            </div>
-            <!-- End Header Bar -->
+				</div>
+			</div>
+			<!-- End Header Bar -->
 			
 			<table>
 				<thead>
@@ -117,7 +135,7 @@
 						</th>
 						
 						<?php if($config[ConfigNames::ShowAbvCol]){ ?>
-							<th class="abv">				
+							<th class="abv">
 								CALORIES<hr>ALCOHOL
 							</th>
 						<?php } ?>
@@ -128,7 +146,7 @@
 							</th>
 						<?php } ?>
 					</tr>
-                </thead>
+				</thead>
 				<tbody>
 					<?php for($i = 1; $i <= $numberOfTaps; $i++) {
 						if( isset($beers[$i]) ) {
@@ -177,21 +195,21 @@
 												}
 												*/
 											?>
-										</div>								
+										</div>
 										<h2><?php echo $beer['ibu']; ?> IBU</h2>
 									</td>
 								<?php } ?>
 							
 								<td class="name">
 									<h1><?php echo $beer['beername']; ?></h1>
-									<h2 class="subhead"><?php echo $beer['style']; ?></h2>
+									<h2 class="subhead"><?php echo str_replace("_","",$beer['style']); ?></h2>
 									<p><?php echo $beer['notes']; ?></p>
 								</td>
 							
-								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::ShowAbvImage])){ ?>
+								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3><?php
-											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);									
+											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
 											$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
 											if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
 												$calfromalc = 0;
@@ -205,13 +223,13 @@
 												$abv = ($beer['og'] - $beer['fg']) * 131;
 												$numCups = 0;
 												$remaining = $abv * 20;
-												do{                                                                
+												do{
 														if( $remaining < 100 ){
 																$level = $remaining;
 														}else{
 																$level = 100;
 														}
-														?><div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div><?php                                                                
+														?><div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div><?php
 														
 														$remaining = $remaining - $level;
 														$numCups++;
@@ -226,10 +244,10 @@
 									</td>
 								<?php } ?>
 								
-								<?php if(($config[ConfigNames::ShowAbvCol]) && ! ($config[ConfigNames::ShowAbvImage])){ ?>
+								<?php if(($config[ConfigNames::ShowAbvCol]) && ! ($config[ConfigNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3><?php
-											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);									
+											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
 											$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
 											if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
 												$calfromalc = 0;
@@ -249,10 +267,26 @@
 								
 								<?php if($config[ConfigNames::ShowKegCol]){ ?>
 									<td class="keg">
+										
+										
 										<h3><?php echo number_format((($beer['startAmount'] - $beer['remainAmount']) * 128)); ?> fl oz poured</h3>
 										<?php 
-											$kegImgClass = "";
-											$percentRemaining = $beer['remainAmount'] / $beer['startAmount'] * 100;
+											// Code for new kegs that are not full
+                                                                                        $tid = $beer['id'];
+                                                                                        $sql = "Select kegId from taps where id=".$tid." limit 1";
+                                                                                        $kegID = mysql_query($sql);
+                                                                                        $kegID = mysql_fetch_array($kegID);
+                                                                                        //echo $kegID[0];
+                                                                                        $sql = "SELECT `kegTypes`.`maxAmount` as kVolume FROM  `kegs`,`kegTypes` where  kegs.kegTypeId = kegTypes.id and kegs.id =".$kegID[0]."";
+                                                                                        $kvol = mysql_query($sql);
+                                                                                        $kvol = mysql_fetch_array($kvol);
+                                                                                        $kvol = $kvol[0];
+                                                                                        $kegImgClass = "";
+                                                                                        if ($beer['startAmount']>=$kvol) {
+                                                                                        $percentRemaining = $beer['remainAmount'] / $beer['startAmount'] * 100;
+                                                                                        } else {
+                                                                                        $percentRemaining =  $beer['remainAmount'] / $kvol * 100;
+                                                                                        }
 											if( $beer['remainAmount'] <= 0 ) {
 												$kegImgClass = "keg-empty";
 												$percentRemaining = 100; }
@@ -309,8 +343,8 @@
 									<h2 class="subhead"></h2>
 									<p></p>
 								</td>
-							
-								<?php if($config[ConfigNames::ShowAbvCol]){ ?>
+								
+								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3></h3>
 										<div class="abv-container">
@@ -319,7 +353,15 @@
 										<h2></h2>
 									</td>
 								<?php } ?>
-							
+
+								<?php if(($config[ConfigNames::ShowAbvCol]) && ! ($config[ConfigNames::ShowAbvImg])){ ?>
+									<td class="abv">
+										<h3></h3>
+
+										<h2></h2>
+									</td>
+								<?php } ?>								
+								
 								<?php if($config[ConfigNames::ShowKegCol]){ ?>
 									<td class="keg">
 										<h3></h3>
