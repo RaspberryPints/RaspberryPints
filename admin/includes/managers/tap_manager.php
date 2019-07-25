@@ -55,8 +55,8 @@ class TapManager extends Manager{
 		while($currCount < $newTapNumber)
 		{
 			$currCount++;
-			$sql = 	"INSERT INTO taps( tapNumber, createdDate, modifiedDate ) " .
-					"VALUES( ".$currCount.", NOW(), NOW())";
+			$sql = 	"INSERT INTO taps( tapNumber, active, createdDate, modifiedDate ) " .
+					"VALUES( ".$currCount.", 1, NOW(), NOW())";
 			$ret = $ret && $this->executeQueryNoResult($sql);
 		}
 		
@@ -162,7 +162,7 @@ class TapManager extends Manager{
 			if($updateSql != "")$sql = "UPDATE tapconfig SET ".$updateSql." WHERE tapId = " . $id;
 		} else {
 			$sql = "INSERT INTO tapconfig (tapId, flowPin, valvePin, valveOn, count, countUnit) VALUES(" . 
-			                             $id.", ".$flowPin.", ".$valvePin. ", ".$valveOn.", ".$countpergallon.", ".$countpergallonunit.")";
+			                             $id.", ".$flowPin.", ".$valvePin. ", ".$valveOn.", ".$countpergallon.", '".$countpergallonunit."')";
 		}
 		if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
 		return $ret;
