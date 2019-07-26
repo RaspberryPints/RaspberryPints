@@ -134,7 +134,7 @@ class PintDispatch(object):
             log(str(setupSocket))
             log("FATAL: Unable to setup socket")
             quit()
-			
+            
         self.valvesState = []
         self.fanTimer = None
         self.valvePowerTimer = None
@@ -255,7 +255,7 @@ class PintDispatch(object):
         con.close()        
     def saveTemp(self, probe, temp, tempUnit):
         insertLogSql = "INSERT INTO tempLog (probe, temp, tempUnit, takenDate) "
-        insertLogSql += "VALUES('"+probe+"',"+str(temp)+"+ (SELECT COALESCE(manualAdj, 0) FROM tempProbes WHERE name = '"+probe+"'), '"+str(tempUnit)+"'NOW());"
+        insertLogSql += "VALUES('"+probe+"',"+str(temp)+"+ COALESCE((SELECT manualAdj FROM tempProbes WHERE name = '"+probe+"'), 0), '"+str(tempUnit)+"', NOW());"
         con = self.connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)
         result = cursor.execute(insertLogSql)
@@ -460,7 +460,7 @@ class PintDispatch(object):
             else:
                     GPIO.setup(int(pin), GPIO.OUT)
             return True
-		
+        
     # update PI gpio pin (either turn on or off), this requires that this is run as root 
     def updatepin(self, pin, value):
         if not GPIO_IMPORT_SUCCESSFUL:
@@ -502,7 +502,7 @@ class PintDispatch(object):
         value = GPIO.input(pin)
         debug( "read pin %s value %s" %(pin, value))
         return value;
-		        
+                
     def valveStopPower(self):
         debug( "stopping valve power on pin %s" %(OPTION_VALVEPOWERPIN))
         self.updatepin(self.getValvesPowerPin(), 0)
@@ -556,7 +556,7 @@ class PintDispatch(object):
             if valveItem is not None:
                 return int(valveItem["configValue"])
         return -1
-		
+        
     def getValvesPowerTime(self):
         if self.useOption("useTapValves"):
             valveItem = self.getConfigItem("valvesOnTime")
