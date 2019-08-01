@@ -1,54 +1,57 @@
-#!/bin/bash -e
+#!/bin/bash
+
+# Copyright (C) 2019 Lee C. Bussy (@LBussy)
+
+# This file is part of LBussy's Raspberry Pints Tools (RPints-Tools).
+#Modified RandR+ with contributions from day_trippr's and tobor
 #
-# Simple script to install RaspberryPints
-# should work on any Raspbian based system
+# Raspberry Pints Tools is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
 #
-# The script will ask you where you want to install the RaspberryPints application to.
-# The default is '/var/www' which is the default location for apache2 websites on Raspbian.
-# If you already have a website being served from /var/www, make sure and select a different lcoation.
+# Raspberry Pints Tools is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
 #
-# INSTRUCTIONS
-# - Install Raspbian onto your Raspberry Pi and configure the network
-# - login as user 'pi' (default password is 'raspberry')
-# - Download a raw copy of this script
-#     i.e. "wget https://raw.githubusercontent.com/rtlindne/RaspberryPints/master/util/installRaspberryPints"
-#	  This script is based off the original work of tssgery to get the original use (NOTE this may not work with latest Raspbian):
-#     i.e. "wget https://raw.github.com/tssgery/RaspberryPints/master/util/installRaspberryPints"
-# - make the script executable
-#     i.e. "chmod +x installRaspberryPints"
-# - Run the script with root permissions
-#     i.e. "sudo ./installRaspberryPints"
-# - The script will ask for a default MySQL RaspberryPints password. Remember this value as it will be 
-#   needed later on
-# - make sure and select that you would like phpmyadmin integrated with apache2
-# - You will also be asked for a password for the 'phpmyadmin' user. You should remember this as it
-#   is used to log into the phpmyadmin application at http://<ipaddress>/phpmyadmin
-# - After the script completes, you should be able to open a web browser pointing to the ip/hostname
-#   of the Pi, to configure RaspberryPints
-#
-# From then on, to update RaspberryPints when changes are committed to the BRANCH used, simply
-# - login to the Pi as user 'pi'
-# - Change to the directory where you installed RaspberryPints
-#     i.e. "cd /var/www"
-# - run a git pull as user www-data
-#     i.e. "sudo -u www-data git pull"
-#
-RP_VERSION=2.9.0.1
-# packages needed to install. This is a default set
-PACKAGES="dialog apache2 libapache2-mod-php7.0 mysql-client mysql-server 
-         php7.0-mysql phpmyadmin chromium-browser git 
+# You should have received a copy of the GNU General Public License along
+# with Raspberry Pints Tools. If not, see <https://www.gnu.org/licenses/>.
+
+############
+### Global Declarations
+############
+
+# General constants
+declare THISSCRIPT VERSION PACKAGE VERBOSE REPLY CMDLINE  
+declare SCRIPTNAME APTPACKAGES VERBOSE HOMEPATH REALUSER
+# Packages to be installed via apt
+APTPACKAGES="dialog apache2 mariadb-server php php-mysql 
+		 libapache2-mod-php phpmyadmin chromium-browser git 
          ttf-mscorefonts-installer x11-xserver-utils unclutter vim"         
-JESSIE_PACKAGES="dialog apache2 php5 mysql-client mysql-server  
-         php5-mysql phpmyadmin chromium-browser git 
-         ttf-mscorefonts-installer x11-xserver-utils unclutter vim"
-		 
-FLOW_MEATERS_PACKAGES="arduino python-serial python-mysqldb php7.0-cli 
-					   xdotool dos2unix python-mod-pywebsocket i2c-tools"
-JESSIE_FLOW_MEATERS_PACKAGES="arduino python-serial python-mysqldb php5-cli 
+     
+FLOW_MEATERS_PACKAGES="arduino python-serial python-mysqldb php-cli 
 					   xdotool dos2unix python-mod-pywebsocket i2c-tools"
 
-# default directory to install to
-DIRECTORY=/var/www/html
+# the base github repo name
+DEFAULT_REPO=https://github.com/RaspberryPints/RaspberryPints.git  
+CUSTOM_REPO=https://github.com/rtlindne/RaspberryPints.git  
+FLOW_METERS_REPO=https://github.com/wyolum/alamode/raw/master/bundles/alamode-setup.tar.gz
+FLOW_METERS_STRETCH_REPO=https://github.com/wyolum/alamode/raw/master/alamode-setup/stretch-setup
+
+# RPints Archive from Tobor
+# From: https://www.homebrewtalk.com/forum/threads/version-2-release-raspberrypints-digital-taplist-solution.487694/page-116#post-8609646
+TOBOR_SOURCE="https://www.homebrewtalk.com/forum/attachments/raspberrypints-2-1-0-000-zip.629862/"
+TOBOR_ARCHIVE="RaspberryPints-2.1.0.000.zip"
+REPO_CHOICE=1
+
+RPINTS_INSTALL_DETECTED=0
+RECONFIG_PI=0
+UPDATE_RPINTS=0
+
+# the branch to pull
+BRANCH=master
+
 INIT_DIRECTORY=/etc/init.d
 
 ADMIN_INCLUDES_DIRECTORY=${DIRECTORY}/admin/includes/
@@ -68,610 +71,1254 @@ MYSQL_RP_PASS="RaspberryPints"
 USE_FLOW_METERS=N
 USE_RFID=N
 
-# the base github repo name
-DEFAULT_REPO=https://github.com/RaspberryPints/RaspberryPints.git  
-CUSTOM_REPO=https://github.com/rtlindne/RaspberryPints.git  
-FLOW_METERS_REPO=https://github.com/wyolum/alamode/raw/master/bundles/alamode-setup.tar.gz
-FLOW_METERS_STRETCH_REPO=https://github.com/wyolum/alamode/raw/master/alamode-setup/stretch-setup
+############
+### Init
+############
 
-# the branch to pull
-BRANCH=master
+init() {
+    # Set up some project variables we won't have running as a curled script
+    PACKAGE="RPints-Tools"
+    THISSCRIPT="rpints_install.sh"
+    VERSION="0.0.0.1"
+    CMDLINE="curl -L https://github.com/rtlindne/RaspberryPints/blob/master/util/installRaspberryPints | sudo bash"
+    SCRIPTNAME="${THISSCRIPT%%.*}"
+}
 
-########################################################################
-# No need to change below this line
+############
+### Handle logging
+############
 
-# make sure I am running as root!
-if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root" 1>&2
-   exit 1
-fi
+timestamp() {
+    # Add date in '2019-02-26 08:19:22' format to log
+    [[ "$VERBOSE" == "true" ]] && length=999 || length=60 # Allow full logging
+    while read -r; do
+        # Clean and trim line to 60 characters to allow for timestamp on one line
+        REPLY="$(clean "$REPLY" $length)"
+        # Strip blank lines
+        if [ -n "$REPLY" ]; then
+            # Add date in '2019-02-26 08:19:22' format to log
+            printf '%(%Y-%m-%d %H:%M:%S)T %s\n' -1 "$REPLY"
+        fi
+    done
+}
 
-# make sure I am running on a raspbian os!
-if [ ! -f /etc/os-release ]; then
-   echo "You do not appear to be running Raspbian"
-   exit 2
-fi
+clean() {
+    # Cleanup log line
+    local input length
+    input="$1"
+    length="$2"
+    # Strip color codes
+    input="$(echo "$input" | sed 's,\x1B[[(][0-9;]*[a-zA-Z],,g')"
+    # Strip beginning spaces
+    input="$(printf "%s" "${input#"${input%%[![:space:]]*}"}")"
+    # Strip ending spaces
+    input="$(printf "%s" "${input%"${input##*[![:space:]]}"}")"
+    # Squash any repeated whitespace within string
+    input="$(echo "$input" | awk '{$1=$1};1')"
+    # Log only first $length chars to allow for date/time stamp
+    input="$(echo "$input" | cut -c-"$length")"
+    echo "$input"
+}
 
-. /etc/os-release
+log() {
+    [[ "$*" == *"-nolog"* ]] && return # Turn off logging
+    # Tee all output to log file in home directory
+    sudo -u "$REALUSER" touch "$HOMEPATH/$SCRIPTNAME.log"
+    exec > >(tee >(timestamp >> "$HOMEPATH/$SCRIPTNAME.log")) 2>&1
+}
 
-if [ "$ID" != "raspbian" ]; then
-   echo "You appear to be running $ID NOT Raspbian"
-   exit 2
-fi
-VER_NAME="$(echo $VERSION | grep -oP '(?<=\()[^\)]+')"
+############
+### Command line arguments
+############
 
-if echo "$VER_NAME" | grep -iq "^jessie" ; then
-	PACKAGES=$JESSIE_PACKAGES
-	FLOW_MEATERS_PACKAGES=$JESSIE_FLOW_MEATERS_PACKAGES
-fi
+# usage outputs to stdout the --help usage message.
+usage() {
+cat << EOF
 
-REPO=$CUSTOM_REPO
-# ask the user what REPO they want to install. The original does not work with this script
-ANSWER=N
-read -e -p "Do You wish to use the Original GitHub Repository (It does not fully work with this script)? (default is: $ANSWER): " ANSWER
-if echo "$ANSWER" | grep -iq "^y" ; then
-	REPO=$DEFAULT_REPO
-fi
-echo "Installing Source ${REPO}"
+$PACKAGE $THISSCRIPT version $VERSION
 
-echo "Installing RaspberryPints ${RP_VERSION}"
-# ask the user where they want to install to (default is WEBROOT)
-read -e -p "Where do you want to install RaspberryPints? : " -i "${DIRECTORY}" ANSWER
-if [ "$ANSWER" = "" ]; then
-   ANSWER="${DIRECTORY}"
-fi
-DIRECTORY="${ANSWER}"
-echo "Installing to: ${DIRECTORY}"
+Usage: sudo ./$THISSCRIPT"
+EOF
+}
 
-read -e -p "Will this pi host the database? (default is: Y): " ANSWER
-if [ "$ANSWER" = "" ]; then
-   ANSWER="Y"
-fi
-if ! echo "$ANSWER" | grep -iq "^y" ; 
-then
-	PACKAGES=${PACKAGES/mysql-server /}
-	read -e -p "What computer will Host RaspberryPints Database? (default is: localhost): " ANSWER
-	if [ "$ANSWER" != "" ]; then
-	   MYSQL_SERVER=$ANSWER
+# version outputs to stdout the --version message.
+version() {
+cat << EOF
+
+$THISSCRIPT ($PACKAGE) $VERSION
+
+Copyright (C) 2019 Lee C. Bussy (@LBussy)
+
+This is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published
+by the Free Software Foundation, either version 3 of the License,
+or (at your option) any later version.
+<https://www.gnu.org/licenses/>
+
+There is NO WARRANTY, to the extent permitted by law.
+EOF
+}
+
+# Parse arguments and call usage or version
+arguments() {
+    local arg
+    while [[ "$#" -gt 0 ]]; do
+        arg="$1"
+        case "$arg" in
+            --h* )
+            usage; exit 0 ;;
+            --v* )
+            version; exit 0 ;;
+            * )
+            break;;
+        esac
+    done
+}
+
+############
+### Make sure command is running with sudo
+############
+
+checkroot() {
+    local retval shadow
+    if [ -n "$SUDO_USER" ]; then REALUSER="$SUDO_USER"; else REALUSER=$(whoami); fi
+    if [ "$REALUSER" == "root" ]; then
+        # We're not gonna run as the root user
+        echo -e "\nThis script may not be run from the root account, use 'sudo' instead."
+        exit 1
+    fi
+    ### Check if we have root privs to run
+    if [[ "$EUID" -ne 0 ]]; then
+        sudo -n true 2> /dev/null
+        retval="$?"
+        if [ "$retval" -eq 0 ]; then
+            echo -e "\nNot running as root, relaunching correctly."
+            sleep 2
+            eval "$CMDLINE"
+            exit "$?"
+        else
+            # sudo not available, give instructions
+            echo -e "\nThis script must be run with root privileges."
+            echo -e "Enter the following command as one line:"
+            echo -e "$CMDLINE" 1>&2
+            exit 1
+        fi
+    fi
+    # And get the user home directory
+    shadow="$( (getent passwd "$REALUSER") 2>&1)"
+    retval="$?"
+    if [ "$retval" -eq 0 ]; then
+        HOMEPATH="$(echo "$shadow" | cut -d':' -f6)"
+    else
+        echo -e "\nUnable to retrieve $REALUSER's home directory. Manual install may be necessary."
+        exit 1
+    fi
+}
+
+############
+### Functions to catch/display errors during execution
+############
+
+warn() {
+    local fmt
+    fmt="$1"
+    command shift 2>/dev/null
+    echo -e "$fmt"
+    echo -e "${@}"
+    echo -e "\n*** ERROR ERROR ERROR ERROR ERROR ***" > /dev/tty
+    echo -e "-------------------------------------" > /dev/tty
+    echo -e "\nSee above lines for error message." > /dev/tty
+    echo -e "Setup NOT completed.\n" > /dev/tty
+}
+
+die() {
+    local st
+    st="$?"
+    warn "$@"
+    exit "$st"
+}
+
+
+############
+### Ask the user for a Y/N response
+### args prompttext, default value
+### returns user Response == Y
+############
+
+promptYN(){
+	local options yesResponse
+	case $2 in
+		[Nn]* ) options=y/N;; 
+		* ) options=Y/n;;
+	esac
+	while true; do
+	    read -rp "${1} [$options]: " yn < /dev/tty
+	    if [ -z "$yn" ]; then
+			yn=$2
+    	fi
+    	
+	    case "$yn" in
+	        [Yy]* ) return 0 ;;
+	        [Nn]* ) return 1 ;;
+	        * ) echo "Must Enter Y(es) or N(o)" ;;
+	    esac
+	done  
+}
+
+detectRPintsInstall(){
+	 RPINTS_INSTALL_DETECTED=0
+	 RECONFIG_PI=0
+	 UPDATE_RPINTS=0
+	 if [ -f /var/www/html/admin/includes/conn.php ] ; then
+	 	RPINTS_INSTALL_DETECTED=1
+	 	if promptYN "RPints Install Detected. Do you wish to Update RPints?" "Y" ; then
+			UPDATE_RPINTS=1
+	 	else 
+		 	if promptYN "Do you wish to Reconfigure the PI?" "N" ; then
+		 		RECONFIG_PI=1
+		 	else
+		 		if ! promptYN "Do you wish to Reinstall RPints?" "N" ; then
+		 			echo "Nothing to do, bye"
+		 			exit 3
+		 		else
+		 			#Set to no RPints detected so that load logic executes
+		 			RPINTS_INSTALL_DETECTED=0
+		 		fi
+	 		fi
+	 	fi
+	 fi
+}
+
+############
+### Instructions
+############
+
+instructions() {
+    clear
+    cat << EOF
+
+=============================================================================
+     -----=====>>>>>     Raspberry Pints Tools     <<<<<=====-----
+=============================================================================
+
+You will be presented with some choices during the install. Most frequently
+you will see a 'yes or no' choice, with the default choice capitalized like
+so: [y/N]. Default means if you hit <enter> without typing anything, you will
+make the capitalized choice, i.e. hitting <enter> when you see [Y/n] will
+default to 'yes.'
+
+Yes/no choices are not case sensitive. However; passwords, system names and
+install paths are. Be aware of this. There is generally no difference between
+'y', 'yes', 'YES', 'Yes'; you get the idea. In some areas you are asked for a
+path; the default/recommended choice is in braces like: [/var/www/html].
+Pressing <enter> without typing anything will take the default/recommended
+choice.
+
+EOF
+    read -n 1 -s -r -p  "Press any key when you are ready to proceed. " < /dev/tty
+    echo -e ""
+}
+
+############
+### Check for default 'pi' password and gently prompt to change it now
+############
+
+checkpass() {
+    local user_exists salt extpass match badpwd yn setpass
+    user_exists=$(id -u 'pi' > /dev/null 2>&1; echo $?)
+    if [ "$user_exists" -eq 0 ]; then
+        salt=$(getent shadow "pi" | cut -d$ -f3)
+        extpass=$(getent shadow "pi" | cut -d: -f2)
+        match=$(python -c 'import crypt; print crypt.crypt("'"raspberry"'", "$6$'${salt}'")')
+        [ "${match}" == "${extpass}" ] && badpwd=true || badpwd=false
+        if [ "$badpwd" = true ]; then
+            echo -e "\nDefault password found for the 'pi' account. This should be changed."
+			if promptYN "Do you want to change the password now?" "Y"; then setpass=1; fi
+        fi
+        if [ -n "$setpass" ]; then
+            echo
+            until passwd pi < /dev/tty; do sleep 2; echo; done
+            echo -e "\nYour password has been changed, remember it or write it down now."
+            sleep 5
+        fi
+    fi
+}
+
+############
+### Set timezone
+###########
+
+settime() {
+    local date tz
+    date=$(date)
+    echo -e "\nThe time is currently set to $date."
+    tz="$(date +%Z)"
+    if [ "$tz" == "GMT" ] || [ "$tz" == "BST" ]; then
+        # Probably never been set
+		if ! promptYN "Is this correct?" "N"; then dpkg-reconfigure tzdata; fi
+    else
+        # Probably been set
+		if ! promptYN "Is this correct?" "Y"; then dpkg-reconfigure tzdata; fi
+    fi
+}
+
+############
+### Change hostname
+###########
+
+host_name() {
+    local oldHostName yn sethost host1 host2 newHostName
+    oldHostName=$(hostname)
+    if [ "$oldHostName" = "raspberrypi" ]; then
+        echo -e "\nYour hostname is set to '$oldHostName'. Each machine on your network should"
+        echo -e  "have a unique name to prevent issues.\n"
+		if promptYN "Do you want to change it now, maybe to 'rpints'" "Y"; then sethost=1; fi
+        echo
+        if [ "$sethost" -eq 1 ]; then
+            echo -e "You will now be asked to enter a new hostname."
+            while
+                read -rp "Enter new hostname: " host1  < /dev/tty
+                read -rp "Enter new hostname again: " host2 < /dev/tty
+                [[ -z "$host1" || "$host1" != "$host2" ]]
+            do
+                echo -e "\nHost names blank or do not match.\n";
+                sleep 1
+            done
+            echo
+            newHostName=$(echo "$host1" | awk '{print tolower($0)}')
+            eval "sed -i 's/$oldHostName/$newHostName/g' /etc/hosts"||die
+            eval "sed -i 's/$oldHostName/$newHostName/g' /etc/hostname"||die
+            hostnamectl set-hostname "$newHostName"
+            /etc/init.d/avahi-daemon restart
+            echo -e "\nYour hostname has been changed to '$newHostName'.\n"
+            echo -e "(If your hostname is part of your prompt, your prompt will not change until"
+            echo -e "you log out and in again.  This will have no effect on anything but the way"
+            echo -e "the prompt looks.)"
+            sleep 5
+        fi
+    fi
+}
+
+
+############
+### Check OS is available to run Raspberry Pints
+##        AND setup the correct packages
+############
+
+checkOS(){
+	# make sure I am running on a raspbian os!
+	if [ ! -f /etc/os-release ]; then
+	   echo -e "You do not appear to be running Raspbian"
+	   exit 2
 	fi
-	read -e -p "MySql Admin User for server ${MYSQL_SERVER}?: " ANSWER
-	MYSQL_USER=$ANSWER
-	ANSWER=""
-	read -s -e -p "MySql Admin Password for server ${MYSQL_SERVER}?: " ANSWER
-	MYSQL_PASS=$ANSWER
-	echo
-else
-	if echo "$VER_NAME" | grep -iq "^jessie" ; 
+	
+	. /etc/os-release
+	
+	if [ "$ID" != "raspbian" ]; then
+		echo -e "You appear to be running $ID NOT Raspbian, setup may throw unexpected errors"
+		if ! promptYN "Continue Anyways?" "N"; then exit 2; fi	   
+	fi
+	VER_NAME="$(echo $VERSION | grep -oP '(?<=\()[^\)]+')"
+
+}
+
+############
+### Install or update required packages
+############
+
+packages() {
+    local lastUpdate nowTime pkgOk upgradesAvail pkg didUpdate
+    # Run 'apt update' if last run was > 1 week ago
+    lastUpdate=$(stat -c %Y /var/lib/apt/lists)
+    nowTime=$(date +%s)
+    if [ $(("$nowTime" - "$lastUpdate")) -gt 604800 ] ; then
+        echo -e "\nLast apt update was over a week ago. Running apt update before updating"
+        echo -e "dependencies."
+        apt-get update -q||die
+        echo -e "\nRunning apt upgrade to upgrade any previously installed system tools and"
+        echo -e "installed dependencies."
+        apt-get upgrade -y||die
+        didUpdate=1
+    fi
+    
+    # Now install any necessary packages if they are not installed
+    echo -e "\nChecking and installing required dependencies via apt."
+    for pkg in $APTPACKAGES; do
+        pkgOk=$(dpkg-query -W --showformat='${Status}\n' "$pkg" | \
+        grep "install ok installed")
+        if [ -z "$pkgOk" ]; then
+            echo -e "\nInstalling '$pkg'."
+            apt-get install "$pkg" -y -q=2 < /dev/tty ||die
+        fi
+    done
+    
+    # Get list of installed packages with updates available
+    if [ ! "$didUpdade" == 1 ]; then
+        echo -e "\nUpdating any installed packages which may require it."
+        upgradesAvail=$(dpkg --get-selections | xargs apt-cache policy {} | \
+            grep -1 Installed | sed -r 's/(:|Installed: |Candidate: )//' | \
+        uniq -u | tac | sed '/--/I,+1 d' | tac | sed '$d' | sed -n 1~2p)
+        # Loop through the required packages and see if they need an upgrade
+        for pkg in $APTPACKAGES; do
+            if [[ "$upgradesAvail" == *"$pkg"* ]]; then
+                echo -e "\nUpgrading '$pkg'."
+                apt-get install "$pkg" -y -q=2||die
+            fi
+        done
+    fi
+    
+    configurePHPMyAdmin
+}
+
+
+configurePHPMyAdmin(){
+	# now, enable phpmyadmin if necessary
+	if [ -f /etc/phpmyadmin/apache.conf ]; then
+		if [ ! -f /etc/apache2/sites-available/phpmyadmin.conf ]; then
+			ln -s /etc/phpmyadmin/apache.conf /etc/apache2/sites-available/phpmyadmin.conf
+		fi
+	   a2ensite phpmyadmin.conf
+	   systemctl reload apache2
+	fi
+}
+############
+### Create a banner
+############
+
+banner() {
+    local adj
+    adj="$1"
+    echo -e "\n***Script $THISSCRIPT $adj.***"
+}
+
+############
+### Check for free space
+############
+
+checkfree() {
+    local req freek freem freep
+    req=512
+    freek=$(df -Pk | grep -m1 '\/$' | awk '{print $4}')
+    freem="$((freek / 1024))"
+    freep=$(df -Pk | grep -m1 '\/$' | awk '{print $5}')
+    
+    if [ "$freem" -le "$req" ]; then
+        echo -e "\nDisk usage is $freep, free disk space is $freem MB,"
+        echo -e "Not enough space to continue setup. Installing $PACKAGE requires"
+        echo -e "at least $req MB free space."
+		if ! promptYN "Continue Anyways?" "N"; then exit 1; fi	          
+    else
+        echo -e "\nDisk usage is $freep, free disk space is $freem MB."
+    fi
+}
+
+############
+### Web path setup
+############
+
+getwwwpath() {
+    # Find web path based on Apache2 config
+    echo -e "\nSearching for default web location."
+    WWWPATH="$(grep DocumentRoot /etc/apache2/sites-enabled/000-default* |xargs |cut -d " " -f2)"
+    if [ -n "$WWWPATH" ]; then
+        echo -e "\nFound $WWWPATH in /etc/apache2/sites-enabled/000-default*."
+    else
+        echo -e "\nSomething went wrong searching for /etc/apache2/sites-enabled/000-default*."
+        echo -e "Fix that and come back to try again."
+        exit 1
+    fi
+}
+
+############
+### Test apache and PHP
+############
+
+testapache() {
+    local retval
+    echo -e "\nTesting Apache."
+    if [ ! -f "$WWWPATH/index.html" ];
+    then
+    	if [ ! -d ${WWWPATH} ]; then mkdir ${WWWPATH}; fi
+   		echo '<html><body>test</body></html>' > "$WWWPATH/index.html"
+    fi
+    wget -q --spider localhost > /dev/null 2>&1
+    retval="$?"
+    rm -f "$WWWPATH/index.html"
+    if [ "$retval" -ne 0 ]; then
+        echo -e "\nERROR: Apache test failed."
+        exit 1
+    fi
+    echo -e "\nTesting PHP."
+    echo '<?php phpinfo(); ?>' > "$WWWPATH/test.php"
+    wget -q --spider localhost/test.php > /dev/null 2>&1
+    retval="$?"
+    rm "${WWWPATH:?}/test.php"
+    if [ "$retval" -ne 0 ]; then
+        echo -e "\nERROR: PHP test failed."
+        exit 1
+    fi
+    echo -e "\nApache and PHP test ok."
+}
+
+############
+### CreateDB
+############
+
+dbauser() {
+	if ! promptYN "Will this pi host the database" "Y";
 	then
+		PACKAGES=${PACKAGES/mysql-server /}
+		read -e -p "What computer will Host RaspberryPints Database? (default is: localhost): " ANSWER
+		if [ "$ANSWER" != "" ]; then
+		   MYSQL_SERVER=$ANSWER
+		fi
+		read -e -p "MySql Admin User for server ${MYSQL_SERVER}?: " ANSWER
+		MYSQL_USER=$ANSWER
 		ANSWER=""
-		read -s -e -p "MySql Admin Password to be used for server ${MYSQL_SERVER}?: " ANSWER
+		read -s -e -p "MySql Admin Password for server ${MYSQL_SERVER}?: " ANSWER
 		MYSQL_PASS=$ANSWER
 		echo
+	else
+		if echo "$VER_NAME" | grep -iq "^jessie" ; 
+		then
+			ANSWER=""
+			read -s -e -p "MySql Admin Password to be used for server ${MYSQL_SERVER}?: " ANSWER
+			MYSQL_PASS=$ANSWER
+			echo
+		fi
 	fi
-fi
 
-# ask the user if they want to install flowmeters
-read -e -p "Do you want to use Flow Meters? (Y:N) (default is: ${USE_FLOW_METERS}): " ANSWER
-if [ "$ANSWER" = "" ]; then
-   ANSWER="${USE_FLOW_METERS}"
-fi
-if echo "$ANSWER" | grep -iq "^y" ;then
-	USE_FLOW_METERS=true
-fi
-if [ "$USE_FLOW_METERS" = "true" ];
-then
-	echo "Will Install Flow Meters"
-else
-	echo "Will Not Install Flow Meters"
-fi
-
-# ask the user if they want to install RFID
-read -e -p "Do you want to use RFID? (Y:N) (default is: ${USE_RFID}): " ANSWER
-if [ "$ANSWER" = "" ]; then
-   ANSWER="${USE_RFID}"
-fi
-if echo "$ANSWER" | grep -iq "^y" ;then
-	USE_RFID=true
-fi
-if [ "$USE_RFID" = "true" ];
-then
-	echo "Will Install RFID"
-else
-	echo "Will Not Install RFID"
-fi
-
-#update the RPI
-rpi-update
-
-# update the repository information
-apt-get update
-
-# install necessary packages
-apt-get install --assume-yes ${PACKAGES}
-
-#upgrade all base
-apt-get upgrade
-
-# find out who the apache server runs as (APACHE_RUN_USER and APACHE_RUN_GROUP)
-if [ -f /etc/apache2/envvars ]; then
-   . /etc/apache2/envvars
-else
-   echo "Unable to determine who the apache server runs as."
-   echo "Exiting"
-   exit 3 
-fi
-
-# copy the old DIRECTORY if it exists
-if [ -d "${DIRECTORY}" ]; then
-   echo "renaming current \"${DIRECTORY}\" to \"${DIRECTORY}-$(date +"%Y%m%d-%H%M%S")\""
-
-   # remove the current contents of the install location
-   mv "${DIRECTORY}" ${DIRECTORY}-$(date +"%Y%m%d-%H%M%S")
-fi
- 
-# git clone the RaspberryPints installation
-git clone -b ${BRANCH} ${REPO} "${DIRECTORY}"
-
-# ensure the files are owned by the apache user  
-chown -R ${APACHE_RUN_USER}:${APACHE_RUN_GROUP} "${DIRECTORY}"
-
-MONITOR=true
-MONITOR_OPTIONS=(1 "No Monitor"
-		 2 "1920 x 1080 | 1080p"
-         3 "1280 x 720  | 720p"
-         4 "1600 x 1200"
-         5 "1680 x 1050"
-         6 "1920 x 1200")
-HDMI_GROUP=1
-HDMI_MODE=16
-MONITOR_RESOLUTION=$(dialog --clear \
-                --backtitle "Monitor" \
-                --title "Monitor Options" \
-                --menu "Choose your Monitor Size" \
-                20 40 6 \
-                "${MONITOR_OPTIONS[@]}" \
-                2>&1 >/dev/tty);
-clear
-case $MONITOR_RESOLUTION in
-		1)
-			MONITOR=false
-			;;
-		2)
-			HDMI_GROUP=1
-			HDMI_MODE=16
-			;;
-		3)
-			HDMI_GROUP=1
-			HDMI_MODE=4
-			;;
-		4)
-			HDMI_GROUP=1
-			HDMI_MODE=2
-			;;
-		5)
-			HDMI_GROUP=2
-			HDMI_MODE=51
-			;;
-		6)
-			HDMI_GROUP=2
-			HDMI_MODE=68
-			;;
-esac
-if $MONITOR = true ; then		
-
-	if [ -f $BOOT_CONFIG_FILE ]; then
-		sed -i -E 's/^\s*(hdmi_group.*)/#\1/g' $BOOT_CONFIG_FILE
-		sed -i -E 's/^\s*(hdmi_mode.*)/#\1/g' $BOOT_CONFIG_FILE
+	read -e -p "RaspberryPints Database Name? (default is: ${MYSQL_DB_NAME}): " ANSWER
+	if [ "$ANSWER" != "" ]; then
+		MYSQL_DB_NAME=$ANSWER
 	fi
-	echo "hdmi_group=$HDMI_GROUP" >> $BOOT_CONFIG_FILE
-	echo "hdmi_mode=$HDMI_MODE" >> $BOOT_CONFIG_FILE
-	MONITOR_OPTIONS=(1 "No Rotation"
-		 2 "90 Degrees Clockwise"
-         3 "90 Degrees CounterClockwise"
-         4 "Upside Down")
-	MONITOR_ROTATION=0
-	MONITOR_ROTATION=$(dialog --clear \
-					--backtitle "Monitor" \
-					--title "Monitor Options" \
-					--menu "Choose your Monitor Size" \
-					20 40 4 \
-					"${MONITOR_OPTIONS[@]}" \
-					2>&1 >/dev/tty);
+	
+	read -e -p "RaspberryPints Database User Name? (default is: ${MYSQL_RP_USER}): " ANSWER
+	if [ "$ANSWER" != "" ]; then
+		MYSQL_RP_USER=$ANSWER
+	fi
+	# setup respberrypints mysql user
+	read -s -e -p "RaspberryPints Database User Password? (default is: ${MYSQL_RP_PASS}): " ANSWER
+	if [ "$ANSWER" != "" ]; then
+		MYSQL_RP_PASS=$ANSWER
+	fi 
+	echo
+	MYSQL_CMD="-h${MYSQL_SERVER}"
+	if [ "${MYSQL_USER}" != "" ]; then 
+		MYSQL_CMD="${MYSQL_CMD} -u${MYSQL_USER}"
+	fi
+	if [ "${MYSQL_PASS}" != "" ] ; then 
+		MYSQL_CMD="${MYSQL_CMD} -p${MYSQL_PASS}"
+	fi
+	USER_EXISTS="$(mysql $MYSQL_CMD -sse "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '${MYSQL_RP_USER}')")"
+	if [ $USER_EXISTS = 0 ];
+	then
+		mysql ${MYSQL_CMD} -e "CREATE USER ${MYSQL_RP_USER}@'%' IDENTIFIED BY '${MYSQL_RP_PASS}';"
+	else
+		mysql ${MYSQL_CMD} -e "SET PASSWORD FOR ${MYSQL_RP_USER}@'%' = PASSWORD('${MYSQL_RP_PASS}');"
+	fi
+	mysql ${MYSQL_CMD} -e "GRANT ALL PRIVILEGES ON *.* TO ${MYSQL_RP_USER}@'%';"
+
+	outputRPintsConfigs
+	setupDatabase
+}
+
+outputRPintsConfigs(){
+	local INCLUDES_DIRECTORY ADMIN_INCLUDES_DIRECTORY
+	
+	INCLUDES_DIRECTORY=${WWWPATH}/includes/
+	ADMIN_INCLUDES_DIRECTORY=${WWWPATH}/admin/includes/
+	if [ -f "${INCLUDES_DIRECTORY}/config.php" ]; then
+		rm ${INCLUDES_DIRECTORY}/config.php
+	fi
+	
+	if [ ${REPO_CHOICE} -eq 1 ] ;
+	then  
+		echo "<?php " >> ${INCLUDES_DIRECTORY}/config.php
+		echo "	function db() {" >> ${INCLUDES_DIRECTORY}/config.php
+		echo "		return new mysqli('${MYSQL_SERVER}', '${MYSQL_RP_USER}', '${MYSQL_RP_PASS}', '${MYSQL_DB_NAME}');" >> ${INCLUDES_DIRECTORY}/config.php
+		echo "	}" >> ${INCLUDES_DIRECTORY}/config.php
+		echo '	$rpintsversion='"\"2.9.0.1\";" >> ${INCLUDES_DIRECTORY}/config.php
+		echo "?>" >> ${INCLUDES_DIRECTORY}/config.php
+	fi
+	if [ ${REPO_CHOICE} -eq 2 ] ;
+	then 
+		echo "<?php " >> ${INCLUDES_DIRECTORY}/config.php
+		echo "	function dbRPintsConnect() {" >> ${INCLUDES_DIRECTORY}/config.php
+		echo "		return mysqli_connect('${MYSQL_SERVER}', '${MYSQL_RP_USER}', '${MYSQL_RP_PASS}', '${MYSQL_DB_NAME}');" >> ${INCLUDES_DIRECTORY}/config.php
+		echo "	}" >> ${INCLUDES_DIRECTORY}/config.php
+		echo '	$rpintsversion='"\"2.1.0.000\";" >> ${INCLUDES_DIRECTORY}/config.php
+		echo "?>" >> ${INCLUDES_DIRECTORY}/config.php
+	fi
+	if [ ${REPO_CHOICE} -eq 3 ] ;
+	then 
+		echo "<?php " >> ${INCLUDES_DIRECTORY}/config.php
+		echo "	function db() {" >> ${INCLUDES_DIRECTORY}/config.php
+		echo "		/$link = mysql_connect('${MYSQL_SERVER}', '${MYSQL_RP_USER}', '${MYSQL_RP_PASS}');" >> ${INCLUDES_DIRECTORY}/config.php
+		echo "      mysql_select_db('${MYSQL_DB_NAME}') or die("cannot select DB");" >>  ${INCLUDES_DIRECTORY}/config.php
+		echo "	}" >> ${INCLUDES_DIRECTORY}/config.php
+		echo '	$rpintsversion='"\"1.0.0.279\";" >> ${INCLUDES_DIRECTORY}/config.php
+		echo "?>" >> ${INCLUDES_DIRECTORY}/config.php
+	fi
+	
+	if [ -f "${ADMIN_INCLUDES_DIRECTORY}/conn.php" ]; then
+		rm ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+	fi
+	echo "<?php " >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+	echo '	//show/hide SQL statements in errors' >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+	echo '	//$showSqlState = true;' >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+	echo "  \$host=\"${MYSQL_SERVER}\"; // Host name" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+	echo "  \$username=\"${MYSQL_RP_USER}\"; // Mysql username" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+	echo "  \$password=\"${MYSQL_RP_PASS}\"; // Mysql password" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+	echo "  \$db_name=\"${MYSQL_DB_NAME}\"; // Database name" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+	echo "  \$tbl_name=\"users\";" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+	echo '	//Connect to server and select database.' >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+	if [ ${REPO_CHOICE} -eq 1 ] ;
+	then  
+		echo "	\$mysqli = new mysqli(\"\$host\", \"\$username\", \"\$password\", \"\$db_name\") or die(\"cannot connect to server\");" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+	fi
+	if [ ${REPO_CHOICE} -eq 2 ] ;
+	then
+		echo "	\$adminLink = mysqli_connect(\"\$host\", \"\$username\", \"\$password\", \"\$db_name\") or die(\"cannot connect to server\");" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+	fi
+	if [ ${REPO_CHOICE} -eq 3 ] ;
+	then
+		echo "	mysql_connect(\"\$host\", \"\$username\", \"\$password\") or die(\"cannot connect to server\");" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+		echo "  mysql_select_db('${MYSQL_DB_NAME}') or die("cannot select DB");" >>  ${INCLUDES_DIRECTORY}/config.php
+	fi
+	echo '?>' >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+
+	
+	if [ ${REPO_CHOICE} -eq 2 ] ||
+       [ ${REPO_CHOICE} -eq 3 ] ;
+	then  
+		if [ -f "${ADMIN_INCLUDES_DIRECTORY}/configp.php" ]; then
+			rm ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+		fi	
+		echo "<?php " >> ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+		echo '	//show/hide SQL statements in errors' >> ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+		echo '	//$showSqlState = true;' >> ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+		echo "  \$host=\"${MYSQL_SERVER}\"; // Host name" >> ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+		echo "  \$username=\"${MYSQL_RP_USER}\"; // Mysql username" >> ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+		echo "  \$password=\"${MYSQL_RP_PASS}\"; // Mysql password" >> ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+		echo "  \$db_name=\"${MYSQL_DB_NAME}\"; // Database name" >> ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+		echo "  \$tbl_name=\"users\";" >> ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+		echo '	//Connect to server and select database.' >> ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+		echo "	\$conn = new PDO(\"mysql:host=\$host;dbname=\$db_name\",\$username,\$password);" >> ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+		echo "  \$stmt = \$conn->prepare('SELECT * from config WHERE showOnPanel = 1');" >> ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+		echo "  \$stmt->execute();" >> ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+		echo "  \$result = \$stmt->fetchAll();" >> ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+		echo '?>' >> ${ADMIN_INCLUDES_DIRECTORY}/configp.php
+	fi
+	  
+}
+
+setupDatabase(){
+	mysql ${MYSQL_CMD} -e "DROP DATABASE IF EXISTS $MYSQL_DB_NAME;"
+	mysql ${MYSQL_CMD} -e "CREATE DATABASE $MYSQL_DB_NAME;"
+	
+	echo "Database loading"
+	cat ${WWWPATH}/sql/schema.sql | mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} 
+	echo "Database Successfully loaded"
+	RP_USERNAME=admin
+	RP_PASS=""
+	RP_PASS2="2"
+	RP_NAME_FIRST=""
+	RP_NAME_LAST=""
+	RP_EMAIL=""
+	read -e -p "Admin Username?: " -i ${RP_USERNAME} RP_USERNAME
+	while [ "$RP_PASS" != "$RP_PASS2" ];
+	do
+		read -s -e -p "Admin Password?: " RP_PASS
+		echo
+		read -s -e -p "Re-enter Admin Password?: " RP_PASS2
+		if [ "$RP_PASS" != "$RP_PASS2" ] ; then
+			echo
+			echo "Passwords didnt match, please try again"
+		fi
+	done
+	echo
+	read -e -p "Admin First Name?: " RP_NAME_FIRST
+	read -e -p "Admin Last Name?: " RP_NAME_Last
+	read -e -p "Admin Email?: " RP_EMAIL
+	
+	if ! echo "$REPO" | grep -iq "rtlindne" ; then
+		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO users 
+							 (username,password,name,email,createdDate,modifiedDate) 
+							 VALUES ('${RP_USERNAME}',MD5('${RP_PASS}'),CONCAT('${RP_NAME_FIRST}', ' ', '${RP_NAME_LAST}'),'${RP_EMAIL}',NOW(),NOW());";
+	else
+		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO users 
+						 (username,password,nameFirst,nameLast,mugId,email,unTapAccessToken,isAdmin,active,createdDate,modifiedDate) 
+							 VALUES ('${RP_USERNAME}',MD5('${RP_PASS}'),'${RP_NAME_FIRST}','${RP_NAME_LAST}',NULL,'${RP_EMAIL}',NULL,1,1,NOW(),NOW());";
+	fi
+
+	mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO config ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+												( 'repo', '${REPO_CHOICE}', 'The Repo Option from install', '0', NOW(), NOW() );";
+	
+	
+	if [ -f "${WWWPATH}/index.html" ]; then
+		rm ${WWWPATH}/index.html
+	fi
+	
+	if promptYN "Load Test Data into RaspberryPints" "Y";
+	then
+		echo "Loading Test Data"
+		cat ${WWWPATH}/sql/test_data.sql | mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME}
+		echo "Test Data Successfully loaded"
+	fi
+}
+
+############
+### Handle the RPints archive
+############
+
+doarchive() {
+	
+    local archname retval
+    
+	REPO_OPTIONS=(1 "RandR+"
+		 2 "Tobor"
+         3 "Original (May not work After Raspbian Jessie)")
+	REPO_CHOICE=$(dialog --clear \
+	                --backtitle "Repository" \
+	                --title "Repository Options" \
+	                --menu "Choose which version of RaspberryPints to install" \
+	                20 40 6 \
+	                "${REPO_OPTIONS[@]}" \
+	                2>&1 >/dev/tty);
+	case ${REPO_CHOICE} in
+        1 ) REPO=$CUSTOM_REPO ;;
+        2 ) REPO=$TOBOR_ARCHIVE ;;
+        3 ) REPO=$DEFAULT_REPO ;;		
+	esac     
+	clear           
+	echo "Installing Source ${REPO}"
+
+	# copy the old DIRECTORY if it exists
+	if [ -d "${WWWPATH}" ]; then
+	   echo "renaming current \"${WWWPATH}\" to \"${WWWPATH}-$(date +"%Y%m%d-%H%M%S")\""
+	
+	   # remove the current contents of the install location
+	   mv "${WWWPATH}" ${WWWPATH}-$(date +"%Y%m%d-%H%M%S")
+	fi
+	
+	if [ ${REPO_CHOICE} -ne 2 ] ;
+	then  
+		# git clone the RaspberryPints installation
+		git clone -b ${BRANCH} ${REPO} "${WWWPATH}"
+	else
+    	if [ ! -d ${WWWPATH} ]; then mkdir ${WWWPATH}; fi
+	    archname=${TOBOR_ARCHIVE%.*}
+	    echo -e "\nDownloading Raspberry Pints archive from Homebrewtalk thread.\n"
+		wget -P "$HOMEPATH" -O "$TOBOR_ARCHIVE" "$TOBOR_SOURCE"
+		retval="$?"
+		if [ "$retval" -ne 0 ]; then
+	        echo -e "\nERROR: Archive download failed."
+	        exit 1
+	    fi
+	    if [ ! -f "$HOMEPATH/$TOBOR_ARCHIVE" ]; then
+	        echo -e "\nERROR:  $HOMEPATH/$TOBOR_ARCHIVE not found."
+	        exit 1
+	    fi
+	    echo -e "\nExtracting $HOMEPATH/$TOBOR_ARCHIVE to $WWWPATH."
+	    unzip -q "$HOMEPATH/$TOBOR_ARCHIVE" -d "$WWWPATH"||die
+		retval="$?"
+		if [ "$retval" -ne 0 ]; then
+	        echo -e "\nERROR: Archive unzip failed."
+	        exit 1
+	    fi
+	    shopt -s extglob
+	    eval cp -R "$WWWPATH/$archname/*" "$WWWPATH"
+	    rm -fr "${WWWPATH:?}/$archname"
+	fi
+}
+
+############
+### Fix WWW path permissions
+############
+
+doperms() {
+    echo -e "\nFixing file permissions for $WWWPATH."
+	# find out who the apache server runs as (APACHE_RUN_USER and APACHE_RUN_GROUP)
+	if [ -f /etc/apache2/envvars ]; then
+	   . /etc/apache2/envvars
+	else
+	   APACHE_RUN_USER=www-data
+	   APACHE_RUN_GROUP=www-data
+	fi
+	
+	# ensure the files are owned by the apache user  
+	chown -R ${APACHE_RUN_USER}:${APACHE_RUN_GROUP} "${WWWPATH}"||warn
+    find "$WWWPATH" -type d -exec chmod 2770 {} \; || warn
+    find "$WWWPATH" -type f -exec chmod 640 {} \;||warn
+    find "$WWWPATH" -type f -regex ".*\.\(py\|sh\)" -exec chmod 770 {} \;||warn
+    usermod -a -G www-data "$REALUSER"
+}
+
+
+installFlowmeters(){
+
+	FLOWMETER_ENABLED=$(mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -sse "SELECT configValue FROM config WHERE configName='useFlowMeter'")
+	if [ $FLOWMETER_ENABLED -eq 1 ]; then return ; fi
+	
+	# ask the user if they want to install flowmeters
+	if promptYN "Do you want to use Flow Meters?" "N";
+	then
+		echo "Will Install Flow Meters"
+		
+		# install necessary packages
+		apt-get install --assume-yes ${FLOW_MEATERS_PACKAGES}
+	
+		#upgrade all base
+		apt-get upgrade
+	
+		# enable I2C on Raspberry Pi
+		echo '>>> Enable I2C'
+		if ! grep -q '^\s*i2c-bcm2708' $MODULE_CONFIG_FILE; then
+		  echo 'i2c-bcm2708' >> $MODULE_CONFIG_FILE
+		fi
+		if ! grep -q '^\s*i2c-dev' $MODULE_CONFIG_FILE; then
+		  echo 'i2c-dev' >> $MODULE_CONFIG_FILE
+		fi
+		if ! grep -q '^\s*dtparam=i2c1=on' $BOOT_CONFIG_FILE; then
+		  echo 'dtparam=i2c1=on' >> $BOOT_CONFIG_FILE
+		fi
+		if ! grep -q '^\s*dtparam=i2c_arm=on' $BOOT_CONFIG_FILE; then
+		  echo 'dtparam=i2c_arm=on' >> $BOOT_CONFIG_FILE
+		fi
+		if ! grep -q '^\s*dtparam=spi=on' $BOOT_CONFIG_FILE; then
+		  echo 'dtparam=spi=on' >> $BOOT_CONFIG_FILE
+		fi
+		if ! grep -q '^\s*enable_uart=1' $BOOT_CONFIG_FILE; then
+		  echo 'enable_uart=1' >> $BOOT_CONFIG_FILE
+		fi
+		if [ -f /etc/modprobe.d/raspi-blacklist.conf ]; then
+		  sed -i -r 's/^\s*(blacklist\s*spi-bcm2708)/#\1/g' $BLACKLIST_CONFIG_FILE
+		  sed -i -r 's/^\s*(blacklist\s*i2c-bcm2708)/#\1/g' $BLACKLIST_CONFIG_FILE
+		fi
+	
+		if [ ! -d ${WWWPATH}/alamode/ ]; then
+			FLOW_METERS_DIRECTORY=${WWWPATH}/alamode/
+			pushd .
+			if [ ! -d $FLOW_METERS_DIRECTORY ]; then
+				mkdir $FLOW_METERS_DIRECTORY
+			fi
+			cd "${FLOW_METERS_DIRECTORY}"
+			# Get the Alamode files
+			if [ -f "${FLOW_METERS_DIRECTORY}/alamode-setup.tar.gz" ]; then
+				rm "${FLOW_METERS_DIRECTORY}/alamode-setup.tar.gz"
+			fi
+			wget ${FLOW_METERS_REPO} 
+			if [ -d "${FLOW_METERS_DIRECTORY}/alamode-setup" ]; then
+				rm "${FLOW_METERS_DIRECTORY}/alamode-setup" -r
+			fi
+			tar -xvzf "alamode-setup.tar.gz"
+			cd "${FLOW_METERS_DIRECTORY}/alamode-setup"
+			if [ ! -f "${FLOW_METERS_DIRECTORY}/alamode-setup/stretch-setup" ]; then 
+				wget ${FLOW_METERS_STRETCH_REPO}
+			fi
+		
+			# ensure the files are executable by the owner  
+			find "${WWWPATH}" -type f -exec chmod o+x {} \;
+			
+			dos2unix ./*
+			./${VER_NAME}-setup
+			
+			popd
+		fi
+		
+		if [ -f "${WWWPATH}/python/Config.py" ]; then
+			FIND_STR="config\['pints.dir'.*"
+			REPL_STR="config\['pints.dir'\] = '${WWWPATH}/'"
+			sed -i "s_${FIND_STR}_${REPL_STR}_" "${WWWPATH}/python/Config.py"	
+						
+			CONNECTION_OPTIONS=(1 "Serial"
+					 2 "USB"
+			         3 "Bluetooth")
+			user_choice=$(dialog --clear \
+			                --backtitle "Connection" \
+			                --title "Shield Communication" \
+			                --menu "Choose how Rpints communicates to the sheild" \
+			                20 40 6 \
+			                "${CONNECTION_OPTIONS[@]}" \
+			                2>&1 >/dev/tty);
+			clear
+			comm_option="/dev/ttyS0"
+			case $user_choice in
+					1)
+						comm_option="/dev/ttyS0"
+						;;
+					2)
+						comm_option="/dev/ttyACM0"
+						;;
+					3)
+						comm_option="/dev/rfcomm0"
+						;;
+			esac
+			sed -E -i 's/(.*flowmon.port.*)/#\1/' "${WWWPATH}/python/Config.py"	
+		  	echo "config['flowmon.port'] = '$comm_option'" >> "${WWWPATH}/python/Config.py"
+	
+		fi
+		if [ -f "${WWWPATH}/python/flowmon" ];
+		then
+			FIND_STR="DIR=.*"
+			REPL_STR="DIR=${WWWPATH}/python"
+			sed -i "s_${FIND_STR}_${REPL_STR}_" "${WWWPATH}/python/flowmon"
+			  
+			cp "${WWWPATH}/python/flowmon" "${INIT_DIRECTORY}/flowmon"
+			chmod a+x "${INIT_DIRECTORY}/flowmon"
+			if echo "$VER_NAME" | grep -iq "^jessie" ; then
+				/bin/systemctl daemon-reload
+				/bin/systemctl enable flowmon.service
+			fi
+			"${INIT_DIRECTORY}/flowmon" start 
+			if ps aux | grep -iq "flow_monitor.py" ; then
+				echo "Flowmon install successfully"
+			else
+				echo "Unable to install flowmon"
+			fi
+			update-rc.d flowmon defaults
+		fi
+		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "UPDATE config SET configValue='1' WHERE configName='useFlowMeter';";
+		read -e -p "For alamode set the 5V_link jumper to on (see page 11 of the Alamode Manual). Enter to continue" ANSWER
+	else
+		echo "Will Not Install Flow Meters"
+		echo
+	fi
+
+}
+
+installRFID(){
+	RFID_SPI_DIRECTORY=${WWWPATH}/python/SPI-Py	
+	if [ $RECONFIG_PI -ne 0 ] && [ -d RFID_SPI_DIRECTORY ]; then return ; fi
+
+	# ask the user if they want to install RFID
+	if promptYN "Do you want to use RFID" "N";
+	then
+		echo "Will Install RFID"
+		
+		pushd .
+	
+		cd ${RFID_SPI_DIRECTORY}
+		python setup.py install 
+		
+		popd
+		
+		read -e -p "What Pi Pin is the RFID Slave Select (SDA) connected to (Blank to skip)?: " ANSWER
+		if [ "$ANSWER" != "" ]; then
+			mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO rfidReaders 
+								 (name,type,pin,priority,createdDate,modifiedDate) 
+								 VALUES ('default',0,'${ANSWER}',0,NOW(),NOW());";
+		else
+			echo "To setup a RFID Reader visit your RaspberryPints Admin - RFID Reader page"
+		fi
+	else
+		echo "Will Not Install RFID"
+		echo
+	fi
+}
+installMotionSensor(){
+	PKG_OK=$(dpkg-query -W --showformat='${Status}\n' xscreensaver|grep "install ok installed")
+	if [ "" != "$PKG_OK" ] && [ $RECONFIG_PI -ne 0  ]; then return ; fi
+	
+	# ask the user if they want to install Motion Detection
+	if promptYN "Do you want to use Motion Detection?" "N";
+	then
+		echo "Will Install Motion Detection"
+		apt-get install xscreensaver
+
+		if promptYN "Do you want to use day_trippr's configuration?" "Y"; then
+			cp ${DIRECTORY}/util/.xscreensaver /home/pi/.xscreensaver
+		else
+			echo "Configure Screen Saver"
+		fi
+		
+		echo "Connect the detector to the PI when power is off)"
+		echo "5V: Pin 2, or 4 (pick one)"
+		echo "GND: Pin 6,9,14,20 or 25 (pick one)"
+		echo "Notes:"
+		echo "	- Verify that the two pin jumper is positioned on the 2 pins closes to the adjust dials."
+		echo "	- Set the Sensitivity Adjust to 50% of travel to start"
+		echo "	- Set the Time Delay Adjust full counter-clockwise to start (minimum delay between triggers is roughly 10 seconds)"
+		
+		read -e -p "What Pi Pin is the Motion Sensor output connected to (Blank to skip)?: " ANSWER
+		if [ "$ANSWER" != "" ] && [[ $ANSWER =~ '^[0-9]+$' ]] ; then
+			mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO motionDetectors 
+								 (name,pin,createdDate,modifiedDate) 
+								 VALUES ('default','${ANSWER}',NOW(),NOW());";
+		else
+			echo "To setup a Motion Detector visit your RaspberryPints Admin - Motion Detector page"
+		fi
+	else
+		echo "Will Not Install Motion Detection"
+		echo
+	fi
+}
+installTempProbes(){
+	if [ $RECONFIG_PI -ne 0 ] && grep -q '^\s*dtoverlay=w1-gpio' $BOOT_CONFIG_FILE; then return ; fi
+	
+	# ask the user if they want to use temp probes
+	if promptYN "Do you want to use Temp Probes?" "N";
+	then
+		if ! grep -q '^\s*dtoverlay=w1-gpio' $BOOT_CONFIG_FILE; then
+		  echo 'dtoverlay=w1-gpio' >> $BOOT_CONFIG_FILE
+		fi
+	else
+		echo "Will Not Setup Temp Probes"
+		echo
+	fi
+}
+
+configureMonitor(){
+	MONITOR=true
+	MONITOR_OPTIONS=(1 "No Monitor"
+			 2 "1920 x 1080 | 1080p"
+	         3 "1280 x 720  | 720p"
+	         4 "1600 x 1200"
+	         5 "1680 x 1050"
+	         6 "1920 x 1200")
+	HDMI_GROUP=1
+	HDMI_MODE=16
+	MONITOR_RESOLUTION=$(dialog --clear \
+	                --backtitle "Monitor" \
+	                --title "Monitor Options" \
+	                --menu "Choose your Monitor Size" \
+	                20 40 6 \
+	                "${MONITOR_OPTIONS[@]}" \
+	                2>&1 >/dev/tty);
 	clear
-	case $MONITOR_ROTATION in
-			1)
-				MONITOR_ROTATION=0
-				;;
+	case $MONITOR_RESOLUTION in
 			2)
-				MONITOR_ROTATION=3
+				HDMI_GROUP=1
+				HDMI_MODE=16
 				;;
 			3)
-				MONITOR_ROTATION=1
+				HDMI_GROUP=1
+				HDMI_MODE=4
 				;;
 			4)
-				MONITOR_ROTATION=2
+				HDMI_GROUP=1
+				HDMI_MODE=2
 				;;
+			5)
+				HDMI_GROUP=2
+				HDMI_MODE=51
+				;;
+			6)
+				HDMI_GROUP=2
+				HDMI_MODE=68
+				;;
+			*) 
+				MONITOR=false
+			    ;;
 	esac
-
-	if [ -f $BOOT_CONFIG_FILE ]; then
-		sed -i -E 's/^\s*(display_rotate.*)/#\1/g' $BOOT_CONFIG_FILE
-	fi
-	echo "display_rotate=$MONITOR_ROTATION" >> $BOOT_CONFIG_FILE
+	if $MONITOR = true ; then		
 	
-	read -e -p "Do you want to turn off Screen Blanking? (Y:N) (default is: Y): " ANSWER
-	if [ "$ANSWER" = "" ]; then
-	   ANSWER="Y"
-	fi
-	if [ ! -f "${START_CONFIG_FILE}" ]; then
-		START_CONFIG_FILE=${GLOBAL_CONFIG_FILE}
-	fi
-	if echo "$ANSWER" | grep -iq "^y" ;then
-		if ! grep -q '^\s*@xset s off' $START_CONFIG_FILE; then
-		  echo '@xset s off' >> $START_CONFIG_FILE
+		if [ -f $BOOT_CONFIG_FILE ]; then
+			sed -i -E 's/^\s*(hdmi_group.*)/#\1/g' $BOOT_CONFIG_FILE
+			sed -i -E 's/^\s*(hdmi_mode.*)/#\1/g' $BOOT_CONFIG_FILE
 		fi
-		if ! grep -q '^\s*@xset -dpms' $START_CONFIG_FILE; then
-		  echo '@xset -dpms' >> $START_CONFIG_FILE
-		fi
-		if ! grep -q '^\s*@xset s noblank' $START_CONFIG_FILE; then
-		  echo '@xset s noblank' >> $START_CONFIG_FILE
-		fi
-	fi
-	read -e -p "Do you want to start with Chromium in Kiosk Mode? (Y:N) (default is: Y): " ANSWER
-	if [ "$ANSWER" = "" ]; then
-	   ANSWER="Y"
-	fi
-	if echo "$ANSWER" | grep -iq "^y" ;then
-		sed -i -E 's/^\s*(@chromium --kiosk.*)/#\1/g' $START_CONFIG_FILE
-		echo '@chromium --kiosk localhost' >> $START_CONFIG_FILE
-	fi
-fi
- 
-# ensure the files are executable by the owner  
-find "${DIRECTORY}" -type f -exec chmod o+x {} \;
-
-# now, enable phpmyadmin if necessary
-if [ -f /etc/phpmyadmin/apache.conf ]; then
-	if [ ! -f /etc/apache2/sites-available/phpmyadmin.conf ]; then
-		ln -s /etc/phpmyadmin/apache.conf /etc/apache2/sites-available/phpmyadmin.conf
-	fi
-   a2ensite phpmyadmin.conf
-   systemctl reload apache2
-fi
-
-read -e -p "RaspberryPints Database Name? (default is: ${MYSQL_DB_NAME}): " ANSWER
-if [ "$ANSWER" != "" ]; then
-	MYSQL_DB_NAME=$ANSWER
-fi
-
-read -e -p "RaspberryPints Database User Name? (default is: ${MYSQL_RP_USER}): " ANSWER
-if [ "$ANSWER" != "" ]; then
-	MYSQL_RP_USER=$ANSWER
-fi
-# setup respberrypints mysql user
-read -s -e -p "RaspberryPints Database User Password? (default is: ${MYSQL_RP_PASS}): " ANSWER
-if [ "$ANSWER" != "" ]; then
-	MYSQL_RP_PASS=$ANSWER
-fi 
-echo
-MYSQL_CMD="-h${MYSQL_SERVER}"
-if [ "${MYSQL_USER}" != "" ]; then 
-	MYSQL_CMD="${MYSQL_CMD} -u${MYSQL_USER}"
-fi
-if [ "${MYSQL_PASS}" != "" ] ; then 
-	MYSQL_CMD="${MYSQL_CMD} -p${MYSQL_PASS}"
-fi
-USER_EXISTS="$(mysql $MYSQL_CMD -sse "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '${MYSQL_RP_USER}')")"
-if [ $USER_EXISTS = 0 ];
-then
-	mysql ${MYSQL_CMD} -e "CREATE USER ${MYSQL_RP_USER}@'%' IDENTIFIED BY '${MYSQL_RP_PASS}';"
-else
-	mysql ${MYSQL_CMD} -e "SET PASSWORD FOR ${MYSQL_RP_USER}@'%' = PASSWORD('${MYSQL_RP_PASS}');"
-fi
-mysql ${MYSQL_CMD} -e "GRANT ALL PRIVILEGES ON *.* TO ${MYSQL_RP_USER}@'%';"
-
-INCLUDES_DIRECTORY=${DIRECTORY}/includes/
-ADMIN_INCLUDES_DIRECTORY=${DIRECTORY}/admin/includes/
-if [ -f "${INCLUDES_DIRECTORY}/config.php" ]; then
-	rm ${INCLUDES_DIRECTORY}/config.php
-fi
-echo "<?php " >> ${INCLUDES_DIRECTORY}/config.php
-echo "	function db() {" >> ${INCLUDES_DIRECTORY}/config.php
-echo "		return new mysqli('${MYSQL_SERVER}', '${MYSQL_RP_USER}', '${MYSQL_RP_PASS}', '${MYSQL_DB_NAME}');" >> ${INCLUDES_DIRECTORY}/config.php
-echo "	}" >> ${INCLUDES_DIRECTORY}/config.php
-echo '	$rpintsversion='"\"${RP_VERSION}\";" >> ${INCLUDES_DIRECTORY}/config.php
-echo "?>" >> ${INCLUDES_DIRECTORY}/config.php
-
-if [ -f "${ADMIN_INCLUDES_DIRECTORY}/conn.php" ]; then
-	rm ${ADMIN_INCLUDES_DIRECTORY}/conn.php
-fi
-echo "<?php " >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
-echo '	//show/hide SQL statements in errors' >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
-echo '	//$showSqlState = true;' >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
-echo "  \$host=\"${MYSQL_SERVER}\"; // Host name" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
-echo "  \$username=\"${MYSQL_RP_USER}\"; // Mysql username" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
-echo "  \$password=\"${MYSQL_RP_PASS}\"; // Mysql password" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
-echo "  \$db_name=\"${MYSQL_DB_NAME}\"; // Database name" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
-echo "  \$tbl_name=\"users\";" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
-echo '	//Connect to server and select databse.' >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
-echo "	\$mysqli = new mysqli(\"\$host\", \"\$username\", \"\$password\", \"\$db_name\") or die(\"cannot connect to server\");" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
-echo '?>' >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
-
-mysql ${MYSQL_CMD} -e "DROP DATABASE IF EXISTS $MYSQL_DB_NAME;"
-mysql ${MYSQL_CMD} -e "CREATE DATABASE $MYSQL_DB_NAME;"
-
-echo "Database loading"
-cat ${DIRECTORY}/sql/schema.sql | mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} 
-echo "Database Successfully loaded"
-RP_USERNAME=admin
-RP_PASS=""
-RP_PASS2="2"
-RP_NAME_FIRST=""
-RP_NAME_LAST=""
-RP_EMAIL=""
-read -e -p "Admin Username?: " -i ${RP_USERNAME} RP_USERNAME
-while [ "$RP_PASS" != "$RP_PASS2" ];
-do
-	read -s -e -p "Admin Password?: " RP_PASS
-	echo
-	read -s -e -p "Re-enter Admin Password?: " RP_PASS2
-	if [ "$RP_PASS" != "$RP_PASS2" ] ; then
-		echo
-		echo "Passwords didnt match, please try again"
-	fi
-done
-echo
-read -e -p "Admin First Name?: " RP_NAME_FIRST
-read -e -p "Admin Last Name?: " RP_NAME_Last
-read -e -p "Admin Email?: " RP_EMAIL
-
-if ! echo "$REPO" | grep -iq "rtlindne" ; then
-	mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO users 
-						 (username,password,name,email,createdDate,modifiedDate) 
-						 VALUES ('${RP_USERNAME}',MD5('${RP_PASS}'),CONCAT('${RP_NAME_FIRST}', ' ', '${RP_NAME_LAST}'),'${RP_EMAIL}',NOW(),NOW());";
-else
-	mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO users 
-					 (username,password,nameFirst,nameLast,mugId,email,unTapAccessToken,isAdmin,active,createdDate,modifiedDate) 
-						 VALUES ('${RP_USERNAME}',MD5('${RP_PASS}'),'${RP_NAME_FIRST}','${RP_NAME_LAST}',NULL,'${RP_EMAIL}',NULL,1,1,NOW(),NOW());";
-fi
-
-if [ -f "${DIRECTORY}/index.html" ]; then
-	rm ${DIRECTORY}/index.html
-fi
-
-read -e -p "Load Test Data into RaspberryPints? (default is: Y): " ANSWER
-if [ "$ANSWER" = "" ]; then
-   ANSWER="Y"
-fi
-if echo "$ANSWER" | grep -iq "^y" ;then
-	echo "Loading Test Data"
-	cat ${DIRECTORY}/sql/test_data.sql | mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME}
-	echo "Test Data Successfully loaded"
-fi
-# we are done
-echo "Successfully Installed RaspberryPints! "
-echo "Open webbrowser and point to localhost to get tap list "
-echo "Open webbrowser and point to localhost/admin/index.php to get control center "
-
-if [ "$USE_FLOW_METERS" = "true" ];
-then
-	# install necessary packages
-	apt-get install --assume-yes ${FLOW_MEATERS_PACKAGES}
-
-	#upgrade all base
-	apt-get upgrade
-
-	# enable I2C on Raspberry Pi
-	echo '>>> Enable I2C'
-	if ! grep -q '^\s*i2c-bcm2708' $MODULE_CONFIG_FILE; then
-	  echo 'i2c-bcm2708' >> $MODULE_CONFIG_FILE
-	fi
-	if ! grep -q '^\s*i2c-dev' $MODULE_CONFIG_FILE; then
-	  echo 'i2c-dev' >> $MODULE_CONFIG_FILE
-	fi
-	if ! grep -q '^\s*dtparam=i2c1=on' $BOOT_CONFIG_FILE; then
-	  echo 'dtparam=i2c1=on' >> $BOOT_CONFIG_FILE
-	fi
-	if ! grep -q '^\s*dtparam=i2c_arm=on' $BOOT_CONFIG_FILE; then
-	  echo 'dtparam=i2c_arm=on' >> $BOOT_CONFIG_FILE
-	fi
-	if ! grep -q '^\s*dtparam=spi=on' $BOOT_CONFIG_FILE; then
-	  echo 'dtparam=spi=on' >> $BOOT_CONFIG_FILE
-	fi
-	if ! grep -q '^\s*enable_uart=1' $BOOT_CONFIG_FILE; then
-	  echo 'enable_uart=1' >> $BOOT_CONFIG_FILE
-	fi
-	if [ -f /etc/modprobe.d/raspi-blacklist.conf ]; then
-	  sed -i -r 's/^\s*(blacklist\s*spi-bcm2708)/#\1/g' $BLACKLIST_CONFIG_FILE
-	  sed -i -r 's/^\s*(blacklist\s*i2c-bcm2708)/#\1/g' $BLACKLIST_CONFIG_FILE
-	fi
-
-	FLOW_METERS_DIRECTORY=${DIRECTORY}/alamode/
-	pushd .
-	if [ ! -d $FLOW_METERS_DIRECTORY ]; then
-		mkdir $FLOW_METERS_DIRECTORY
-	fi
-	cd "${FLOW_METERS_DIRECTORY}"
-	# Get the Alamode files
-	if [ -f "${FLOW_METERS_DIRECTORY}/alamode-setup.tar.gz" ]; then
-		rm "${FLOW_METERS_DIRECTORY}/alamode-setup.tar.gz"
-	fi
-	wget ${FLOW_METERS_REPO} 
-	if [ -d "${FLOW_METERS_DIRECTORY}/alamode-setup" ]; then
-		rm "${FLOW_METERS_DIRECTORY}/alamode-setup" -r
-	fi
-	tar -xvzf "alamode-setup.tar.gz"
-	cd "${FLOW_METERS_DIRECTORY}/alamode-setup"
-	if [ ! -f "${FLOW_METERS_DIRECTORY}/alamode-setup/stretch-setup" ]; then 
-		wget ${FLOW_METERS_STRETCH_REPO}
-	fi
-
-	# ensure the files are executable by the owner  
-	find "${DIRECTORY}" -type f -exec chmod o+x {} \;
-	
-	dos2unix ./*
-	./${VER_NAME}-setup
-	
-	popd
-	
-	#if [ -d "${DIRECTORY}/arduino/rfid" ]; then
-	#	cp "${DIRECTORY}/arduino/rfid/" "~/sketchbook/libraries/rfid" -R -n
-	#fi
-	if [ -f "${DIRECTORY}/python/Config.py" ]; then
-		FIND_STR="config\['pints.dir'.*"
-		REPL_STR="config\['pints.dir'\] = '${DIRECTORY}/'"
-		sed -i "s_${FIND_STR}_${REPL_STR}_" "${DIRECTORY}/python/Config.py"	
-		
-		
-		CONNECTION_OPTIONS=(1 "Serial"
-				 2 "USB"
-		         3 "Bluetooth")
-		user_choice=$(dialog --clear \
-		                --backtitle "Connection" \
-		                --title "Shield Communication" \
-		                --menu "Choose how Rpints communicates to the sheild" \
-		                20 40 6 \
-		                "${CONNECTION_OPTIONS[@]}" \
-		                2>&1 >/dev/tty);
+		echo "hdmi_group=$HDMI_GROUP" >> $BOOT_CONFIG_FILE
+		echo "hdmi_mode=$HDMI_MODE" >> $BOOT_CONFIG_FILE
+		MONITOR_OPTIONS=(1 "No Rotation"
+			 2 "90 Degrees Clockwise"
+	         3 "90 Degrees CounterClockwise"
+	         4 "Upside Down")
+		MONITOR_ROTATION=0
+		MONITOR_ROTATION=$(dialog --clear \
+						--backtitle "Monitor" \
+						--title "Monitor Options" \
+						--menu "Choose your Monitor Size" \
+						20 40 4 \
+						"${MONITOR_OPTIONS[@]}" \
+						2>&1 >/dev/tty);
 		clear
-		comm_option="/dev/ttyS0"
-		case $user_choice in
+		case $MONITOR_ROTATION in
 				1)
-					comm_option="/dev/ttyS0"
+					MONITOR_ROTATION=0
 					;;
 				2)
-					comm_option="/dev/ttyACM0"
+					MONITOR_ROTATION=3
 					;;
 				3)
-					comm_option="/dev/rfcomm0"
+					MONITOR_ROTATION=1
 					;;
+				4)
+					MONITOR_ROTATION=2
+					;;
+				*) 
+					MONITOR=false
+				    ;;
+				
 		esac
-		sed -E -i 's/(.*flowmon.port.*)/#\1/' "${DIRECTORY}/python/Config.py"	
-	  	echo "config['flowmon.port'] = '$comm_option'" >> "${DIRECTORY}/python/Config.py"
-
-	fi
-	if [ -f "${DIRECTORY}/python/flowmon" ];
-	then
-		FIND_STR="DIR=.*"
-		REPL_STR="DIR=${DIRECTORY}/python"
-		sed -i "s_${FIND_STR}_${REPL_STR}_" "${DIRECTORY}/python/flowmon"
-		  
-		cp "${DIRECTORY}/python/flowmon" "${INIT_DIRECTORY}/flowmon"
-		chmod a+x "${INIT_DIRECTORY}/flowmon"
-		if echo "$VER_NAME" | grep -iq "^jessie" ; then
-			/bin/systemctl daemon-reload
-			/bin/systemctl enable flowmon.service
+	
+		if $MONITOR = true ; then	
+			if [ -f $BOOT_CONFIG_FILE ]; then
+				sed -i -E 's/^\s*(display_rotate.*)/#\1/g' $BOOT_CONFIG_FILE
+			fi
+			echo "display_rotate=$MONITOR_ROTATION" >> $BOOT_CONFIG_FILE
 		fi
-		"${INIT_DIRECTORY}/flowmon" start 
-		if ps aux | grep -iq "flow_monitor.py" ; then
-			echo "Flowmon install successfully"
-		else
-			echo "Unable to install flowmon"
+		if [ ! -f "${START_CONFIG_FILE}" ]; then
+			START_CONFIG_FILE=${GLOBAL_CONFIG_FILE}
 		fi
-		update-rc.d flowmon defaults
+		if ! grep -q '^\s*@xset s off' $START_CONFIG_FILE ||
+		   ! grep -q '^\s*@xset -dpms' $START_CONFIG_FILE ||
+		   ! grep -q '^\s*@xset s noblank' $START_CONFIG_FILE; then
+			if promptYN "Do you want to turn off Screen Blanking?" "Y"; 
+			then
+				if ! grep -q '^\s*@xset s off' $START_CONFIG_FILE; then
+				  echo '@xset s off' >> $START_CONFIG_FILE
+				fi
+				if ! grep -q '^\s*@xset -dpms' $START_CONFIG_FILE; then
+				  echo '@xset -dpms' >> $START_CONFIG_FILE
+				fi
+				if ! grep -q '^\s*@xset s noblank' $START_CONFIG_FILE; then
+				  echo '@xset s noblank' >> $START_CONFIG_FILE
+				fi
+			fi
+		fi
+		
+		sed -i -E 's/^\s*(@chromium --kiosk.*)/#\1/g' $START_CONFIG_FILE
+		if promptYN "Do you want to start with Chromium in Kiosk Mode?" "Y"; 
+		then
+			echo '@chromium --kiosk localhost' >> $START_CONFIG_FILE
+		fi
 	fi
-	mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "UPDATE config SET configValue='1' WHERE configName='useFlowMeter';";
-	read -e -p "For alamode set the 5V_link jumper to on (see page 11 of the Alamode Manual). Enter to continue" ANSWER
-fi
+	 
+}
 
-if [ "$USE_RFID" = "true" ];
-then
-	RFID_SPI_DIRECTORY=${DIRECTORY}/python/SPI-Py
-	pushd .
+############
+### Instructions
+############
 
-	cd ${RFID_SPI_DIRECTORY}
-	python setup.py install 
-	
-	popd
-	
-	read -e -p "What Pi Pin is the RFID Slave Select (SDA) connected to?: " ANSWER
-	if [ "$ANSWER" != "" ]; then
-		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO rfidReaders 
-							 (name,type,pin,priority,createdDate,modifiedDate) 
-							 VALUES ('default',0,'${ANSWER}',0,NOW(),NOW());";
-	else
-		echo "To setup a RFID Reader visit your RaspberryPints Admin - RFID Reader page"
-	fi
-fi
+complete() {
+    local IP
+    IP=$(ip -4 addr | grep 'global' | cut -f1  -d'/' | cut -d" " -f6)
+    clear
+    cat << EOF
 
-# ask the user if they want to install Motion Detectors
-#from day_trippr's instructions
-read -e -p "Do you want to install Motion Detectors? (Y:N) (default is: N): " ANSWER
-if [ "$ANSWER" = "" ]; then
-   ANSWER="N"
-fi
-if echo "$ANSWER" | grep -iq "^y" ;then
-	apt-get install xscreensaver
-	
-	read -e -p "Do you want to use day_trippr's configuration? (Y:N) (default is: Y): " ANSWER
-	if [ "$ANSWER" = "" ]; then
-	   ANSWER="Y"
-	fi
-	if echo "$ANSWER" | grep -iq "^y" ;then
-		cp ${DIRECTORY}/util/.xscreensaver /home/pi/.xscreensaver
-	else
-		echo "Configure Screen Saver"
-	fi
-	
-	echo "Connect the detector to the PI when power is off)"
-	echo "5V: Pin 2, or 4 (pick one)"
-	echo "GND: Pin 6,9,14,20 or 25 (pick one)"
-	echo "Notes:"
-	echo "	- Verify that the two pin jumper is positioned on the 2 pins closes to the adjust dials."
-	echo "	- Set the Sensitivity Adjust to 50% of travel to start"
-	echo "	- Set the Time Delay Adjust full counter-clockwise to start (minimum delay between triggers is roughly 10 seconds)"
-	
-	read -e -p "What Pi Pin is the output connected to?: " ANSWER
-	if [ "$ANSWER" != "" ]; then
-		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO motionDetectors 
-							 (name,pin,createdDate,modifiedDate) 
-							 VALUES ('default','${ANSWER}',NOW(),NOW());";
-	else
-		echo "To setup a Motion Detector visit your RaspberryPints Admin - Motion Detector page"
-	fi
-fi
+=============================================================================
+   -----=====>>>>>     Raspberry Pints Tools Complete     <<<<<=====-----
+=============================================================================
 
-USE_TEMP_PROBES=Y
-# ask the user if they want to use temp probes
-read -e -p "Do you want to use Temp Probes? (Y:N) (default is: ${USE_TEMP_PROBES}): " ANSWER
-if [ "$ANSWER" = "" ]; then
-   ANSWER="${USE_TEMP_PROBES}"
-fi
-if echo "$ANSWER" | grep -iq "^y" ;then
-	USE_TEMP_PROBES=true
-fi
-if [ "$USE_TEMP_PROBES" = "true" ];
-then
-	if ! grep -q '^\s*dtoverlay=w1-gpio' $BOOT_CONFIG_FILE; then
-	  echo 'dtoverlay=w1-gpio' >> $BOOT_CONFIG_FILE
-	fi
-fi
+Raspberry Pints has now been installed to $WWWPATH.
 
-echo "All Done!"
+There's also a very good chance that a large number
+of packages have been updated.  In order to allow thse changes to be
+effective, please reboot your Pi to ensure a clean start.
 
-if [ "$USE_FLOW_METERS" = "true" ];
-then
-	read -e -p "Restarted needed to use alamode. Restart Now? Note Installation will NOT resume on startup(default is: Y): " ANSWER
-	if [ "$ANSWER" = "" ]; then
-	   ANSWER="Y"
-	fi
-	if echo "$ANSWER" | grep -iq "^y" ;then
+It may take several minutes for this reboot.  Be patient.
+
+To continue your Raspberry Pints setup, please use your web browser and
+navigate to:
+
+    By IP             : http://$IP
+    -or- by host name : http://$(hostname).local
+
+EOF
+
+	if promptYN "Restarted needed to use alamode. Restart Now?" "Y"; then
 		reboot
 	fi
-fi
+	if promptYN "Open RaspberryPints" "Y"; then
+		su pi chromium-browser http://localhost
+	fi
+	if promptYN "Open RaspberryPints Admin?" "Y"; then
+		su pi chromium-browser http://localhost/admin/index.php
+	fi
+}
 
-read -e -p "Open RaspberryPints? (default is: Y): " ANSWER
-if [ "$ANSWER" = "" ]; then
-   ANSWER="Y"
-fi
-if echo "$ANSWER" | grep -iq "^y" ; then
-	su pi chromium-browser http://localhost
-fi
-read -e -p "Open RaspberryPints Admin? (default is: Y): " ANSWER
-if [ "$ANSWER" = "" ]; then
-   ANSWER="Y"
-fi
-if echo "$ANSWER" | grep -iq "^y" ; then
-	su pi chromium-browser http://localhost/admin/index.php
-fi
+############
+### Used to read the database settings from RPints and get the current Repo value (if exists)
+############
+getExistingSystemVariables(){
+	getwwwpath # Get WWW path
+		    
+	MYSQL_SERVER=$(grep -oE '\$host=.*;' ${WWWPATH}/admin/includes/conn.php | tail -1 | sed 's/$host="//g;s/";//g')
+	MYSQL_RP_USER=$(grep -oE '\$username=.*;' ${WWWPATH}/admin/includes/conn.php | tail -1 | sed 's/$username="//g;s/";//g')
+	MYSQL_RP_PASS=$(grep -oE '\$password=.*;' ${WWWPATH}/admin/includes/conn.php | tail -1 | sed 's/$password="//g;s/";//g')
+	MYSQL_DB_NAME=$(grep -oE '\$db_name=.*;' ${WWWPATH}/admin/includes/conn.php | tail -1 | sed 's/$db_name="//g;s/";//g')
+	
+	MYSQL_CMD="-h${MYSQL_SERVER}"
+	if [ "${MYSQL_USER}" != "" ]; then 
+		MYSQL_CMD="${MYSQL_CMD} -u${MYSQL_USER}"
+	fi
+	if [ "${MYSQL_PASS}" != "" ] ; then 
+		MYSQL_CMD="${MYSQL_CMD} -p${MYSQL_PASS}"
+	fi
+	
+	REPO_CHOICE=$(mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -sse "SELECT configValue FROM config WHERE configName='repo'")
+	if [ -z $REPO_CHOICE ]; then
+		if grep -qE '.*\$rpintsversion="1.0.0.279".*' ${WWWPATH}/install/includes/config_files.php; then REPO_CHOICE=3; fi
+		if grep -qE '.*dbRPintsConnect.*' ${WWWPATH}/install/includes/config_files.php; then REPO_CHOICE=2; fi
+		if grep -qE '.*\$rpintsversion="2.0.4.0".*'   ${WWWPATH}/install/includes/config_files.php; then REPO_CHOICE=1; fi
+	fi
+}
 
+############
+### Actually pull the latest and run the update database script
+############
+updateRpints(){
+	getExistingSystemVariables
 
+	pushd .
+	cd ${WWWPATH}
+	case ${REPO_CHOICE} in
+        1 ) git pull; mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -s -L < ${WWWPATH}/sql/update.sql > /dev/null 2>&1 ;;
+        2 ) git pull; ;;
+        3 )  ;; #Not sure how to update this one since its static		
+	esac
+	popd
+}
+
+############
+### Main function
+############
+
+main() {
+    [[ "$*" == *"-verbose"* ]] && VERBOSE=true # Do not trim logs
+    init "$@" # Get constants
+    checkroot # Make sure we are su into root
+    log "$@" # Start logging
+    checkOS # Check what operating system is being used
+    arguments "$@" # Check command line arguments
+    banner "starting" # Pop starting banner
+    detectRPintsInstall
+	if [ $UPDATE_RPINTS -ne 0 ] ;  then
+		updateRpints
+	else
+	    if [ $RPINTS_INSTALL_DETECTED -eq 0 ] || [ $RECONFIG_PI -eq 1 ] ; then
+		    instructions # Show instructions
+		    checkpass # Check for default password
+		    settime # Set timezone
+		    host_name # Change hostname
+		    if [ $RPINTS_INSTALL_DETECTED -eq 0 ]; then
+			    checkfree # TODO:  Figure out size needed
+			    packages # Install and update required packages
+			    getwwwpath # Get WWW path
+			    testapache # Test Apache/PHP
+			    doarchive # Handle unzipping archive to WWW path
+			    doperms # Fix permissions in WWW path
+			    dbauser # Add a new DBA user
+			else #if [ $RECONFIG_PI -eq 1 ] ; then
+				getExistingSystemVariables
+		    fi
+		    installFlowmeters
+		    installRFID
+		    installMotionSensor
+			installTempProbes
+			configureMonitor
+			if [ $RPINTS_INSTALL_DETECTED -eq 0 ]; then
+    			complete # Final user instructions
+    		else
+    			echo Reconfiguration Complete
+    		fi
+		fi
+	fi
+}
+
+############
+### Start the script
+############
+
+main "$@" && exit 0
