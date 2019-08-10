@@ -586,6 +586,7 @@ include 'left_bar.php';
 include 'scripts.php';
 ?>
 <script>
+<?php if($config[ConfigNames::UseKegWeightCalc]) { ?> 
 <?php 
     foreach($activeTaps as $tap){
         if(null == $tap)continue; 
@@ -656,6 +657,7 @@ include 'scripts.php';
 																				'<?php echo $config[ConfigNames::DisplayUnitVolume]?>');
 		if(!isNaN(volume))document.getElementById("currentAmount"+tapId).value = parseFloat(volume).toFixed(5);
 	}
+<?php } ?>
 	function validateBeerSelected(kegSelectStart, beerSelectStart) {
 		var ii = 1;
 		var kegSelect = null;
@@ -718,6 +720,12 @@ include 'scripts.php';
 		//Select array is kegid~beerid(in keg)~tapId(keg is on)~...
 		var kegSelArr = selectObject.value.split("~");
 
+		if( kegSelArr[0] == '' ){
+			var beerSelect = document.getElementById(secSelectBeerStart+tapId);
+			beerSelect.selectedIndex = 0;
+			return;
+		}
+		
 		//Check if the user selected this keg for any other tap
 		var onOtherTap = null;
 		var ii = 1;
