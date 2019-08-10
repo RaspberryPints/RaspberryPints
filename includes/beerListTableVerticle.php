@@ -162,7 +162,7 @@
                                 <h1><?php echo $beer['beername']; ?></h1>
                             <?php } ?>
                             
-                            <?php if($config[ConfigNames::ShowBeerStyle]){ ?>
+                            <?php if($config[ConfigNames::ShowBeerStyle] && $beer['style']){ ?>
                                 <h2 class="subhead"><?php echo str_replace("_","",$beer['style']); ?></h2>
                             <?php } ?>
                             

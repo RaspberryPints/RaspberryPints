@@ -109,9 +109,7 @@
 	}
 		
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-"http://www.w3.org/TR/html4/strict.dtd">
-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
 		<title>RaspberryPints</title>
@@ -172,7 +170,7 @@
           		           $date = $tempInfo["takenDate"];
           		           $tempDisplay .= sprintf('%s - %0.1f%s<br/>', $probe, convert_temperature($temp, $tempUnit, $config[ConfigNames::DisplayUnitTemperature]), $config[ConfigNames::DisplayUnitTemperature] );
           		       }
-              		   $tempDisplay .= sprintf('%s', str_replace(' ', "<br/>", $date));
+          		       if( isset($date) && isset($tempDisplay) )$tempDisplay .= sprintf('%s', str_replace(' ', "<br/>", $date));
           		    }
           		    echo '<div class="HeaderRight" style="width:15%;text-align:right;vertical-align:middle">'.$tempDisplay.'</div>';           		    
           	     ?>
@@ -208,7 +206,7 @@
 		<div class="copyright">Data provided by <a href="http://untappd.com">Untappd</a></div>
 		
 		<?php if($config[ConfigNames::DisplayRowsSameHeight]) { ?>
-		<script>
+		<script type="text/javascript">
 		window.onload = function(){
 			tables = document.getElementsByTagName("table")
 			for (var i = 0; i < tables.length; i++) {
@@ -226,6 +224,8 @@
     				}
 				}
 			}
+
+			wsconnect();
 		}
 		</script>
 		<?php } ?>

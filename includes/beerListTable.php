@@ -168,7 +168,7 @@
                             <h1><?php echo $beer['beername']; ?></h1>
                         <?php } ?>
                         
-                        <?php if($config[ConfigNames::ShowBeerStyle]){ ?>
+                        <?php if($config[ConfigNames::ShowBeerStyle] && $beer['style']){ ?>
                             <h2 class="subhead"><?php echo str_replace("_","",$beer['style']); ?></h2>
                         <?php } ?>
                         
@@ -254,7 +254,7 @@
 			<?php } ?>
 				
 			<?php if($config[ConfigNames::ShowKegCol]){ ?>
-				<td class="keg" colspan="2">
+				<td class="keg">
 				<?php if(isset($beer) && $beer['beername']){ ?>
 				<?php 
 				//Convert to the correct units (use gal and l)

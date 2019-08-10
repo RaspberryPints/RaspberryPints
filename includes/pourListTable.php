@@ -92,7 +92,9 @@
                 
 				<?php if($config[ConfigNames::ShowPourUserName]){ ?>
 					<td class="poursuser">
-						<h2><?php echo $pour->get_userName(); ?></h2>
+        				<?php if($pour->get_userName()){ ?>
+        						<h2><?php echo $pour->get_userName(); ?></h2>
+						<?php } ?>
 					</td>
 				<?php } ?>
 			</tr>
