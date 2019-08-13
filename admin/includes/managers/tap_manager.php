@@ -181,10 +181,9 @@ class TapManager extends Manager{
 	        if($updateSql != "")$sql = "UPDATE tapconfig SET ".$updateSql." WHERE tapId = " . $id;
 	    } else {
 	        $sql = "INSERT INTO tapconfig (tapId, loadCellCmdPin, loadCellRspPin, loadCellUnit) VALUES(" .
-	   	        $id.", ".$loadCellCmdPin.", ".$loadCellRspPin.", ".$loadCellUnit.")";
+	   	        $id.", ".$loadCellCmdPin.", ".$loadCellRspPin.", '".$loadCellUnit."')";
 	    }
 	    if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
-	    echo $sql;
 	    return $ret;
 	}
 	function set_tapTareRequested($id, $tare) {
