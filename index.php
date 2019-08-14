@@ -159,21 +159,29 @@
 					</h1>
 				</div>
           		<?php 
-          		    $temp = null;
-          		    if($config[ConfigNames::ShowTempOnMainPage]) { 
-          		       $tempProbeManager = new TempProbeManager();
-          		       $tempInfos = $tempProbeManager->get_lastTemp();
-          		       foreach($tempInfos as $tempInfo){
-          		           $temp = $tempInfo["temp"];
-          		           $tempUnit = $tempInfo["tempUnit"];
-          		           $probe = $tempInfo["probe"];
-          		           $date = $tempInfo["takenDate"];
-          		           $tempDisplay .= sprintf('%s - %0.1f%s<br/>', $probe, convert_temperature($temp, $tempUnit, $config[ConfigNames::DisplayUnitTemperature]), $config[ConfigNames::DisplayUnitTemperature] );
-          		       }
-          		       if( isset($date) && isset($tempDisplay) )$tempDisplay .= sprintf('%s', str_replace(' ', "<br/>", $date));
-          		    }
-          		    echo '<div class="HeaderRight" style="width:15%;text-align:right;vertical-align:middle">'.$tempDisplay.'</div>';           		    
-          	     ?>
+      		        $temp = null;
+      		        if(!$config[ConfigNames::ShowLastPour]){ 
+      		    ?>
+              		<?php 
+              		    
+              		    if($config[ConfigNames::ShowTempOnMainPage]) { 
+              		       $tempProbeManager = new TempProbeManager();
+              		       $tempInfos = $tempProbeManager->get_lastTemp();
+              		       foreach($tempInfos as $tempInfo){
+              		           $temp = $tempInfo["temp"];
+              		           $tempUnit = $tempInfo["tempUnit"];
+              		           $probe = $tempInfo["probe"];
+              		           $date = $tempInfo["takenDate"];
+              		           $tempDisplay .= sprintf('%s - %0.1f%s<br/>', $probe, convert_temperature($temp, $tempUnit, $config[ConfigNames::DisplayUnitTemperature]), $config[ConfigNames::DisplayUnitTemperature] );
+              		       }
+              		       if( isset($date) && isset($tempDisplay) )$tempDisplay .= sprintf('%s', str_replace(' ', "<br/>", $date));
+              		    }
+              		    echo '<div class="HeaderRight" style="width:15%;text-align:right;vertical-align:middle">'.$tempDisplay.'</div>';     
+              		    
+              		    
+              	     ?>
+				<?php }?>
+          	     
 				<div class="HeaderRight">
           		<?php 
           		    if(null !== $temp) { 
@@ -183,6 +191,23 @@
           			   		<div class="temp-full" style="height:<?php echo $temp; ?>%; padding-right: 50px"></div>
           			   </div>
           		        </div>
+          		<?php }elseif($config[ConfigNames::ShowLastPour]) { ?>
+				<table>
+    				<tr>
+    					<td class="poursbeername">	
+    						<h1>Last Pour</h1>
+    					</td>
+    				<?php $pour = count($poursList)>0?array_values($poursList)[0]:null;?>
+    				<?php if(null !== $pour) {?>
+    					<td class="poursbeername">	
+    						<h1><?php echo $pour->get_beerName(); ?></h1>
+    					</td>
+                        <td class="poursamount">
+                            <h2><?php echo $pour->get_amountPouredDisplay(); ?></h2>
+                        </td>
+    				<?php } ?>
+                    </tr>
+                </table>
           		<?php }elseif($config[ConfigNames::ShowRPLogo]) { ?>
 					<?php if($config[ConfigNames::UseHighResolution]) { ?>			
 						<a href="http://www.raspberrypints.com"><img src="img/RaspberryPints-4k.png" height="200" alt=""></a>

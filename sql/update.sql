@@ -342,8 +342,39 @@ ALTER TABLE taps CHANGE COLUMN `tapNumber` `tapNumber` INT(11) NULL ;
 CALL addColumnIfNotExist(DATABASE(), 'kegs', 'startAmount', 'decimal(7, 5)' );
 CALL addColumnIfNotExist(DATABASE(), 'kegs', 'currentAmount', 'decimal(7, 5)' );
 
-UPDATE kegs k INNER JOIN taps t ON k.onTapId = t.id SET k.startAmount = t.startAmount, k.currentAmount = t.currentAmount 
-UPDATE kegs k INNER JOIN tapconfig t ON k.onTapId = t.tapId SET k.fermentationPSI = t.fermentationPSI 
+SET @preparedStatement = (
+      SELECT IF(
+        (
+          SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+          WHERE
+            (lower(table_name) = lower("taps"))
+            AND (lower(table_schema) = lower(DATABASE()))
+            AND (lower(column_name) = lower("startamount"))
+        ) = 0,
+        "SELECT 1",
+        "UPDATE kegs k INNER JOIN taps t ON k.onTapId = t.id SET k.startAmount = t.startAmount, k.currentAmount = t.currentAmount ;"
+      )
+  );
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
+SET @preparedStatement = (
+      SELECT IF(
+        (
+          SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+          WHERE
+            (lower(table_name) = lower("taps"))
+            AND (lower(table_schema) = lower(DATABASE()))
+            AND (lower(column_name) = lower("fermentationPSI"))
+        ) = 0,
+        "SELECT 1",
+        "UPDATE kegs k INNER JOIN tapconfig t ON k.onTapId = t.tapId SET k.fermentationPSI = t.fermentationPSI ;"
+      )
+  );
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
+
 
 CREATE OR REPLACE VIEW vwGetActiveTaps
 AS
@@ -743,3 +774,9 @@ SELECT
     takenDate
 FROM tempLog tl 
 LEFT JOIN tempProbes tp ON tl.probe = tp.name;
+
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+							( 'repo', '1', 'The Repo Option from install', '0', NOW(), NOW() );
+												
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+							( 'showLastPour', '0', 'Show the Last Pour in Upper Right Corner instead of temp', '1', NOW(), NOW() );

@@ -395,6 +395,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'showPouredValue', '1', 'Show Poured Value', '1', NOW(), NOW() ),
 ( 'showRemainValue', '1', 'Show Remaining Value', '1', NOW(), NOW() ),
 ( 'showRPLogo', '0', 'Show the RaspberryPints Logo', '1', NOW(), NOW() ),
+( 'showLastPour', '0', 'Show the Last Pour in Upper Right Corner if no temp', '1', NOW(), NOW() ),
 ( 'showCalories', '0', 'Show the calories', '1', NOW(), NOW() ),
 ( 'showGravity', '0', 'Show the Gravity numbers', '1', NOW(), NOW() ),
 ( 'showBalance', '0', 'Show the Balance', '1', NOW(), NOW() ),
