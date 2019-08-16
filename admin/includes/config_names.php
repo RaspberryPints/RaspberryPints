@@ -59,6 +59,7 @@ abstract class ConfigNames
 	const ShowRemainValue = 'showRemainValue';
 	const ShowVerticalTapList = 'showVerticleTapList';
 	const ShowRPLogo = 'showRPLogo';
+	const ShowLastPour = 'showLastPour';
 	const ShowSrmCol = 'showSrmCol';
 	const ShowSrmImg = 'showSrmImg';
 	const ShowSrmValue = 'showSrmValue';
