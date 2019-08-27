@@ -131,6 +131,7 @@ function beerRATING($config, $untID, $display=TRUE ) {
 			fwrite($fp, $imgs);
 			fclose($fp);
 			ob_end_flush();
+			include $cachefile;
 		}
 	}
 
