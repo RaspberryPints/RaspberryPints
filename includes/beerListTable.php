@@ -161,7 +161,7 @@
 					</td>
 				<?php } ?>
                 
-				<td class="name" <?php if($beerColSpan > 1){ echo 'style="border-left: none;"'; } ?>>	
+				<td class="name" <?php if($beerColSpan > 1){ echo 'style="border-left: none; width : '.($beerColSpan > 2?80:90).'%"'; } ?>>	
 					<?php if(isset($beer) && $beer['beername']){ ?>		
                     					
 						<?php if($config[ConfigNames::ShowBeerName]){ ?>
