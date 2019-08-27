@@ -159,7 +159,7 @@
     					<?php if(isset($beer) && $beer['beername']) { ?>		
                         					
     						<?php if($config[ConfigNames::ShowBeerName]){ ?>
-                                <h1><?php echo $beer['beername']; ?></h1>
+                                <h1 style="text-align: center"><?php echo $beer['beername']; ?></h1>
                             <?php } ?>
                             
                             <?php if($config[ConfigNames::ShowBeerStyle] && $beer['style']){ ?>
