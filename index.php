@@ -164,7 +164,7 @@
       		    ?>
               		<?php 
               		    
-              		    if($config[ConfigNames::ShowTempOnMainPage]) { 
+              		    if($config[ConfigNames::ShowTempOnMainPage]) {
               		       $tempProbeManager = new TempProbeManager();
               		       $tempInfos = $tempProbeManager->get_lastTemp();
               		       foreach($tempInfos as $tempInfo){
@@ -172,7 +172,7 @@
               		           $tempUnit = $tempInfo["tempUnit"];
               		           $probe = $tempInfo["probe"];
               		           $date = $tempInfo["takenDate"];
-              		           $tempDisplay .= sprintf('%s - %0.1f%s<br/>', $probe, convert_temperature($temp, $tempUnit, $config[ConfigNames::DisplayUnitTemperature]), $config[ConfigNames::DisplayUnitTemperature] );
+              		           $tempDisplay .= sprintf('%s:%0.1f%s<br/>', $probe, convert_temperature($temp, $tempUnit, $config[ConfigNames::DisplayUnitTemperature]), $config[ConfigNames::DisplayUnitTemperature] );
               		       }
               		       if( isset($date) && isset($tempDisplay) )$tempDisplay .= sprintf('%s', str_replace(' ', "<br/>", $date));
               		    }
@@ -195,15 +195,15 @@
 				<table>
     				<tr>
     					<td class="poursbeername">	
-    						<h1>Last Pour</h1>
+    						<h1 style="text-align: right">Last Pour</h1>
     					</td>
     				<?php $pour = count($poursList)>0?array_values($poursList)[0]:null;?>
     				<?php if(null !== $pour) {?>
     					<td class="poursbeername">	
-    						<h1><?php echo $pour->get_beerName(); ?></h1>
+    						<h1 style="font-size: .5em"><?php echo $pour->get_beerName(); ?></h1>
     					</td>
                         <td class="poursamount">
-                            <h2><?php echo $pour->get_amountPouredDisplay(); ?></h2>
+                            <h1><?php echo $pour->get_amountPouredDisplay(); ?></h1>
                         </td>
     				<?php } ?>
                     </tr>
