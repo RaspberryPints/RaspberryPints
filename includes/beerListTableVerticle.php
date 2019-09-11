@@ -137,7 +137,7 @@
     				<?php if($config[ConfigNames::ShowBreweryImages]){ ?>
     					<td style="border-left: none;width:auto" class="breweryimg">
     					<?php if(isset($beer) && $beer['beername']){ ?>
-    						<img style="border:0;width:100%" src="<?php echo $beer['breweryImage']; ?>" />
+    						<img style="border:0;width:100px" src="<?php echo $beer['breweryImage']; ?>" />
     					<?php $beerColSpan++; ?>
     					<?php } ?>
     					</td>
@@ -172,7 +172,7 @@
                             
                             <?php 
                                 if($config[ConfigNames::ShowBeerRating]){ 
-                                	beerRATING($config, $beer['untID']);
+                                	beerRATING($config, $beer['untID'], $beer['rating']);
                                 } 
                             ?>
     					

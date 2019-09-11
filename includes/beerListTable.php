@@ -144,15 +144,20 @@
 				<?php } ?>
 			
 				<?php if($config[ConfigNames::ShowBreweryImages]){ ?>
-					<td style="<?php if($beerColSpan > 1){ echo 'border-left: none;'; } ?>" class="breweryimg" >
+					<td class="breweryimg" >
 					<?php if(isset($beer) && $beer['beername']){ ?>
-						<img style="border:0;width:100%" src="<?php echo $beer['breweryImage']; ?>" />
+						<img style="border:0;width:100px" src="<?php echo $beer['breweryImage']; ?>" />
 					<?php } ?>
 					</td>
 				<?php } ?>
 				
 				<?php if($config[ConfigNames::ShowBeerImages]){ ?>
-					<td style="<?php if($beerColSpan > 1){ echo 'border-left: none;'; } ?>" class="beerimg">
+				<?php /* If not the first column in the beer section 
+				       ($beerColSpan = 1 if just beer 
+				        $beerColSpan = 2 if breweryimg or beerimg and beer, 
+				        $beerColSpan = 3 if all 3
+				 */ ?>
+					<td style="<?php if($beerColSpan > 2){ echo 'border-left: none;'; } ?>" class="beerimg">
 					<?php if(isset($beer) && $beer['beername']){ ?>
 						<?php 
 							beerImg($config, $beer['untID']);
@@ -161,6 +166,7 @@
 					</td>
 				<?php } ?>
                 
+				<!-- If not the first column in the beer section-->
 				<td class="name" <?php if($beerColSpan > 1){ echo 'style="border-left: none; width : '.($beerColSpan > 2?80:90).'%"'; } ?>>	
 					<?php if(isset($beer) && $beer['beername']){ ?>		
                     					
@@ -178,7 +184,7 @@
                         
                         <?php 
                             if($config[ConfigNames::ShowBeerRating]){ 
-                            	beerRATING($config, $beer['untID']);
+                                beerRATING($config, $beer['untID'], $beer['rating']);
                             } 
                         ?>
 					

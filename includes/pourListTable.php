@@ -53,7 +53,7 @@
 			<tr class="<?php if($i%2 > 0){ echo 'altrow'; }?>">
 			<?php if($config[ConfigNames::ShowPourDate]){ ?>
 				<td class="poursdate">
-					<h2><?php echo $pour->get_createdDate(); ?></h2>
+					<h2><?php echo date_format(date_create($pour->get_createdDate()), 'Y-m-d H:i:s A'); ?></h2>
 				</td>
 			<?php } ?>	
 				<?php if($config[ConfigNames::ShowPourTapNumCol]){ ?>

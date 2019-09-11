@@ -77,10 +77,10 @@ table td.name{
 	vertical-align: middle;	
 }
 .beerimg{ 
-	width:500px;
+	vertical-align:middle;
 }
 .breweryimg{ 
-	width: 500px;
+	vertical-align:middle;
 }
 html, body {
 	background-image: url(img/background.jpg);
@@ -479,10 +479,11 @@ table .subhead{
 	text-align:left;
 }
 p.rating .num {
-display: inline-block;
-padding-top: 4px;
-position: relative;
-top: -24px;
+	display: inline-block;
+	padding-top: 4px;
+	position: relative;
+	top: -4px;
+	font-size: 20px;
 }
   
 p.rating {
@@ -490,7 +491,6 @@ p.rating {
 	padding: 0px 0 0px;
 	display: inline-block;
 	color: #ccc;
-	text-align: center;
 	font-size: 12px;
 	margin: 0px;
 }

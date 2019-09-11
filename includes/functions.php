@@ -53,77 +53,85 @@ function utBreweryFeed($config, $breweryId) {
 }
 
 
-function beerRATING($config, $untID, $display=TRUE ) {
+function beerRATING($config, $untID, $rating=NULL, $displayOnly=TRUE ) {
 
-	if(!isset($untID))return;
-	$cachefile = __DIR__."/cache/rating/".$untID."";
-	
-	$filetimemod = 0;
-	if(file_exists($cachefile)) {
-		$filetimemod = filemtime($cachefile)+86400;
-	}
-	//If display then only use the cache file otherwise we are saving the beer and want to update the cache
-	if ($display) {
-		include $cachefile;
-	} elseif($filetimemod == 0 || time()<$filetimemod){
-		ob_start();
-		// This section calls for the rating from Untappd																		
-		if($config[ConfigNames::ClientID] && $beer->untID!='0'){ 
-			$ut = new Pintlabs_Service_Untappd($config);
-			$rs = 0;
-			try{
-    			$feed = $ut->beerInfo($untID)->response->beer;
-    			$rs = $feed->rating_score;
-    			$rs = .5*floor($rs/.5);
-			}catch(Exception $e){
-			    
-			}
-			$img = "<span class=\"rating small\" style=\"background-position: 0 ".(-48*$rs)."px;\"></span><span class=\"num\">(".$rs.")</span>";
-		} else {
-			$img = "";
-		}
-		if($img != "")
-		{
-			$img = '<p class="rating">'.$img.'</p>';
-			try{ $fp = fopen($cachefile, 'w'); } catch(Exception $e){}
-			if($fp)
-			{
-				fwrite($fp, $img);
-				fclose($fp);
-				ob_end_flush();
-			}
-		}
-	}
+    
+    if(isset($untID)){
+    	$cachefile = __DIR__."/cache/rating/".$untID."";
+    	
+    	$filetimemod = 0;
+    	if(file_exists($cachefile)) {
+    	    $filetimemod = filemtime($cachefile)+86400;
+    	}
+    	//If display then only use the cache file otherwise we are saving the beer and want to update the cache
+    	if ($displayOnly && $filetimemod > 0) {
+    		include $cachefile;
+    	} elseif($filetimemod == 0 || time()<$filetimemod){
+    	    $img = "";
+    		ob_start();
+    		// This section calls for the rating from Untappd																		
+    		if($config[ConfigNames::ClientID] && $beer->untID!='0'){ 
+    			$ut = new Pintlabs_Service_Untappd($config);
+    			$rs = 0;
+    			try{
+        			$feed = $ut->beerInfo($untID)->response->beer;
+        			$rs = $feed->rating_score;
+        			$rs = .5*floor($rs/.5);
+        			$img = "<span class=\"rating small\" style=\"background-position: 0 ".(-48*$rs)."px;\"></span><span class=\"num\">(".$rs.")</span>";
+    			}catch(Exception $e){
+    			    
+    			}
+    		}
+    		if($img != "")
+    		{
+    			$img = '<p class="rating">'.$img.'</p>';
+    			try{ $fp = fopen($cachefile, 'w'); } catch(Exception $e){}
+    			if($fp)
+    			{
+    				fwrite($fp, $img);
+    				fclose($fp);
+    				ob_end_flush();
+    			}
+    			//Dont let the local rating be displayed
+    			return;
+    		}
+    	}
+    }
+    //untappd not set or could not get use local rating
+    if(isset($rating) && NULL !== $rating){
+        $rs = .5*floor($rating/.5);
+        echo "<p class=\"rating\"><span class=\"rating small\" style=\"background-position: 0 ".(-48*$rs)."px;\"></span><span class=\"num\">(".$rs.")</span></p>";
+    }
  
  }
 
- function beerIMG($config, $untID, $display=TRUE) {
+ function beerIMG($config, $untID, $displayOnly=TRUE) {
 	 
 	if(!isset($untID))return;
 	$cachefile = __DIR__."/cache/img/".$untID."";
 	$filetimemod = 0;
 	if(file_exists($cachefile)) {
-		$filetimemod = filemtime($cachefile)+86400;
+	    //update 1 time per year
+	    $filetimemod = filemtime($cachefile)+31536000;
 	}
 	//If display then only use the cache file otherwise we are saving the beer and want to update the cache
-	if ($display && false) {
+	if ($displayOnly && $filetimemod > 0) {
 		include $cachefile;
-	} elseif($filetimemod == 0 || time()<$filetimemod) {
+	}else if($filetimemod == 0 || time()<$filetimemod) {
 		ob_start();
+		$img = 'https://d1c8v1qci5en44.cloudfront.net/site/assets/images/temp/badge-beer-default.png';
 		if($config[ConfigNames::ClientID] && $beer->untID!='0'){ 
 			$ut = new Pintlabs_Service_Untappd($config);
 			try {
     			$feed = $ut->beerInfo($untID)->response->beer;
     			$img = $feed->beer_label;
-    			$imgs = "<img src=".$img." style=\"border:0;width:100%\">";
 			} catch (Exception $e) {
-			    echo 'N/A';
-			    ob_end_flush();
-			    return;
+			    //echo 'N/A';
+			    //ob_end_flush();
+			    //return;
 			}
-		} else {
-			$imgs = "<img src='https:\/\/d1c8v1qci5en44.cloudfront.net/site/assets/images/temp/badge-beer-default.png' border=0 width=75 height=75>";
-		}
+		} 
+        $imgs = "<img src=".$img." style=\"border:0;width:100px\">";
 		$fp = false;
 		try{ $fp = fopen($cachefile, 'w'); } catch(Exception $e){}
 		if($fp)

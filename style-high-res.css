@@ -84,9 +84,11 @@ span.tapcircle {
 }
 .beerimg{ 
 	width:200px;
+	vertical-align:middle;
 }
 .breweryimg{ 
 	width: 200px;
+	vertical-align:middle;
 }
 
 .keg-container{
