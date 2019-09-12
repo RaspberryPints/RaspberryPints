@@ -292,43 +292,6 @@ INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOn
 ('tempProbeBoundHigh', '212', 'High bound of valid Temperature', 0, NOW(), NOW() ),
 ('showTempOnMainPage', '1', 'Show Avg Temperature on home page', 1, NOW(), NOW() );
 
-
-DROP TABLE beerFermentables;
-CREATE TABLE IF NOT EXISTS `beerFermentables` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`beerId` int(11) NOT NULL,
-  `fermentablesId`int(11) NOT NULL,
-	`amount` tinytext NULL,
-	`time` tinytext NULL,
-	
-	PRIMARY KEY (`id`),
-	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
-	FOREIGN KEY (`fermentablesId`) REFERENCES fermentables(`id`) ON DELETE CASCADE
-) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
-DROP TABLE beerHops;
-CREATE TABLE IF NOT EXISTS `beerHops` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`beerId` int(11) NOT NULL,
-  `hopsId`  int(11) NOT NULL,
-	`amount` tinytext NULL,
-	`time` tinytext NULL,
-	
-	PRIMARY KEY (`id`),
-	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
-	FOREIGN KEY (`hopsId`) REFERENCES hops(`id`) ON DELETE CASCADE
-) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
-DROP TABLE beerYeasts;
-CREATE TABLE IF NOT EXISTS `beerYeasts` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`beerId` int(11) NOT NULL,
-  `yeastsId`int(11) NOT NULL,
-	`amount` tinytext NULL,
-	
-	PRIMARY KEY (`id`),
-	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
-	FOREIGN KEY (`yeastsId`) REFERENCES yeasts(`id`) ON DELETE CASCADE
-) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
-
 CREATE OR REPLACE VIEW `vwFermentables` 
 AS
  SELECT 
