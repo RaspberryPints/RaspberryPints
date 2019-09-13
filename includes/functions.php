@@ -127,8 +127,8 @@ function beerRATING($config, $untID, $rating=NULL, $displayOnly=TRUE ) {
     			$img = $feed->beer_label;
 			} catch (Exception $e) {
 			    //echo 'N/A';
-			    //ob_end_flush();
-			    //return;
+			    ob_end_flush();
+			    return;
 			}
 		} 
         $imgs = "<img src=".$img." style=\"border:0;width:100px\">";
