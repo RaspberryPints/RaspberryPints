@@ -11,6 +11,7 @@ require_once __DIR__.'/managers/beerStyle_manager.php';
 $beerManger = new BeerManager();
 $breweryManager = new BreweryManager();
 $error=false; 
+const MAX_SRM = 40.0;
 global $mysqli;
 
 if(!isset($_FILES['uploaded']) || !isset($_FILES['uploaded']['size']) || !isset($_FILES['uploaded']['type']))
@@ -88,6 +89,7 @@ else
 		$beer->set_og(preg_replace("/[^0-9|.]/", "", $recipe->OG));
 		$beer->set_fg(preg_replace("/[^0-9|.]/", "", $recipe->FG));
 		$beer->set_srm(preg_replace("/[^0-9|.]/", "", ($recipe->SRM?$recipe->SRM:$recipe->EST_COLOR)));
+		if( floatval($beer->get_srm()) > MAX_SRM ) $beer->set_srm(MAX_SRM) ;
 		$beer->set_ibu(preg_replace("/[^0-9|.]/", "", $recipe->IBU));
 		$beer->set_notes($recipe->NOTES);
 		if(!$beer->get_notes() || $beer->get_notes() == '')$beer->set_notes($recipe->TASTE_NOTES);
