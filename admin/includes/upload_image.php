@@ -6,10 +6,10 @@ if(null !== $uploadFile && $uploadFile != ''){
 }
 $ok=1;
 
-
+$_SESSION['errorMessage'] = '';
 //This is our size condition 
-if (filesize($uploadFile) > 1000000) 
-{ 
+if ($_FILES['uploaded']['size'] > 100000000) 
+{
     $_SESSION['errorMessage'] =  "Your file is too large.<br>"; 
     $ok=0; 
 } 
@@ -18,6 +18,12 @@ $path_parts = pathinfo($uploadFile);
 $uploaded_type = $path_parts['extension'];
 
 //This is our limit file type condition 
+if ( strpos( $_FILES['uploaded']['type'], "image/" ) !== 0 )
+{
+    $_SESSION['errorMessage'] =  "Must be an Image<br>";
+    $ok=0; 
+}
+
 if ($uploaded_type =="php") 
 { 
     $_SESSION['errorMessage'] =  "No PHP files<br>";
@@ -34,7 +40,7 @@ else
 { 
     $target = $_POST['target'];
     $path_parts = pathinfo($target);
-    $target_type = $path_parts['extension'];
+    $target_type = isset($path_parts['extension'])?$path_parts['extension']:null;
     if(null == $target_type || $target_type == '') $target .= '.'.$uploaded_type;    
 
     if(!move_uploaded_file($tmpUploadFile, $target)) 
