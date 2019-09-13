@@ -103,7 +103,7 @@ include 'top_menu.php';
 					?>
 								<tr class="intborder collapsed heading" onClick="toggleBeerInfo(this, '<?php echo $beer->get_id()?>')" >
 									<th style="width:35%; vertical-align:middle;">
-										<p style="font-size:24px; font-weight:bold"><?php echo $beer->get_name() ?></p>
+										<p style="font-size:24px; font-weight:bold; width:400px; overflow:hidden"><?php echo $beer->get_name() ?></p>
                                         <?php 
 											if($beer->get_breweryId())
 											{
