@@ -107,8 +107,12 @@
 					<td class="srm">
 					<?php if(isset($beer) && $beer['beername'] && $beer['srm'] > 0){ ?>						
 						<div class="srm-container">
-							<?php echo '<div class="srm-indicator" style="background-color:'.$htmlHelper->CreateRGB($beer['srmRgb']).'"></div>'?>
-							<div class="srm-stroke"></div> 
+							<?php if($config[ConfigNames::ShowSrmImg]){?>
+								<?php echo '<img src="img/srm/'.floor($beer['srm']).'-srm.png" />'?>
+							<?php }else{?>
+								<?php echo '<div class="srm-indicator" style="background-color:'.$htmlHelper->CreateRGB($beer['srmRgb']).'"></div>'?>
+								<div class="srm-stroke"></div> 
+							<?php }?>
 						</div>
 						
 						<h2><?php echo $beer['srm']; ?> SRM</h2>
