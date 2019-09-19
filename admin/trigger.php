@@ -21,7 +21,10 @@
 	    $value == "config" ||
 	    $value == "alamode" ||
 	    $value == "tare" ||
-	    $value == "tempProbe")
+	    $value == "tempProbe"||
+	    $value == "shutdown"||
+	    $value == "restart"||
+	    $value == "restartservice")
 	{
 		$data = "RPC:".$value."\n";
 	} 

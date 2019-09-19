@@ -94,6 +94,15 @@ class CommandTCPHandler(SocketServer.StreamRequestHandler):
             if ( reading[1] == "tempProbe" ):
                 debug("Requesting Reset of Temp Probes")
                 self.server.pintdispatch.flowmonitor.reconfigTempProbes()
+            if ( reading[1] == "shutdown" ):
+                log("Requesting Pi ShutDown")
+                self.server.pintdispatch.shutdown()
+            if ( reading[1] == "restart" ):
+                log("Requesting Pi Restart")
+                self.server.pintdispatch.restart()
+            if ( reading[1] == "restartservice" ):
+                debug("Requesting Reset of Service")
+                self.server.pintdispatch.restartService()
         
         self.wfile.write("RPACK\n")
 
@@ -563,7 +572,19 @@ class PintDispatch(object):
             if valveItem is not None:
                 return int(valveItem["configValue"])
         return -1
-
+        
+    def shutdown(self,):
+        log("Shuting Down System")
+        os.system('sudo shutdown -P now')
+    
+    def restart(self,):
+        log("Rebooting System")
+        os.system('sudo reboot')
+        
+    def restartService(self,):
+        log("Restarting Service")
+        os.system('sudo /etc/init.d/flowmon restart')
+            
 class FanControlThread (threading.Thread):
     restart = False
     def __init__(self, threadID, dispatch):

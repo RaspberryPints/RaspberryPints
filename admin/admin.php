@@ -1,37 +1,17 @@
 <?php
 require_once __DIR__.'/header.php';
 if (isset ( $_POST ['reboot'] )) {
-	$output = '';
-	$return_var = 0;
-	echo ("rebooting system: ");
-	exec("/usr/bin/sudo /sbin/reboot 2>&1", $output, $return_var);
-	echo (", return var: ");
-	var_dump ($return_var);
-	echo (", output: ");
-	var_dump ($output);
-	header("location:index.php");
-	}
+	//echo ("rebooting system: ");	
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=shutdown');
+}
 if (isset ( $_POST ['shutdown'] )) {
-	$output = '';
-	$return_var = 0;
-	echo ("shutting down system");
-	exec("/usr/bin/sudo /sbin/shutdown now 2>&1", $output, $return_var);
-	echo (", return var: ");
-	var_dump ($return_var);
-	echo (", output: ");
-	var_dump ($output);
-	header("location:index.php");
-	}
+	//echo ("shutting down system");	
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=restart');
+}
 if (isset ( $_POST ['restartservice'] )) {
-	$output = '';
-	$return_var = 0;
-	echo ("restarting flowmon service: ");
-	exec("/usr/bin/sudo /usr/sbin/service flowmon restart 2>&1", $output, $return_var);
-	echo (", return var: ");
-	var_dump ($return_var);
-	echo (", output: ");
-	var_dump ($output);
-	}
+	//echo ("restarting flowmon service: ");	
+	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=restartservice');
+}
 ?>
 <body id="homepage">
 	<!-- Start Header  -->
@@ -58,6 +38,7 @@ include 'top_menu.php';
 		
 				<br/>
 				<br/>
+			<?php $config = getAllConfigs(); if( $config[ConfigNames::UseFlowMeter] ){ ?>
 			<form method="POST">
 				<table style="width:300;border:0;cellspacing:1;cellpadding:0;">
 					<thead>
@@ -68,15 +49,16 @@ include 'top_menu.php';
 					<tbody>
 						<tr>
 							<td><input type="submit" name="reboot" class="btn"
-								value="Reboot System" /></td>
+								value="Reboot System" onclick="return confirm('Are you sure you want to Restart the system?')"/></td>
 							<td><input type="submit" name="shutdown" class="btn"
-								value="Shut System Down" /></td>
+								value="Shut System Down" onclick="return confirm('Are you sure you want to Shutdown the system?')"/></td>
 							<td><input type="submit" name="restartservice" class="btn"
-								value="Restart Flowmeter Service" /></td>
-								</tr>
+								value="Restart Flowmeter Service" onclick="return confirm('Are you sure you want to Restart the Service?')"/></td>
+						</tr>
 					</tbody>
 				</table>
 			</form>
+			<?php }?>
 
 	<!-- Start Footer -->   
 <?php 
