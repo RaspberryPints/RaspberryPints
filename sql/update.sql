@@ -312,10 +312,10 @@ SET @preparedStatement = (
           WHERE
             (lower(table_name) = lower("taps"))
             AND (lower(table_schema) = lower(DATABASE()))
-            AND (lower(column_name) = lower("startamount"))
+            AND (lower(column_name) = lower("startAmount"))
         ) = 0,
         "SELECT 1",
-        "UPDATE kegs k INNER JOIN taps t ON k.onTapId = t.id SET k.startAmount = t.startAmount, k.currentAmount = t.currentAmount ;"
+        "UPDATE kegs k INNER JOIN taps t ON k.onTapId = t.id SET k.startAmount = t.startAmount, k.currentAmount = t.currentAmount WHERE k.startAmount IS NULl AND k.currentAmount IS NULL"
       )
   );
 PREPARE alterIfNotExists FROM @preparedStatement;
@@ -331,7 +331,7 @@ SET @preparedStatement = (
             AND (lower(column_name) = lower("fermentationPSI"))
         ) = 0,
         "SELECT 1",
-        "UPDATE kegs k INNER JOIN tapconfig t ON k.onTapId = t.tapId SET k.fermentationPSI = t.fermentationPSI ;"
+        "UPDATE kegs k INNER JOIN tapconfig t ON k.onTapId = t.tapId SET k.fermentationPSI = t.fermentationPSI WHERE k.fermentationPSI IS NULL"
       )
   );
 PREPARE alterIfNotExists FROM @preparedStatement;
@@ -743,3 +743,17 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 												
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 							( 'showLastPour', '0', 'Show the Last Pour in Upper Right Corner instead of temp', '1', NOW(), NOW() );
+							
+							
+CREATE TABLE IF NOT EXISTS `log` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`process` tinytext NOT NULL,
+	`category` tinytext NOT NULL,
+	`text` text NOT NULL,
+    `occurances` decimal(10,0) NOT NULL DEFAULT 1,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+							
