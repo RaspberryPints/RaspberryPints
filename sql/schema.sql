@@ -380,7 +380,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'showKegCol', '0', 'Show Keg Column', '1', NOW(), NOW() ),
 ( 'showAbvImg', '1', 'Show ABV Images', '1', NOW(), NOW() ),
 ( 'showCalCol', '1', 'Show Cal Information', '1', NOW(), NOW() ),
-( 'showSrmImg', '1', 'Show SRM Image', '1', NOW(), NOW() ),
+( 'showSrmImg', '1', 'Show SRM Image Instead of Calculated Color', '1', NOW(), NOW() ),
 ( 'showIbuImg', '1', 'Show IBU Image', '1', NOW(), NOW() ),
 ( 'showKegImg', '1', 'Show Keg Image', '1', NOW(), NOW() ),
 ( 'showOgValue', '1', 'Show OG Value', '1', NOW(), NOW() ),
@@ -1390,6 +1390,21 @@ CREATE TABLE IF NOT EXISTS `tempLog` (
 	`takenDate` TIMESTAMP NOT NULL,	
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE IF NOT EXISTS `log` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`process` tinytext NOT NULL,
+	`category` tinytext NOT NULL,
+	`text` text NOT NULL,
+        `occurances` decimal(10,0) NOT NULL DEFAULT 1,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+
 --
 -- Create View `vwGetActiveTaps`
 --
