@@ -16,12 +16,14 @@ abstract class Manager {
 	protected function getInsertColumns(){return $this->getColumns();}
 	
 	function Save(&$dbObject, $new=false){
+	    global $mysqli;
 		$sql = "";
 		if($dbObject->get_id() && !$new){
 			$columns = "";
 			foreach($this->getUpdateColumns() as $col){
 				if(strlen($columns) > 0) $columns.= ', ';
 				$value = $dbObject->{'get_'.$col}();
+				$value = $mysqli->escape_string($value);
 				if($value && (is_string($value) || preg_match("/[^0-9]/", $value) || $value == '')){
 					$columns.= "$col = NULLIF('$value','')";
 				}else{
@@ -46,6 +48,7 @@ abstract class Manager {
 			foreach($this->getInsertColumns() as $col){
 				if(strlen($values) > 0) $values.= ', ';
 				$value = $dbObject->{'get_'.$col}();
+				$value = $mysqli->escape_string($value);
 				if($col == $this->getActiveColumnName()){
 					$values.= "1";				
 				}else if($value && (is_string($value) || preg_match("/[^0-9]/", $value) || $value == '')){
@@ -61,7 +64,6 @@ abstract class Manager {
 		}
 		$success = $this->executeQueryNoResult($sql);
 		if($new){
-		    global $mysqli;
 		    $dbObject->set_id($mysqli->insert_id);
 		}
 		return $success;
