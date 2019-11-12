@@ -150,7 +150,7 @@
 				<div class="HeaderCenter">
 					<h1 id="HeaderTitle">
 						<?php
-							if (mb_strlen($config[ConfigNames::HeaderText], 'UTF-8') > ($config[ConfigNames::HeaderTextTruncLen])) {
+							if (strlen($config[ConfigNames::HeaderText]) > ($config[ConfigNames::HeaderTextTruncLen])) {
 								echo htmlentities(substr($config[ConfigNames::HeaderText],0,$config[ConfigNames::HeaderTextTruncLen]) . "...");
 							} else {
 								echo htmlentities($config[ConfigNames::HeaderText]);
