@@ -41,7 +41,7 @@ FLOW_METERS_STRETCH_REPO=https://github.com/wyolum/alamode/raw/master/alamode-se
 
 # RPints Archive from Tobor
 # From: https://www.homebrewtalk.com/forum/threads/version-2-release-raspberrypints-digital-taplist-solution.487694/page-116#post-8609646
-TOBOR_SOURCE="https://www.homebrewtalk.com/forum/attachments/raspberrypints-2-1-0-000-zip.629862/"
+TOBOR_SOURCE="https://www.homebrewtalk.com/forum/attachments/raspberrypints-2-1-0-000-zip.640232/"
 TOBOR_ARCHIVE="RaspberryPints-2.1.0.000.zip"
 REPO_CHOICE=1
 
@@ -80,7 +80,7 @@ init() {
     PACKAGE="RPints-Tools"
     THISSCRIPT="rpints_install.sh"
     VERSION="0.0.0.1"
-    CMDLINE="curl -L https://github.com/rtlindne/RaspberryPints/blob/master/util/installRaspberryPints | sudo bash"
+    CMDLINE="curl -L https://raw.githubusercontent.com/rtlindne/RaspberryPints/master/util/installRaspberryPints | sudo bash"
     SCRIPTNAME="${THISSCRIPT%%.*}"
 }
 
@@ -431,7 +431,7 @@ packages() {
     # Run 'apt update' if last run was > 1 week ago
     lastUpdate=$(stat -c %Y /var/lib/apt/lists)
     nowTime=$(date +%s)
-    if [ $(("$nowTime" - "$lastUpdate")) -gt 604800 ] ; then
+    if [ $(($nowTime - $lastUpdate)) -gt 604800 ] ; then
         echo -e "\nLast apt update was over a week ago. Running apt update before updating"
         echo -e "dependencies."
         apt-get update -q||die
@@ -523,10 +523,15 @@ getwwwpath() {
     if [ -n "$WWWPATH" ]; then
         echo -e "\nFound $WWWPATH in /etc/apache2/sites-enabled/000-default*."
     else
-        echo -e "\nSomething went wrong searching for /etc/apache2/sites-enabled/000-default*."
-        echo -e "Fix that and come back to try again."
-        exit 1
+        WWWPATH="/var/www/html"
     fi
+    # ask the user where they want to install to (default is WEBROOT)
+	read -e -p "Where do you want to install RaspberryPints? : " -i "${WWWPATH}" ANSWER
+	if [ "$ANSWER" = "" ]; then
+	   ANSWER="${WWWPATH}"
+	fi
+	WWWPATH="${ANSWER}"
+	echo "Installing to: ${WWWPATH}"
 }
 
 ############
@@ -990,7 +995,7 @@ installFlowmeters(){
 
 installRFID(){
 	RFID_SPI_DIRECTORY=${WWWPATH}/python/SPI-Py	
-	if [ $RECONFIG_PI -ne 0 ] && [ -d RFID_SPI_DIRECTORY ]; then return ; fi
+	if [ $RECONFIG_PI -ne 0 ] && [ -d ${RFID_SPI_DIRECTORY} ]; then return ; fi
 
 	# ask the user if they want to install RFID
 	if promptYN "Do you want to use RFID" "N";
@@ -1178,10 +1183,10 @@ configureMonitor(){
 			fi
 		fi
 		
-		sed -i -E 's/^\s*(@chromium --kiosk.*)/#\1/g' $START_CONFIG_FILE
+		sed -i -E 's/^\s*(@chromium.*)/#\1/g' $START_CONFIG_FILE
 		if promptYN "Do you want to start with Chromium in Kiosk Mode?" "Y"; 
 		then
-			echo '@chromium --kiosk localhost' >> $START_CONFIG_FILE
+			echo '@chromium-browser --kiosk localhost' >> $START_CONFIG_FILE
 		fi
 	fi
 	 
