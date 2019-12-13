@@ -28,9 +28,14 @@ declare SCRIPTNAME APTPACKAGES VERBOSE HOMEPATH REALUSER
 # Packages to be installed via apt
 APTPACKAGES="dialog apache2 mariadb-server php php-mysql 
 		 libapache2-mod-php phpmyadmin chromium-browser git 
-         ttf-mscorefonts-installer x11-xserver-utils unclutter vim"         
+         ttf-mscorefonts-installer x11-xserver-utils unclutter vim"    
+JESSIE_ATPPACKAGES="dialog apache2 php5 mysql-client mysql-server  
+         php5-mysql phpmyadmin chromium-browser git 
+         ttf-mscorefonts-installer x11-xserver-utils unclutter vim"     
      
 FLOW_MEATERS_PACKAGES="arduino python-serial python-mysqldb php-cli 
+					   xdotool dos2unix python-mod-pywebsocket i2c-tools"
+JESSIE_FLOW_MEATERS_PACKAGES="arduino python-serial python-mysqldb php5-cli 
 					   xdotool dos2unix python-mod-pywebsocket i2c-tools"
 
 # the base github repo name
@@ -443,6 +448,10 @@ packages() {
     
     # Now install any necessary packages if they are not installed
     echo -e "\nChecking and installing required dependencies via apt."
+	if echo "$VER_NAME" | grep -iq "^jessie" ; then
+		APTPACKAGES=$JESSIE_ATPPACKAGES
+		FLOW_MEATERS_PACKAGES=$JESSIE_FLOW_MEATERS_PACKAGES
+	fi
     for pkg in $APTPACKAGES; do
         pkgOk=$(dpkg-query -W --showformat='${Status}\n' "$pkg" | \
         grep "install ok installed")
