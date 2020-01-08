@@ -6,7 +6,7 @@ if(null !== $uploadFile && $uploadFile != ''){
 }
 $ok=1;
 
-$_SESSION['errorMessage'] = '';
+//$_SESSION['errorMessage'] = '';
 //This is our size condition 
 if ($_FILES['uploaded']['size'] > 100000000) 
 {
