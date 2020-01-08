@@ -406,18 +406,27 @@ include 'top_menu.php';
                         <td>
                             <?php 
                             if(isset($tap) ) { 
-
-                                
-                                $imgs = glob ( '../img/tap/tap'.$tap->get_id().'.*' );
-                                $img = "";
-                                if(count($imgs) > 0){
-                                   $img = $imgs[0];
-                                }
-                                
                             ?>
-                            <div style="width:105px">
-                                <input type="text" id="tapNumber<?php echo $tap->get_id();?>" class="smallbox" name="tapNumber[]" value="<?php echo $tap->get_tapNumber(); ?>" <?php echo ($img != ""?'style="background:url('.$img.') no-repeat bottom left; background-size:cover"':''); ?> />
-                                <a href="image_prompt.php?tapId=<?php echo $tap->get_id();?>" target="_blank"><span class="tooltip"><img src="img/icons/upload.png" /><span class="tooltiptext">Upload Tap Image</span></span></a>
+                            <div style="width:115px">
+                               <?php 
+                                    $style = "";
+                                    $hasImg = false;
+                                    if(isset($tap) && null !== $tap->get_tapRgba()) $style = "background-color: ".$htmlHelper->CreateRGB($tap->get_tapRgba());
+                                    if(isset($tap))
+        							{
+        							    $imgs = glob ( '../img/tap/tap'.$tap->get_id().'.*' );
+            							if(count($imgs) > 0)
+            							{
+            							    $style .= ($style != ""?";":"").'background:url('.$imgs[0].') no-repeat bottom left; background-size:cover; -webkit-border-radius:0px; -mox-border-radius:0px; height:100%; width:50px';
+            							    $hasImg = true;
+            							}
+        							}
+    							?> 
+    							<input type="text" id="tapNumber<?php echo $tap->get_id();?>" class="smallbox" name="tapNumber[]" value="<?php echo $tap->get_tapNumber(); ?>" <?php echo $style != ""?'style="'.$style.'"':""; ?> />
+    							<a href="image_prompt.php?tapId=<?php echo $tap->get_id();?>" target="_blank"><span class="tooltip"><img src="img/icons/upload.png" /><span class="tooltiptext">Upload Tap Image</span></span></a>
+                            	<?php if($hasImg) {?>
+                            		<a href="image_remove.php?tapId=<?php echo $tap->get_id();?>" target="_blank"><span class="tooltip"><img src="img/icons/icon_missing.png" /><span class="tooltiptext">Remove Tap Image</span></span></a>
+                            		<?php }?>
                             </div>
                             <?php } ?>
                         </td>
