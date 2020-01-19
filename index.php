@@ -136,7 +136,7 @@
 	</head> 
 
 <!--<body> -->
-<body onload="wsconnect(); ">
+<body onload="wsconnect(); <?php if($config[ConfigNames::ShowTempOnMainPage])echo "setTimeout(function(){window.location.reload(1);}, 60000);"; ?>">
 		<div class="bodywrapper" id="mainTable">
 			<!-- Header with Brewery Logo and Project Name -->
 			<div class="header clearfix">
@@ -251,6 +251,8 @@
 			}
 
 			wsconnect();
+
+			<?php if($config[ConfigNames::ShowTempOnMainPage])echo "setTimeout(function(){window.location.reload(1);}, 60000);"; ?>
 		}
 		</script>
 		<?php } ?>
