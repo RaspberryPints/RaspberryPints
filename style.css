@@ -121,7 +121,7 @@ img {
 {
 	width: 101%;
 	height: 99%;
-	overflow: auto;
+	overflow-x: hidden;
 	
 }
 /* Header Styles */
