@@ -99,11 +99,11 @@ Configuration Updated
 			<b>Current image:</b><br /><br />
 			<img src="../img/logo.png<?php echo "?" . time(); ?>" height="100" alt="Brewery Logo" style="border-style: solid; border-width: 2px; border-color: #d6264f;" />
 			<form enctype="multipart/form-data" action="includes/upload_image.php" method="POST"><br />
-				<input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/>
+				<input name="uploaded" type="file" accept="image/gif, image/jpg, image/png" onchange="$('#taplistUpload').css('visibility', 'visible')"/>
 				<?php echo '<input type="hidden" name="target" value="../../img/logo.png"/>'; ?>
 				<?php echo '<input type="hidden" name="jumpto" value="#untappd"/>'; ?>
 				<?php echo '<input type="hidden" name="jumpto" value="#tapListLogo"/>'; ?>
-				<input type="submit" class="btn" value="Upload" />
+				<input type="submit" id="taplistUpload" class="btn" value="Upload" style="visibility: hidden" />
 			</form> 
 			<hr />
 	<a id="adminLogo"></a> 
@@ -112,10 +112,10 @@ Configuration Updated
 			<b>Current image:</b><br /><br />
 			<img src="img/logo.png<?php echo "?" . time(); ?>" height="100" alt="Brewery Logo" style="border-style: solid; border-width: 2px; border-color: #d6264f;" />
 			<form enctype="multipart/form-data" action="includes/upload_image.php" method="POST"><br />
-				<input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/>
+				<input name="uploaded" type="file" accept="image/gif, image/jpg, image/png" onchange="$('#adminUpload').css('visibility', 'visible')"/>
 				<?php echo '<input type="hidden" name="target" value="../img/logo.png"/>'; ?>
 				<?php echo '<input type="hidden" name="jumpto" value="#adminLogo"/>'; ?>
-				<input type="submit" class="btn" value="Upload" />
+				<input type="submit" id="adminUpload" class="btn" value="Upload" style="visibility: hidden" />
 			</form> 
 
 		<hr />
@@ -125,10 +125,10 @@ Configuration Updated
 			<b>Current image:</b><br /><br />
 				<img src="../img/background.jpg<?php echo "?" . time(); ?>" width="200" alt="Background" style="border-style: solid; border-width: 2px; border-color: #d6264f;" />
 			<form enctype="multipart/form-data" action="includes/upload_image.php" method="POST">
-				<input name="uploaded" type="file" accept="image/gif, image/jpg, image/png"/>
+				<input name="uploaded" type="file" accept="image/gif, image/jpg, image/png" onchange="$('backgroupUpload').css('visibility', 'visible')"/>
 				<?php echo '<input type="hidden" name="target" value="../../img/background.jpg"/>'; ?>
 				<?php echo '<input type="hidden" name="jumpto" value="#tapListBackground"/>'; ?>
-				<input type="submit" class="btn" value="Upload" /><br /><br />
+				<input type="submit" id="backgroupUpload" class="btn" value="Upload" style="visibility: hidden" /><br /><br />
 			</form>
 			<form action="restore_background.php" method="POST">
 				<input type="submit" class="btn" value="Restore Default Background" />
