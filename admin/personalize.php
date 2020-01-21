@@ -125,7 +125,7 @@ Configuration Updated
 			<b>Current image:</b><br /><br />
 				<img src="../img/background.jpg<?php echo "?" . time(); ?>" width="200" alt="Background" style="border-style: solid; border-width: 2px; border-color: #d6264f;" />
 			<form enctype="multipart/form-data" action="includes/upload_image.php" method="POST">
-				<input name="uploaded" type="file" accept="image/gif, image/jpg, image/png" onchange="$('backgroupUpload').css('visibility', 'visible')"/>
+				<input name="uploaded" type="file" accept="image/gif, image/jpg, image/png" onchange="$('#backgroupUpload').css('visibility', 'visible')"/>
 				<?php echo '<input type="hidden" name="target" value="../../img/background.jpg"/>'; ?>
 				<?php echo '<input type="hidden" name="jumpto" value="#tapListBackground"/>'; ?>
 				<input type="submit" id="backgroupUpload" class="btn" value="Upload" style="visibility: hidden" /><br /><br />
