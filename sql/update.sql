@@ -756,4 +756,6 @@ CREATE TABLE IF NOT EXISTS `log` (
 	
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
-							
+
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+( 'saveNonUserRfids', '1', 'If unknown RFID tags should be saved into the database', '1', NOW(), NOW() );

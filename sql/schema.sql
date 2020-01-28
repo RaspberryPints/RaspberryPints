@@ -422,7 +422,8 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'defaultFermPSIUnit', 'psi', 'Default pressure of fermentation Unit', '0', NOW(), NOW() ),
 ( 'defaultKeggingTemp', '56', 'Default Temperature of beer when kegging', '0', NOW(), NOW() ),
 ( 'defaultKeggingTempUnit', 'F', 'Default Temperature Unit of beer when kegging', '0', NOW(), NOW() ),
-( 'allowSamplePour', '1', 'Allow Sample Pour from List', '1', NOW(), NOW() );
+( 'allowSamplePour', '1', 'Allow Sample Pour from List', '1', NOW(), NOW() ),
+( 'saveNonUserRfids', '1', 'If unknown RFID tags should be saved into the database', '1', NOW(), NOW() );
 
 INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
 ('autoKickKegs', '1', 'Kick Kegs from Tap when kill is detected', 1, NOW(), NOW() ),
