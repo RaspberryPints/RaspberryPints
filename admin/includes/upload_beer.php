@@ -52,17 +52,16 @@ else
 	while ($xml && ($recipe = $xml->RECIPE[$ii++]))
 	{
 		$styleId = '';
-		$catNum = $recipe->STYLE->CATEGORY . $recipe->STYLE->LETTER;
+		$catNum = $recipe->STYLE->CATEGORY . ($recipe->STYLE->LETTER?$recipe->STYLE->LETTER:$recipe->STYLE->STYLE_LETTER);
 		$styleName = $recipe->STYLE->NAME;
 
 		$beerStyleManager = new BeerStyleManager();
 		$beerStyle = $beerStyleManager->GetByNameOrCatNum($styleName, $catNum);
-		if(!$beerStyle){
+		if(!$beerStyle && $styleName != '' && $catNum != ''){
 		    $beerStyle = new BeerStyle();
 		    $beerStyle->set_category($recipe->STYLE->CATEGORY);
-		    $beerStyle->set_catNum($_catNum)($catNum);
+		    $beerStyle->set_catNum($catNum);
 		    $beerStyle->set_name($styleName);
-		    $beerStyle->set_($styleName);
 		    $beerStyle->set_ogMin($recipe->STYLE->OG_MIN);
 		    $beerStyle->set_ogMax($recipe->STYLE->OG_MAX);
 		    $beerStyle->set_fgMin($recipe->STYLE->FG_MIN);
@@ -132,7 +131,8 @@ else
               $beerFerm = new BeerFermentable();
               $beerFerm->set_beerID($beerId);
               $beerFerm->set_fermentable($dbFerm);
-              $beerFerm->set_amount($fermentable->DISPLAY_AMOUNT);
+              if($fermentable->AMOUNT)$beerFerm->set_amount($fermentable->AMOUNT);
+              if($fermentable->DISPLAY_AMOUNT)$beerFerm->set_amount($fermentable->DISPLAY_AMOUNT);
               $beerFermManager->Save($beerFerm);			  
             }
 	
@@ -153,8 +153,10 @@ else
               $beerHop = new BeerHop();
               $beerHop->set_beerID($beerId);
               $beerHop->set_hop($dbHop);
-              $beerHop->set_amount($hop->DISPLAY_AMOUNT);
-              $beerHop->set_time($hop->DISPLAY_TIME);
+              if($hop->AMOUNT)$beerHop->set_amount($hop->AMOUNT);
+              if($hop->TIME)$beerHop->set_time($hop->TIME);
+              if($hop->DISPLAY_AMOUNT)$beerHop->set_amount($hop->DISPLAY_AMOUNT);
+              if($hop->DISPLAY_TIME)$beerHop->set_time($hop->DISPLAY_TIME);
               $beerHopManager->Save($beerHop);
             }
             
