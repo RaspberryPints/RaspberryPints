@@ -116,7 +116,7 @@ include 'top_menu.php';
     				</tr>
                 	<tr>
     						<td><b>Temperature Probes:</b></td>
-    						<td><b>Check Delay:</b><br/>The seconds between the checking temperature probes</td>
+    						<td><b>Highest Temerature:</b><br/>The highest temperature possibles</td>
     						<td><input type="text" name="tempProbeBoundHigh" class="smallbox" value="<?php echo ($config[ConfigNames::TempProbeBoundHigh]) ?>"></td>
     				</tr>
 				    <tr>
