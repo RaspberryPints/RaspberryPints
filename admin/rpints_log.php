@@ -23,7 +23,7 @@
 	$interval 	= (isset($_POST['timeinterval'])?$_POST['timeinterval']:0);
 	if($interval != 0 ){
 	    $endDate = date('Y-m-d', strtotime('0 hour'));
-	    $endTime = date('H:i:s', strtotime('0 hour'));
+	    $endTime = date('H:i:s', strtotime('1 hour'));
 	    $startDate = date('Y-m-d', strtotime('-'.$interval.' hour'));
 	    $startTime = date('H:i:s', strtotime('-'.$interval.' hour'));
 	}
@@ -292,13 +292,13 @@ if(isset( $_SESSION['myusername'] ))include 'left_bar.php';
     	function addNewLogMessages(){
         	if( !$('#autoRefresh').is(':checked') ) return;
     		var data = {};
-    		data['startDate']     = "<?php echo $_POST['startDate']; ?>";
-    		data['endDate']       = "<?php echo $_POST['endDate']; ?>";
-    		data['startTime']     = "<?php echo $_POST['startTime']; ?>";
-    		data['endTime']       = "<?php echo $_POST['endTime']; ?>";
-    		data['timeinterval']  = "<?php echo $_POST['timeinterval']; ?>";
-    		data['process']       = "<?php echo $_POST['process']; ?>";
-    		data['category']      = "<?php echo $_POST['category']; ?>";
+    		data['startDate']     = "<?php echo $startDate; ?>";
+    		data['endDate']       = "<?php echo $endDate; ?>";
+    		data['startTime']     = "<?php echo $startTime; ?>";
+    		data['endTime']       = "<?php echo $endTime; ?>";
+    		data['timeinterval']  = "<?php echo $interval; ?>";
+    		data['process']       = "<?php echo $process; ?>";
+    		data['category']      = "<?php echo $category; ?>";
     		data['lastId']        = lastId;
     		data['dataOnly']      = "TRUE"
     		$.ajax(

@@ -22,7 +22,7 @@
 	$interval 	= (isset($_POST['timeinterval'])?$_POST['timeinterval']:0);
 	if($interval != 0 ){
 	    $endDate = date('Y-m-d', strtotime('0 hour'));
-	    $endTime = date('H:i:s', strtotime('0 hour'));
+	    $endTime = date('H:i:s', strtotime('1 hour'));
 	    $startDate = date('Y-m-d', strtotime('-'.$interval.' hour'));
 	    $startTime = date('H:i:s', strtotime('-'.$interval.' hour'));
 	}
