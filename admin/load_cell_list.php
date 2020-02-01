@@ -2,6 +2,7 @@
 require_once __DIR__.'/header.php';
 $htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
+$kegManager = new KegManager();
 
 $config = getAllConfigs();
 
@@ -74,10 +75,10 @@ include 'top_menu.php';
             <strong>No Active Load Cells Found</strong>
             <br>
             <?php } ?>
-            <h1><strong>
+<!--             <h1><strong>
             This is a place holder for anyone who wants to use load cells. (assuming 2 pin communication)<br/>
             python/FlowMonitor.py:LoadCellCheckThread:getWeight needs to be updated<br/></strong></h1>
-            Originally designed for hx711 load cells.<br/>            
+            Originally designed for hx711 load cells.<br/>   -->          
 
 			<form method="POST" id="loadCells-form">
                 <table style="width:500px" id="tableList">
@@ -88,6 +89,7 @@ include 'top_menu.php';
                             <th style="vertical-align: middle;">Response Pin</th>
                             <th style="width:200px;vertical-align: middle;">Unit</th>
                             <th style="width:50px; vertical-align: middle;">Tare Date</th>
+                            <th style="width:50px; vertical-align: middle;">Current Weight</th>
                             <th>
                         </tr>
                     </thead>
@@ -125,6 +127,19 @@ include 'top_menu.php';
                         			</td>
                                     <td style="vertical-align: middle;">
                                         <span><?php echo $tap->get_loadCellTareDate() ?></span>
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                    	<span>
+                                    	<?php
+                                        	$keg = null;
+                                        	if( $tap->get_kegId() > 0 ) $keg = $kegManager->GetByID($tap->get_kegId());
+                                    	    if( $keg ){
+                                    	        echo $keg->get_weight();
+                                    	    }else{
+                                    	        echo "No Keg";
+                                    	    }
+                                    	?>
+                                    	</span>
                                     </td>
                                     <td style="vertical-align: middle;">
                                         <?php if( $tap->get_loadCellCmdPin() != '' ) { ?>

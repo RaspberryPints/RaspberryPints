@@ -18,6 +18,7 @@ import os
 import os.path
 import traceback
 import glob
+from hx711 import HX711
 
 GPIO_IMPORT_SUCCESSFUL = True
 try:
@@ -570,6 +571,7 @@ class LoadCellCheckThread (threading.Thread):
         self.unit = unit
         self.checkTare = False
         self.shutdown_required = False
+        self.hx711 = HX711(name=threadID, dout_pin=responsePin, pd_sck_pin=commandPin) 
         
     def exit(self):
         self.shutdown_required = True
@@ -578,13 +580,11 @@ class LoadCellCheckThread (threading.Thread):
         self.checkTare = checkTare
         
     def tare(self):
-        ##TODO determine how to tare the load cell
+        self.hx711.zero()
         return
     
     def getWeight(self):
-        #TODO use the commandpin and responsepin to get the weight
-        #Dependant on the type of load cell that you have
-        return -1
+        return self.hx711.get_weight_mean(20)
     
     def run(self):
         log("Load Cell Checker " + self.threadID + " is Running")
@@ -604,8 +604,9 @@ class LoadCellCheckThread (threading.Thread):
                     subprocess.call(["php", self.updateDir + '/admin/updateKeg.php', str(self.tapId), str(weight), self.unit])
                     lastWeight = weight
                 time.sleep(self.delay)
-        except:
+        except Exception as ex:
             log("Unable to run Load Cell Checker")
+            debug(str(ex))
             return
         
 #See https://www.homebrewtalk.com/forum/threads/web-accessible-temperature-logger-for-raspberry-pi.469523/ for source information
