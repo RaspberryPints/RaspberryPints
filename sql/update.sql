@@ -759,3 +759,29 @@ CREATE TABLE IF NOT EXISTS `log` (
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ( 'saveNonUserRfids', '1', 'If unknown RFID tags should be saved into the database', '1', NOW(), NOW() );
+
+INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
+('TapNumColNum', '1', 'Column number for Tap Number', 1, NOW(), NOW() ),
+('SrmColNum', '2', 'Column number for SRM', 1, NOW(), NOW() ),
+('IbuColNum', '3', 'Column number for IBU', 1, NOW(), NOW() ),
+('BeerInfoColNum', '4', 'Column number for Beer Info', 1, NOW(), NOW() ),
+('AbvColNum', '5', 'Column number for ABV', 1, NOW(), NOW() ),
+('KegColNum', '6', 'Column number for Keg', 1, NOW(), NOW() );
+
+UPDATE config  SET displayName='Show Tap List Direction', validation='Vertical|Horizontal' WHERE configName = 'showVerticleTapList';
+
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+( 'showAbvTxtWImg', '1', 'Show ABV Text If Image is shown', '1', NOW(), NOW() );
+
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+( 'showBeerTableHead', '1', 'Show the Title Bar on Beer List', '1', NOW(), NOW() );
+
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+( 'showPourListOnHome', '1', 'Show list of pours on home screen', '1', NOW(), NOW() );
+
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, validation, createdDate, modifiedDate ) VALUES
+( 'relayTrigger', '0', 'Show list of pours on home screen', '0', 'High|Low', NOW(), NOW() ),
+( 'hozTapListCol', '0', 'Number Of horizontal tap List Beer Column', '1', '2|1', NOW(), NOW() );
+
+
+UPDATE `config` SET `configValue` = '3.0.9.0' WHERE `configName` = 'version';

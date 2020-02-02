@@ -379,6 +379,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'showAbvCol', '1', 'Show ABV Column', '1', NOW(), NOW() ),
 ( 'showKegCol', '0', 'Show Keg Column', '1', NOW(), NOW() ),
 ( 'showAbvImg', '1', 'Show ABV Images', '1', NOW(), NOW() ),
+( 'showAbvTxtWImg', '1', 'Show ABV Text If Image is shown', '1', NOW(), NOW() ),
 ( 'showCalCol', '1', 'Show Cal Information', '1', NOW(), NOW() ),
 ( 'showSrmImg', '1', 'Show SRM Image Instead of Calculated Color', '1', NOW(), NOW() ),
 ( 'showIbuImg', '1', 'Show IBU Image', '1', NOW(), NOW() ),
@@ -397,14 +398,14 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'showRPLogo', '0', 'Show the RaspberryPints Logo', '1', NOW(), NOW() ),
 ( 'showLastPour', '0', 'Show the Last Pour in Upper Right Corner if no temp', '1', NOW(), NOW() ),
 ( 'showCalories', '0', 'Show the calories', '1', NOW(), NOW() ),
-( 'showGravity', '0', 'Show the Gravity numbers', '1', NOW(), NOW() ),
+( 'showGravity', '1', 'Show the Gravity numbers', '1', NOW(), NOW() ),
 ( 'showBalance', '0', 'Show the Balance', '1', NOW(), NOW() ),
-( 'showVerticleTapList', '0', 'Show the Tap List Vertically (ON = YES)', '1', NOW(), NOW() ),
+( 'showBeerTableHead', '1', 'Show the Title Bar on Beer List', '1', NOW(), NOW() ),
 ( 'logoUrl', 'img/logo.png', 'Logo Url', '0', NOW(), NOW() ),
 ( 'adminLogoUrl', 'admin/img/logo.png', 'Admin Logo Url', '0', NOW(), NOW() ),
 ( 'headerText', 'Currently On Tap', 'Header Text', '0', NOW(), NOW() ),
 ( 'numberOfTaps', '0', 'Number of Taps', '0', NOW(), NOW() ),
-( 'version', '3.0.5.0', 'Version', '0', NOW(), NOW() ),
+( 'version', '3.0.9.0', 'Version', '0', NOW(), NOW() ),
 ( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() ),
 ( 'useFlowMeter','0','Use Flow Monitoring', '1', NOW(),NOW() ),
 ( 'ClientID', '','Client ID', '0', NOW(), NOW() ),
@@ -423,7 +424,8 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'defaultKeggingTemp', '56', 'Default Temperature of beer when kegging', '0', NOW(), NOW() ),
 ( 'defaultKeggingTempUnit', 'F', 'Default Temperature Unit of beer when kegging', '0', NOW(), NOW() ),
 ( 'allowSamplePour', '1', 'Allow Sample Pour from List', '1', NOW(), NOW() ),
-( 'saveNonUserRfids', '1', 'If unknown RFID tags should be saved into the database', '1', NOW(), NOW() );
+( 'saveNonUserRfids', '1', 'If unknown RFID tags should be saved into the database', '1', NOW(), NOW() ),
+( 'showPourListOnHome', '1', 'Show list of pours on home screen', '1', NOW(), NOW() );
 
 INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
 ('autoKickKegs', '1', 'Kick Kegs from Tap when kill is detected', 1, NOW(), NOW() ),
@@ -447,6 +449,11 @@ INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`,
 ('alamodeKickTriggerCount', '30', 'Alamode Kick Trigger Count', 0, NOW(), NOW() ),
 ('alamodeUpdateTriggerCount', '250', 'Alamode Update Trigger Count', 0, NOW(), NOW() );
 
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, validation, createdDate, modifiedDate ) VALUES
+( 'relayTrigger', '0', 'Show list of pours on home screen', '0', 'High|Low', NOW(), NOW() ),
+( 'hozTapListCol', '0', 'Number Of horizontal tap List Beer Column', '1', '2|1', NOW(), NOW() );
+
+
 INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
 ( 'numberOfDisplayPours', '10', 'Pours to display at one time (0 dont show pours)', 0, NOW(), NOW() ),
 ( 'showPourTapNumCol', '1', 'Pours Show Tap Column', '1', NOW(), NOW() ),
@@ -464,6 +471,17 @@ INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`,
 ( 'displayUnitGravity', 'sg', 'Gravity Units', '0', 'sg|bx|p', NOW(), NOW() ),
 ( 'displayUnitTemperature', 'F', 'Temperature Units', '0', 'F|C', NOW(), NOW() ),
 ( 'displayUnitWeight', 'lb', 'Weight Units', '0', 'lb|kg', NOW(), NOW() );
+
+INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `validation`, `createdDate`, `modifiedDate`) VALUES
+( 'showVerticleTapList', '0', 'Show Tap List Direction', '1', 'Vertical|Horizontal', NOW(), NOW() );
+
+INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
+('TapNumColNum', '1', 'Column number for Tap Number', 1, NOW(), NOW() ),
+('SrmColNum', '2', 'Column number for SRM', 1, NOW(), NOW() ),
+('IbuColNum', '3', 'Column number for IBU', 1, NOW(), NOW() ),
+('BeerInfoColNum', '4', 'Column number for Beer Info', 1, NOW(), NOW() ),
+('AbvColNum', '5', 'Column number for ABV', 1, NOW(), NOW() ),
+('KegColNum', '6', 'Column number for Keg', 1, NOW(), NOW() );
 -- --------------------------------------------------------
 
 --

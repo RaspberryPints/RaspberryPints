@@ -34,23 +34,22 @@ except:
     
 from Config import config
 
-alamodeRelayTrigger = 0
-
-def debug(msg):
-    if(config['flowmon.debug']):
-        log(msg)
+def debug(msg, process="FlowMonitor"):
+    if(config['dispatch.debug']):
+        log(msg, process, True)
                  
-def log(msg):
+def log(msg, process="FlowMonitor", isDebug=False):
     if ("RFIDCheck" not in msg and "Status" not in msg) or log.lastMsg != msg:
-        print datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S') + " RPINTS: " + msg.rstrip()
-        sys.stdout.flush()
+        log.logger.log(msg, process, isDebug)
         log.lastMsg = msg
+    else:
+        log.logger.logDB(msg, process, isDebug)
 log.lastMsg = "" 
 
 class FlowMonitor(object):
     
-    def __init__(self, dispatcher):
-            
+    def __init__(self, dispatcher, logger):
+        log.logger = logger    
         if not RFID_IMPORT_SUCCESSFUL:
             log("Could not import RFID Reader, RFID disabled. Assuming SPI not installed/configured")
             
@@ -73,7 +72,7 @@ class FlowMonitor(object):
         line = bytearray()
         while True:
             c = self.arduino.read(1)
-            #debug(c)
+            #debug(repr(c))
             if c:
                 line += c
                 if line[-leneol:] == eol:
@@ -82,34 +81,39 @@ class FlowMonitor(object):
     
     def setup(self):
         hexfile = config['pints.dir'] + "/arduino/raspberrypints/raspberrypints.cpp.hex"
-        cmdline = "/usr/share/arduino/hardware/tools/avrdude -C/usr/share/arduino/hardware/tools/avrdude.conf -patmega328p -calamode -P"+self.port+" -b115200 -D -Uflash:w:"
-        cmdline = cmdline + hexfile
-        cmdline = cmdline + ":i"
-        
-        output = ""
-        if os.path.isfile(hexfile) and os.access(hexfile, os.R_OK):
-            debug("resetting alamode to try to force it to listen to us...")
-            self.dispatch.resetAlaMode()
-            debug("giving it a short break to wake up again...")
-            time.sleep(2)
-
-            try: 
-                debug("reflashing alamode via:\n" + cmdline)
-                output = subprocess.check_output(cmdline, shell=True, stderr=subprocess.STDOUT,)
-                debug( output )
-            except Exception as ex:
-                print 'RPINTS: reflashing alamode failed, moving on anyways, error was: ', ex
-                debug (output)
+        inofile = config['pints.dir'] + "/arduino/raspberrypints/raspberrypints.ino"
+        if os.path.isfile(inofile) and os.access(inofile, os.R_OK) and os.path.getmtime(inofile) > os.path.getmtime(hexfile) :
+            log("Ino new than Hex. manual upload assumed")
         else:
-            self.resetAlamode = False
-            debug("no hexfile to flash alamode (or not readable), moving on")
+            cmdline = "/usr/share/arduino/hardware/tools/avrdude -C/usr/share/arduino/hardware/tools/avrdude.conf -patmega328p -calamode -P"+self.port+" -b115200 -D -Uflash:w:"
+            
+            cmdline = cmdline + hexfile
+            cmdline = cmdline + ":i"
+            output = ""
+            if os.path.isfile(hexfile) and os.access(hexfile, os.R_OK):
+                debug("resetting alamode to try to force it to listen to us...")
+                self.dispatch.resetAlaMode()
+                debug("giving it a short break to wake up again...")
+                time.sleep(2)
+    
+                try: 
+                    debug("reflashing Arduino via:\n" + cmdline)
+                    output = subprocess.check_output(cmdline, shell=True, stderr=subprocess.STDOUT,)
+                    debug( output )
+                except Exception as ex:
+                    print 'RPINTS: reflashing Arduino failed, moving on anyways, error was: ', ex
+                    debug (output)
+            else:
+                self.resetAlamode = False
+                debug("no hexfile to flash Arduino (or not readable), moving on")
 
     def assembleConfigMessage(self):
-        debug(  "getting config data for alamode" )
+        alamodeRelayTrigger = 0
+        debug(  "getting config data for Arduino" )
 
-        config = self.dispatch.getConfig()
+        rpConfig = self.dispatch.getConfig()
         taps = self.dispatch.getTapConfig()
-        for item in config:
+        for item in rpConfig:
             if (item["configName"] == 'useTapValves'):
                     alamodeUseTapValves = item["configValue"]
             if (item["configName"] == 'relayTrigger'):
@@ -131,29 +135,33 @@ class FlowMonitor(object):
         for tap in taps:
             pins.append(tap["flowPin"])
             valvePins.append(tap["valvePin"])
-        
+        lastLen = 0
         #'C:<numSensors>:<sensor pin>:<...>:<pourMsgDelay>:<pourTriggerValue>:<kickTriggerValue>:<updateTriggerValue>':<useRFID>|
         cfgmsg = "C:" 
         cfgmsg = cfgmsg + str(numberOfTaps) + ":"
         for pin in pins:
             cfgmsg = cfgmsg + str(pin) + ":"
-        if len(cfgmsg) > 50:
+        if len(cfgmsg) - lastLen > 50:
             cfgmsg = cfgmsg + "~"
+            lastLen = len(cfgmsg)
         cfgmsg = cfgmsg + str(alamodeUseTapValves) + ":"            
         if int(alamodeUseTapValves) > 0:
             cfgmsg = cfgmsg + str(alamodeRelayTrigger) + ":"
             for pin in valvePins:
                cfgmsg = cfgmsg + str(pin) + ":"
-        if len(cfgmsg) > 50:
-            cfgmsg = cfgmsg + "~"
+               if len(cfgmsg) - lastLen > 50:
+                    cfgmsg = cfgmsg + "~"
+                    lastLen = len(cfgmsg)
         cfgmsg = cfgmsg + alamodePourMessageDelay + ":"
         cfgmsg = cfgmsg + alamodePourTriggerCount + ":"
-        if len(cfgmsg) > 50:
+        if len(cfgmsg) - lastLen > 50:
             cfgmsg = cfgmsg + "~"
+            lastLen = len(cfgmsg)
         cfgmsg = cfgmsg + alamodeKickTriggerCount + ":"
         cfgmsg = cfgmsg + alamodeUpdateTriggerCount + ":"
         cfgmsg = cfgmsg + alamodePourShutOffCount + ":"
-        cfgmsg = cfgmsg + ("1" if self.alamodeUseRFID else "0")
+        cfgmsg = cfgmsg + ("1" if self.alamodeUseRFID else "0") + ":"
+        cfgmsg = cfgmsg + ("1" if config["dispatch.debug"] else "0")
         cfgmsg = cfgmsg + "|"
         return cfgmsg
                   
@@ -173,7 +181,7 @@ class FlowMonitor(object):
                             
     def reconfigAlaMode(self):
 
-        debug( "waiting for alamode to come alive" )
+        debug( "waiting for Arduino to come alive" )
         
         # wait for arduiono to come alive, it sens out a stream of 'a' once it's ready
         msg = self.readline_notimeout()
@@ -186,36 +194,38 @@ class FlowMonitor(object):
             msg = self.readline_notimeout()
         self.serialResetInputBuffer()
         
-        debug( "alamode alive..." )
+        debug( "Arduino alive..." )
         self.alaIsAlive = True
         cfgmsg = self.assembleConfigMessage()
 
-        debug( "alamode config, about to send: " + cfgmsg )
+        debug( "Arduino config, about to send: " + cfgmsg )
         ii = 0
         while(ii < len(cfgmsg)):
             self.arduino.write(cfgmsg[ii:ii+1]) # send config message, this will make it send pulses
             if cfgmsg[ii:ii+1] == "~":
-                while self.serialInWaiting() == 0:
-                    time.sleep(.005)
-                reply = self.arduino.readline()
+                reply = ""
+                while reply.strip() != "continue":
+                    while self.serialInWaiting() == 0:
+                        time.sleep(.005)
+                    reply = self.arduino.readline()
             ii += 1
         debug("Waiting for Config Response")
         while self.serialInWaiting() == 0:
             time.sleep(.005)
         reply = self.arduino.readline()
-        debug( "alamode says: " + reply )
+        debug( "Arduino says: " + reply )
         
     # 'C:<numSensors>:<sensor pin>:<...>:<pourTriggerValue>:<kickTriggerValue>:<updateTriggerValue>'    
     def monitor(self):
         running = True
         
         if self.alaIsAlive is False:
-            debug( "resetting alamode" )
+            debug( "resetting Arduino" )
             self.dispatch.resetAlaMode()
             self.arduino = serial.Serial(self.port,9600,timeout=.5)
         else:
             self.alaIsAlive = False
-            debug( "NOT resetting alamode" )
+            debug( "NOT resetting Arduino" )
 
         if GPIO_IMPORT_SUCCESSFUL:
             self.motionDetectors = []
@@ -229,7 +239,7 @@ class FlowMonitor(object):
             self.loadCellThreads = []
             configMD = self.dispatch.getLoadCellConfig()
             for item in configMD:
-                loadCell = LoadCellCheckThread( "LC-" + str(item["tapId"]), updateDir=config['pints.dir'], dispatch=self.dispatch, tapId=item["tapId"], commandPin=item["loadCellCmdPin"], responsePin=item["loadCellRspPin"], unit=item["loadCellUnit"] )
+                loadCell = LoadCellCheckThread( "LC-" + str(item["tapId"]), updateDir=config['pints.dir'], dispatch=self.dispatch, tapId=item["tapId"], commandPin=item["loadCellCmdPin"], responsePin=item["loadCellRspPin"], unit=item["loadCellUnit"], logger=log.logger )
                 loadCell.start()
                 self.loadCellThreads.append(loadCell)
             
@@ -240,10 +250,11 @@ class FlowMonitor(object):
                 if (item["type"] == 0):
                         self.readers.append( RFIDCheckThread( "RFID-" + str(item["name"]), self.rfiddir, rfidSPISSPin=int(item["pin"]) ) )
                 self.alamodeUseRFID = True
-        self.reconfigAlaMode()
         
         self.reconfigTempProbes()
-        debug( "listening to alamode" )
+        
+        self.reconfigAlaMode()
+        debug( "listening to Arduino" )
         
         try:
             while running:   
@@ -256,19 +267,19 @@ class FlowMonitor(object):
                 if reading[0] == "alive" :
                     debug(msg)
                     if self.alaIsAlive == True :
-                        debug( "alamode was restarted, restart flowmonitor" )
+                        debug( "Arduino was restarted, restart flowmonitor" )
                     else :
-                        debug( "alamode was started" )
+                        debug( "Arduino was started" )
                     #incase the arduino restarts its self we want to do not alive so that we reset it next time
                     self.alaIsAlive = not self.alaIsAlive 
                     return # arduino was restarted, get out and let the caller restart us
                 if reading[0] == "dead" :
-                    # check if we need to reconfigure alamode
-                    debug( "alamode reconfig in progress..." )
+                    # check if we need to reconfigure Arduino
+                    debug( "Arduino reconfig in progress..." )
                     self.alaIsAlive = False
                     return # get out and let the caller restart us                
                 if ( len(reading) < 2 ):
-                    debug( "alamode - Unknown message (length too short): "+ msg )
+                    debug( "Arduino - Unknown message (length too short): "+ msg )
                     continue
                 #debug(str(reading))
                 if ( reading[0] == "P" ):
@@ -346,6 +357,12 @@ class FlowMonitor(object):
                     msg = "Status;%s;%d;%s;%s;|" % (RFIDState, userId, self.dispatch.needAlaModeReconfig(), valves)
                     debug( "Sending "+ msg )
                     self.arduino.write(msg)
+                #log message
+                elif ( reading[0] == "Log" ):
+                   log(reading[1], "Arduino")
+                #debug message
+                elif ( reading[0] == "Debug" ):
+                   debug(reading[1], "Arduino")
                 else:
                     debug( "unknown message: "+ msg )
         except:
@@ -353,7 +370,7 @@ class FlowMonitor(object):
             traceback.print_exc(file=sys.stdout)
         finally:            
             if self.alaIsAlive is False :
-                debug( "closing serial connection to alamode..." )
+                debug( "closing serial connection to Arduino..." )
                 self.arduino.close()
             for item in self.readers:
                 if item.isAlive():
@@ -369,7 +386,7 @@ class FlowMonitor(object):
 
     def fakemonitor(self):
         running = True
-        debug( "listening to alamode" )
+        debug( "listening to Arduino" )
         updatecount = 0;
         pin = 10;
         
@@ -383,7 +400,7 @@ class FlowMonitor(object):
                     continue
                 reading = msg.split(";")
                 if ( len(reading) < 2 ):
-                    debug( "alamode - Unknown message (length too short): "+ msg )
+                    debug( "Arduino - Unknown message (length too short): "+ msg )
                     continue
                 if ( reading[0] == "P" ):
                     MCP_RFID = str(reading[1])
@@ -405,7 +422,7 @@ class FlowMonitor(object):
                 else:
                     debug( "Unknown message: "+ msg )
         finally:
-            debug( "Closing serial connection to alamode..." )
+            debug( "Closing serial connection to Arduino..." )
             debug( "Exiting" )
 
     def tareRequest(self):
@@ -521,7 +538,10 @@ class WritePinsThread (threading.Thread):
         part += 1
         COUNT = int(self.splitMsg[part])
         part += 1
-        while ( part-2 <= COUNT ):
+        while ( part-2 <= COUNT and COUNT > 0 ):
+            if not self.splitMsg[part]:
+                debug("Got empty pin for part "+str(part))
+                continue
             self.dispatch.updatepin(int(self.splitMsg[part]), MODE)
             part += 1
             if self.delay > 0:
@@ -558,7 +578,7 @@ class MotionDetectionPIRThread (threading.Thread):
         
         
 class LoadCellCheckThread (threading.Thread):
-    def __init__(self, threadID, dispatch, updateDir, tapId = 1, commandPin = 7, responsePin = 8, delay=1, updateVariance=.01, unit="lb"):
+    def __init__(self, threadID, dispatch, updateDir, tapId = 1, commandPin = 7, responsePin = 8, delay=1, updateVariance=.01, unit="lb", logger=None):
         threading.Thread.__init__(self)
         self.threadID = threadID
         self.dispatch = dispatch
@@ -571,7 +591,7 @@ class LoadCellCheckThread (threading.Thread):
         self.unit = unit
         self.checkTare = False
         self.shutdown_required = False
-        self.hx711 = HX711(name=threadID, dout_pin=responsePin, pd_sck_pin=commandPin) 
+        self.hx711 = HX711(name=threadID, dout_pin=responsePin, pd_sck_pin=commandPin, logger=logger) 
         
     def exit(self):
         self.shutdown_required = True

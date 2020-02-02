@@ -99,13 +99,15 @@
     	//$bottleManager->UpdateCounts();
 		$numberOfBottles = $bottleManager->getCount();
 		
-		
-		$poursManager = new PourManager();
-		$page = 1;
-		$limit = $config[ConfigNames::NumberOfDisplayPours];
-		$totalRows = 0;
-		$poursList = $poursManager->getLastPours($page, $limit, $totalRows);
-		$numberOfPours = count($poursList);
+		$numberOfPours = 0;
+		if($config[ConfigNames::ShowPourListOnHome]){
+    		$poursManager = new PourManager();
+    		$page = 1;
+    		$limit = $config[ConfigNames::NumberOfDisplayPours];
+    		$totalRows = 0;
+    		$poursList = $poursManager->getLastPours($page, $limit, $totalRows);
+    		$numberOfPours = count($poursList);
+		}
 	}
 		
 ?>
@@ -163,7 +165,7 @@
       		        if(!$config[ConfigNames::ShowLastPour]){ 
       		    ?>
               		<?php 
-              		    
+              		    $tempDisplay = "";
               		    if($config[ConfigNames::ShowTempOnMainPage]) {
               		       $tempProbeManager = new TempProbeManager();
               		       $tempInfos = $tempProbeManager->get_lastTemp();
@@ -224,7 +226,7 @@
 				if($numberOfTaps > 0)printBeerList($taps, $numberOfTaps, ConfigNames::CONTAINER_TYPE_KEG);
 			    if($numberOfTaps > 0 && $numberOfBottles > 0) echo "<h1 style=\"text-align: center;\">Bottles</h1>";
 				if($numberOfBottles > 0) printBeerList($bottles, $numberOfBottles, ConfigNames::CONTAINER_TYPE_BOTTLE);
-			    if($numberOfPours > 0 ) echo "<h1 style=\"text-align: center;\">Pours</h1>";
+			    if($numberOfPours > 0) echo "<h1 style=\"text-align: center;\">Pours</h1>";
 				if($numberOfPours > 0) printPoursList($poursList);
 			?>
 		</div>

@@ -106,10 +106,12 @@ class MFRC522:
   Reserved34      = 0x3F
     
   serNum = []
-  
+  readerStatus = MI_ERR
   def __init__(self, dev='/dev/spidev0.0', spd=1000000, pin=-1):
     if pin != -1:
-        spi.openSPI(device=dev,speed=spd)
+        ret = spi.openSPI(device=dev,speed=spd)
+        if ret is not none:
+            self.readerStatus = MI_OK
         self.NRSTPD = pin
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.NRSTPD, GPIO.OUT)
@@ -219,17 +221,18 @@ class MFRC522:
   
   
   def MFRC522_Request(self, reqMode):
-    status = None
+    status = MI_ERR
     backBits = None
     TagType = []
     
-    self.Write_MFRC522(self.BitFramingReg, 0x07)
-    
-    TagType.append(reqMode);
-    (status,backData,backBits) = self.MFRC522_ToCard(self.PCD_TRANSCEIVE, TagType)
-  
-    if ((status != self.MI_OK) | (backBits != 0x10)):
-      status = self.MI_ERR
+    if self.readerStatus == MI_OK:
+        self.Write_MFRC522(self.BitFramingReg, 0x07)
+        
+        TagType.append(reqMode);
+        (status,backData,backBits) = self.MFRC522_ToCard(self.PCD_TRANSCEIVE, TagType)
+      
+        if ((status != self.MI_OK) | (backBits != 0x10)):
+          status = self.MI_ERR
       
     return (status,backBits)
   

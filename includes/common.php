@@ -4,14 +4,15 @@
 	$beers;
 	$tapOrBottle;
 	$pours;
-	function printBeerList($beerList, $beerListSize, $containerType)
+	function printBeerList($beerList, $beerListSize, $containerType, $editing = FALSE)
 	{
 		global $numberOfBeers,$beers,$tapOrBottle;
 		$beers = $beerList;
 		$numberOfBeers = $beerListSize;
 		$tapOrBottle = $containerType;
+		$editingTable = $editing;
 		$config = getAllConfigs();
-		if($config[ConfigNames::ShowVerticalTapList]){
+		if($config[ConfigNames::ShowVerticleTapList]){
 		  include "beerListTableVerticle.php";
 		} else {
 		    include "beerListTable.php";		
@@ -26,5 +27,8 @@
 		$numberOfPours = count($pours);
 		include "pourListTable.php";
 	}
-
+	
+	function beerListShouldDisplayRow($editting, $col, $configValue){
+	    return ($col == ($editting?abs($configValue):$configValue));
+	}
 ?>

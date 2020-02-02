@@ -5,7 +5,7 @@
 <div id="welcome"> &nbsp; Logged in as: <br />
 	&nbsp;
 	<?php
-		echo $_SESSION['myusername'];
+	if(isset($_SESSION['myusername']) )echo $_SESSION['myusername'];
 	?>
 </div>
 
@@ -74,11 +74,12 @@
 			<li><a href="stats_tapHistory.php" title="tap-history">Tap history</a></li>
 		</ul>
 	</li>
-	<?php if($_SESSION['showadmin']){?>
+	<?php if(isset($_SESSION['showadmin']) && $_SESSION['showadmin']){?>
     	<li>
     		<a class="expanded heading">Install</a>
     		<ul class="navigation">
     			<li><a href="manage_install.php" title="install">Install Page</a></li>
+    			<li><a href="rpints_log.php" title="install">Log</a></li>
     		</ul>	
     	</li>
 	<?php }?>

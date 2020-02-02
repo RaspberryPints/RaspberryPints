@@ -8,6 +8,7 @@
 #include <Arduino.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
+#include <util/atomic.h> // this library includes the ATOMIC_BLOCK macro.
 
 ISR (PCINT0_vect) // handle pin change interrupt for D8 to D13 here
 {    
@@ -28,19 +29,19 @@ ISR(PCINT3_vect, ISR_ALIASOF(PCINT0_vect));//Handle PCINT3 as if its PCINT0
 #define INPUT_SIZE 50
 #define RFID_TAG_LEN 11
 #define INVALID_USER_ID -1
-#define SERIAL_TIMEOUT 100
-
+#define SERIAL_TIMEOUT 10
+#define MAX_PIN_LENGTH 4
 #define serialPrint(VALUE) Serial.print(VALUE)
-#define serialPrintln(VALUE) Serial.println(VALUE)
-#define serialFlush(VALUE) Serial.flush(VALUE)
+#define serialPrintln(VALUE) Serial.println(VALUE);Serial.flush()
+#define serialFlush() Serial.flush()
 
 #define CMD_READ_PINS     "RP"
-#define CMD_WRITE_PINS    "WP"
-#define CMD_SET_PINS_MODE "SM"
-const char *MSG_DELIMETER   = ";";
+#define CMD_WRITE_PINS    F("WP")
+#define CMD_SET_PINS_MODE F("SM")
+#define MSG_DELIMETER   ";"
 
 #define LED_PIN 13
-const int maxpins = 50;
+const int maxpins = 30;
 //This is the number of flow sensors connected.
 unsigned int numSensors = 5;
 int pulsePin[maxpins];
@@ -70,21 +71,23 @@ unsigned int useRFID = 0;
 unsigned int useValves = 0;
 unsigned int relayTrigger = 0;
 unsigned int reconfigRequired = 0;
+unsigned int debugEnabled = 0;
 // data structures to keep current state
 volatile unsigned int pulseCount[maxpins];
 volatile unsigned int kickedCount[maxpins];
 volatile unsigned int updateCount[maxpins];
-unsigned long lastPourTime[maxpins];
-unsigned long lastPinStateChangeTime[maxpins];
+volatile unsigned long lastPulseTime[maxpins];
+volatile unsigned long lastPinStateChangeTime[maxpins];
 int lastPinState[maxpins];
 unsigned long nowTime;
+unsigned long lastTapPulseTime;
 unsigned long lastRfidCheckTime = 0;
 unsigned long lastBlinkTime = 0;
 unsigned long lastBlinkState = LOW;
 
 unsigned long lastSend = 0;
 int waitingStatusResponse = false;
-
+void debug(char *sfmt, ...);
 // Install Pin change interrupt for a pin, can be called multiple times
 void pciSetup(byte pin) 
 {
@@ -151,7 +154,8 @@ void setup() {
   updateTriggerValue = getSerialInteger(&configDone);
   pourShutOffCount = getSerialInteger(&configDone);
   useRFID = getSerialInteger(&configDone);
-  if(configDone != true) serialPrintln("Missing Configuration End");
+  debugEnabled = getSerialInteger(&configDone);
+  if(configDone != true) serialPrintln(F("Missing Configuration End"));
 
   // echo back the config string with our own stuff
   serialPrint("C:");
@@ -182,6 +186,8 @@ void setup() {
   serialPrint(pourShutOffCount);
   serialPrint(":");
   serialPrint(useRFID);
+  serialPrint(":");
+  serialPrint(debugEnabled);
   serialPrintln("|");
 
 
@@ -218,9 +224,12 @@ void loop() {
   int shutNonPouring = false;
   int reset = false;
   int tapPouring = false;
+  unsigned long lastTapPulseTime;
   for( unsigned int i = 0; i < numSensors; i++ ) {
-    nowTime = millis();
-    if ( lastPourTime[i] <= 0 ) continue;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
+    	lastTapPulseTime = lastPulseTime[i];
+    }
+    if ( lastTapPulseTime <= 0 ) continue;
     tapPouring = true;
     if ( pulseCount[i] > 0 ) {
       //If pulse count has reached a point were we can assign the user to this tap
@@ -230,10 +239,14 @@ void loop() {
       {
         userIdForPin[i] = activeUserId;
         activeUserId = INVALID_USER_ID;
-        if( useValves ) shutNonPouring = true;
+        if( useValves ){
+            debug("%s %d %d", "Tap Selected Pin", pulsePin[i], i);
+        	shutNonPouring = true;
+        }
       }
+      nowTime = millis();
       //If no new pulses have come in awhile
-      if ( (nowTime - lastPourTime[i]) > pourMsgDelay )
+      if ( (nowTime - lastTapPulseTime) > pourMsgDelay )
       {
         //only save pours that meet the trigger to filter out tiny bursts
     	if(pulseCount[i] > pourTriggerValue )
@@ -250,6 +263,7 @@ void loop() {
               pourShutOffCount > 0 && 
               pulseCount[i] >= pourShutOffCount )
       {
+        debug("%s %d %d", "Shutdown Tap too many pulses Pin", pulsePin[i], i);
         shutDownTap(i);
       }
       //If we just need to send an update
@@ -261,7 +275,7 @@ void loop() {
       //If we detect a kck
       if ( kickedCount[i] > 0 && 
         kickedCount[i] > kickTriggerValue &&
-        (nowTime - lastPourTime[i]) > pourMsgDelay ) {
+        (nowTime - lastTapPulseTime) > pourMsgDelay ) {
         //if there are enough high speed pulses, send a kicked message
         sendKickedMsg(userIdForPin[i], pulsePin[i]);
         reset = true;
@@ -270,9 +284,14 @@ void loop() {
       if ( reset == true ) {
         //We had at activity on this pin, if it wasnt enough to trigger 
         //we want to reset so snowballing doesnt happen (i.e. small pulses turns into a pour)
+    	//Only log if we have a major pulse count
+        if( pulseCount[i] > 10 )debug("%s %d %d", "Reset Tap during loop Pin", pulsePin[i], i);
         resetTap(i);
       }
-      if ( useValves && shutNonPouring ) shutDownNonPouringTaps(i);
+      if ( useValves && shutNonPouring ){
+          debug("%s %d %d", "Shut down nonPouring during loop Pin ", pulsePin[i], i);
+    	  shutDownNonPouringTaps(i);
+      }
 
     }
   }
@@ -282,12 +301,17 @@ void loop() {
 	  longLED();
   }
 
+  nowTime = millis();
   if( activeUserDate != -1UL && activeUserId != INVALID_USER_ID &&
-    nowTime - activeUserDate > tapSelectTime )
+      nowTime - activeUserDate > tapSelectTime )
   {
     activeUserId = INVALID_USER_ID;
     activeUserDate = nowTime;
-    if ( useValves ) shutDownNonPouringTaps(-1);
+    //If we already shut non-pouring dont do it again
+    if ( useValves && !shutNonPouring ){
+        debug(F("Shutdown All taps, no select"));
+    	shutDownNonPouringTaps(-1);
+    }
   }
 }
 
@@ -301,12 +325,10 @@ void pollPins() {
         if( checkTime - lastPinStateChangeTime[i] > 0 ){
           pulseCount[i] ++;
           updateCount[i] ++;
-        }
-        else{
+        }else{
           kickedCount[i] ++;
         }
-        lastPinStateChangeTime[i] = checkTime;
-        lastPourTime[i] = checkTime;
+        lastPulseTime[i] = lastPinStateChangeTime[i] =  millis();
       }
       lastPinState[i] = pinState;
     }
@@ -323,26 +345,26 @@ void piStatusCheck(){
   char *valveState = NULL;
   unsigned int tapNum;
   int newState;
-  int turnOnPins[numSensors];
-  int turnOffPins[numSensors];
-  int countOn = 0;
-  int countOff = 0;
+  static unsigned long checkTime = 0;
+  if( checkTime > 0 && waitingStatusResponse && millis() - checkTime > 1000)
+  {
+  	waitingStatusResponse = false;
+  }
 
-  memset(turnOnPins, 0, sizeof(turnOnPins));
-  memset(turnOffPins, 0, sizeof(turnOffPins));
   memset(readMsg, 0, INPUT_SIZE);
   if(!waitingStatusResponse){
-	  serialPrintln("StatusCheck;");
+	  serialPrintln(F("StatusCheck;"));
 	  serialFlush();
 	  waitingStatusResponse = true;
+	  checkTime = millis();
   }
   if(Serial.available() <= 0) return;
   ii = 0;
   while(ii + 1 < INPUT_SIZE)
   {
-    readMsg[ii] = getsc();
+    readMsg[ii] = getsc_timeout(SERIAL_TIMEOUT);
     if(readMsg[ii] == 'S') ii = 0; //In case serial string starts over (S)tatus
-    if(readMsg[ii] == '\n' || readMsg[ii] == '|') break;
+    if(readMsg[ii] == '\n' || readMsg[ii] == '|' || readMsg[ii] == 0) break;
     ii++;
   }
   readMsg[ii] = 0;
@@ -358,11 +380,11 @@ void piStatusCheck(){
 		  newState = atoi(valveState);
 		  if( newState != manualValveState[tapNum] ){
 			 if(newState){
-				 turnOnPins [countOn++] = valvesPin[tapNum];
+				  writePin(valvesPin[tapNum],  relayTrigger);
 		     //If not waiting to select a tap and tap is not pouring then we can shut off tap
 			 }else if( activeUserId == INVALID_USER_ID &&
 					   !isValvePinPouring(valvesPin[tapNum], tapNum) ){
-				 turnOffPins[countOff++] = valvesPin[tapNum];
+				  writePin(valvesPin[tapNum], !relayTrigger);
 			 }
 		  }
 		  manualValveState[tapNum] = newState;
@@ -373,8 +395,7 @@ void piStatusCheck(){
 	    activeUserDate = millis();
 	    if(tagValue && activeUserId != atol(tagValue)){
 	      activeUserId = atol(tagValue);
-	      //serialPrint("RFID:");
-	      //serialPrintln(activeUserId);
+          debug("%s%d", "RFID:", activeUserId);
 	      if(useValves > 0){
 	        writePins( numSensors, valvesPin, relayTrigger );
 	      }
@@ -383,11 +404,8 @@ void piStatusCheck(){
 
 	  if(reconfigReq) reconfigRequired = atol(reconfigReq);
 
-	  //If any pins changed write them now
-	  if(turnOffPins[0] != 0) writePins(countOff, turnOffPins, !relayTrigger);
-	  if(turnOnPins [0] != 0) writePins(countOn,  turnOnPins,  relayTrigger);
+	  waitingStatusResponse = false;
   }
-  waitingStatusResponse = false;
 }
 
 void fastLED() {
@@ -412,14 +430,14 @@ void resetTap(int tapNum){
   pulseCount[tapNum]   = 0;
   userIdForPin[tapNum] = INVALID_USER_ID;
   updateCount[tapNum]  = 0;
-  lastPourTime[tapNum] = 0;
+  lastPulseTime[tapNum] = 0;
   kickedCount[tapNum]  = 0;
   if(useValves > 0){
     shutDownTap(tapNum);
   }/*else if(useRFID > 0 && activeUserId > 0){		
    		unsigned int pouring = false;
    		for( unsigned int i = 0; i < numSensors; i++ ) {
-   			if(lastPourTime[i] > 0) {
+   			if(lastPulseTime[i] > 0) {
    				pouring = true;
    				break;
    			}
@@ -454,7 +472,7 @@ void shutDownNonPouringTaps(unsigned int currentTap){
 int isValvePinPouring(int valvePin, unsigned int currentTap){
   for( unsigned int i = 0; i < numSensors; i++ ) {
     if(i == currentTap) continue;
-    if(valvesPin[i] == valvePin && lastPourTime[i] > 0) {
+    if(valvesPin[i] == valvePin && lastPulseTime[i] > 0) {
       return true;
     }
   }
@@ -463,33 +481,35 @@ int isValvePinPouring(int valvePin, unsigned int currentTap){
 void sendPulseCount(long rfidUser, int pinNum, unsigned int pulseCount) {
   serialPrint("P;");
   serialPrint(rfidUser);
-  serialPrint(";");
+  serialPrint(MSG_DELIMETER);
   serialPrint(pinNum);
-  serialPrint(";");
+  serialPrint(MSG_DELIMETER);
   serialPrintln(pulseCount);
 }
 
 void sendKickedMsg(long rfidUser, int pinNum) {
   serialPrint("K;");
   serialPrint(rfidUser);
-  serialPrint(";");
+  serialPrint(MSG_DELIMETER);
   serialPrintln(pinNum);
 }
 
 void sendUpdateCount(long rfidUser, int pinNum, unsigned int count) {
   serialPrint("U;");
   serialPrint(rfidUser);
-  serialPrint(";");
+  serialPrint(MSG_DELIMETER);
   serialPrint(pinNum);
-  serialPrint(";");
+  serialPrint(MSG_DELIMETER);
   serialPrintln(count);
 }
 
 void establishContact() {
+  unsigned long startTime;
   serialPrintln("") ;
   while (Serial.available() <= 0) {
-    serialPrintln("alive");   // send 'aaaa' to get the Pi side started after reset
-    delay(100);
+    serialPrintln(F("alive"));   // send 'aaaa' to get the Pi side started after reset
+    startTime = millis();
+    while( Serial.available() <= 0 && millis() - startTime < 5000 ) delay(5);
   }
 }
 
@@ -501,7 +521,7 @@ int getsc_timeout(long timeout) {
   unsigned long startTime = millis();
   while(Serial.available() <= 0 )
   {
-    if( timeout > -1 && startTime + timeout < millis() ){
+    if( timeout > -1 && millis() - startTime > timeout){
       return 0;
     } 
   }
@@ -512,7 +532,7 @@ int getsc_timeout(long timeout) {
  * Following are Pin helper function allowing requesting python to set the pin for Arduino
  */
 void setPinMode(int pin, uint8_t state) {
-  int	pins[2];
+  static int	pins[1];
   pins[0] = pin;
   setPinsMode(1, pins, state);
 }
@@ -520,8 +540,7 @@ void setPinsMode(int count, int pins[], uint8_t state) {
   int  ii = 0;
   int  pinCount = 0;
   int  pin;
-  char msg[INPUT_SIZE];
-  char pinStr[INPUT_SIZE];
+  static char msg[INPUT_SIZE];
   memset( msg, 0, sizeof(msg) );
   while (ii < count )
   {	
@@ -536,11 +555,9 @@ void setPinsMode(int count, int pins[], uint8_t state) {
       pinMode(pin, state);		
     }
     else if(pin < 0){
-      memset( pinStr, 0, sizeof(pinStr) );
-      snprintf(pinStr, INPUT_SIZE, "%d", pin*-1);
-      if( strlen(pinStr) + strlen(msg) + 1 < INPUT_SIZE)
+      if( MAX_PIN_LENGTH + strlen(msg) + 1 < INPUT_SIZE)
       {
-        snprintf(msg, INPUT_SIZE, "%s%s%s", msg, (msg[0]==0?"":";"), pinStr);
+        snprintf(msg, INPUT_SIZE, "%s%s%d", msg, (msg[0]==0?"":MSG_DELIMETER), pin*-1);
         pinCount++;
       } 
       else 
@@ -562,13 +579,14 @@ void setPinsMode(int count, int pins[], uint8_t state) {
  * Read A Pin helper allows requesting python to read the pin for Arduino
  */
 unsigned char readPin(int pin) {
-  char readMsg[INPUT_SIZE]; 
+  static char readMsg[INPUT_SIZE];
   char *curPart;
   if(pin > 0) {
     return digitalRead(pin);		
   }
   else if(pin < 0){
-    serialPrint(CMD_READ_PINS";");
+    serialPrint(CMD_READ_PINS);
+    serialPrint(MSG_DELIMETER);
     serialPrint(pin*-1);
     serialPrintln("");
     while(!Serial.available()) ;
@@ -610,7 +628,7 @@ unsigned char readPin(int pin) {
  * Write A Pin helper allows requesting python to write the pin for Arduino
  */
 void writePin(int pin, uint8_t state) {
-  int	pins[2];
+  static int	pins[1];
   pins[0] = pin;
   writePins(1, pins, state);
 }
@@ -618,8 +636,7 @@ void writePins(int count, int pins[], uint8_t state) {
   int  ii = 0;
   int  pinCount = 0;
   int  pin;
-  char msg[INPUT_SIZE];
-  char pinStr[INPUT_SIZE];
+  static char msg[INPUT_SIZE];
   memset( msg, 0, sizeof(msg) );
   while (ii < count )
   {	
@@ -634,11 +651,9 @@ void writePins(int count, int pins[], uint8_t state) {
       digitalWrite(pin, state);		
     }
     else if(pin < 0){
-      memset( pinStr, 0, sizeof(pinStr) );
-      snprintf(pinStr, INPUT_SIZE, "%d", pin*-1);
-      if( strlen(pinStr) + strlen(msg) + 1 < INPUT_SIZE)
+      if( MAX_PIN_LENGTH + strlen(msg) + 1 < INPUT_SIZE)
       {
-        snprintf(msg, INPUT_SIZE, "%s%s%s", msg, (msg[0]==0?"":";"), pinStr);
+        snprintf(msg, INPUT_SIZE, "%s%s%d", msg, (msg[0]==0?"":MSG_DELIMETER), pin*-1);
         pinCount++;
       } 
       else 
@@ -657,25 +672,58 @@ void writePins(int count, int pins[], uint8_t state) {
   }
 } // End writePin()
 
-void sendPins(char *cmd, int count, char *msg, uint8_t state){
+void sendPins(const __FlashStringHelper *cmd, int count, char *msg, uint8_t state){
   unsigned long sendTime = millis();
 
   serialPrint(cmd);
-  serialPrint(";");
+  serialPrint(MSG_DELIMETER);
   serialPrint(state);
-  serialPrint(";");
+  serialPrint(MSG_DELIMETER);
   //If we dont have a count then we just want to send the message 
   if(count > 0){
     serialPrint(count);
-    serialPrint(";");
+    serialPrint(MSG_DELIMETER);
   }
   serialPrint(msg);
   serialPrintln("");
   serialFlush();
   
-  while(getsc_timeout(SERIAL_TIMEOUT) != '|' && sendTime+SERIAL_TIMEOUT > millis());
+  //while(Serial.available() <= 0 && millis()- sendTime < SERIAL_TIMEOUT);
+  while(getsc_timeout(SERIAL_TIMEOUT) != '|' && millis()- sendTime < SERIAL_TIMEOUT);
 }//End sendPins
 
+
+void debug(const char *msg){
+	if(debugEnabled){
+		serialPrint(F("Debug;"));
+		serialPrintln(msg);
+	}
+}
+void debug(const __FlashStringHelper *msg){
+	if(debugEnabled){
+		serialPrint(F("Debug;"));
+		serialPrintln(msg);
+	}
+}
+void debug(char *sfmt, ...){
+	if(debugEnabled){
+		char temp[50];
+		serialPrint(F("Debug;"));
+		va_list l_arg;
+		va_start(l_arg, sfmt);
+		vsnprintf(temp, sizeof(temp), sfmt, l_arg);
+		serialPrintln(temp);
+		va_end(l_arg);
+	}
+}
+void log(const char *msg){
+	serialPrint(F("Log;"));
+	serialPrintln(msg);
+}
+void log(const __FlashStringHelper *msg){
+	serialPrint(F("Log;"));
+	serialPrintln(msg);
+}
 
 
 
