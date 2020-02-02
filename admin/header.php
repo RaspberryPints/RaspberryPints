@@ -27,7 +27,6 @@ require_once 'includes/managers/kegType_manager.php';
 require_once __DIR__.'/includes/managers/brewery_manager.php';
 require_once __DIR__.'/includes/managers/tap_manager.php';
 ?>
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
