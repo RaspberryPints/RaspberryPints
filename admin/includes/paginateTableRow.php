@@ -8,9 +8,9 @@
                 	<input type="hidden" name="totalRows" value="<?php echo $totalRows; ?>">
                 	<input type="hidden" name="queryChanged" value="0">
                 </td>
-                <?php if($page < $maxPage){?><td><input type="button" name="nextPage" value="&gt;" onclick="changePage(<?php echo $page + 1?>);"/><input type="button" name="lastPage" value="&gt;&gt;" onclick="changePage(<?php echo $maxPage?>)"/></td><?php } ?><td>
+                <?php if($page < $maxPage){?><td><input type="button" name="nextPage" value="&gt;" onclick="changePage(<?php echo $page + 1?>);"/><input type="button" name="lastPage" value="&gt;&gt;" onclick="changePage(<?php echo $maxPage?>)"/></td><?php } ?>
             </tr>
         </table></td>
-        <td style="vertical-align:middle">Total Rows: <?php echo $totalRows; ?></td>
+        <td colspan="<?php if(!isset($columnCount))$columnCount = 5; echo $columnCount-2?>" style="vertical-align:middle">Total Rows: <?php echo $totalRows; ?></td>
     </tr>
                     
