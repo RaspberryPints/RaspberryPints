@@ -32,7 +32,7 @@ class HX711(object):
                  name,
                  dout_pin,
                  pd_sck_pin, 
-                 logger=none,
+                 logger=None,
                  gain_channel_A=128,
                  select_channel='A'):
         """
