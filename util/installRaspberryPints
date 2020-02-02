@@ -43,6 +43,7 @@ DEFAULT_REPO=https://github.com/RaspberryPints/RaspberryPints.git
 CUSTOM_REPO=https://github.com/rtlindne/RaspberryPints.git  
 FLOW_METERS_REPO=https://github.com/wyolum/alamode/raw/master/bundles/alamode-setup.tar.gz
 FLOW_METERS_STRETCH_REPO=https://github.com/wyolum/alamode/raw/master/alamode-setup/stretch-setup
+FLOW_METERS_BUSTER_REPO=https://github.com/wyolum/alamode/raw/master/alamode-setup/stretch-setup
 
 # RPints Archive from Tobor
 # From: https://www.homebrewtalk.com/forum/threads/version-2-release-raspberrypints-digital-taplist-solution.487694/page-116#post-8609646
@@ -85,7 +86,8 @@ init() {
     PACKAGE="RPints-Tools"
     THISSCRIPT="rpints_install.sh"
     VERSION="0.0.0.1"
-    CMDLINE="curl -L https://raw.githubusercontent.com/rtlindne/RaspberryPints/master/util/installRaspberryPints | sudo bash"
+    #CMDLINE="curl -L https://raw.githubusercontent.com/rtlindne/RaspberryPints/master/util/installRaspberryPints | sudo bash"
+    CMDLINE="curl -L install.rpints.com | sudo bash"
     SCRIPTNAME="${THISSCRIPT%%.*}"
 }
 
@@ -377,9 +379,8 @@ host_name() {
     if [ "$oldHostName" = "raspberrypi" ]; then
         echo -e "\nYour hostname is set to '$oldHostName'. Each machine on your network should"
         echo -e  "have a unique name to prevent issues.\n"
-		if promptYN "Do you want to change it now, maybe to 'rpints'" "Y"; then sethost=1; fi
-        echo
-        if [ "$sethost" -eq 1 ]; then
+		if promptYN "Do you want to change it now, maybe to 'rpints'" "Y"; then
+        	echo
             echo -e "You will now be asked to enter a new hostname."
             while
                 read -rp "Enter new hostname: " host1  < /dev/tty
@@ -930,6 +931,9 @@ installFlowmeters(){
 			cd "${FLOW_METERS_DIRECTORY}/alamode-setup"
 			if [ ! -f "${FLOW_METERS_DIRECTORY}/alamode-setup/stretch-setup" ]; then 
 				wget ${FLOW_METERS_STRETCH_REPO}
+			fi
+			if [ ! -f "${FLOW_METERS_DIRECTORY}/alamode-setup/buster-setup" ]; then 
+				wget -O buster-setup ${FLOW_METERS_BUSTER_REPO}
 			fi
 		
 			# ensure the files are executable by the owner  
