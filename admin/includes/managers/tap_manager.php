@@ -127,7 +127,7 @@ class TapManager extends Manager{
 		$tapEvent->set_tapId($tap->get_id());
 		$tapEvent->set_kegId($kegId);
 		$tapEvent->set_beerId($beerId);
-		$tapEvent->set_userId($_SESSION['myuserid']);
+		$tapEvent->set_userId(isset($_SESSION['myuserid'])?$_SESSION['myuserid']:"System");
 		$keg = $kegManager->GetByID($kegId);
 		if($keg) $tapEvent->set_amount($keg->get_currentAmount());
 		if($keg) $tapEvent->set_amountUnit(is_unit_imperial($keg->get_currentAmountUnit())?UnitsOfMeasure::VolumeGallon:UnitsOfMeasure::VolumeLiter);
