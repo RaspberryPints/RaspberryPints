@@ -36,9 +36,19 @@ Configuration Updated
     			<?php
     			    $result = getConfigurableConfigs();
     				foreach($result as $row) {
+    				    $options = array();
+    				    $options[0] = 'On';
+    				    $options[1] = 'Off';
+    				    $validation = $row['validation'];
+    				    if( $validation !== NULL && $validation != ''){
+    				        $valids = explode('|', $validation);
+    				        for( $i = 0; $i < count($valids); $i++ ){
+    				            $options[$i] = $valids[$i];
+    				        }
+    				    }
     				    echo '<h3>' . $row['displayName'] . ":"  .'<span id="' . $row['configName'] . 'Success" style="display:none; color: #8EA534;"> (Updated)</span>'. '</h3>'.
-    					'On<input type="radio" ' . ($row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="1" onclick="changeConfiguration(this)">' .
-    					'Off<input type="radio" ' . (!$row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="0" onclick="changeConfiguration(this)">'. 
+        				    $options[0].'<input type="radio" ' . ($row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="1" onclick="changeConfiguration(this)">' .
+        				    $options[1].'<input type="radio" ' . (!$row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="0" onclick="changeConfiguration(this)">'. 
     					
     					'<br><br>';
     			} ?>
