@@ -20,7 +20,7 @@ from symbol import except_clause
 MCAST_GRP = '224.1.1.1'
 MCAST_PORT = 0xBEE2
 
-OPTION_DEBUG = True
+OPTION_DEBUG = False
 
 def debug(msg):
     if(OPTION_DEBUG):
@@ -69,7 +69,7 @@ def web_socket_transfer_data(request):
                 if not line is None:
                     request.ws_stream.send_message(line, binary=False)
             except Exception, e:
-                debug(str(e))
+                #debug(str(e))
                 break
             finally:
                 pass
@@ -84,7 +84,8 @@ def web_socket_transfer_data(request):
         try:
             sock.close()
         except Exception, e:
-            debug(str(e))
+            #debug(str(e))
+            return
 
 def web_socket_passive_closing_handshake(request):
     # Simply echo a close status code
