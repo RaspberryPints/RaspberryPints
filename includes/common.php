@@ -31,4 +31,12 @@
 	function beerListShouldDisplayRow($editting, $col, $configValue){
 	    return ($col == ($editting?abs($configValue):$configValue));
 	}
+	
+	function DisplayEditShowColumn($editting, $config, $col, $configName){
+	    if( !$editting ) return;
+	    
+	    echo '<br/>';
+	    echo '<input type="radio" value="1"  name="show'.$configName.'" id="show'.$configName.'" '.($config[$configName] > 0?"checked":"").'/>Visible';
+	    echo '<input type="radio" value="-1" name="show'.$configName.'" id="show'.$configName.'" '.($config[$configName] < 0?"checked":"").'/>Hidden';
+	}
 ?>

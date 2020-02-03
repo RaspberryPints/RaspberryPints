@@ -9,13 +9,6 @@ $beerColSpan = 1;
 $MAX_COLUMNS = 6;
 $editting = (isset($editingTable) && $editingTable);
 
-function DisplayEditShowColumn($editting, $config, $col, $configName){
-    if( !$editting ) return;
-    
-    echo '<br/>';
-    echo '<input type="radio" value="1"  name="show'.$configName.'" id="show'.$configName.'" '.($config[$configName] > 0?"checked":"").'/>Visible';
-    echo '<input type="radio" value="-1" name="show'.$configName.'" id="show'.$configName.'" '.($config[$configName] < 0?"checked":"").'/>Hidden';
-}
 $maxTapCol = isset($config[ConfigNames::HozTapListCol])?$config[ConfigNames::HozTapListCol]+1:1;
 ?>
 
