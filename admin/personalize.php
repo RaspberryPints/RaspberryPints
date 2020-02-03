@@ -52,6 +52,14 @@ Configuration Updated
     					
     					'<br><br>';
     			} ?>
+    			<a id="numDisplayPours"></a>
+        		<p><b>Number of Pours to show on home page:</b> </p>
+        		<form method="post" action="includes/config_update.php">
+        			<input type="text" class="largebox" value="<?php echo $configs[ConfigNames::NumberOfDisplayPours]; ?>" name="configValue"> &nbsp; 
+        				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::NumberOfDisplayPours.'"/>'; ?>
+        				<?php echo '<input type="hidden" name="jumpto" value="#numDisplayPours"/>'; ?>
+        			<input type="submit" class="btn" name="Submit" value="Submit">
+        		</form>
     		</div>
 		<hr />
 
