@@ -143,7 +143,8 @@ include 'top_menu.php';
                                     </td>
                                     <td style="vertical-align: middle;">
                                         <?php if( $tap->get_loadCellCmdPin() != '' ) { ?>
-                                            <button name="tare[]" id="tare echo $tap->get_id();?>" type="button" class="btn" style="white-space:nowrap;" value="1" onClick="tare( <?php echo $tap->get_id()?>)">Tare</button>
+                                            <button name="tare[]" id="tare<?php echo $tap->get_id();?>" type="button" class="btn" style="white-space:nowrap;" value="1" onClick="tare(this, <?php echo $tap->get_id()?>)">Tare</button>
+                                            <span id="tare<?php echo $tap->get_id();?>Success" style="display:none; color: #8EA534;"> (Success)</span>
                                         <?php } ?>
                                     </td>
                                 </tr>
@@ -224,7 +225,7 @@ include 'scripts.php';
 			});		
 		});
 
-		function tare(tapId){
+		function tare(button, tapId){
 			var data
 			data = { "tare" : tapId }
 			
@@ -233,7 +234,11 @@ include 'scripts.php';
 	                   type: "POST",
 	                   url: "load_cell_list.php",
 	                   data: data,// data to send to above script page if any
-	                   cache: false
+	                   cache: false,
+	                   success: function(response)
+	                   {
+	                	   document.getElementById(button.id + 'Success').style.display = ""; 
+	                   }
 	             });
 	  	}
 </script>
