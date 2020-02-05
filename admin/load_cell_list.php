@@ -17,7 +17,7 @@ if (isset ( $_POST ['save'] )) {
 	$ii = 0;
 	while(isset($_POST ['id'][$ii]))
 	{
-	    if($_POST ['id'][$ii] == "")
+	    if($_POST ['id'][$ii] == "" || _POST['loadCellCmdPin'][$ii] == "" || $_POST['loadCellRspPin'][$ii] == "")
 	    {
 	        $ii++;
 	        continue;
