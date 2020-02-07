@@ -15,6 +15,8 @@ class Tap
 	private $_active;
 	private $_loadCellCmdPin;
 	private $_loadCellRspPin;
+	private $_loadCellScaleRatio;
+	private $_loadCellTareOffset;
 	private $_loadCellUnit;
 	private $_loadCellTareDate;
 	private $_createdDate; 
@@ -63,6 +65,12 @@ class Tap
 	
 	public function get_loadCellRspPin(){ return $this->_loadCellRspPin; }
 	public function set_loadCellRspPin($_loadCellRspPin){ $this->_loadCellRspPin = $_loadCellRspPin; }
+	
+	public function get_loadCellScaleRatio(){ return $this->_loadCellScaleRatio; }
+	public function set_loadCellScaleRatio($_loadCellScaleRatio){ $this->_loadCellScaleRatio = $_loadCellScaleRatio; }
+	
+	public function get_loadCellTareOffset(){ return $this->_loadCellTareOffset; }
+	public function set_loadCellTareOffset($_loadCellTareOffset){ $this->_loadCellTareOffset = $_loadCellTareOffset; }
 	
 	public function get_loadCellUnit(){ return $this->_loadCellUnit; }
 	public function set_loadCellUnit($_loadCellUnit){ $this->_loadCellUnit = $_loadCellUnit; }
@@ -147,6 +155,16 @@ class Tap
             $this->set_loadCellRspPin($postArr['loadCellRspPin']);
         else
             $this->set_loadCellRspPin(null);
+        
+        if( isset($postArr['loadCellTareOffset']) )
+            $this->set_loadCellScaleRatio($postArr['loadCellScaleRatio']);
+        else
+            $this->set_loadCellScaleRatio(null);
+        
+        if( isset($postArr['loadCellTareOffset']) )
+            $this->set_loadCellTareOffset($postArr['loadCellTareOffset']);
+        else
+            $this->set_loadCellTareOffset(null);
 		            
         if( isset($postArr['loadCellUnit']) )
             $this->set_loadCellUnit($postArr['loadCellUnit']);

@@ -168,7 +168,7 @@ class TapManager extends Manager{
 		return $ret;
 	}
 	
-	function saveTapLoadCellInfo($id, $loadCellCmdPin, $loadCellRspPin, $loadCellUnit) {
+	function saveTapLoadCellInfo($id, $loadCellCmdPin, $loadCellRspPin, $loadCellScaleRatio, $loadCellTareOffset, $loadCellUnit) {
 	    $ret = true;
 	    $sql="SELECT * FROM tapconfig where tapId = $id";
 	    $tap = $this->executeQueryWithSingleResult($sql);
@@ -177,11 +177,13 @@ class TapManager extends Manager{
 	    if( $tap ){
 	        if($tap->get_loadCellCmdPin() != $loadCellCmdPin) $updateSql .= ($updateSql!=""?",":"")."loadCellCmdPin = NULLIF('" . $loadCellCmdPin . "', '')";
 	        if($tap->get_loadCellRspPin() != $loadCellRspPin) $updateSql .= ($updateSql!=""?",":"")."loadCellRspPin = NULLIF('" . $loadCellRspPin . "', '')";
+	        if($tap->get_loadCellScaleRatio() != $loadCellScaleRatio) $updateSql .= ($updateSql!=""?",":"")."loadCellScaleRatio = NULLIF('" . $loadCellScaleRatio . "', '')";
+	        if($tap->get_loadCellTareOffset() != $loadCellTareOffset) $updateSql .= ($updateSql!=""?",":"")."loadCellTareOffset = NULLIF('" . $loadCellTareOffset . "', '')";
 	        if($tap->get_loadCellUnit() != $loadCellUnit) $updateSql .= ($updateSql!=""?",":"")."loadCellUnit = NULLIF('" . $loadCellUnit . "', '')";
 	        if($updateSql != "")$sql = "UPDATE tapconfig SET ".$updateSql." WHERE tapId = " . $id;
 	    } else {
-	        $sql = "INSERT INTO tapconfig (tapId, loadCellCmdPin, loadCellRspPin, loadCellUnit) VALUES(" .
-	   	        $id.", ".$loadCellCmdPin.", ".$loadCellRspPin.", '".$loadCellUnit."')";
+	        $sql = "INSERT INTO tapconfig (tapId, loadCellCmdPin, loadCellRspPin, loadCellScaleRatio, loadCellTareOffset, loadCellUnit) VALUES(" .
+	   	        $id.", ".$loadCellCmdPin.", ".$loadCellRspPin.", ".$loadCellScaleRatio.", ".$loadCellTareOffset.", '".$loadCellUnit."')";
 	    }
 	    if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
 	    return $ret;
