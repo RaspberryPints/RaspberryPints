@@ -615,6 +615,8 @@ CREATE TABLE IF NOT EXISTS `tapconfig` (
   `loadCellCmdPin` int(11) DEFAULT NULL,
   `loadCellRspPin` int(11) DEFAULT NULL,
   `loadCellTareReq` int(11) DEFAULT NULL,
+  `loadCellScaleRatio` int(11) DEFAULT NULL,
+  `loadCellTareOffset` int(11) DEFAULT NULL,
   `loadCellUnit` tinytext DEFAULT NULL,
   `loadCellTareDate` TIMESTAMP NULL,
 	PRIMARY KEY (`tapId`)

@@ -33,6 +33,8 @@ class HX711(object):
                  dout_pin,
                  pd_sck_pin, 
                  logger=None,
+                 scale_ratio=1,
+                 tare_offset=0,
                  gain_channel_A=128,
                  select_channel='A'):
         """
@@ -80,6 +82,10 @@ class HX711(object):
         GPIO.setup(self._dout, GPIO.IN)  # pin _dout is input only
         self.select_channel(select_channel)
         self.set_gain_A(gain_channel_A)
+        if scale_ratio != '':
+            self.set_scale_ratio(scale_ratio)
+        if tare_offset != '':
+            self.set_offset(tare_offset)
         debug("Init Finished Command " + str(pd_sck_pin) + " Rsp " + str(dout_pin))
         
     def select_channel(self, channel):

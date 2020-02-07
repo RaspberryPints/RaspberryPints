@@ -265,7 +265,7 @@ class PintDispatch(object):
     def getLoadCellConfig(self):
         con = connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)
-        cursor.execute("SELECT tapId,loadCellCmdPin,loadCellRspPin,loadCellUnit FROM tapconfig WHERE loadCellCmdPin IS NOT NULL ORDER BY tapId")
+        cursor.execute("SELECT tapId,loadCellCmdPin,loadCellRspPin,loadCellUnit,loadCellScaleRatio,loadCellTareOffset FROM tapconfig WHERE loadCellCmdPin IS NOT NULL ORDER BY tapId")
         rows = cursor.fetchall()
         con.close()
         return rows
@@ -287,6 +287,15 @@ class PintDispatch(object):
         sql = "UPDATE tapconfig SET loadCellTareReq="+tareReq
         if not tareRequested:
             sql = sql + ",loadCellTareDate=NOW()"
+        sql = sql + " WHERE tapId = " + str(tapId)
+        con = connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        result = cursor.execute(sql)
+        con.commit()
+        con.close()
+        
+    def setLoadCellTareOffset(self, tapId, offset):
+        sql = "UPDATE tapconfig SET loadCellTareOffset="+str(offset)
         sql = sql + " WHERE tapId = " + str(tapId)
         con = connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)

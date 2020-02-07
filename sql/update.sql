@@ -196,6 +196,8 @@ CALL addColumnIfNotExist(DATABASE(), 'kegs', 'keggingTemp', 'decimal(6, 2)' );
 CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'loadCellCmdPin', 'int(11)' );
 CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'loadCellRspPin', 'int(11)' );
 CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'loadCellTareReq', 'int(11)' );
+CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'loadCellScaleRatio', 'int(11)' );
+CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'loadCellTareOffset', 'int(11)' );
 CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'loadCellTareDate', 'TIMESTAMP NULL' );
 CALL addColumnIfNotExist(DATABASE(), 'kegTypes', 'emptyWeight', 'decimal(11, 4)' );
 CALL addColumnIfNotExist(DATABASE(), 'kegs', 'emptyWeight', 'decimal(11, 4)' );

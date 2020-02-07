@@ -17,12 +17,12 @@ if (isset ( $_POST ['save'] )) {
 	$ii = 0;
 	while(isset($_POST ['id'][$ii]))
 	{
-	    if($_POST ['id'][$ii] == "" || _POST['loadCellCmdPin'][$ii] == "" || $_POST['loadCellRspPin'][$ii] == "")
+	    if($_POST ['id'][$ii] == "" || $_POST['loadCellCmdPin'][$ii] == "" || $_POST['loadCellRspPin'][$ii] == "")
 	    {
 	        $ii++;
 	        continue;
 	    }
-	    if(!$tapManager->saveTapLoadCellInfo($_POST ['id'][$ii], $_POST['loadCellCmdPin'][$ii], $_POST['loadCellRspPin'][$ii], $_POST['loadCellUnit'][$ii]))$error=true;
+	    if(!$tapManager->saveTapLoadCellInfo($_POST ['id'][$ii], $_POST['loadCellCmdPin'][$ii], $_POST['loadCellRspPin'][$ii], $_POST['loadCellScaleRatio'][$ii], $_POST['loadCellTareOffset'][$ii], $_POST['loadCellUnit'][$ii]))$error=true;
 	    $ii++;
 	    $reconfig = true;
 	}
@@ -87,6 +87,8 @@ include 'top_menu.php';
                             <th style="vertical-align: middle;">Tap</th>
                             <th style="vertical-align: middle;">Command Pin</th>
                             <th style="vertical-align: middle;">Response Pin</th>
+                            <th style="vertical-align: middle;">Scale Ratio</th>
+                            <th style="vertical-align: middle;">Offset</th>
                             <th style="width:200px;vertical-align: middle;">Unit</th>
                             <th style="width:50px; vertical-align: middle;">Tare Date</th>
                             <th style="width:50px; vertical-align: middle;">Current Weight</th>
@@ -112,6 +114,12 @@ include 'top_menu.php';
                                     </td>
                                     <td style="vertical-align: middle;">
                                         <input type="text" id="loadCellRspPin<?php echo $tap->get_id();?>" class="smallbox" name="loadCellRspPin[]" value="<?php echo $tap->get_loadCellRspPin() ?>" />
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <input type="text" id="loadCellScaleRatio<?php echo $tap->get_id();?>" class="smallbox" name="loadCellScaleRatio[]" value="<?php echo $tap->get_loadCellScaleRatio() ?>" />
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <input type="text" id="loadCellTareOffset<?php echo $tap->get_id();?>" class="smallbox" name="loadCellTareOffset[]" value="<?php echo $tap->get_loadCellTareOffset() ?>" />
                                     </td>
                                     <td style="vertical-align: middle;">
                                     <select name="loadCellUnit[]">
@@ -143,8 +151,9 @@ include 'top_menu.php';
                                     </td>
                                     <td style="vertical-align: middle;">
                                         <?php if( $tap->get_loadCellCmdPin() != '' ) { ?>
-                                            <button name="tare[]" id="tare<?php echo $tap->get_id();?>" type="button" class="btn" style="white-space:nowrap;" value="1" onClick="tare(this, <?php echo $tap->get_id()?>)">Tare</button>
-                                            <span id="tare<?php echo $tap->get_id();?>Success" style="display:none; color: #8EA534;"> (Success)</span>
+                                            <button name="tare[]" id="tare<?php echo $tap->get_id();?>" type="button" class="btn" style="white-space:nowrap;" value="1" 
+                                            onClick='tare(this, <?php echo $tap->get_id()?>); $(loadCellTareOffset<?php echo $tap->get_id()?>).attr("disabled", "disabled");'>Tare</button>
+                                            <span id="tare<?php echo $tap->get_id();?>Success" style="display:none; color: #8EA534;"> (Success<br>Refresh to see Offset)</span>
                                         <?php } ?>
                                     </td>
                                 </tr>
@@ -220,6 +229,8 @@ include 'scripts.php';
 					<?php echo $comma; ?>loadCellCmd<?php echo $tap->get_id(); ?>: { number: true, min: 1, integer: true   }
 					<?php $comma = ","; ?>
 					<?php echo $comma; ?>loadCellRsp<?php echo $tap->get_id(); ?>: { number: true, min: 1, integer: true  }
+					<?php echo $comma; ?>loadScaleRatio<?php echo $tap->get_id(); ?>: { number: true, min: 1, integer: true  }
+					<?php echo $comma; ?>loadTareOffset<?php echo $tap->get_id(); ?>: { number: true, min: 1, integer: true  }
 			     <?php } ?> 
 				}
 			});		

@@ -239,7 +239,10 @@ class FlowMonitor(object):
             self.loadCellThreads = []
             configMD = self.dispatch.getLoadCellConfig()
             for item in configMD:
-                loadCell = LoadCellCheckThread( "LC-" + str(item["tapId"]), updateDir=config['pints.dir'], dispatch=self.dispatch, tapId=item["tapId"], commandPin=item["loadCellCmdPin"], responsePin=item["loadCellRspPin"], unit=item["loadCellUnit"], logger=log.logger )
+                loadCell = LoadCellCheckThread( "LC-" + str(item["tapId"]), updateDir=config['pints.dir'], 
+                                                dispatch=self.dispatch, tapId=item["tapId"], commandPin=item["loadCellCmdPin"], 
+                                                responsePin=item["loadCellRspPin"], unit=item["loadCellUnit"], logger=log.logger,
+                                                scaleRatio=item["loadCellScaleRatio"], tareOffset=item["loadCellTareOffset"] )
                 loadCell.start()
                 self.loadCellThreads.append(loadCell)
             
@@ -578,7 +581,8 @@ class MotionDetectionPIRThread (threading.Thread):
         
         
 class LoadCellCheckThread (threading.Thread):
-    def __init__(self, threadID, dispatch, updateDir, tapId = 1, commandPin = 7, responsePin = 8, delay=1, updateVariance=.01, unit="lb", logger=None):
+    def __init__(self, threadID, dispatch, updateDir, tapId = 1, commandPin = 7, responsePin = 8, delay=1, 
+                 updateVariance=.01, unit="lb", logger=None, scaleRatio=1, tareOffset=0):
         threading.Thread.__init__(self)
         self.threadID = threadID
         self.dispatch = dispatch
@@ -591,7 +595,7 @@ class LoadCellCheckThread (threading.Thread):
         self.unit = unit
         self.checkTare = False
         self.shutdown_required = False
-        self.hx711 = HX711(name=threadID, dout_pin=responsePin, pd_sck_pin=commandPin, logger=logger) 
+        self.hx711 = HX711(name=threadID, dout_pin=responsePin, pd_sck_pin=commandPin, logger=logger,scale_ratio=scaleRatio,tare_offset=tareOffset) 
         
     def exit(self):
         self.shutdown_required = True
@@ -601,6 +605,7 @@ class LoadCellCheckThread (threading.Thread):
         
     def tare(self):
         self.hx711.zero()
+        self.dispatch.setLoadCellTareOffset(self.hx711.get_offset())
         return
     
     def getWeight(self):
