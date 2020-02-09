@@ -216,16 +216,17 @@ class FlowMonitor(object):
         debug( "Arduino says: " + reply )
         
     # 'C:<numSensors>:<sensor pin>:<...>:<pourTriggerValue>:<kickTriggerValue>:<updateTriggerValue>'    
-    def monitor(self):
+    def monitor(self, flowMetersEnabld=True):
         running = True
         
-        if self.alaIsAlive is False:
-            debug( "resetting Arduino" )
-            self.dispatch.resetAlaMode()
-            self.arduino = serial.Serial(self.port,9600,timeout=.5)
-        else:
-            self.alaIsAlive = False
-            debug( "NOT resetting Arduino" )
+        if flowMetersEnabld :
+            if self.alaIsAlive is False:
+                debug( "resetting Arduino" )
+                self.dispatch.resetAlaMode()
+                self.arduino = serial.Serial(self.port,9600,timeout=.5)
+            else:
+                self.alaIsAlive = False
+                debug( "NOT resetting Arduino" )
 
         if GPIO_IMPORT_SUCCESSFUL:
             self.motionDetectors = []
@@ -256,8 +257,11 @@ class FlowMonitor(object):
         
         self.reconfigTempProbes()
         
-        self.reconfigAlaMode()
-        debug( "listening to Arduino" )
+        if flowMetersEnabld :
+            self.reconfigAlaMode()
+            debug( "listening to Arduino" )
+        else:
+            log("Not listening for flowmeters")
         
         try:
             while running:   

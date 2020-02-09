@@ -420,7 +420,7 @@ class PintDispatch(object):
                 if(config['dispatch.debugMonitoring']):
                     self.flowmonitor.fakemonitor()
                 else:
-                    self.flowmonitor.monitor()
+                    self.flowmonitor.monitor(self.useOption("useFlowMeter"))
             except Exception, e:
                 log("serial connection stopped...")
                 debug( str(e) )
@@ -458,13 +458,10 @@ class PintDispatch(object):
         t.setDaemon(True)
         t.start()
 
-        if self.useOption("useFlowMeter"):
-            log("starting tap flow meters...")
-            t = threading.Thread(target=self.spawn_flowmonitor)
-            t.setDaemon(True)
-            t.start()
-        else:
-            log("tap flow meters not enabled")
+        log("starting device monitors...")
+        t = threading.Thread(target=self.spawn_flowmonitor)
+        t.setDaemon(True)
+        t.start()
             
         log("starting command server")
         t = threading.Thread(target=self.commandserver.serve_forever)
