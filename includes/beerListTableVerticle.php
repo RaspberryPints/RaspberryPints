@@ -95,7 +95,7 @@
 				<?php if(isset($beer) && $beer['srm'] > 0){ ?>						
 					<div class="srm-container">
 						<?php if($config[ConfigNames::ShowSrmImg]){?>
-							<?php echo '<img src="'.($editting?'../':'').'img/srm/'.($beer['srm']>36?36:floor($beer['srm'])).'-srm.png" />'?>
+							<?php echo '<img src="'.($editting?'../':'').'img/srm/'.($beer['srm']>40?40:floor($beer['srm'])).'-srm.png" />'?>
 						<?php }else{?>
 							<?php echo '<div class="srm-indicator" style="background-color:'.$htmlHelper->CreateRGB($beer['srmRgb']).'"></div>'?>
 							<div class="srm-stroke"></div> 
