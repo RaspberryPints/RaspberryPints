@@ -90,8 +90,8 @@ $maxTapCol = isset($config[ConfigNames::HozTapListCol])?$config[ConfigNames::Hoz
     					<input type="hidden" name="<?php echo ConfigNames::KegColNum;?>" id="<?php echo ConfigNames::KegColNum;?>" value="<?php echo abs($config[ConfigNames::KegColNum]);?>"/>
     				</th>
     			<?php } ?>
-			<?php if($maxTapCol > 1 && $tapCol != $maxTapCol){ echo "<td style=width:70px;></td>"; } ?>
 			<?php } ?>
+			<?php if($maxTapCol > 1 && $tapCol != $maxTapCol-1){ echo "<td style=width:70px;></td>"; } ?>
 		<?php } ?>
 		</tr>
 	<?php echo !$editting?'</thead><tbody>':'' ?>
@@ -103,8 +103,9 @@ $maxTapCol = isset($config[ConfigNames::HozTapListCol])?$config[ConfigNames::Hoz
 		?>
 			<tr class="<?php if($i%2 > 0){ echo 'altrow'; }?>" id="<?php echo $beer['id']; ?>">
 				<?php 
-				    for($tapCol = 0; $tapCol< $maxTapCol && $numberOfBeers > $tapCol; $tapCol++){
+			    for($tapCol = 0; $tapCol< $maxTapCol && $numberOfBeers > $tapCol; $tapCol++){
         			$beer = null;
+        			if( $i+($tapCol * (ceil($numberOfBeers/$maxTapCol))) > $numberOfBeers ) continue;//Skip numbers outside of the tap range
         			if( isset($beers[$i+($tapCol * (ceil($numberOfBeers/$maxTapCol)))]) ) $beer = $beers[$i+($tapCol * (ceil($numberOfBeers/$maxTapCol)))];
         			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG  && !isset($beer) ) continue;
         		?>
@@ -372,8 +373,8 @@ $maxTapCol = isset($config[ConfigNames::HozTapListCol])?$config[ConfigNames::Hoz
 				<?php } ?>
 				</td>
 			<?php } ?>
-			<?php if($maxTapCol > 1 && $tapCol != $maxTapCol){ echo "<td style=width:70px;></td>"; } ?>
 			<?php } //End for column loop ?>
+			<?php if($maxTapCol > 1 && $tapCol != $maxTapCol-1){ echo "<td style=width:70px;></td>"; } ?>
 			<?php } //End for tap column loop ?>
 			</tr>
 		<?php } ?>
