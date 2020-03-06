@@ -8,15 +8,6 @@
 	$row = 0;
 	$MAX_COLUMNS = 6;
 	$editting = (isset($editingTable) && $editingTable);
-	
-	function DisplayEditShowColumn($editting, $config, $col, $configName){
-	    if( !$editting ) return;
-	    
-	    echo '<td style="width:200px">';
-	    echo '<input type="radio" value="1"  name="show'.$configName.'" id="show'.$configName.'" '.($config[$configName] > 0?"checked":"").'/>Visible';
-	    echo '<input type="radio" value="-1" name="show'.$configName.'" id="show'.$configName.'" '.($config[$configName] < 0?"checked":"").'/>Hidden';
-	    echo '</td>';
-	}
 ?>
 
 <table style="text-align: center">
