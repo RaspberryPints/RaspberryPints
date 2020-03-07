@@ -408,6 +408,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'version', '3.0.9.0', 'Version', '0', NOW(), NOW() ),
 ( 'headerTextTruncLen' ,'20', 'Header Text Truncate Length', '0', NOW(), NOW() ),
 ( 'useFlowMeter','0','Use Flow Monitoring', '1', NOW(),NOW() ),
+( 'usePlaato', '0', 'Use Plaato Values', '1', NOW(), NOW() ),
 ( 'ClientID', '','Client ID', '0', NOW(), NOW() ),
 ( 'ClientSecret','','Client Secret','0',NOW(),NOW() ),
 ( 'BreweryID', '','Brewery ID','0',NOW(),NOW() ),
@@ -619,6 +620,7 @@ CREATE TABLE IF NOT EXISTS `tapconfig` (
   `loadCellTareOffset` int(11) DEFAULT NULL,
   `loadCellUnit` tinytext DEFAULT NULL,
   `loadCellTareDate` TIMESTAMP NULL,
+  `plaatoAuthToken` tinytext NULL,
 	PRIMARY KEY (`tapId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -1458,7 +1460,8 @@ SELECT
     tc.flowPin as pinId,
 	s.rgb as srmRgb,
 	tc.valveOn,
-	tc.valvePinState
+	tc.valvePinState,
+    tc.plaatoAuthToken
 FROM taps t
 	LEFT JOIN tapconfig tc ON t.id = tc.tapId
 	LEFT JOIN kegs k ON k.id = t.kegId
@@ -1504,7 +1507,8 @@ SELECT
     NULL as pinId,
 	s.rgb as srmRgb,
 	1 as valveOn,
-	1 as valvePinState
+	1 as valvePinState,
+    NULL
 FROM bottles t
 	LEFT JOIN beers b ON b.id = t.beerId
 	LEFT JOIN bottleTypes bt ON bt.id = t.bottleTypeId

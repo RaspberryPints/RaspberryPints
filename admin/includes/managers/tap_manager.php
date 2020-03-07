@@ -147,7 +147,7 @@ class TapManager extends Manager{
 		return $this->executeQueryNoResult($sql);
 	}
 	
-	function saveTapConfig($id, $flowPin, $valvePin, $valveOn, $countpergallon, $countpergallonunit) {
+	function saveTapConfig($id, $flowPin, $valvePin, $valveOn, $countpergallon, $countpergallonunit, $plaatoAuthToken) {
 		$ret = true;
 		$sql="SELECT * FROM tapconfig where tapId = $id";
 		$tap = $this->executeQueryWithSingleResult($sql);
@@ -159,10 +159,11 @@ class TapManager extends Manager{
 			if($tap->get_valveOn() != $valveOn) 		$updateSql .= ($updateSql!=""?",":"")."valveOn = NULLIF('" . $valveOn . "', '')"; 
 			if($tap->get_count() != $countpergallon) 	$updateSql .= ($updateSql!=""?",":"")."count = NULLIF('" . $countpergallon . "', '')";
 			if($tap->get_countUnit() != $countpergallonunit) 	$updateSql .= ($updateSql!=""?",":"")."countUnit = NULLIF('" . $countpergallonunit . "', '')";
+			if($tap->get_plaatoAuthToken() != $plaatoAuthToken) $updateSql .= ($updateSql!=""?",":"")."plaatoAuthToken = NULLIF('" . $plaatoAuthToken . "', '')";
 			if($updateSql != "")$sql = "UPDATE tapconfig SET ".$updateSql." WHERE tapId = " . $id;
 		} else {
-			$sql = "INSERT INTO tapconfig (tapId, flowPin, valvePin, valveOn, count, countUnit) VALUES(" . 
-			                             $id.", ".$flowPin.", ".$valvePin. ", ".$valveOn.", ".$countpergallon.", '".$countpergallonunit."')";
+			$sql = "INSERT INTO tapconfig (tapId, flowPin, valvePin, valveOn, count, countUnit, plaatoAuthToken) VALUES(" . 
+			 			$id.", ".$flowPin.", ".$valvePin. ", ".$valveOn.", ".$countpergallon.", '".$countpergallonunit."','".$plaatoAuthToken."')";
 		}
 		if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
 		return $ret;

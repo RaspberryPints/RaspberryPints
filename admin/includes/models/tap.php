@@ -19,6 +19,7 @@ class Tap
 	private $_loadCellTareOffset;
 	private $_loadCellUnit;
 	private $_loadCellTareDate;
+	private $_plaatoAuthToken;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
@@ -77,6 +78,9 @@ class Tap
 	
 	public function get_loadCellTareDate(){ return $this->_loadCellTareDate; }
 	public function set_loadCellTareDate($_loadCellTareDate){ $this->_loadCellTareDate = $_loadCellTareDate; }
+	
+	public function get_plaatoAuthToken(){ return $this->_plaatoAuthToken; }
+	public function set_plaatoAuthToken($_plaatoAuthToken){ $this->_plaatoAuthToken = $_plaatoAuthToken; }
 		
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -181,6 +185,11 @@ class Tap
 		else
 			$this->set_createdDate(null);
 			
+		if( isset($postArr['plaatoAuthToken']) )
+		    $this->set_plaatoAuthToken($postArr['plaatoAuthToken']);
+		else
+		    $this->set_plaatoAuthToken(null);
+		
 		if( isset($postArr['modifiedDate']) )
 			$this->set_modifiedDate($postArr['modifiedDate']);
 		else

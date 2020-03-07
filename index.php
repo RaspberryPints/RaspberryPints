@@ -14,6 +14,13 @@
 	require_once __DIR__.'/admin/includes/managers/bottle_manager.php';
 	require_once __DIR__.'/admin/includes/managers/pour_manager.php'; 
 		
+	$plaatoPins = array(
+	    "style" => 'v64',
+	    "abv" => 'v68',
+	    "og" => 'v65',
+	    "fg" => 'v66',
+	    "remainAmount" => 'v51'
+	);
 	//This can be used to choose between CSV or MYSQL DB
 	$db = true;
 	
@@ -53,10 +60,25 @@
 				"tapNumber" => $b['tapNumber'],
 				"rating" => $b['rating'],
 				"srmRgb" => $b['srmRgb'],
-				"valvePinState" => $b['valvePinState']
+				"valvePinState" => $b['valvePinState'],
+				"plaatoAuthToken" => $b['plaatoAuthToken']
 			);
+			if($config[ConfigNames::UsePlaato]) {
+    			if(isset($b['plaatoAuthToken']) && $b['plaatoAuthToken'] !== NULL && $b['plaatoAuthToken'] != '')
+    			{
+    			    foreach( $plaatoPins as $value => $pin)
+    			    {
+    			        $plaatoValue = file_get_contents("http://plaato.blynk.cc/".$b['plaatoAuthToken']."/get/".$pin);
+    			        $plaatoValue = substr($plaatoValue, 2, strlen($plaatoValue)-4);
+    			        if( $value == 'fg' || $value == 'og' ) $plaatoValue = $plaatoValue/1000;
+    			        $beeritem[$value] = $plaatoValue;
+    			        //echo $value."=http://plaato.blynk.cc/".$b['plaatoAuthToken']."/get/".$pin."-".$beeritem[$value].'-'.$plaatoValue.'<br/>';
+    			    }
+    			}
+			}
 			$taps[$b['id']] = $beeritem;
 		}
+		
 		
 		$tapManager = new TapManager();
 		$numberOfTaps = $tapManager->getNumberOfTaps();

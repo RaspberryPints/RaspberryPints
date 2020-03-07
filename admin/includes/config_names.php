@@ -79,6 +79,7 @@ abstract class ConfigNames
 	const UseHighResolution = 'useHighResolution';
 	const UseRFID = 'useRFID';
 	const UseTapValves = 'useTapValves';
+	const UsePlaato = 'usePlaato';
 	const ValvesPowerPin = 'valvesPowerPin';
 	const Use3WireValves = 'use3WireValves';
 	const ValvesOnTime = 'valvesOnTime';

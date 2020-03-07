@@ -85,7 +85,7 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 		$valvepin = 0;
 		$countpergallon = 0;
 		$countpergallonUnit = UnitsOfMeasure::VolumeGallon;
-	
+		$plaatoAuthToken = "";
 		if (isset ( $_POST ['flowpin'][$ii] )) {
 			$flowpin = $_POST ['flowpin'][$ii];
 		}
@@ -112,8 +112,11 @@ if (isset ( $_POST ['saveTapConfig'] )) {
     			$countpergallonUnit = $_POST ['countpergallonUnit'][$ii];
     		}
 		}
+		if (isset ( $_POST ['plaatoAuthToken'][$ii] )) {
+		    $plaatoAuthToken = $_POST ['plaatoAuthToken'][$ii];
+		}
 	
-		$tapManager->saveTapConfig ( $id, $flowpin, $valvepin, $valveon, $countpergallon, $countpergallonUnit );
+		$tapManager->saveTapConfig ( $id, $flowpin, $valvepin, $valveon, $countpergallon, $countpergallonUnit, $plaatoAuthToken );
 		$ii++;
 	}
 	$reconfig = true;
@@ -388,6 +391,9 @@ include 'top_menu.php';
                         <th>Valve Pin</th>
                         <th>Valve<br>PI Pin?</th>
                     	<th></th>
+                        <?php if($config[ConfigNames::UsePlaato]) { ?>
+                    		<th>Plaato<br/>Auth<br/>Token</th>
+                        <?php } ?>
                     <?php } ?>
                 </tr>
             </thead>
@@ -557,6 +563,13 @@ include 'top_menu.php';
                             <td>
                                 <?php if( isset($tap) ) { ?>
                                     <button name="tapOverride[]" id="tapOverride<?php echo $tap->get_id();?>" type="button" class="btn" style="white-space:nowrap;" value="<?php echo $tap->get_valveOn(); ?>" onClick="changeTapState(this, <?php echo $tap->get_id()?>)"><?php echo ($tap->get_valveOn() < 1?TAP_TEXT_ENABLE:TAP_TEXT_DISABLE);?></button>
+                                <?php } ?>
+                            </td>
+                        <?php } ?>
+                        <?php if($config[ConfigNames::UsePlaato]) { ?>
+                            <td>
+                                <?php if( isset($tap) ) { ?>
+                                    <input type="text" id="plaatoAuthToken<?php echo $tap->get_id();?>" class="mediumbox" name="plaatoAuthToken[]" value="<?php echo $tap->get_plaatoAuthToken(); ?>" />
                                 <?php } ?>
                             </td>
                         <?php } ?>

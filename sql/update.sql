@@ -366,7 +366,8 @@ SELECT
     tc.flowPin as pinId,
 	s.rgb as srmRgb,
 	tc.valveOn,
-	tc.valvePinState
+	tc.valvePinState,
+    tc.plaatoAuthToken
 FROM taps t
 	LEFT JOIN tapconfig tc ON t.id = tc.tapId
 	LEFT JOIN kegs k ON k.id = t.kegId
@@ -612,46 +613,6 @@ FROM pours p
 	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId;
 	
 	
-CREATE OR REPLACE VIEW vwGetActiveTaps
-AS
-
-SELECT
-	t.id,
-	b.name,
-	b.untID,
-	bs.name as 'style',
-	br.name as 'breweryName',
-	br.imageUrl as 'breweryImageUrl',
-	b.rating,
-	b.notes,
-	b.abv,
-	b.og as og,
-	b.ogUnit as ogUnit,
-	b.fg as fg,
-	b.fgUnit as fgUnit,
-	b.srm as srm,
-	b.ibu as ibu,
-	IFNULL(k.startAmount, 0)        as startAmount,
-	IFNULL(k.startAmountUnit, '')   as startAmountUnit,
-    IFNULL(k.currentAmount, 0)      as remainAmount,
-    IFNULL(k.currentAmountUnit, '') as remainAmountUnit,
-	t.tapNumber,
-	t.tapRgba,
-    tc.flowPin as pinId,
-	s.rgb as srmRgb,
-	tc.valveOn,
-	tc.valvePinState
-FROM taps t
-	LEFT JOIN tapconfig tc ON t.id = tc.tapId
-	LEFT JOIN kegs k ON k.id = t.kegId
-	LEFT JOIN beers b ON b.id = k.beerId
-	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
-	LEFT JOIN breweries br ON br.id = b.breweryId
-	LEFT JOIN srmRgb s ON s.srm = b.srm
-WHERE t.active = true
-ORDER BY t.id;
-	
-
 CREATE OR REPLACE VIEW vwGetFilledBottles
 AS
 
@@ -681,7 +642,8 @@ SELECT
     NULL as pinId,
 	s.rgb as srmRgb,
 	1 as valveOn,
-	1 as valvePinState
+	1 as valvePinState,
+    NULL
 FROM bottles t
 	LEFT JOIN beers b ON b.id = t.beerId
 	LEFT JOIN bottleTypes bt ON bt.id = t.bottleTypeId
@@ -785,5 +747,9 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 ( 'relayTrigger', '0', 'Show list of pours on home screen', '0', 'High|Low', NOW(), NOW() ),
 ( 'hozTapListCol', '0', 'Number Of horizontal tap List Beer Column', '1', '2|1', NOW(), NOW() );
 
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+( 'usePlaato', '0', 'Use Plaato Values', '1', NOW(), NOW() );
+
+CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'plaatoAuthToken', 'tinytext NULL' );
 
 UPDATE `config` SET `configValue` = '3.0.9.0' WHERE `configName` = 'version';
