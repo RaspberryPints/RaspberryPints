@@ -319,10 +319,12 @@ if($editting) $maxTapCol = 1;
 				    $beer['remainAmount'] = convert_volume($beer['remainAmount'], $beer['remainAmountUnit'], $config[ConfigNames::DisplayUnitVolume], TRUE);
 					$beer['remainAmountUnit'] = $config[ConfigNames::DisplayUnitVolume]; 
 				?>
+					<?php if($conifg[ConfigNames::ShowPouredValue]){?>
 					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
 						<h3><?php echo number_format($beer['startAmount'] - $beer['remainAmount'], 1); echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L"); ?> poured</h3>
 					<?php } else { ?>
 						<h3><?php echo $beer['remainAmount'].' x '.number_format(convert_volume($beer['volume'], $beer['volumeUnit'], $config[ConfigNames::DisplayUnitVolume]), 1); echo $config[ConfigNames::DisplayUnitVolume];?></h3> 
+					<?php } ?>
 					<?php } ?>
 					<?php 
     					if($config[ConfigNames::ShowKegImg]){
