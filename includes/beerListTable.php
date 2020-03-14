@@ -10,6 +10,7 @@ $MAX_COLUMNS = 6;
 $editting = (isset($editingTable) && $editingTable);
 
 $maxTapCol = isset($config[ConfigNames::HozTapListCol])?$config[ConfigNames::HozTapListCol]+1:1;
+if($editting) $maxTapCol = 1;
 ?>
 
 <table>
@@ -203,7 +204,7 @@ $maxTapCol = isset($config[ConfigNames::HozTapListCol])?$config[ConfigNames::Hoz
 					<td style="<?php if($beerColSpan > 2){ echo 'border-left: none;'; } ?>" class="beerimg">
 					<?php if(isset($beer) && $beer['beername']){ ?>
 						<?php 
-							beerImg($config, $beer['untID']);
+						beerImg($config, $beer['untID'], $beer['beerId']);
 						?>
 					<?php } ?>
 					</td>

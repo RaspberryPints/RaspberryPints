@@ -74,7 +74,7 @@
 						
 				<?php if($config[ConfigNames::ShowPourBeerImages]){ ?>
                     <td style="<?php if($beerColSpan > 1){ echo 'border-left: none;'; } ?>" class="poursbeerimg">	
-                    <?php beerImg($config, $pour->get_beerUntID()); ?>
+                    <?php beerImg($config, $pour->get_beerUntID(), $pour->get_beerId()); ?>
                     </td>
                 <?php } ?>
 					

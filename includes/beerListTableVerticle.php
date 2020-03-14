@@ -182,7 +182,7 @@
     					<td style="border-left: none;width:auto" class="beerimg">
     					<?php if(isset($beer) && $beer['beername']){
     					 		$beerColSpan++; 
-    							beerImg($config, $beer['untID']);
+    					 		beerImg($config, $beer['untID'], $beer['beerId']);
     					 } ?>
     					</td>
     				<?php } ?>

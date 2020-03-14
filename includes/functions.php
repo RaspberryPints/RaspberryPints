@@ -5,7 +5,7 @@ require_once __DIR__.'/Pintlabs/Service/Untappd.php';
 
 function utBreweryFeed($config, $breweryId) {
 	
-	if(!isset($untID))return;
+    if(!isset($breweryId))return;
 	$cachefile = "cache/bfeed";
 	$filetimemod = 0;
 	if(file_exists($cachefile)) {
@@ -105,17 +105,23 @@ function beerRATING($config, $untID, $rating=NULL, $displayOnly=TRUE ) {
  
  }
 
- function beerIMG($config, $untID, $displayOnly=TRUE) {
+ function beerIMG($config, $untID, $beerId, $displayOnly=TRUE) {
 	 
-	if(!isset($untID))return;
+     if(!isset($untID) && !isset($beerId))return;
 	$cachefile = __DIR__."/cache/img/".$untID."";
 	$filetimemod = 0;
 	if(file_exists($cachefile)) {
 	    //update 1 time per year
 	    $filetimemod = filemtime($cachefile)+31536000;
 	}
+	
+	if( isset($beerId) ) $imgFiles = glob ( 'img/beer/beer'.$beerId.'.*' );
+	if( isset($beerId) && count($imgFiles) > 0 ){
+	    $imgs = "<img src=".$imgFiles[0]." style=\"border:0;width:100px\">";
+	    echo $imgs;
+	}
 	//If display then only use the cache file otherwise we are saving the beer and want to update the cache
-	if ($displayOnly && $filetimemod > 0) {
+	else if ($displayOnly && $filetimemod > 0) {
 		include $cachefile;
 	}else if($filetimemod == 0 || time()<$filetimemod) {
 		ob_start();

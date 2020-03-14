@@ -346,6 +346,7 @@ AS
 
 SELECT
 	t.id,
+	b.id as 'beerId',
 	b.name,
 	b.untID,
 	bs.name as 'style',
@@ -414,25 +415,6 @@ INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOn
 
 INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
 ('restartFanAfterPour', '1', 'Restart Fan After pour', 0, NOW(), NOW() );
-
-
-CREATE OR REPLACE VIEW `vwPours`
-AS
-SELECT 
-	p.*, 
-	t.tapNumber, 
-	t.tapRgba,
-	b.name AS beerName, 
-	b.untID AS beerUntID, 
-  bs.name as beerStyle,
-	br.imageUrl AS breweryImageUrl, 
-	COALESCE(u.userName, '') as userName
-FROM pours p 
-	LEFT JOIN taps t ON (p.tapId = t.id) 
-	LEFT JOIN beers b ON (p.beerId = b.id) 
-	LEFT JOIN breweries br ON (b.breweryId = br.id) 
-	LEFT JOIN users u ON (p.userId = u.id)
-	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId;
 
   update config set showOnPanel = '1' WHERE configName = 'showPourDate';
 
@@ -592,8 +574,8 @@ AS
         ON k.kegTypeId = kt.id
       LEFT JOIN taps t 
         ON k.onTapId = t.id;
-
         
+
 CREATE OR REPLACE VIEW `vwPours`
 AS
 SELECT 
@@ -602,7 +584,7 @@ SELECT
 	t.tapRgba,
 	b.name AS beerName, 
 	b.untID AS beerUntID, 
-  bs.name as beerStyle,
+        bs.name as beerStyle,
 	br.imageUrl AS breweryImageUrl, 
 	COALESCE(u.userName, '') as userName
 FROM pours p 
@@ -618,6 +600,7 @@ AS
 
 SELECT
 	t.id,
+	b.id as 'beerId',
 	b.name,
 	b.untID,
 	bs.name as 'style',

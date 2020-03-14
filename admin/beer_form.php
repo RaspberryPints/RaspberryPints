@@ -154,6 +154,36 @@ include 'top_menu.php';
 			<p>Fields marked with <b><font color="red">*</font></b> are required.<br><br>
 			<?php $htmlHelper->ShowMessage(); ?>
 
+	<form id="beer-form" method="POST" action="image_prompt.php?id=<?php echo $beer->get_id();?>" target="_blank">
+		<input type="hidden" name="id" value="<?php echo $beer->get_id() ?>" />
+		<input type="hidden" name="active" value="<?php echo $beer->get_active() ?>" />		
+        <input type="hidden" name="targetDir" value="beer/beer"/>
+		<table style="width:800;border:0;cellspacing:1;cellpadding:0;">
+			<tr>
+				<td style="vertical-align: middle">
+					<b>Image:</b>
+				</td>
+				<td style="vertical-align: middle">
+                   <?php 
+                        $hasImg = false;
+                        if(isset($beer))
+						{
+						    $imgs = glob ( '../img/beer/beer'.$beer->get_id().'.*' );
+							if(count($imgs) > 0)
+							{
+							    echo '<img src="'.$imgs[0].'"></img>';
+							    $hasImg = true;
+							}
+						}
+					?> 
+                	<?php if($hasImg) {?>
+                		<a href="image_remove.php?id=<?php echo $beer->get_id();?>" target="_blank"><span class="tooltip"><img src="img/icons/icon_missing.png" /><span class="tooltiptext">Remove Beer Image</span></span></a>
+                	<?php }?>
+                	<input name="save" type="submit" class="btn" value="Upload" />
+				</td>
+			</tr>
+		</table>
+	</form>
 	<form id="beer-form" method="POST">
 		<input type="hidden" name="id" value="<?php echo $beer->get_id() ?>" />
 		<input type="hidden" name="active" value="<?php echo $beer->get_active() ?>" />
@@ -175,6 +205,7 @@ include 'top_menu.php';
 					<input type="text" id="untID" class="smallbox" name="untID" value="<?php echo $beer->get_untID() ?>" />
 				</td>
 			</tr>
+			<tr>
 			<tr>
 				<td>
 					<b>Brewery:</b>
