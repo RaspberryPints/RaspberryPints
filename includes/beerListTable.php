@@ -211,7 +211,7 @@ if($editting) $maxTapCol = 1;
 				<?php } ?>
                 
 				<!-- If not the first column in the beer section-->
-				<td class="name" <?php if($beerColSpan > 1){ echo 'style="border-left: none; width : '.($maxTapCol==1?($beerColSpan > 2?80:90).'%"':"50%"); } ?>
+				<td class="name" <?php if($beerColSpan > 1){ echo 'style="border-left: none; width : '.($maxTapCol==1?($beerColSpan > 2?80:90).'%"':'50%"'); } ?>
 							     <?php if($beerColSpan == 1){ echo 'style="width : '.(100/$maxTapCol).'%"'; } ?>>	
 					<?php if(isset($beer) && $beer['beername']){ ?>		
                     					
