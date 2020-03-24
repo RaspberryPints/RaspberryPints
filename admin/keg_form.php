@@ -13,7 +13,8 @@ $config = getAllConfigs();
 if(isset($_POST['beerId'])){
     $_POST['beerId'] = explode('~', $_POST['beerId'])[0];
 }
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
+    isset($_POST['save']) ) {
     $keg = new Keg();
     $keg->setFromArray($_POST);
     if( isset($_POST['kickKeg'])){
@@ -196,6 +197,15 @@ include 'top_menu.php';
 				<td>
 					<input type="text" id="emptyWeight" class="mediumbox" name="emptyWeight" value="<?php echo convert_weight($keg->get_emptyWeight(), $keg->get_emptyWeightUnit(), $config[ConfigNames::DisplayUnitWeight]); ?>" />
 					<input type="hidden" id="emptyWeightUnit" name="emptyWeightUnit" value="<?php echo $config[ConfigNames::DisplayUnitWeight]; ?>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					
+					<div class="tooltip">Continuous Lid:<span class="tooltiptext">Keg will always be full<br/>if start amount in keg is 0 then <br/>remaining is hidden on list</span></div>
+				</td>
+				<td>
+					<input type="checkbox" id="hasContinuousLid" name="hasContinuousLid" value="1" <?php echo $keg->get_hasContinuousLid()?'checked':''; ?> />
 				</td>
 			</tr>
 			<tr>

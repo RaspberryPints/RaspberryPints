@@ -590,6 +590,7 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 	`onTapId` int(11) NULL,
 	`beerId` int(11) NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
+    `hasContinuousLid` int(11) DEFAULT 0,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
@@ -1454,7 +1455,7 @@ SELECT
 	b.ibu as ibu,
 	IFNULL(k.startAmount, 0)        as startAmount,
 	IFNULL(k.startAmountUnit, '')   as startAmountUnit,
-    IFNULL(k.currentAmount, 0)      as remainAmount,
+    CASE WHEN k.hasContinuousLid = 0 THEN IFNULL(k.currentAmount, 0) ELSE IFNULL(k.startAmount, 0)  END      as remainAmount,
     IFNULL(k.currentAmountUnit, '') as remainAmountUnit,
 	t.tapNumber,
 	t.tapRgba,
@@ -1560,6 +1561,7 @@ AS
     k.fermentationPSIUnit,
     k.keggingTemp,
     k.keggingTempUnit,
+    k.hasContinuousLid,
     k.modifiedDate,
     k.createdDate
  FROM kegs k LEFT JOIN kegTypes kt 

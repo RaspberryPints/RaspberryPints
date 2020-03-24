@@ -29,6 +29,7 @@ class Keg
 	private $_fermenationPSIUnit;
 	private $_keggingTemp;
 	private $_keggingTempUnit;
+	private $_hasContinuousLid;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
@@ -123,6 +124,9 @@ class Keg
 	
 	public function get_keggingTempUnit(){ return $this->_keggingTempUnit; }
 	public function set_keggingTempUnit($_keggingTempUnit){ $this->_keggingTempUnit = $_keggingTempUnit; }
+	
+	public function get_hasContinuousLid(){ return $this->_hasContinuousLid; }
+	public function set_hasContinuousLid($_hasContinuousLid){ $this->_hasContinuousLid = $_hasContinuousLid; }
 	
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -272,6 +276,11 @@ class Keg
         else
             $this->set_keggingTempUnit(null);
         
+        if( isset($postArr['hasContinuousLid']) )
+            $this->set_hasContinuousLid($postArr['hasContinuousLid']);
+        else
+            $this->set_hasContinuousLid(0);
+        
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);
 		else
@@ -312,6 +321,7 @@ class Keg
 			"fermentationPSIUnit: " . $this->get_fermentationPSIUnit() . ", " .
 			"keggingTemp: " . $this->get_keggingTemp() . ", " .
 			"keggingTempUnit: " . $this->get_keggingTempUnit() . ", " .
+			"hasContinuousLid: " . $this->get_hasContinuousLid() . ", " .
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  
 		"}";

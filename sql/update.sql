@@ -238,7 +238,20 @@ AS
     t.tapNumber,
     k.active,
     CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeight ELSE k.emptyWeight END AS emptyWeight,
-    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmount ELSE k.maxVolume END AS maxVolume
+    CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeightUnit ELSE k.emptyWeightUnit END AS emptyWeightUnit,
+    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmount ELSE k.maxVolume END AS maxVolume,
+    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmountUnit ELSE k.maxVolumeUnit END AS maxVolumeUnit,
+    k.startAmount,
+    k.startAmountUnit,
+    k.currentAmount,
+    k.currentAmountUnit,
+    k.fermentationPSI,
+    k.fermentationPSIUnit,
+    k.keggingTemp,
+    k.keggingTempUnit,
+    k.hasContinuousLid,
+    k.modifiedDate,
+    k.createdDate
  FROM kegs k LEFT JOIN kegTypes kt 
         ON k.kegTypeId = kt.id
       LEFT JOIN taps t 
@@ -356,12 +369,15 @@ SELECT
 	b.notes,
 	b.abv,
 	b.og as og,
+	b.ogUnit as ogUnit,
 	b.fg as fg,
+	b.fgUnit as fgUnit,
 	b.srm as srm,
 	b.ibu as ibu,
-	k.startAmount,
-	(IFNULL(k.startAmount,0) - IFNULL(k.currentAmount,0)) as amountPoured,
-    IFNULL(k.currentAmount , 0)as remainAmount,
+	IFNULL(k.startAmount, 0)        as startAmount,
+	IFNULL(k.startAmountUnit, '')   as startAmountUnit,
+    CASE WHEN k.hasContinuousLid = 0 THEN IFNULL(k.currentAmount, 0) ELSE IFNULL(k.startAmount, 0)  END      as remainAmount,
+    IFNULL(k.currentAmountUnit, '') as remainAmountUnit,
 	t.tapNumber,
 	t.tapRgba,
     tc.flowPin as pinId,
@@ -734,5 +750,8 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 ( 'usePlaato', '0', 'Use Plaato Values', '1', NOW(), NOW() );
 
 CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'plaatoAuthToken', 'tinytext NULL' );
+
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'hasContinuousLid', 'int(11) DEFAULT 0' );
+
 
 UPDATE `config` SET `configValue` = '3.0.9.0' WHERE `configName` = 'version';
