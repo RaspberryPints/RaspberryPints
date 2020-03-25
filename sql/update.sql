@@ -219,43 +219,6 @@ UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE displayName = 'Cask (kilder
 UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE displayName = 'Cask (barrel)' AND emptyWeight IS NULL;
 UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE displayName = 'Cask (hogshead)' AND emptyWeight IS NULL;
 
-CREATE OR REPLACE VIEW `vwKegs` 
-AS
- SELECT 
-    k.id,
-    k.label,
-    k.kegTypeId,
-    k.make,
-    k.model,
-    k.serial,
-    k.stampedOwner,
-    k.stampedLoc,
-    k.notes,
-    k.kegStatusCode,
-    k.weight,
-    k.beerId,
-    k.onTapId,
-    t.tapNumber,
-    k.active,
-    CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeight ELSE k.emptyWeight END AS emptyWeight,
-    CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeightUnit ELSE k.emptyWeightUnit END AS emptyWeightUnit,
-    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmount ELSE k.maxVolume END AS maxVolume,
-    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmountUnit ELSE k.maxVolumeUnit END AS maxVolumeUnit,
-    k.startAmount,
-    k.startAmountUnit,
-    k.currentAmount,
-    k.currentAmountUnit,
-    k.fermentationPSI,
-    k.fermentationPSIUnit,
-    k.keggingTemp,
-    k.keggingTempUnit,
-    k.hasContinuousLid,
-    k.modifiedDate,
-    k.createdDate
- FROM kegs k LEFT JOIN kegTypes kt 
-        ON k.kegTypeId = kt.id
-      LEFT JOIN taps t 
-        ON k.onTapId = t.id;
 
 CREATE OR REPLACE VIEW `vwTaps` 
 AS
@@ -354,77 +317,6 @@ EXECUTE alterIfNotExists;
 DEALLOCATE PREPARE alterIfNotExists;
 
 
-CREATE OR REPLACE VIEW vwGetActiveTaps
-AS
-
-SELECT
-	t.id,
-	b.id as 'beerId',
-	b.name,
-	b.untID,
-	bs.name as 'style',
-	br.name as 'breweryName',
-	br.imageUrl as 'breweryImageUrl',
-	b.rating,
-	b.notes,
-	b.abv,
-	b.og as og,
-	b.ogUnit as ogUnit,
-	b.fg as fg,
-	b.fgUnit as fgUnit,
-	b.srm as srm,
-	b.ibu as ibu,
-	IFNULL(k.startAmount, 0)        as startAmount,
-	IFNULL(k.startAmountUnit, '')   as startAmountUnit,
-    CASE WHEN k.hasContinuousLid = 0 THEN IFNULL(k.currentAmount, 0) ELSE IFNULL(k.startAmount, 0)  END      as remainAmount,
-    IFNULL(k.currentAmountUnit, '') as remainAmountUnit,
-	t.tapNumber,
-	t.tapRgba,
-    tc.flowPin as pinId,
-	s.rgb as srmRgb,
-	tc.valveOn,
-	tc.valvePinState,
-    tc.plaatoAuthToken
-FROM taps t
-	LEFT JOIN tapconfig tc ON t.id = tc.tapId
-	LEFT JOIN kegs k ON k.id = t.kegId
-	LEFT JOIN beers b ON b.id = k.beerId
-	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
-	LEFT JOIN breweries br ON br.id = b.breweryId
-	LEFT JOIN srmRgb s ON s.srm = b.srm
-WHERE t.active = true
-ORDER BY t.id;
-
-CREATE OR REPLACE VIEW `vwKegs` 
-AS
- SELECT 
-    k.id,
-    k.label,
-    k.kegTypeId,
-    k.make,
-    k.model,
-    k.serial,
-    k.stampedOwner,
-    k.stampedLoc,
-    k.notes,
-    k.kegStatusCode,
-    k.weight,
-    k.beerId,
-    k.onTapId,
-    t.tapNumber,
-    k.active,
-    CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeight ELSE k.emptyWeight END AS emptyWeight,
-    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmount ELSE k.maxVolume END AS maxVolume,
-    k.startAmount,
-    k.currentAmount,
-    k.fermentationPSI,
-    k.keggingTemp,
-    k.modifiedDate,
-    k.createdDate
- FROM kegs k LEFT JOIN kegTypes kt 
-        ON k.kegTypeId = kt.id
-      LEFT JOIN taps t 
-        ON k.onTapId = t.id;
 
 INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
 ( 'allowSamplePour', '1', 'Allow Sample Pour from List', '1', NOW(), NOW() );
@@ -552,44 +444,6 @@ AS
  FROM taps t 
  LEFT JOIN tapconfig tc ON (t.id = tc.tapId) 
  LEFT JOIN kegs k ON (t.kegId = k.id);
-
-CREATE OR REPLACE VIEW `vwKegs` 
-AS
- SELECT 
-    k.id,
-    k.label,
-    k.kegTypeId,
-    k.make,
-    k.model,
-    k.serial,
-    k.stampedOwner,
-    k.stampedLoc,
-    k.notes,
-    k.kegStatusCode,
-    k.weight,
-    k.weightUnit,
-    k.beerId,
-    k.onTapId,
-    t.tapNumber,
-    k.active,
-    CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeight ELSE k.emptyWeight END AS emptyWeight,
-    CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeightUnit ELSE k.emptyWeightUnit END AS emptyWeightUnit,
-    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmount ELSE k.maxVolume END AS maxVolume,
-    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmountUnit ELSE k.maxVolumeUnit END AS maxVolumeUnit,
-    k.startAmount,
-    k.startAmountUnit,
-    k.currentAmount,
-    k.currentAmountUnit,
-    k.fermentationPSI,
-    k.fermentationPSIUnit,
-    k.keggingTemp,
-    k.keggingTempUnit,
-    k.modifiedDate,
-    k.createdDate
- FROM kegs k LEFT JOIN kegTypes kt 
-        ON k.kegTypeId = kt.id
-      LEFT JOIN taps t 
-        ON k.onTapId = t.id;
         
 
 CREATE OR REPLACE VIEW `vwPours`
@@ -752,6 +606,88 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'plaatoAuthToken', 'tinytext NULL' );
 
 CALL addColumnIfNotExist(DATABASE(), 'kegs', 'hasContinuousLid', 'int(11) DEFAULT 0' );
+
+
+CREATE OR REPLACE VIEW vwGetActiveTaps
+AS
+
+SELECT
+	t.id,
+	b.id as 'beerId',
+	b.name,
+	b.untID,
+	bs.name as 'style',
+	br.name as 'breweryName',
+	br.imageUrl as 'breweryImageUrl',
+	b.rating,
+	b.notes,
+	b.abv,
+	b.og as og,
+	b.ogUnit as ogUnit,
+	b.fg as fg,
+	b.fgUnit as fgUnit,
+	b.srm as srm,
+	b.ibu as ibu,
+	IFNULL(k.startAmount, 0)        as startAmount,
+	IFNULL(k.startAmountUnit, '')   as startAmountUnit,
+    CASE WHEN k.hasContinuousLid = 0 THEN IFNULL(k.currentAmount, 0) ELSE IFNULL(k.startAmount, 0)  END      as remainAmount,
+    IFNULL(k.currentAmountUnit, '') as remainAmountUnit,
+	t.tapNumber,
+	t.tapRgba,
+    tc.flowPin as pinId,
+	s.rgb as srmRgb,
+	tc.valveOn,
+	tc.valvePinState,
+    tc.plaatoAuthToken
+FROM taps t
+	LEFT JOIN tapconfig tc ON t.id = tc.tapId
+	LEFT JOIN kegs k ON k.id = t.kegId
+	LEFT JOIN beers b ON b.id = k.beerId
+	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
+	LEFT JOIN breweries br ON br.id = b.breweryId
+	LEFT JOIN srmRgb s ON s.srm = b.srm
+WHERE t.active = true
+ORDER BY t.id;
+
+
+
+CREATE OR REPLACE VIEW `vwKegs` 
+AS
+ SELECT 
+    k.id,
+    k.label,
+    k.kegTypeId,
+    k.make,
+    k.model,
+    k.serial,
+    k.stampedOwner,
+    k.stampedLoc,
+    k.notes,
+    k.kegStatusCode,
+    k.weight,
+    k.beerId,
+    k.onTapId,
+    t.tapNumber,
+    k.active,
+    CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeight ELSE k.emptyWeight END AS emptyWeight,
+    CASE WHEN (k.emptyWeight IS NULL OR k.emptyWeight = '' OR k.emptyWeight = 0) AND kt.emptyWeight IS NOT NULL THEN kt.emptyWeightUnit ELSE k.emptyWeightUnit END AS emptyWeightUnit,
+    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmount ELSE k.maxVolume END AS maxVolume,
+    CASE WHEN (k.maxVolume IS NULL OR k.maxVolume = '' OR k.maxVolume = 0) AND kt.maxAmount IS NOT NULL THEN kt.maxAmountUnit ELSE k.maxVolumeUnit END AS maxVolumeUnit,
+    k.startAmount,
+    k.startAmountUnit,
+    k.currentAmount,
+    k.currentAmountUnit,
+    k.fermentationPSI,
+    k.fermentationPSIUnit,
+    k.keggingTemp,
+    k.keggingTempUnit,
+    k.hasContinuousLid,
+    k.modifiedDate,
+    k.createdDate
+ FROM kegs k LEFT JOIN kegTypes kt 
+        ON k.kegTypeId = kt.id
+      LEFT JOIN taps t 
+        ON k.onTapId = t.id;
 
 
 UPDATE `config` SET `configValue` = '3.0.9.0' WHERE `configName` = 'version';
