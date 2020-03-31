@@ -72,7 +72,7 @@
     			        $plaatoValue = file_get_contents("http://plaato.blynk.cc/".$b['plaatoAuthToken']."/get/".$pin);
     			        $plaatoValue = substr($plaatoValue, 2, strlen($plaatoValue)-4);
     			        if( $value == 'fg' || $value == 'og' ) $plaatoValue = $plaatoValue/1000;
-    			        $beeritem[$value] = $plaatoValue;
+    			        if( $plaatoValue !== NULL && $plaatoValue != '') $beeritem[$value] = $plaatoValue;
     			        //echo $value."=http://plaato.blynk.cc/".$b['plaatoAuthToken']."/get/".$pin."-".$beeritem[$value].'-'.$plaatoValue.'<br/>';
     			    }
     			}
