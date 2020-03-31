@@ -374,7 +374,7 @@ include 'top_menu.php';
                     <th>Tap<br>Description</th>
                     <th>Keg<br>(OnTap Number)</th>
                     <th style="width:10%">Beer</th>
-                    <th>Start<br>Amount (<?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L");?>)</th>
+                    <th><div class="tooltip">Start<br>Amount (<?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L");?>)<span class="tooltiptext">Set to 0 to hide the Remaining Keg on the list</span></div></th>
                     <th>Current<br>Amount(<?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L");?>)</th>
 					<?php if($config[ConfigNames::UseKegWeightCalc]) { ?>
                         <th>Current<br>Weight(<?php echo $config[ConfigNames::DisplayUnitWeight]?>)</th>
