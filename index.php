@@ -19,7 +19,8 @@
 	    "abv" => 'v68',
 	    "og" => 'v65',
 	    "fg" => 'v66',
-	    "remainAmount" => 'v51'
+	    "remainAmount" => 'v51',
+	    "lastPour" => 'v47'
 	);
 	//This can be used to choose between CSV or MYSQL DB
 	$db = true;
