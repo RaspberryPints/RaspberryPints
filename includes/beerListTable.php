@@ -323,6 +323,9 @@ if($editting) $maxTapCol = 1;
 				<?php if(isset($beer) && $beer['beername'] && 
 				         $beer['startAmount'] > 0){ ?>
 					<?php if($config[ConfigNames::ShowPouredValue]){?>
+					<?php if( isset($beer['lastPour']) && $beer['lastPour'] != ''){ ?>
+    					<h3><?php echo $beer['lastPour']?></h3>
+    				<?php }?>
 					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
 						<h3><?php echo number_format($beer['startAmount'] - $beer['remainAmount'], 1); echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L"); ?> poured</h3>
 					<?php } else { ?>
