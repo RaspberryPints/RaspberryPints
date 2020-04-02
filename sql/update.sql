@@ -603,6 +603,7 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ( 'usePlaato', '0', 'Use Plaato Values', '1', NOW(), NOW() );
 
+
 CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'plaatoAuthToken', 'tinytext NULL' );
 
 CALL addColumnIfNotExist(DATABASE(), 'kegs', 'hasContinuousLid', 'int(11) DEFAULT 0' );
@@ -689,5 +690,9 @@ AS
       LEFT JOIN taps t 
         ON k.onTapId = t.id;
 
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+( 'showPouredValue', '1', 'Show Poured Value', '1', NOW(), NOW() );
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+( 'showLastPouredValue', '1', 'Show Last Poured Value', '1', NOW(), NOW() );
 
 UPDATE `config` SET `configValue` = '3.0.9.0' WHERE `configName` = 'version';

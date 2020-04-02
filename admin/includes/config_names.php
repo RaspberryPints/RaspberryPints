@@ -61,6 +61,7 @@ abstract class ConfigNames
 	const ShowPourTapNumCol = 'showPourTapNumCol';
 	const ShowPourUserName = 'showPourUserName';
 	const ShowPouredValue = 'showPouredValue';
+	const ShowLastPouredValue = 'showLastPouredValue';
 	const ShowRemainValue = 'showRemainValue';
 	const ShowVerticleTapList = 'showVerticleTapList';
 	const ShowRPLogo = 'showRPLogo';

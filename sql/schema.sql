@@ -394,6 +394,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'showTastingNotes', '1', 'Show Tasting Notes', '1', NOW(), NOW() ),
 ( 'showAbvValue', '1', 'Show ABV Value', '1', NOW(), NOW() ),
 ( 'showPouredValue', '1', 'Show Poured Value', '1', NOW(), NOW() ),
+( 'showLastPouredValue', '1', 'Show Last Poured Value', '1', NOW(), NOW() ),
 ( 'showRemainValue', '1', 'Show Remaining Value', '1', NOW(), NOW() ),
 ( 'showRPLogo', '0', 'Show the RaspberryPints Logo', '1', NOW(), NOW() ),
 ( 'showLastPour', '0', 'Show the Last Pour in Upper Right Corner if no temp', '1', NOW(), NOW() ),

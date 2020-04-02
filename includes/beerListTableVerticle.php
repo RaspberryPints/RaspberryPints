@@ -337,11 +337,13 @@
 				<?php } ?>
 				<?php if(isset($beer) && $beer['beername'] && 
 				         $beer['startAmount'] > 0){ ?>
-					<?php if($config[ConfigNames::ShowPouredValue]){?>
-					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
-					<?php if( isset($beer['lastPour']) && $beer['lastPour'] != ''){ ?>
+					<?php if($config[ConfigNames::ShowLastPouredValue] &&
+					         $tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG &&
+					         isset($beer['lastPour']) && $beer['lastPour'] != ''){ ?>
     					<h3><?php echo $beer['lastPour']?></h3>
     				<?php }?>
+					<?php if($config[ConfigNames::ShowPouredValue]){?>
+					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
 						<h3><?php echo number_format($beer['startAmount'] - $beer['remainAmount'], 1); echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L"); ?> poured</h3>
 					<?php } else { ?>
 						<h3><?php echo $beer['remainAmount'].' x '.number_format(convert_volume($beer['volume'], $beer['volumeUnit'], $config[ConfigNames::DisplayUnitVolume]), 1); echo $config[ConfigNames::DisplayUnitVolume];?></h3> 
@@ -396,7 +398,7 @@
 						<?php } ?>
 				<?php }elseif( isset($beer) && $beer['beername'] && 
 				               isset($beer['lastPour']) && $beer['lastPour'] != ''){ ?>
-					<?php if($config[ConfigNames::ShowPouredValue]){?>
+					<?php if($config[ConfigNames::ShowLastPouredValue]){?>
 						<h3>Last pour:<br/><?php echo $beer['lastPour']?></h3>
 					<?php } ?>
 				<?php } ?>
