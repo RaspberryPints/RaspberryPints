@@ -177,7 +177,7 @@ include 'top_menu.php';
 						}
 					?> 
                 	<?php if($hasImg) {?>
-                		<a href="image_remove.php?id=<?php echo $beer->get_id();?>" target="_blank"><span class="tooltip"><img src="img/icons/icon_missing.png" /><span class="tooltiptext">Remove Beer Image</span></span></a>
+                		<a href="image_remove.php?id=<?php echo $beer->get_id();?>&type=beer" target="_blank"><span class="tooltip"><img src="img/icons/icon_missing.png" /><span class="tooltiptext">Remove Beer Image</span></span></a>
                 	<?php }?>
                 	<input name="save" type="submit" class="btn" value="Upload" />
 				</td>

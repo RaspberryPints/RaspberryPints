@@ -431,7 +431,7 @@ include 'top_menu.php';
     							<input type="text" id="tapNumber<?php echo $tap->get_id();?>" class="smallbox" name="tapNumber[]" value="<?php echo $tap->get_tapNumber(); ?>" <?php echo $style != ""?'style="'.$style.'"':""; ?> />
     							<a href="image_prompt.php?id=<?php echo $tap->get_id();?>" target="_blank"><span class="tooltip"><img src="img/icons/upload.png" /><span class="tooltiptext">Upload Tap Image</span></span></a>
                             	<?php if($hasImg) {?>
-                            		<a href="image_remove.php?id=<?php echo $tap->get_id();?>" target="_blank"><span class="tooltip"><img src="img/icons/icon_missing.png" /><span class="tooltiptext">Remove Tap Image</span></span></a>
+                            		<a href="image_remove.php?id=<?php echo $tap->get_id();?>&type=tap" target="_blank"><span class="tooltip"><img src="img/icons/icon_missing.png" /><span class="tooltiptext">Remove Tap Image</span></span></a>
                             	<?php }?>
                             </div>
                             <?php } ?>
