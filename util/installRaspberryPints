@@ -602,7 +602,6 @@ dbauser() {
 			echo
 		fi
 	fi
-
 	read -e -p "RaspberryPints Database Name? (default is: ${MYSQL_DB_NAME}): " ANSWER
 	if [ "$ANSWER" != "" ]; then
 		MYSQL_DB_NAME=$ANSWER
