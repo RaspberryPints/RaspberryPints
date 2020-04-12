@@ -1035,6 +1035,7 @@ installRFID(){
 		echo
 	fi
 }
+#based off https://www.homebrewtalk.com/forum/threads/initial-release-raspberrypints-digital-taplist-solution.456809/page-20#post-6029665
 installMotionSensor(){
 	PKG_OK=$(dpkg-query -W --showformat='${Status}\n' xscreensaver|grep "install ok installed")
 	if [ "" != "$PKG_OK" ] && [ $RECONFIG_PI -ne 0  ]; then return ; fi
