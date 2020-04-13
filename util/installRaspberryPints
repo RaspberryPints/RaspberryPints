@@ -536,7 +536,7 @@ getwwwpath() {
         WWWPATH="/var/www/html"
     fi
     # ask the user where they want to install to (default is WEBROOT)
-	read -e -p "Where do you want to install RaspberryPints? : " -i "${WWWPATH}" ANSWER
+	read -e -p "Where do you want to install RaspberryPints? : " -i "${WWWPATH}" ANSWER < /dev/tty
 	if [ "$ANSWER" = "" ]; then
 	   ANSWER="${WWWPATH}"
 	fi
@@ -583,36 +583,36 @@ dbauser() {
 	if ! promptYN "Will this pi host the database" "Y";
 	then
 		PACKAGES=${PACKAGES/mysql-server /}
-		read -e -p "What computer will Host RaspberryPints Database? (default is: localhost): " ANSWER
+		read -e -p "What computer will Host RaspberryPints Database? (default is: localhost): " ANSWER < /dev/tty
 		if [ "$ANSWER" != "" ]; then
 		   MYSQL_SERVER=$ANSWER
 		fi
-		read -e -p "MySql Admin User for server ${MYSQL_SERVER}?: " ANSWER
+		read -e -p "MySql Admin User for server ${MYSQL_SERVER}?: " ANSWER < /dev/tty
 		MYSQL_USER=$ANSWER
 		ANSWER=""
-		read -s -e -p "MySql Admin Password for server ${MYSQL_SERVER}?: " ANSWER
+		read -s -e -p "MySql Admin Password for server ${MYSQL_SERVER}?: " ANSWER < /dev/tty
 		MYSQL_PASS=$ANSWER
 		echo
 	else
 		if echo "$VER_NAME" | grep -iq "^jessie" ; 
 		then
 			ANSWER=""
-			read -s -e -p "MySql Admin Password to be used for server ${MYSQL_SERVER}?: " ANSWER
+			read -s -e -p "MySql Admin Password to be used for server ${MYSQL_SERVER}?: " ANSWER < /dev/tty
 			MYSQL_PASS=$ANSWER
 			echo
 		fi
 	fi
-	read -e -p "RaspberryPints Database Name? (default is: ${MYSQL_DB_NAME}): " ANSWER
+	read -e -p "RaspberryPints Database Name? (default is: ${MYSQL_DB_NAME}): " ANSWER < /dev/tty
 	if [ "$ANSWER" != "" ]; then
 		MYSQL_DB_NAME=$ANSWER
 	fi
 	
-	read -e -p "RaspberryPints Database User Name? (default is: ${MYSQL_RP_USER}): " ANSWER
+	read -e -p "RaspberryPints Database User Name? (default is: ${MYSQL_RP_USER}): " ANSWER < /dev/tty
 	if [ "$ANSWER" != "" ]; then
 		MYSQL_RP_USER=$ANSWER
 	fi
 	# setup respberrypints mysql user
-	read -s -e -p "RaspberryPints Database User Password? (default is: ${MYSQL_RP_PASS}): " ANSWER
+	read -s -e -p "RaspberryPints Database User Password? (default is: ${MYSQL_RP_PASS}): " ANSWER < /dev/tty
 	if [ "$ANSWER" != "" ]; then
 		MYSQL_RP_PASS=$ANSWER
 	fi 
@@ -740,21 +740,21 @@ setupDatabase(){
 	RP_NAME_FIRST=""
 	RP_NAME_LAST=""
 	RP_EMAIL=""
-	read -e -p "Admin Username?: " -i ${RP_USERNAME} RP_USERNAME
+	read -e -p "Admin Username?: " -i ${RP_USERNAME} RP_USERNAME < /dev/tty
 	while [ "$RP_PASS" != "$RP_PASS2" ];
 	do
-		read -s -e -p "Admin Password?: " RP_PASS
+		read -s -e -p "Admin Password?: " RP_PASS < /dev/tty
 		echo
-		read -s -e -p "Re-enter Admin Password?: " RP_PASS2
+		read -s -e -p "Re-enter Admin Password?: " RP_PASS2 < /dev/tty
 		if [ "$RP_PASS" != "$RP_PASS2" ] ; then
 			echo
 			echo "Passwords didnt match, please try again"
 		fi
 	done
 	echo
-	read -e -p "Admin First Name?: " RP_NAME_FIRST
-	read -e -p "Admin Last Name?: " RP_NAME_Last
-	read -e -p "Admin Email?: " RP_EMAIL
+	read -e -p "Admin First Name?: " RP_NAME_FIRST < /dev/tty
+	read -e -p "Admin Last Name?: " RP_NAME_Last < /dev/tty
+	read -e -p "Admin Email?: " RP_EMAIL < /dev/tty
 	
 	if ! echo "$REPO" | grep -iq "rtlindne" ; then
 		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO users 
@@ -997,7 +997,7 @@ installFlowmeters(){
 			update-rc.d flowmon defaults
 		fi
 		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "UPDATE config SET configValue='1' WHERE configName='useFlowMeter';";
-		read -e -p "For alamode set the 5V_link jumper to on (see page 11 of the Alamode Manual). Enter to continue" ANSWER
+		read -e -p "For alamode set the 5V_link jumper to on (see page 11 of the Alamode Manual). Enter to continue" ANSWER < /dev/tty
 	else
 		echo "Will Not Install Flow Meters"
 		echo
@@ -1021,7 +1021,7 @@ installRFID(){
 		
 		popd
 		
-		read -e -p "What Pi Pin is the RFID Slave Select (SDA) connected to (Blank to skip)?: " ANSWER
+		read -e -p "What Pi Pin is the RFID Slave Select (SDA) connected to (Blank to skip)?: " ANSWER < /dev/tty
 		if [ "$ANSWER" != "" ]; then
 			mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO rfidReaders 
 								 (name,type,pin,priority,createdDate,modifiedDate) 
@@ -1059,7 +1059,7 @@ installMotionSensor(){
 		echo "	- Set the Sensitivity Adjust to 50% of travel to start"
 		echo "	- Set the Time Delay Adjust full counter-clockwise to start (minimum delay between triggers is roughly 10 seconds)"
 		
-		read -e -p "What Pi Pin is the Motion Sensor output connected to (Blank to skip)?: " ANSWER
+		read -e -p "What Pi Pin is the Motion Sensor output connected to (Blank to skip)?: " ANSWER < /dev/tty
 		if [ "$ANSWER" != "" ] && [[ $ANSWER =~ '^[0-9]+$' ]] ; then
 			mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "INSERT INTO motionDetectors 
 								 (name,pin,createdDate,modifiedDate) 
