@@ -175,15 +175,13 @@
 					<?php } ?>
 				</div>
 				<div class="HeaderCenter">
-					<h1 id="HeaderTitle">
-						<?php
-							if (strlen($config[ConfigNames::HeaderText]) > ($config[ConfigNames::HeaderTextTruncLen])) {
-								echo htmlentities(substr($config[ConfigNames::HeaderText],0,$config[ConfigNames::HeaderTextTruncLen]) . "...");
-							} else {
-								echo htmlentities($config[ConfigNames::HeaderText]);
-							}
-						?>
-					</h1>
+					<?php
+						if (strlen($config[ConfigNames::HeaderText]) > ($config[ConfigNames::HeaderTextTruncLen])) {
+							echo htmlentities(substr($config[ConfigNames::HeaderText],0,$config[ConfigNames::HeaderTextTruncLen]) . "...");
+						} else {
+							echo htmlentities($config[ConfigNames::HeaderText]);
+						}
+					?>
 				</div>
           		<?php 
       		        $temp = null;

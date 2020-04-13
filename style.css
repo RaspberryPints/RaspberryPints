@@ -145,8 +145,7 @@ img {
 	height: 50px;
 	text-align: center;
 	display:table-cell;
-	font-size: 1em;
-	font: 1em Georgia;
+	font: 3em Georgia bold;
 	color: white;
 	vertical-align: middle;
 	padding-top:25px;
