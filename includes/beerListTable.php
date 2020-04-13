@@ -154,7 +154,9 @@ if($editting) $maxTapCol = 1;
 							<?php }?>
 						</div>
 						
-						<h2><?php echo $beer['srm']; ?> SRM</h2>
+    					<?php if($config[ConfigNames::ShowSrmValue]){?>
+    						<h2><?php echo $beer['srm']; ?> SRM</h2>
+						<?php }?>
 					<?php }elseif(isset($beer) && $beer['beername']){ echo "<h2>N/A</h2>"; } ?>
 					</td>
 				<?php } ?>
