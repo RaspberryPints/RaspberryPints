@@ -27,7 +27,7 @@
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			<?php if($editting || $config[ConfigNames::ShowBeerTableHead]){?>
 			<td>
-				<?php if( isset($noTableHead) && $noTableHead){?>TAP<br><?php }?>
+				<?php if( (isset($noTableHead) && $noTableHead) || $editting){?>TAP<br><?php }?>
 				<input type="hidden" name="<?php echo ConfigNames::TapNumColNum;?>" id="<?php echo ConfigNames::TapNumColNum;?>" value="<?php echo abs($config[ConfigNames::TapNumColNum]);?>"/>
 			</td>
 			<?php }?>
