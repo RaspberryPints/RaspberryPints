@@ -601,7 +601,8 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 ( 'hozTapListCol', '0', 'Number Of horizontal tap List Beer Column', '1', '2|1', NOW(), NOW() );
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
-( 'usePlaato', '0', 'Use Plaato Values', '1', NOW(), NOW() );
+( 'usePlaato', '0', 'Use Plaato Values', '1', NOW(), NOW() ),
+( 'usePlaatoTemp', '0', 'Use Plaato Temp', '1', NOW(), NOW() );
 
 
 CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'plaatoAuthToken', 'tinytext NULL' );
