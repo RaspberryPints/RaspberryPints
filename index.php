@@ -23,6 +23,7 @@
 	    "lastPour" => 'v47',
 	    "temp" => 'v69'
 	);
+	$plaatoTemps = array();
 	//This can be used to choose between CSV or MYSQL DB
 	$db = true;
 	
@@ -71,12 +72,18 @@
     			{
     			    foreach( $plaatoPins as $value => $pin)
     			    {
-    			        if( $value == "temp" && (!$config[ConfigNames::UsePlaatoTemp] || (isset($plaatoTemp) && $plaatoTemp != ''))) continue;
     			        $plaatoValue = file_get_contents("http://plaato.blynk.cc/".$b['plaatoAuthToken']."/get/".$pin);
     			        $plaatoValue = substr($plaatoValue, 2, strlen($plaatoValue)-4);
     			        if( $value == 'fg' || $value == 'og' ) $plaatoValue = $plaatoValue/1000;
     			        if( $value == "temp"){
-    			            if($config[ConfigNames::UsePlaatoTemp] && (!isset($plaatoTemp) || $plaatoTemp == ''))$plaatoTemp = $plaatoValue;
+    			            if($config[ConfigNames::UsePlaatoTemp])
+    			            {
+    			                $tempInfo["tempUnit"] = (strpos($plaatoValue,"C")?UnitsOfMeasure::TemperatureCelsius:UnitsOfMeasure::TemperatureFahrenheight);
+    			                $tempInfo["temp"] = substr($plaatoValue, 0, strpos($plaatoValue, '°'));
+    			                $tempInfo["probe"] = $b['id'];
+    			                $tempInfo["takenDate"] = date('Y-m-d H:i:s');
+    			                array_push($plaatoTemps, $tempInfo);
+    			            }
     			            //echo $value."=http://plaato.blynk.cc/".$b['plaatoAuthToken']."/get/".$pin."-".$plaatoTemp.'-'.$plaatoValue.'<br/>';
         			    }else{
         			        if( $plaatoValue !== NULL && $plaatoValue != '') $beeritem[$value] = $plaatoValue;
@@ -198,21 +205,21 @@
               		<?php 
               		    $tempDisplay = "";
               		    if($config[ConfigNames::ShowTempOnMainPage]) {
-              		        if(!isset($plaatoTemp) || $plaatoTemp == '')
+              		        if(!isset($plaatoTemps) && count($plaatoTemps) > 0)
               		        {
                   		       $tempProbeManager = new TempProbeManager();
                   		       $tempInfos = $tempProbeManager->get_lastTemp();
-                  		       foreach($tempInfos as $tempInfo){
-                  		           $temp = $tempInfo["temp"];
-                  		           $tempUnit = $tempInfo["tempUnit"];
-                  		           $probe = $tempInfo["probe"];
-                  		           $date = $tempInfo["takenDate"];
-                  		           $tempDisplay .= sprintf('%s:%0.1f%s<br/>', $probe, convert_temperature($temp, $tempUnit, $config[ConfigNames::DisplayUnitTemperature]), $config[ConfigNames::DisplayUnitTemperature] );
-                  		       }
-                  		       if( isset($date) && isset($tempDisplay) )$tempDisplay .= sprintf('%s', str_replace(' ', "<br/>", $date));
               		        }else{
-              		            $tempDisplay = $plaatoTemp;
+              		            $tempInfos = $plaatoTemps;
               		        }
+              		        foreach($tempInfos as $tempInfo){
+              		            $temp = $tempInfo["temp"];
+              		            $tempUnit = $tempInfo["tempUnit"];
+              		            $probe = $tempInfo["probe"];
+              		            $date = $tempInfo["takenDate"];
+              		            $tempDisplay .= sprintf('%s:%0.1f%s<br/>', $probe, convert_temperature($temp, $tempUnit, $config[ConfigNames::DisplayUnitTemperature]), $config[ConfigNames::DisplayUnitTemperature] );
+              		        }
+              		        if( isset($date) && isset($tempDisplay) )$tempDisplay .= sprintf('%s', str_replace(' ', "<br/>", $date));
               		    }
               		    echo '<div class="HeaderRight" style="width:15%;text-align:right;vertical-align:middle">'.$tempDisplay.'</div>';     
               		    
