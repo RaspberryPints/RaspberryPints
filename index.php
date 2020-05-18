@@ -205,7 +205,7 @@
               		<?php 
               		    $tempDisplay = "";
               		    if($config[ConfigNames::ShowTempOnMainPage]) {
-              		        if(!isset($plaatoTemps) && count($plaatoTemps) > 0)
+              		        if(!isset($plaatoTemps) || count($plaatoTemps) == 0)
               		        {
                   		       $tempProbeManager = new TempProbeManager();
                   		       $tempInfos = $tempProbeManager->get_lastTemp();
