@@ -111,12 +111,12 @@ include 'top_menu.php';
     				</tr>
                 	<tr>
     						<td><b>Temperature Probes:</b></td>
-    						<td><b>Lowest Temperature:</b><br/>The lowest temperature possible</td>
+    						<td><b>Lowest Temperature:</b><br/>The lowest temperature (C&#730;) possible</td>
     						<td><input type="text" name="tempProbeBoundLow" class="smallbox" value="<?php echo ($config[ConfigNames::TempProbeBoundLow]) ?>"></td>
     				</tr>
                 	<tr>
     						<td><b>Temperature Probes:</b></td>
-    						<td><b>Highest Temerature:</b><br/>The highest temperature possibles</td>
+    						<td><b>Highest Temperature:</b><br/>The highest temperature (C&#730;) possible</td>
     						<td><input type="text" name="tempProbeBoundHigh" class="smallbox" value="<?php echo ($config[ConfigNames::TempProbeBoundHigh]) ?>"></td>
     				</tr>
 				    <tr>
