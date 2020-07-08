@@ -216,7 +216,7 @@
               		            $temp = $tempInfo["temp"];
               		            $tempUnit = $tempInfo["tempUnit"];
               		            $probe = $tempInfo["probe"];
-              		            $date = $tempInfo["takenDate"];
+              		            $date = MAX($tempInfo["takenDate"], $date);
               		            $tempDisplay .= sprintf('%s:%0.1f%s<br/>', $probe, convert_temperature($temp, $tempUnit, $config[ConfigNames::DisplayUnitTemperature]), $config[ConfigNames::DisplayUnitTemperature] );
               		        }
               		        if( isset($date) && isset($tempDisplay) )$tempDisplay .= sprintf('%s', str_replace(' ', "<br/>", $date));
