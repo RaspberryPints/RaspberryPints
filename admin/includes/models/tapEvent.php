@@ -105,7 +105,7 @@ class TapEvent
         else
             $this->set_beerId(null);            
             
-        if( isset($postArr['amountUnit']) )
+        if( isset($postArr['amount']) )
             $this->set_amount($postArr['amount']);
         else
             $this->set_amount(null);
