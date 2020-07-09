@@ -12,6 +12,7 @@
 		$tapOrBottle = $containerType;
 		$editingTable = $editing;
 		$config = getAllConfigs();
+		if( $editing ) $config[ConfigNames::ShowVerticleTapList] = "1";
 		if($config[ConfigNames::ShowVerticleTapList]){
 		  include "beerListTableVerticle.php";
 		} else {
