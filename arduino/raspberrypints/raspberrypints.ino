@@ -230,6 +230,8 @@ void loop() {
     	lastTapPulseTime = lastPulseTime[i];
     }
     if ( lastTapPulseTime <= 0 ) continue;
+    shutNonPouring = false;
+    reset = false;
     tapPouring = true;
     if ( pulseCount[i] > 0 ) {
       //If pulse count has reached a point were we can assign the user to this tap
@@ -256,7 +258,8 @@ void loop() {
     	//Reset no matter what, if there was not enough pulses to save the pour
     	//we want to reset to 0 so we dont accumulate until there is
     	reset = true;
-        if( useValves ) shutNonPouring = true;
+    	//only stop nonPouringTaps if we have an update
+        if( useValves && pulseCount[i] >= updateTriggerValue) shutNonPouring = true;
       }
       //If we have too many pulses for the valve to be open shut off the tap which will trigger a pour eventually
       else if ( useValves > 0 && 
@@ -285,11 +288,17 @@ void loop() {
         //We had at activity on this pin, if it wasnt enough to trigger 
         //we want to reset so snowballing doesnt happen (i.e. small pulses turns into a pour)
     	//Only log if we have a major pulse count
-        if( pulseCount[i] > 10 )debug("%s %d %d", "Reset Tap during loop Pin", pulsePin[i], i);
+        if( pulseCount[i] > 10 )debug("%s %d %d %lu %lu %lu %d %d %d",
+              "RT L", pulsePin[i], i,
+              nowTime, lastTapPulseTime, nowTime-lastTapPulseTime,
+              pourMsgDelay,
+              pulseCount[i], pourTriggerValue);
         resetTap(i);
       }
       if ( useValves && shutNonPouring ){
-          debug("%s %d %d", "Shut down nonPouring during loop Pin ", pulsePin[i], i);
+          debug("%s %d %d %lu %lu %lu %d %d %d", "SD NP L ", pulsePin[i], i,
+                nowTime, lastTapPulseTime, nowTime-lastTapPulseTime, pourMsgDelay,
+                pulseCount[i], pourTriggerValue);
     	  shutDownNonPouringTaps(i);
       }
 
@@ -472,7 +481,7 @@ void shutDownNonPouringTaps(unsigned int currentTap){
 int isValvePinPouring(int valvePin, unsigned int currentTap){
   for( unsigned int i = 0; i < numSensors; i++ ) {
     if(i == currentTap) continue;
-    if(valvesPin[i] == valvePin && lastPulseTime[i] > 0) {
+    if(valvesPin[i] == valvePin && (lastPulseTime[i] > 0 || pulseCount[i] > 0)) {
       return true;
     }
   }
@@ -724,8 +733,3 @@ void log(const __FlashStringHelper *msg){
 	serialPrint(F("Log;"));
 	serialPrintln(msg);
 }
-
-
-
-
-
