@@ -136,7 +136,6 @@ else
               $beerFermManager->Save($beerFerm);			  
             }
 	
-            $hops[] = $hop->NAME;
             foreach ($recipe->HOPS->HOP as $hop)
             {
               $dbHop = $hopManager->GetByName($hop->NAME);
