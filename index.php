@@ -204,6 +204,7 @@
       		    ?>
               		<?php 
               		    $tempDisplay = "";
+              		    $date = null;
               		    if($config[ConfigNames::ShowTempOnMainPage]) {
               		        if(!isset($plaatoTemps) || count($plaatoTemps) == 0)
               		        {
