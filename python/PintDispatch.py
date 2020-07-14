@@ -330,6 +330,17 @@ class PintDispatch(object):
         con.close()
         self.archiveTemp()
         
+    def saveTemps(self, temps):
+        con = connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        for temp in temps:
+            insertLogSql = "INSERT INTO tempLog (probe, temp, tempUnit, takenDate) "
+            insertLogSql += "VALUES('"+temp[0]+"',"+str(temp[1])+"+ COALESCE((SELECT manualAdj FROM tempProbes WHERE name = '"+temp[0]+"'), 0), '"+str(temp[2])+"', '"+temp[3]+"');"
+            result = cursor.execute(insertLogSql)
+        con.commit()
+        con.close()
+        self.archiveTemp()
+        
     def getTempProbeConfig(self):
         useTempProbes = self.getConfigValueByName("useTempProbes")
         if(useTempProbes is not None and int(useTempProbes) == 1):
