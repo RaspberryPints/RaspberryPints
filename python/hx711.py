@@ -6,7 +6,11 @@ This file holds HX711 class
 import statistics as stat
 import time
 
-import RPi.GPIO as GPIO
+GPIO_IMPORT_SUCCESSFUL = True
+try:
+    import RPi.GPIO as GPIO
+except:
+    GPIO_IMPORT_SUCCESSFUL = False
 from Config import config
 
 
