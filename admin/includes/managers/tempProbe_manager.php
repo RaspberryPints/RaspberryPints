@@ -25,7 +25,7 @@ class TempProbeManager extends Manager{
         return $this->executeNonObjectQueryWithArrayResults($sql)[0];
 	}
 	function get_lastTemp(){
-	    $sql=" SELECT temp, tempUnit, probe, takenDate AS takenDate FROM tempLog WHERE takenDate = (SELECT MAX(takenDate) FROM tempLog)";
+	    $sql="SELECT temp, tempUnit, COALESCE(NULLIF(p.notes,''), tl.probe) AS probe, takenDate AS takenDate FROM tempLog tl LEFT JOIN tempProbes p ON (tl.probe = p.name) WHERE takenDate = (SELECT MAX(takenDate) FROM tempLog)";
 	    return $this->executeNonObjectQueryWithArrayResults($sql);
 	}
 }
