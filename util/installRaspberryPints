@@ -1553,7 +1553,7 @@ updateRpints(){
 	#bring over any images that were undone but do not overwrite except background and logo
 	cp -R -n /tmp/rpints_img/* ./img/ 
 	cp -f /tmp/rpints_img/background.jpg ./img/background.jpg 
-	cp -f /tmp/rpints_img/logo.jpg ./img/logo.jpg 
+	cp -f /tmp/rpints_img/logo.png ./img/logo.png 
 	echo -e "Images updated, old images can be found in /tmp/rpints_img"
 	popd >/dev/null
 	doperms
