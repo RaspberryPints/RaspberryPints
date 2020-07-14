@@ -1539,6 +1539,7 @@ updateRpints(){
 	
 	pushd . >/dev/null
 	cd ${WWWPATH}
+	cp -R -f img /tmp/rpints_img 
 	case ${REPO_CHOICE} in
         1 ) git config --global user.email "test@test.com";	git config --global user.name "Test Test"; ;;
         2 ) git config --global user.email "test@test.com";	git config --global user.name "Test Test"; ;;
@@ -1549,8 +1550,13 @@ updateRpints(){
         2 ) git stash; git pull; git difftool --dir-diff -y stash; ;;
         3 )  ;; #Not sure how to update this one since its static		
 	esac
+	#bring over any images that were undone but do not overwrite except background and logo
+	cp -R -n /tmp/rpints_img/* ./img/ 
+	cp -f /tmp/rpints_img/background.jpg ./img/background.jpg 
+	cp -f /tmp/rpints_img/logo.jpg ./img/logo.jpg 
+	echo -e "Images updated, old images can be found in /tmp/rpints_img"
 	popd >/dev/null
-		
+	doperms
 	if [ -f /etc/init.d/flowmon ]; then
 		# Finally, relaunch the RPints
 		echo -e "Relaunching RPints..."
@@ -1574,7 +1580,7 @@ main() {
     banner "starting" # Pop starting banner
     detectRPintsInstall
 	if [ $UPDATE_RPINTS -ne 0 ] ;  then
-		updateRpints
+		updateRpints		
 	else
 	    if [ $RPINTS_INSTALL_DETECTED -eq 0 ] || [ $RECONFIG_PI -eq 1 ] ; then
 		    instructions # Show instructions
