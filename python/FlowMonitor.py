@@ -34,16 +34,17 @@ except:
     
 from Config import config
 
-def debug(msg, process="FlowMonitor"):
+def debug(msg, process="FlowMonitor", logDB=True):
     if(config['dispatch.debug']):
-        log(msg, process, True)
+        log(msg, process, True, logDB)
                  
-def log(msg, process="FlowMonitor", isDebug=False):
+def log(msg, process="FlowMonitor", isDebug=False, logDB=True):
     if ("RFIDCheck" not in msg and "Status" not in msg) or log.lastMsg != msg:
-        log.logger.log(msg, process, isDebug)
+        log.logger.log(msg, process, isDebug, logDB)
         log.lastMsg = msg
     else:
-        log.logger.logDB(msg, process, isDebug)
+         if logDB:
+             log.logger.logDB(msg, process, isDebug)
 log.lastMsg = "" 
 
 class FlowMonitor(object):
@@ -83,7 +84,7 @@ class FlowMonitor(object):
         hexfile = config['pints.dir'] + "/arduino/raspberrypints/raspberrypints.cpp.hex"
         inofile = config['pints.dir'] + "/arduino/raspberrypints/raspberrypints.ino"
         if os.path.isfile(inofile) and os.access(inofile, os.R_OK) and os.path.getmtime(inofile) > os.path.getmtime(hexfile) :
-            log("Ino new than Hex. manual upload assumed")
+            log("Ino newer than Hex. manual upload assumed")
         else:
             cmdline = "/usr/share/arduino/hardware/tools/avrdude -C/usr/share/arduino/hardware/tools/avrdude.conf -patmega328p -calamode -P"+self.port+" -b115200 -D -Uflash:w:"
             
@@ -390,6 +391,7 @@ class FlowMonitor(object):
                     item.exit()
             if self.tempProbeThread is not None and self.tempProbeThread.isAlive():
                 self.tempProbeThread.exit()
+            self.alaIsAlive = False
 
     def fakemonitor(self):
         running = True
