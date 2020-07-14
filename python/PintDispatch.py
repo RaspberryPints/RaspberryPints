@@ -320,9 +320,9 @@ class PintDispatch(object):
             cursor.execute("INSERT INTO tempProbes (name, type) VALUES('"+probe+"', 0)")
         con.commit()
         con.close()        
-    def saveTemp(self, probe, temp, tempUnit):
+    def saveTemp(self, probe, temp, tempUnit, takenDate):
         insertLogSql = "INSERT INTO tempLog (probe, temp, tempUnit, takenDate) "
-        insertLogSql += "VALUES('"+probe+"',"+str(temp)+"+ COALESCE((SELECT manualAdj FROM tempProbes WHERE name = '"+probe+"'), 0), '"+str(tempUnit)+"', NOW());"
+        insertLogSql += "VALUES('"+probe+"',"+str(temp)+"+ COALESCE((SELECT manualAdj FROM tempProbes WHERE name = '"+probe+"'), 0), '"+str(tempUnit)+"', '"+takenDate+"');"
         con = connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)
         result = cursor.execute(insertLogSql)

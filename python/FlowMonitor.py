@@ -700,6 +700,7 @@ class OneWireTemperatureThread (threading.Thread):
             os.system('sudo modprobe w1-therm')
             
             while not self.shutdown_required:
+                takenDate = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
                 # search for a device file that starts with 28
                 devicelist = glob.glob('/sys/bus/w1/devices/28*')
                 for probeDir in devicelist:
@@ -715,7 +716,7 @@ class OneWireTemperatureThread (threading.Thread):
                         
                     #if valid temp save it to the database
                     if temp != None and temp >= self.bound_lo and temp <= self.bound_hi:
-                        self.dispatch.saveTemp(probeName, temp, 'C')
+                        self.dispatch.saveTemp(probeName, temp, 'C', takenDate)
                         
                 time.sleep(self.delay)
                 firstTime = False
