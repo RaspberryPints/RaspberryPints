@@ -26,12 +26,16 @@
 declare THISSCRIPT VERSION PACKAGE VERBOSE REPLY CMDLINE  
 declare SCRIPTNAME APTPACKAGES VERBOSE HOMEPATH REALUSER
 # Packages to be installed via apt
-APTPACKAGES="dialog apache2 mariadb-server php php-mysql 
-		 libapache2-mod-php phpmyadmin chromium-browser git 
+APTPACKAGES="mariadb-server php php-mysql 
+		 git ttf-mscorefonts-installer x11-xserver-utils unclutter vim kompare"
+INSTALLPACKAGES="dialog" 
+JESSIE_ATPPACKAGES="dialog php5 mysql-client mysql-server  
+         php5-mysql git 
          ttf-mscorefonts-installer x11-xserver-utils unclutter vim"    
-JESSIE_ATPPACKAGES="dialog apache2 php5 mysql-client mysql-server  
-         php5-mysql phpmyadmin chromium-browser git 
-         ttf-mscorefonts-installer x11-xserver-utils unclutter vim"     
+RASPBIANPACKAGES=" phpmyadmin chromium-browser "    
+APACHEPACKAGESBEFORE=" apache2 "
+APACHEPACKAGESAFTER=" libapache2-mod-php "
+NGINXPACKAGES=" nginx php-fpm "
      
 FLOW_MEATERS_PACKAGES="arduino python-serial python-mysqldb php-cli 
 					   xdotool dos2unix python-mod-pywebsocket i2c-tools"
@@ -50,10 +54,17 @@ FLOW_METERS_BUSTER_REPO=https://github.com/wyolum/alamode/raw/master/alamode-set
 TOBOR_SOURCE="https://www.homebrewtalk.com/forum/attachments/raspberrypints-2-1-0-000-zip.640232/"
 TOBOR_ARCHIVE="RaspberryPints-2.1.0.000.zip"
 REPO_CHOICE=1
+WEBSERVER_APACHE=apache2
+WEBSERVER_NGINX=nginx
+WEBSERVER=$WEBSERVER_APACHE
+NGINX_SUB=RPints
+NGIXConfigName="default"
 
 RPINTS_INSTALL_DETECTED=0
+RPINTS_INSTALLED=""
 RECONFIG_PI=0
 UPDATE_RPINTS=0
+FERMTRACK_INSTALLED=0
 
 # the branch to pull
 BRANCH=master
@@ -276,7 +287,8 @@ detectRPintsInstall(){
 	 RPINTS_INSTALL_DETECTED=0
 	 RECONFIG_PI=0
 	 UPDATE_RPINTS=0
-	 if [ -f /var/www/html/admin/includes/conn.php ] ; then
+	 RPINTS_INSTALLED=$(find / -wholename "*admin/includes*" -name "conn.php" 2>/dev/null)
+	 if [ -n "$RPINTS_INSTALLED" ] ; then
 	 	RPINTS_INSTALL_DETECTED=1
 	 	if promptYN "RPints Install Detected. Do you wish to Update RPints?" "Y" ; then
 			UPDATE_RPINTS=1
@@ -425,6 +437,7 @@ checkOS(){
 		if ! promptYN "Continue Anyways?" "N"; then exit 2; fi	   
 	fi
 	VER_NAME="$(echo $VERSION | grep -oP '(?<=\()[^\)]+')"
+	OSID=$ID
 
 }
 
@@ -447,12 +460,45 @@ packages() {
         didUpdate=1
     fi
     
-    # Now install any necessary packages if they are not installed
-    echo -e "\nChecking and installing required dependencies via apt."
 	if echo "$VER_NAME" | grep -iq "^jessie" ; then
 		APTPACKAGES=$JESSIE_ATPPACKAGES
 		FLOW_MEATERS_PACKAGES=$JESSIE_FLOW_MEATERS_PACKAGES
 	fi
+	
+    for pkg in $INSTALLPACKAGES; do
+        pkgOk=$(dpkg-query -W --showformat='${Status}\n' "$pkg" | \
+        grep "install ok installed")
+        if [ -z "$pkgOk" ]; then
+            echo -e "\nInstalling '$pkg'."
+            apt-get install "$pkg" -y -q=2 < /dev/tty ||die
+        fi
+    done
+    
+	WEBSERVER_OPTIONS=(1 "apache (RPints/BrewPi)"
+		 			   2 "nginx (Fermentrack)")
+	WEBSERVER_CHOICE=$(dialog --clear \
+	                --backtitle "Webserver" \
+	                --title "Webserver Options" \
+	                --menu "Choose which webserver you would like to use for RaspberryPints" \
+	                20 40 6 \
+	                "${WEBSERVER_OPTIONS[@]}" \
+	                2>&1 >/dev/tty);
+	case ${WEBSERVER_CHOICE} in
+        1 ) WEBSERVER=$WEBSERVER_APACHE ;;
+        2 ) WEBSERVER=$WEBSERVER_NGINX ;;	
+	esac  
+	clear           
+	if [ "$WEBSERVER" = "$WEBSERVER_APACHE" ]; then
+		APTPACKAGES="${APACHEPACKAGESBEFORE}${APTPACKAGES}${APACHEPACKAGESAFTER}"
+	else
+		APTPACKAGES="${NGINXPACKAGES}${APTPACKAGES}"
+	fi
+	if [ "$OSID" = "raspbian" ]; then
+		APTPACKAGES="${APTPACKAGES}${RASPBIANPACKAGES}"
+	fi
+	
+    # Now install any necessary packages if they are not installed
+    echo -e "\nChecking and installing required dependencies via apt."
     for pkg in $APTPACKAGES; do
         pkgOk=$(dpkg-query -W --showformat='${Status}\n' "$pkg" | \
         grep "install ok installed")
@@ -475,20 +521,148 @@ packages() {
                 apt-get install "$pkg" -y -q=2||die
             fi
         done
+        echo -e "\nUpdating Packages which may require it - Complete."
     fi
     
+    checkNginx
     configurePHPMyAdmin
 }
 
 
+checkNginx(){
+	if [ "$WEBSERVER" = "$WEBSERVER_NGINX" ]; then		
+		if [ -f "/etc/nginx/sites-enabled/default-fermentrack" ]; then
+			if promptYN "Fermentrack detected, do you want to place 'Rpints' Under it (i.e. http://fermtrack.ip/$NGINX_SUB)" "N"; then
+				NGIXConfigName="default-fermentrack"
+				FERMTRACK_INSTALLED=1
+			else
+				NGIXConfigName="default-rpints"	
+				FERMTRACK_INSTALLED=-1		
+			fi
+		fi
+	fi
+}
+configureNginx(){
+    #echo -e "configureNginx - Start."
+	if [ "$WEBSERVER" = "$WEBSERVER_NGINX" ]; then
+		PHPSOCKET=$(find /var/run/ -name php*.sock 2>/dev/null)
+	
+		#echo -e "PHP Socket $PHPSOCKET"
+		if [ $FERMTRACK_INSTALLED -ne 1 ] ;  then
+			cp "./nginx-confs/default" "/etc/nginx/sites-available/$NGIXConfigName" &>> "$HOMEPATH/$SCRIPTNAME.log"
+			FIND_STR="#PHPSOCKET#"
+			REPL_STR="$PHPSOCKET"
+			sed -i "s_${FIND_STR}_${REPL_STR}_" "/etc/nginx/sites-available/$NGIXConfigName"
+			if [ $FERMTRACK_INSTALLED -eq -1 ] ;  then
+				FIND_STR="80"
+				REPL_STR="81"
+				sed -i "s_${FIND_STR}_${REPL_STR}_" "/etc/nginx/sites-available/$NGIXConfigName"
+			fi
+			if [ ! -f "/etc/nginx/sites-enabled/$NGIXConfigName" ]; then
+				ln -s "/etc/nginx/sites-available/$NGIXConfigName" "/etc/nginx/sites-enabled/$NGIXConfigName" &>> "$HOMEPATH/$SCRIPTNAME.log"
+			fi
+		fi
+		NGIXConfig="/etc/nginx/sites-available/$NGIXConfigName" 
+		echo -e "\nUpdated $NGIXConfig"
+		if [ $FERMTRACK_INSTALLED -eq 1 ] ;  then
+			#echo -e grep -q "location /$NGINX_SUB" "$NGIXConfig" result $?
+			#echo -e  "\nUpdated $NGIXConfigName With location /$NGINX_SUB - Start"
+			sed -i -r "s|^(\s*location\s*$NGINX_SUB)|#\1|g" "$NGIXConfig"
+			#remove the last } so we can add in our configuration
+			sed -i '$ d' $NGIXConfig
+		    echo "	location $NGINX_SUB {alias ${WWWPATH};index index.php index.html;}" >> $NGIXConfig
+		    #readd last }
+		    echo "}" >> $NGIXConfig
+			#echo -e  "Updated $NGIXConfigName With location /$NGINX_SUB"
+		fi
+		#if the config doesnt already have php enabled
+		if ! grep -q "\s*location.*php" "$NGIXConfig"; then
+			#echo -e grep -q "\s*location.*php" "$NGIXConfig" result $?
+			#echo -e  "\nUpdated $NGIXConfigName With PHP- Start"
+			#remove the last } so we can add in our configuration
+			sed -i '$ d' $NGIXConfig
+		    echo "	location ~ [^/]\.php(/|$) {" >> $NGIXConfig
+		    echo "	    fastcgi_split_path_info ^(.+?\.php)(/.*)$;" >> $NGIXConfig
+		    echo "	    if (!-f \$document_root\$fastcgi_script_name) {" >> $NGIXConfig
+		    echo "	        return 404;" >> $NGIXConfig
+		    echo "	    }" >> $NGIXConfig
+		    echo "	    fastcgi_pass unix:$PHPSOCKET;" >> $NGIXConfig
+		    echo "	    fastcgi_index index.php;" >> $NGIXConfig
+		    echo "	    include fastcgi_params;" >> $NGIXConfig
+		    echo "	    fastcgi_param SCRIPT_FILENAME \$document_root/\$fastcgi_script_name;" >> $NGIXConfig
+		    echo "	}" >> $NGIXConfig
+		    #readd last }
+		    echo "}" >> $NGIXConfig
+			#echo -e  "Updated $NGIXConfigName With PHP - Complete"
+		fi
+		if ! grep -q "\s*location.*\.ht" "$NGIXConfig"; then
+			#echo -e grep -q "\s*location.*\.ht" "$NGIXConfig" result $?
+			#echo -e  "\nUpdated $NGIXConfigName With htaccess deny - start"
+			#remove the last } so we can add in our configuration
+			sed -i '$ d' $NGIXConfig
+			echo "	location ~ /\.ht {" >> $NGIXConfig
+			echo "		deny all;" >> $NGIXConfig
+			echo "	}" >> $NGIXConfig
+		    #readd last }
+		    echo "}" >> $NGIXConfig
+			#echo -e  "Updated $NGIXConfigName With htaccess deny - complete"
+		fi
+	   	systemctl reload $WEBSERVER &>> "$HOMEPATH/$SCRIPTNAME.log"
+		log "Restart $WEBSERVER complete"
+	fi
+    #echo -e "configureNginx - Complete."
+}
+
+configureApache(){
+    #echo -e "configureApache - Start."
+	if [ "$WEBSERVER" = "$WEBSERVER_APACHE" ]; then
+	
+		if promptYN "Keep RPints as the default webpage" "Y";
+		then
+			sed -i -r "s|^(\s*DocumentRoot\s*).*|\1$WWWPATH|g" "/etc/apache2/sites-available/000-default.conf"
+		else
+		    # ask the user what port to use
+			read -e -p "What port do you want to server RPints on? : " -i "81" ANSWER < /dev/tty
+			if [ "$ANSWER" = "" ]; then
+			   ANSWER="81"
+			fi
+			NGINX_SUB=":"$ANSWER
+			if [ -f /etc/apache2/sites-available/000-default.conf ]; then
+				cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/rpints.conf
+				
+				sed -i -r "s|^(\s*<VirtualHost \*:).*|Listen $ANSWER\n\1$ANSWER>|g" "/etc/apache2/sites-available/rpints.conf"
+				sed -i -r "s|^(\s*DocumentRoot\s*).*|\1$WWWPATH|g" "/etc/apache2/sites-available/rpints.conf"
+	   			a2ensite rpints.conf
+			fi
+		fi
+		log "Restarting $WEBSERVER"
+	   	systemctl reload $WEBSERVER &>> "$HOMEPATH/$SCRIPTNAME.log"
+		log "Restart $WEBSERVER complete"
+	fi
+    #echo -e "configureApache - Complete."
+}
 configurePHPMyAdmin(){
 	# now, enable phpmyadmin if necessary
-	if [ -f /etc/phpmyadmin/apache.conf ]; then
-		if [ ! -f /etc/apache2/sites-available/phpmyadmin.conf ]; then
-			ln -s /etc/phpmyadmin/apache.conf /etc/apache2/sites-available/phpmyadmin.conf
+	if [ "$WEBSERVER" = "$WEBSERVER_APACHE" ]; then
+		if [ -f /etc/phpmyadmin/apache.conf ]; then
+			if [ ! -f /etc/$WEBSERVER/sites-available/phpmyadmin.conf ]; then
+				ln -s /etc/phpmyadmin/apache.conf /etc/$WEBSERVER/sites-available/phpmyadmin.conf
+			fi
+		   	a2ensite phpmyadmin.conf
 		fi
-	   a2ensite phpmyadmin.conf
-	   systemctl reload apache2
+		log "Restarting $WEBSERVER"
+	   	systemctl reload $WEBSERVER &>> "$HOMEPATH/$SCRIPTNAME.log"
+		log "Restart $WEBSERVER complete"
+	else
+		log "Restarting $WEBSERVER"
+		#PHPMyAdmin is only installed with raspbian
+		if [ "$OSID" = "raspbian" ]; then
+			if [ ! -e /var/www/html/phpmyadmin ]; then
+				sudo ln -s /usr/share/phpmyadmin /var/www/html
+			fi
+		fi
+		systemctl reload $WEBSERVER &>> "$HOMEPATH/$SCRIPTNAME.log"
+		log "Restart $WEBSERVER complete"
 	fi
 }
 ############
@@ -527,21 +701,63 @@ checkfree() {
 ############
 
 getwwwpath() {
-    # Find web path based on Apache2 config
+    local WEBROOT
+    # Find web path based on $WEBSERVER config
     echo -e "\nSearching for default web location."
-    WWWPATH="$(grep DocumentRoot /etc/apache2/sites-enabled/000-default* |xargs |cut -d " " -f2)"
+    if [ "$WEBSERVER" = "$WEBSERVER_APACHE" ]; then
+	    WWWPATH="$(grep DocumentRoot /etc/$WEBSERVER/sites-enabled/000-default* |xargs |cut -d " " -f2)"
+	else 
+		#if 1 then we are nesting RPints under Fermentrack so gets its root
+	    if [ $FERMTRACK_INSTALLED -eq 1 ]; then
+		    WWWPATH="$(grep root /etc/$WEBSERVER/sites-enabled/default* |xargs |cut -d " " -f2)"
+    		WEBROOT="${WWWPATH//;}"
+		    WWWPATH="${WWWPATH//;}/${NGINX_SUB}"
+		fi
+	fi
     if [ -n "$WWWPATH" ]; then
-        echo -e "\nFound $WWWPATH in /etc/apache2/sites-enabled/000-default*."
+        echo -e "\nFound $WWWPATH in /etc/$WEBSERVER/sites-enabled/."
     else
         WWWPATH="/var/www/html"
     fi
+    if [ -z $WEBROOT ]; then
+    	WEBROOT="${WWWPATH}"
+    fi
+    ApacheConf=0
     # ask the user where they want to install to (default is WEBROOT)
 	read -e -p "Where do you want to install RaspberryPints? : " -i "${WWWPATH}" ANSWER < /dev/tty
 	if [ "$ANSWER" = "" ]; then
 	   ANSWER="${WWWPATH}"
+	else
+		if [ "$ANSWER" != "$WWWPATH" ]; then
+			WWWPATH="${ANSWER}"
+    		configureApache
+    		ApacheConf=1
+			ANSWER="${WWWPATH}"
+    	fi
 	fi
 	WWWPATH="${ANSWER}"
-	echo "Installing to: ${WWWPATH}"
+	echo -e "Installing to: ${WWWPATH}"
+	if [ $FERMTRACK_INSTALLED -eq 1 ]; then
+		NGINX_SUB="${WWWPATH#"$WEBROOT"}"
+		if [ "$NGINX_SUB" = "$WWWPATH" ]; then
+			NGINX_SUB=""
+		fi
+	fi 
+	if [ $FERMTRACK_INSTALLED -eq -1 ]; then
+		NGINX_SUB=":81"
+	fi
+	if [ $FERMTRACK_INSTALLED -eq -0 ] && [ $ApacheConf -eq 0 ]; then
+		NGINX_SUB=
+	fi
+	if [ -n "$NGINX_SUB" ]; then
+		if [ $FERMTRACK_INSTALLED -eq 1 ]; then
+			if [[ ${NGINX_SUB:0:1} != "/" ]]; then 
+				NGINX_SUB="/${NGINX_SUB}" 
+			fi
+		fi
+		echo -e "URL's Sub Folder: ${NGINX_SUB}"
+	fi
+	configureNginx
 }
 
 ############
@@ -550,29 +766,29 @@ getwwwpath() {
 
 testapache() {
     local retval
-    echo -e "\nTesting Apache."
+    echo -e "\nTesting $WEBSERVER."
     if [ ! -f "$WWWPATH/index.html" ];
     then
     	if [ ! -d ${WWWPATH} ]; then mkdir ${WWWPATH}; fi
    		echo '<html><body>test</body></html>' > "$WWWPATH/index.html"
     fi
-    wget -q --spider localhost > /dev/null 2>&1
+    wget -q --spider localhost$NGINX_SUB > /dev/null 2>&1
     retval="$?"
     rm -f "$WWWPATH/index.html"
     if [ "$retval" -ne 0 ]; then
-        echo -e "\nERROR: Apache test failed."
+        echo -e "\nERROR: $WEBSERVER test failed."
         exit 1
     fi
-    echo -e "\nTesting PHP."
+    echo -e "\nTesting PHP at localhost$NGINX_SUB/test.php."
     echo '<?php phpinfo(); ?>' > "$WWWPATH/test.php"
-    wget -q --spider localhost/test.php > /dev/null 2>&1
+    wget -q --spider localhost$NGINX_SUB/test.php > /dev/null 2>&1
     retval="$?"
     rm "${WWWPATH:?}/test.php"
     if [ "$retval" -ne 0 ]; then
         echo -e "\nERROR: PHP test failed."
         exit 1
     fi
-    echo -e "\nApache and PHP test ok."
+    echo -e "\n$WEBSERVER and PHP test ok."
 }
 
 ############
@@ -854,8 +1070,8 @@ doarchive() {
 doperms() {
     echo -e "\nFixing file permissions for $WWWPATH."
 	# find out who the apache server runs as (APACHE_RUN_USER and APACHE_RUN_GROUP)
-	if [ -f /etc/apache2/envvars ]; then
-	   . /etc/apache2/envvars
+	if [ -f /etc/$WEBSERVER/envvars ]; then
+	   . /etc/$WEBSERVER/envvars
 	else
 	   APACHE_RUN_USER=www-data
 	   APACHE_RUN_GROUP=www-data
@@ -879,6 +1095,8 @@ installFlowmeters(){
 	if promptYN "Do you want to use Flow Meters?" "N";
 	then
 		echo "Will Install Flow Meters"
+		
+		touch ${WWWPATH}/arduino/raspberrypints/raspberrypints.cpp.hex
 		
 		# install necessary packages
 		apt-get install --assume-yes ${FLOW_MEATERS_PACKAGES}
@@ -1212,6 +1430,14 @@ configureMonitor(){
 complete() {
     local IP
     IP=$(ip -4 addr | grep 'global' | cut -f1  -d'/' | cut -d" " -f6)
+    IPURL="http://$IP"
+    HOSTURL="http://$(hostname).local"
+	#fix up the URLs based on if fermentrack was installed   
+	case ${FERMTRACK_INSTALLED} in
+        -1 ) IPURL="${IPURL}:81"; HOSTURL="http://$(hostname).local:81"; ;;
+         0 ) ;;
+         1 ) IPURL="${IPURL}$NGINX_SUB"; HOSTURL="http://$(hostname).local$NGINX_SUB"; ;;
+	esac
     clear
     cat << EOF
 
@@ -1230,8 +1456,8 @@ It may take several minutes for this reboot.  Be patient.
 To continue your Raspberry Pints setup, please use your web browser and
 navigate to:
 
-    By IP             : http://$IP
-    -or- by host name : http://$(hostname).local
+    By IP             : $IPURL
+    -or- by host name : $HOSTURL
 
 EOF
 
@@ -1250,7 +1476,33 @@ EOF
 ### Used to read the database settings from RPints and get the current Repo value (if exists)
 ############
 getExistingSystemVariables(){
-	getwwwpath # Get WWW path
+	if [ -z "$RPINTS_INSTALLED" ]; then
+		getwwwpath # Get WWW path
+	else
+		count=$(echo "$RPINTS_INSTALLED" | wc -l )
+		if [ $count -eq 1 ]; then
+			WWWPATH=${RPINTS_INSTALLED/"/admin/includes/conn.php"/}
+		else
+			option=0
+			local Rpints_Options
+			Rpints_Options=()
+		    for item in $RPINTS_INSTALLED
+			do
+			  option=$((option+1))
+			  Rpints_Options+=(${option} ${item/"/admin/includes/conn.php"/})
+			done
+			Rpints_Option=0
+			Rpints_Option=$(dialog --clear \
+							--backtitle "RPints to Update" \
+							--title "Installed RPints" \
+							--menu "Choose RPints to Update" \
+							20 40 4 \
+							"${Rpints_Options[@]}" \
+							2>&1 >/dev/tty);
+			clear
+			WWWPATH=${Rpints_Options[$Rpints_Option+($Rpints_Option-1)]#"${Rpints_Option} "}
+		fi
+	fi
 		    
 	MYSQL_SERVER=$(grep -oE '\$host=.*;' ${WWWPATH}/admin/includes/conn.php | tail -1 | sed 's/$host="//g;s/";//g')
 	MYSQL_RP_USER=$(grep -oE '\$username=.*;' ${WWWPATH}/admin/includes/conn.php | tail -1 | sed 's/$username="//g;s/";//g')
@@ -1279,14 +1531,33 @@ getExistingSystemVariables(){
 updateRpints(){
 	getExistingSystemVariables
 
-	pushd .
+	if [ -f /etc/init.d/flowmon ]; then
+		# Next, kill the running RPints instance using circus
+		echo -e "Stopping Rpints..."
+		/etc/init.d/flowmon stop &>> "$HOMEPATH/$SCRIPTNAME.log"
+	fi
+	
+	pushd . >/dev/null
 	cd ${WWWPATH}
 	case ${REPO_CHOICE} in
-        1 ) git pull; mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -s -L < ${WWWPATH}/sql/update.sql > /dev/null 2>&1 ;;
-        2 ) git pull; ;;
+        1 ) git config --global user.email "test@test.com";	git config --global user.name "Test Test"; ;;
+        2 ) git config --global user.email "test@test.com";	git config --global user.name "Test Test"; ;;
         3 )  ;; #Not sure how to update this one since its static		
 	esac
-	popd
+	case ${REPO_CHOICE} in
+        1 ) git stash; git pull; mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -s -L < ${WWWPATH}/sql/update.sql > /dev/null 2>&1; git difftool --dir-diff -y stash; ;;
+        2 ) git stash; git pull; git difftool --dir-diff -y stash; ;;
+        3 )  ;; #Not sure how to update this one since its static		
+	esac
+	popd >/dev/null
+		
+	if [ -f /etc/init.d/flowmon ]; then
+		# Finally, relaunch the RPints
+		echo -e "Relaunching RPints..."
+		/etc/init.d/flowmon start &>> "$HOMEPATH/$SCRIPTNAME.log"
+		echo -e "Complete!"
+	fi
+	echo -e "Update Complete!"
 }
 
 ############
