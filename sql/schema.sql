@@ -485,6 +485,9 @@ INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`,
 ('BeerInfoColNum', '4', 'Column number for Beer Info', 1, NOW(), NOW() ),
 ('AbvColNum', '5', 'Column number for ABV', 1, NOW(), NOW() ),
 ('KegColNum', '6', 'Column number for Keg', 1, NOW(), NOW() );
+
+INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+( 'amountPerPint', '0', 'Amount per pint. > 0 then display pints remaining', '0', NOW(), NOW() );
 -- --------------------------------------------------------
 
 --
