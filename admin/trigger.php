@@ -24,7 +24,9 @@
 	    $value == "tempProbe"||
 	    $value == "shutdown"||
 	    $value == "restart"||
-	    $value == "restartservice")
+	    $value == "restartservice"||
+	    $value == "upgrade"||
+	    $value == "upgradeForce")
 	{
 		$data = "RPC:".$value."\n";
 	} 

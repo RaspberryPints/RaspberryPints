@@ -5,6 +5,12 @@ $htmlHelper = new HtmlHelper();
 <body>
 	<!-- Start Header  -->
 <?php
+
+if (isset ( $_POST ['upgrade'] )) {
+    //echo ("restarting flowmon service: ");
+    file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=upgrade');
+}
+
 include 'top_menu.php';
 ?>
 	<!-- End Header -->
@@ -27,6 +33,19 @@ include 'top_menu.php';
 		</div>
 		<div class="contentbox">
 			<?php $htmlHelper->ShowMessage(); ?>
+			
+			<?php $config = getAllConfigs(); if( $config[ConfigNames::UseFlowMeter] ){ ?>
+			<form method="POST">
+				<table style="width:300;border:0;cellspacing:1;cellpadding:0;">
+					<tbody>
+						<tr>
+							<td><input type="submit" name="upgrade" class="btn"
+								value="Get Latest RPints" onclick="return confirm('Are you sure you want to Upgrade the system?')"/></td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+			<?php }?>
 			<form action="../install/includes/configprocessor.php" method="post">
 				<input type="hidden" value="<?php echo $host; ?>" name="servername"/>				
                 <input type="hidden" value="<?php echo $db_name; ?>"  name="database"/>

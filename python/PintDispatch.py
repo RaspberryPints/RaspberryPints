@@ -26,6 +26,7 @@ from sys import stdin
 from mod_pywebsocket.standalone import WebSocketServer
 from mod_pywebsocket.standalone import _parse_args_and_config
 from mod_pywebsocket.standalone import _configure_logging
+import subprocess
 
 from Config import config
 
@@ -173,6 +174,12 @@ class CommandTCPHandler(SocketServer.StreamRequestHandler):
             if ( reading[1] == "restartservice" ):
                 debug("Requesting Reset of Service")
                 self.server.pintdispatch.restartService()
+            if ( reading[1] == "upgrade" ):
+                debug("Upgrading Rpints")
+                self.server.pintdispatch.upgrade("")
+            if ( reading[1] == "upgradeForce" ):
+                debug("Upgrading Rpints")
+                self.server.pintdispatch.upgrade("force")
         
         self.wfile.write("RPACK\n")
 
@@ -650,7 +657,17 @@ class PintDispatch(object):
     def restartService(self,):
         log("Restarting Service")
         os.system('sudo /etc/init.d/flowmon restart')
-            
+        
+    def upgrade(self,varient="", branch_to_use="", tag=""):
+        log("Upgrading RPints Service")
+        
+        cmds = {}
+        if varient == "":
+            subprocess.call(""+PINTS_DIR+"/util/installRaspberryPints --u --i "+PINTS_DIR, shell=True)
+
+        elif varient == "force":
+            subprocess.call(""+PINTS_DIR+"/util/installRaspberryPints --u --f --i "+PINTS_DIR, shell=True)
+
 class FanControlThread (threading.Thread):
     restart = False
     def __init__(self, threadID, dispatch):
