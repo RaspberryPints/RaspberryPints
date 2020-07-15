@@ -385,8 +385,17 @@ if($editting) $maxTapCol = 1;
     						<?php } ?>
     					</div>
     					<?php }?>
-						<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
-							<h3><?php echo number_format($beer['remainAmount'], 1); echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L"); ?> left</h3>
+						<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>							
+							<h3>
+							<?php 
+							 if( !isset($config[ConfigNames::AmountPerPint]) || $config[ConfigNames::AmountPerPint] == 0) {
+							     echo number_format($beer['remainAmount'], 1); echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L");
+							 }else{
+							     $beer['remainAmount'] = convert_volume($beer['remainAmount'], $beer['remainAmountUnit'], $config[ConfigNames::DisplayUnitVolume], FALSE, TRUE);
+							     echo number_format($beer['remainAmount']/$config[ConfigNames::AmountPerPint], 1); echo "Pints";
+							 }
+							?> 
+							left</h3>
 						<?php } ?>
 				<?php }elseif( isset($beer) && $beer['beername'] && 
 				               isset($beer['lastPour']) && $beer['lastPour'] != ''){ ?>

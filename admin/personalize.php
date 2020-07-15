@@ -69,7 +69,18 @@ Configuration Updated
 		$Client_ID=$configs[ConfigNames::ClientID];
 		$Client_Secret=$configs[ConfigNames::ClientSecret];
 		$BreweryID=$configs[ConfigNames::BreweryID];
+		$amountPerPint=$configs[ConfigNames::AmountPerPint];
 	?>
+	<a id="amountPerPint"></a> 
+		<h2>Remaining Amount Display</h2><br><br>
+		<p><b>Amount (<?php echo $configs[ConfigNames::DisplayUnitVolume]?>) Per Pint:</b>(If greater than 0 then pints remaining will be displayed)</p>
+			<form method="post" action="includes/config_update.php" id="amountPerPintForm">
+				<input type="text" class="largebox" value="<?php echo $amountPerPint; ?>" name="configValue"> &nbsp; 
+				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::AmountPerPint.'"/>'; ?>
+				<?php echo '<input type="hidden" name="jumpto" value="#amountPerPint"/>'; ?>
+				<input type="submit" class="btn" name="Submit" value="Submit">
+			</form><br><br>
+			<hr />
 	<a id="header"></a> 
 		<h2>Taplist Header</h2><br><br>
 		<p><b>Text to Display:</b></p>
@@ -225,6 +236,16 @@ include 'scripts.php';
                    }
              });
   	}
+
+	$(function() {		
+		
+		$('#amountPerPintForm').validate({
+			rules: {
+				configValue: { required: true, number: true, min: 0 }
+			}
+		});
+		
+	});
   	</script>
 </body>
 </html>

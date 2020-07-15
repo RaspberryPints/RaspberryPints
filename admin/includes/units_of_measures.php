@@ -20,7 +20,14 @@ abstract class UnitsOfMeasure{
     const WeightKiloGrams = 'kg';
 }
 
-function convert_volume($value, $unitsFrom, $unitsTo, $useLargeUnits = FALSE){
+function convert_volume($value, $unitsFrom, $unitsTo, $useLargeUnits = FALSE, $forceLargeToSmall = FALSE){
+    if( $forceLargeToSmall )
+    {
+        if( $unitsFrom == UnitsOfMeasure::Imperial || $unitsFrom == UnitsOfMeasure::VolumeOunce     ) $unitsFrom = UnitsOfMeasure::VolumeGallon;
+        if( $unitsFrom == UnitsOfMeasure::Metric   || $unitsFrom == UnitsOfMeasure::VolumeMilliLiter) $unitsFrom = UnitsOfMeasure::VolumeLiter;
+        if( $unitsTo == UnitsOfMeasure::VolumeGallon ) $unitsTo = UnitsOfMeasure::VolumeOunce;
+        if( $unitsTo == UnitsOfMeasure::VolumeLiter  ) $unitsTo = UnitsOfMeasure::VolumeMilliLiter;
+    }
     //Covert from the smaller units to the large units
     if( $useLargeUnits ){
         if($unitsFrom == UnitsOfMeasure::Imperial)         $unitsFrom = UnitsOfMeasure::VolumeGallon;
