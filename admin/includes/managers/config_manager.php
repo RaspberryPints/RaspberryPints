@@ -86,7 +86,7 @@
 	    global $mysqli;
 	    $sql="UPDATE config set configValue='".$configValue."', modifiedDate = NOW() WHERE configName ='".$configName."'";
 	    if($insert){
-	        $existVal = getConfigValue(ConfigNames::UpdateDate);
+	        $existVal = getConfigValue($configName);
 	        if(!$existVal || $existVal === null){
 	            $sql="INSERT INTO config (configName, configValue, displayName, showOnPanel, createdDate, modifiedDate) VALUES('".$configName."', '".$configValue."', '".$configName."', 0, NOW(), NOW())";
 	        }
