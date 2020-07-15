@@ -148,6 +148,15 @@ $activeTaps = $tapManager->GetAllActive();
 $numberOfTaps = count($activeTaps);
 $beerList = $beerManager->GetAllActive();
 $kegList = $kegManager->GetAllActive();
+$allTapsConfigured = $config[ConfigNames::UseFlowMeter];
+foreach($activeTaps as $tap)
+{
+    if(null === $tap)continue;
+    $allTapsConfigured = $allTapsConfigured && $tap->get_flowPinId() != 0 && $tap->get_count() != 0;
+    if(!$allTapsConfigured)break;
+    if($config[ConfigNames::UseTapValves])$allTapsConfigured = $allTapsConfigured && $tap->get_valvePinId() != 0;
+    if(!$allTapsConfigured)break;
+}
 ?>
 <body>
 	<!-- Start Header  -->
@@ -169,7 +178,13 @@ include 'top_menu.php';
 		<div class="contentcontainer med left" >
 		<?php $htmlHelper->ShowMessage(); ?>
               
-        <a onClick="toggleSettings(this, 'settingsDiv')" class="collapsed heading">Settings</a>
+        
+		<table>
+		<tr>
+        <td><a onClick="toggleSettings(this, 'settingsDiv')" class="collapsed heading">Settings</a></td>
+        <?php if($config[ConfigNames::UseFlowMeter]) {?> <td><input type="checkbox" onclick="togglePinSettings(this)" <?php if(!$allTapsConfigured)echo 'checked';?>/>Show Pin Settings </td><?php }?>
+        </tr>
+        </table>
 		
 	<!-- Start Tap Config Form -->
 		<div id="settingsDiv" style="<?php echo (isset($_POST['settingsExpanded'])?$_POST['settingsExpanded']:'display:none'); ?>">
@@ -388,12 +403,12 @@ include 'top_menu.php';
                         <?php } ?>
                     <?php } ?>
                     <?php if($config[ConfigNames::UseFlowMeter]) { ?>
-                        <th>Flow Pin</th>
-                        <th>Count<br>Per <?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L");?></th>
+                        <th id="flowPin" <?php if($allTapsConfigured) echo 'style=display:none ' ?>>Flow Pin</th>
+                        <th id="flowCount" <?php if($allTapsConfigured) echo 'style=display:none ' ?>>Count<br>Per <?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L");?></th>
                     <?php } ?>
                     <?php if($config[ConfigNames::UseTapValves]) { ?>
-                        <th>Valve Pin</th>
-                        <th>Valve<br>PI Pin?</th>
+                        <th id="valvepin" <?php if($allTapsConfigured) echo 'style=display:none ' ?>>Valve Pin</th>
+                        <th id="valvepinPi" <?php if($allTapsConfigured) echo 'style=display:none ' ?>>Valve<br>PI Pin?</th>
                     	<th></th>
                         <?php if($config[ConfigNames::UsePlaato]) { ?>
                     		<th>Plaato<br/>Auth<br/>Token</th>
@@ -536,12 +551,12 @@ include 'top_menu.php';
 						</td>      
 						<?php } ?>      
                         <?php if($config[ConfigNames::UseFlowMeter]) { ?>
-                                <td>
+                                <td <?php if($allTapsConfigured) echo 'style=display:none ' ?>>
                                     <?php if( isset($tap) ) { ?>
                                         <input type="text" id="flowpin<?php echo $tap->get_id();?>" class="smallbox" name="flowpin[]" value="<?php echo $tap->get_flowPinId(); ?>" />
                                     <?php } ?>
                                 </td>
-                                <td>
+                                <td <?php if($allTapsConfigured) echo 'style=display:none ' ?>>
                                     <?php if( isset($tap) ) { ?>
                                         <input type="text" id="countpergallon<?php echo $tap->get_id();?>" class="smallbox" name="countpergallon[]" value="<?php echo convert_count($tap->get_count(), $tap->get_countUnit(), $config[ConfigNames::DisplayUnitVolume]); ?>" />
                                         <input type="hidden" id="countpergallonOriginal<?php echo $tap->get_id();?>" class="smallbox" name="countpergallonOriginal[]" value="<?php echo convert_count($tap->get_count(), $tap->get_countUnit(), $config[ConfigNames::DisplayUnitVolume]); ?>" />
@@ -550,12 +565,12 @@ include 'top_menu.php';
                                 </td>
                         <?php } ?>
                         <?php if($config[ConfigNames::UseTapValves]) { ?>
-                            <td>
+                            <td <?php if($allTapsConfigured) echo 'style=display:none ' ?>>
                                 <?php if( isset($tap) ) { ?>
                                     <input type="text" id="valvepin<?php echo $tap->get_id();?>" class="smallbox" name="valvepin[]" value="<?php echo abs($tap->get_valvePinId()); ?>" />
                                 <?php } ?>
                             </td>
-                            <td>
+                            <td <?php if($allTapsConfigured) echo 'style=display:none ' ?>>
                                 <?php if( isset($tap) ) { ?>
                                 	<input type="checkbox" id="valvepinPi<?php echo $tap->get_id();?>" class="xsmallbox" name="valvepinPi[<?php echo $tap->get_id();?>]" value="1" <?php if($tap->get_valvePinId() < 0)echo "checked"; ?>  />
                                 <?php } ?>
@@ -737,6 +752,21 @@ include 'scripts.php';
 			}
 			if(document.getElementById("settingsExpanded")!= null)document.getElementById("settingsExpanded").value = div.style.display;
 		}
+	}
+	
+	function togglePinSettings(checkBox) {
+		$("#flowPin").css("display", checkBox.checked?"visible":"none");
+		$("#flowCount").css("display", checkBox.checked?"visible":"none");
+		$("#valvepin").css("display", checkBox.checked?"visible":"none");
+		$("#valvepinPi").css("display", checkBox.checked?"visible":"none");
+		$("input[name='flowpin[]']").css("display", checkBox.checked?"visible":"none");
+		$("input[name='flowpin[]']").parent().css("display", checkBox.checked?"visible":"none");
+		$("input[name='countpergallon[]']").css("display", checkBox.checked?"visible":"none");
+		$("input[name='countpergallon[]']").parent().css("display", checkBox.checked?"visible":"none");
+		$("input[name='valvepin[]']").css("display", checkBox.checked?"visible":"none");
+		$("input[name='valvepin[]']").parent().css("display", checkBox.checked?"visible":"none");
+		$("input[name^='valvepinPi']").css("display", checkBox.checked?"visible":"none");
+		$("input[name^='valvepinPi']").parent().css("display", checkBox.checked?"visible":"none");
 	}
 	
 	function toggleDisplay(selectObject, kegSelectStart, secSelectBeerStart, tapId, tapNumber) {
