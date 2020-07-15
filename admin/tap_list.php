@@ -47,11 +47,15 @@ if (isset ( $_POST ['saveTapConfig'] )) {
     			    $keg->set_maxVolumeUnit($_POST['startAmountUnit'][$ii]);
     			}
 			}
-			if( $_POST ['currentAmount'][$ii] != $_POST ['currentAmountOriginal'][$ii]) {
+			if( ISSET($_POST ['currentAmount']) && 
+			    ISSET($_POST ['currentAmountOriginal']) && 
+			    $_POST ['currentAmount'][$ii] != $_POST ['currentAmountOriginal'][$ii]) {
 			     $keg->set_currentAmount($_POST['currentAmount'][$ii]);
 			     $keg->set_currentAmountUnit($_POST['currentAmountUnit'][$ii]);
 			}
-			if( $_POST ['currentWeight'][$ii] != $_POST ['currentWeightOriginal'][$ii]) {
+			if( ISSET($_POST ['currentWeight']) && 
+			    ISSET($_POST ['currentWeightOriginal']) &&
+			    $_POST ['currentWeight'][$ii] != $_POST ['currentWeightOriginal'][$ii]) {
 			     $keg->set_Weight($_POST['currentWeight'][$ii]);
 			     $keg->set_WeightUnit($_POST['currentWeightUnit'][$ii]);
 			}
