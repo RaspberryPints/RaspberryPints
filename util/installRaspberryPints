@@ -1236,7 +1236,7 @@ installFlowmeters(){
 			fi
 			update-rc.d flowmon defaults
 		fi
-		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "UPDATE config SET configValue='1' WHERE configName='useFlowMeter';";
+		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "UPDATE config SET configValue='1' WHERE configName='useFlowMeter' OR configName='showKegCol';";
 		read -e -p "For alamode set the 5V_link jumper to on (see page 11 of the Alamode Manual). Enter to continue" ANSWER < /dev/tty
 	else
 		echo "Will Not Install Flow Meters"
