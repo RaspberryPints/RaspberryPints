@@ -1565,6 +1565,7 @@ updateRpints(){
 	pushd . >/dev/null
 	cd ${WWWPATH}
 	cp -R -f img /tmp/rpints_img 
+	cp -R -f python/Config.py /tmp/RPints_Config.py 
 	case ${REPO_CHOICE} in
         1 ) git config --global user.email "test@test.com";	git config --global user.name "Test Test"; ;;
         2 ) git config --global user.email "test@test.com";	git config --global user.name "Test Test"; ;;
@@ -1579,6 +1580,7 @@ updateRpints(){
 	cp -R -n /tmp/rpints_img/* ./img/ 
 	cp -f /tmp/rpints_img/background.jpg ./img/background.jpg 
 	cp -f /tmp/rpints_img/logo.png ./img/logo.png 
+	cp -f /tmp/RPints_Config.py  ./python/Config.py 
 	echo -e "Images updated, old images can be found in /tmp/rpints_img"
 	popd >/dev/null
 	doperms
