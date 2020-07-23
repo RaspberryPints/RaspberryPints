@@ -1572,15 +1572,15 @@ updateRpints(){
         3 )  ;; #Not sure how to update this one since its static		
 	esac
 	case ${REPO_CHOICE} in
-        1 ) git stash; git pull; mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -s -L < ${WWWPATH}/sql/update.sql > /dev/null 2>&1; if  [ -z "$WWWPATH_SET" ]; then git difftool --dir-diff -y stash; fi; ;;
-        2 ) git stash; git pull; if  [ -z "$WWWPATH_SET" ]; then git difftool --dir-diff -y stash; fi; ;;
+        1 ) git stash; git pull; mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -s -L < ${WWWPATH}/sql/update.sql > /dev/null 2>&1; cp -f /tmp/RPints_Config.py  ./python/Config.py; if  [ -z "$WWWPATH_SET" ]; then git difftool --dir-diff -y stash; fi; ;;
+        2 ) git stash; git pull; cp -f /tmp/RPints_Config.py  ./python/Config.py; if  [ -z "$WWWPATH_SET" ]; then git difftool --dir-diff -y stash; fi; ;;
         3 )  ;; #Not sure how to update this one since its static		
 	esac
 	#bring over any images that were undone but do not overwrite except background and logo
 	cp -R -n /tmp/rpints_img/* ./img/ 
 	cp -f /tmp/rpints_img/background.jpg ./img/background.jpg 
 	cp -f /tmp/rpints_img/logo.png ./img/logo.png 
-	cp -f /tmp/RPints_Config.py  ./python/Config.py 
+	#cp -f /tmp/RPints_Config.py  ./python/Config.py 
 	echo -e "Images updated, old images can be found in /tmp/rpints_img"
 	popd >/dev/null
 	doperms
