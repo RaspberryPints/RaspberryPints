@@ -189,7 +189,7 @@ class FlowMonitor(object):
         while (b"alive" != msg):
             #debug("["+str(msg)+"]")
             if(b"StatusCheck" == msg):
-                msg = "Status;%s;%d;%s;|" % ("NOTOK", -1, 1)
+                msg = "Status;%s;%d;%s;|" % ("N", -1, 1)
                 debug( "Sending "+ msg )
                 self.arduino.write(msg)
             msg = self.readline_notimeout()
@@ -345,7 +345,7 @@ class FlowMonitor(object):
                 #request basic status infomration like rfid/user and reconfig required
                 elif ( reading[0] == "StatusCheck" ):
                     #debug("RFIDCheck")
-                    RFIDState = "NOTOK"
+                    RFIDState = "N"
                     userId = -1
                     if self.alamodeUseRFID == True:
                         for item in self.readers:
@@ -354,7 +354,7 @@ class FlowMonitor(object):
     
                             userId = item.getLastUserId() 
                             if userId > -1:
-                                RFIDState = "OK"
+                                RFIDState = "Y"
                                 break
                     
                     valves = ""

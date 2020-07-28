@@ -400,7 +400,7 @@ void piStatusCheck(){
 	  }
 
 
-	  if(rfidState && strcmp(rfidState, "OK") == 0){
+	  if(rfidState && strcmp(rfidState, "Y") == 0){
 	    activeUserDate = millis();
 	    if(tagValue && activeUserId != atol(tagValue)){
 	      activeUserId = atol(tagValue);
