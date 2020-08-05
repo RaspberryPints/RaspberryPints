@@ -8,7 +8,7 @@ class FermentableManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["name", "type", "srm", "notes". "srm"];
+		return ["name", "type", "srm", "notes"];
 	}
 	protected function getUpdateColumns(){
 	    return ["name", "type", "srm", "notes"];
