@@ -35,10 +35,12 @@
 	
 	function DisplayEditShowColumn($editting, $config, $col, $configName){
 	    if( !$editting ) return;
-	    
-	    echo '<td>';
+
+	    //if display vertically then add table data, otherwise just add a new line
+	    if($config[ConfigNames::ShowVerticleTapList] != '1')echo '<br/>';
+	    if($config[ConfigNames::ShowVerticleTapList] == '1')echo '<td>';
 	    echo '<input type="radio" value="1"  name="show'.$configName.'" id="show'.$configName.'" '.($config[$configName] > 0?"checked":"").'/>Visible';
 	    echo '<input type="radio" value="-1" name="show'.$configName.'" id="show'.$configName.'" '.($config[$configName] < 0?"checked":"").'/>Hidden';
-	    echo '</td>';
+	    if($config[ConfigNames::ShowVerticleTapList] == '1')echo '</td>';
 	}
 ?>

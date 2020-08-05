@@ -5,6 +5,7 @@ require_once __DIR__.'/../includes/functions.php';
 require_once __DIR__.'/includes/managers/beerFermentable_manager.php';
 require_once __DIR__.'/includes/managers/beerHop_manager.php';
 require_once __DIR__.'/includes/managers/beerYeast_manager.php';
+require_once __DIR__.'/includes/managers/beerAccolade_manager.php';
 require_once __DIR__.'/includes/models/beerFermentable.php';
 require_once __DIR__.'/includes/models/beerHop.php';
 require_once __DIR__.'/includes/models/beerYeast.php';
@@ -15,9 +16,11 @@ $beerStyleManager = new BeerStyleManager();
 $FermentableManager = new FermentableManager();
 $HopManager= new HopManager();
 $YeastManager = new YeastManager();
+$AccoladeManager = new AccoladeManager();
 $beerFermentableManager = new BeerFermentableManager();
 $beerHopManager= new BeerHopManager();
 $beerYeastManager = new BeerYeastManager();
+$beerAccoladeManager = new BeerAccoladeManager();
 $breweryManager = new BreweryManager();
 $srmManager = new SrmManager();
 $beer = null;
@@ -56,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     	    $beerFermentableManager->DeleteAllByBeerId($beer->get_id());
     	    $beerHopManager->DeleteAllByBeerId($beer->get_id());
     	    $beerYeastManager->DeleteAllByBeerId($beer->get_id());
+    	    $beerAccoladeManager->DeleteAllByBeerId($beer->get_id());
     	    
     	    if(isset($_POST['fermId'])){
     	        $ii = 0;
@@ -104,6 +108,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     	            $ii++;
     	        }
     	    }
+    	    if(isset($_POST['accoladeId'])){
+    	        $ii = 0;
+    	        while(isset($_POST['accoladeId'][$ii])){
+    	            if($_POST['accoladeId'][$ii] != ''){
+        	            $id = explode("~", $_POST['accoladeId'][$ii])[0];
+        	            $item = new BeerAccolade();
+        	           // $item->set_id($_POST['beerYeastId'][$ii]);
+        	            $item->set_beerID($beer->get_id());
+        	            $item->set_accoladeID($id);
+        	            $item->set_amount($_POST['accoladeAmount'][$ii]);
+        	            $beerAccoladeManager->Save($item);
+    	            }
+    	            $ii++;
+    	        }
+    	    }
     	    redirect('beer_list.php');
     	}
 	}
@@ -121,10 +140,12 @@ if( null === $beer ){
 $fementableList = $FermentableManager->GetAllActive();
 $hopList = $HopManager->GetAllActive();
 $yeastList = $YeastManager->GetAllActive();
+$accoladeList = $AccoladeManager->GetAllActive();
 
 $beerFermentables = $beerFermentableManager->GetAllByBeerId($beer->get_id());
 $beerHops = $beerHopManager->GetAllByBeerId($beer->get_id());
 $beerYeasts  = $beerYeastManager->GetAllByBeerId($beer->get_id());
+$beerAccolades  = $beerAccoladeManager->GetAllByBeerId($beer->get_id());
 
 $breweryList = $breweryManager->GetAllActive();
 $srmList = $srmManager->getAll();
@@ -154,11 +175,12 @@ include 'top_menu.php';
 			<p>Fields marked with <b><font color="red">*</font></b> are required.<br><br>
 			<?php $htmlHelper->ShowMessage(); ?>
 
-	<form id="beer-form" method="POST" action="image_prompt.php?id=<?php echo $beer->get_id();?>" target="_blank">
+	<form id="beer-form" method="POST" action="image_prompt.php?id=<?php echo $beer->get_id();?>">
 		<input type="hidden" name="id" value="<?php echo $beer->get_id() ?>" />
 		<input type="hidden" name="active" value="<?php echo $beer->get_active() ?>" />		
         <input type="hidden" name="targetDir" value="beer/beer"/>
-		<table style="width:800;border:0;cellspacing:1;cellpadding:0;">
+        <input type="hidden" name="redirect" value="../beer_form.php?id=<?php echo $beer->get_id() ?>"/>
+		<table style="width:800;border:0;cellspacing:1;cellpadding:0;">	
 			<tr>
 				<td style="vertical-align: middle">
 					<b>Image:</b>
@@ -177,7 +199,7 @@ include 'top_menu.php';
 						}
 					?> 
                 	<?php if($hasImg) {?>
-                		<a href="image_remove.php?id=<?php echo $beer->get_id();?>&type=beer" target="_blank"><span class="tooltip"><img src="img/icons/icon_missing.png" /><span class="tooltiptext">Remove Beer Image</span></span></a>
+                		<a onclick="removeImage(<?php echo $beer->get_id();?>)"><span class="tooltip"><img src="img/icons/icon_missing.png" /><span class="tooltiptext">Remove Beer Image</span></span></a>
                 	<?php }?>
                 	<input name="save" type="submit" class="btn" value="Upload" />
 				</td>
@@ -494,8 +516,11 @@ include 'top_menu.php';
                             ?>
                             </td>
     						<td><input type="text" id="yeastAmount" class="meddiumbox" name="yeastAmount[]" value="<?php echo $beerYeast->get_amount() ?>"/></td>
-    						<td><input type="text" disabled id="hopBeta" class="meddiumbox" name="fermtype[]" value="<?php echo $beerYeast->get_yeast()->get_strand() ?>"/></td>
-    						<td><input type="text" disabled id="hopBeta" class="meddiumbox" name="fermtype[]" value="<?php echo $beerYeast->get_yeast()->get_format() ?>"/></td>
+    						<td><input type="text" disabled id="yeastStrand" class="meddiumbox" name="yeastStrand[]" value="<?php echo $beerYeast->get_yeast()->get_strand() ?>"/></td>
+    						<td><input type="text" disabled id="yeastFormat" class="meddiumbox" name="yeastFormat[]" value="<?php echo $beerYeast->get_yeast()->get_format() ?>"/></td>
+    						<td style="width:10%;vertical-align: middle;">
+                                <button name="delete" type="button" class="btn" style="white-space:nowrap" value="<?php echo $beer->get_id()?>" onClick="removeRow(this)">Delete</button>
+                            </td>
     					</tr>
 					<?php
 						}
@@ -506,6 +531,64 @@ include 'top_menu.php';
 			<tr> 
 				<td>	
 	 				<input type="button" id="newRow1" name="newRow2" class="btn" value="Add Yeast" onclick="addRow('yeastList')" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<h3 style="align-content:center">Accolades</h3>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<table id="accoladeList">
+						<tr style="width:100%">
+							<td><strong>Name</strong></td>
+							<td><strong>Amount</strong></td>
+						</tr>
+                        <?php 
+                        if( count($beerAccolades) == 0 ){  
+						  $beerAccolades[] = new BeerAccolade();
+						}
+						foreach ($beerAccolades as $beerAccolade){
+						?>
+    						<tr style="width:100%">
+    						<td>
+							<input type="hidden" id="beerAccoladeId" name="beerAccoladeId[]" value="<?php echo $beerAccolade->get_id(); ?>"/>                     
+							<?php 	
+							   $selStyle = '';
+							   $str = '';
+							   $str .= "<option value=''>Select One</option>\n";
+                                foreach($accoladeList as $item){
+                                    if( !$item ) continue;
+                                    $sel = "";
+                                    if( $beerAccolade && $beerAccolade->get_accoladeID() == $item->get_id() ){
+                                        $sel .= "selected ";
+                                        $beerAccolade->set_accolade($item);
+                                        $selStyle = "style=\"background-color:rgb(".$item->get_rgb().")\"";
+                                    }
+                                    $desc = $item->get_name();
+                                    $str .= "<option value='".$item->get_id()."~".$item->get_name()."' ".$sel." style=\"background-color:rgb(".$item->get_rgb().")\">".$desc."</option>\n";
+                                }					
+                                $str .= "</select>\n";
+                                $selStr = "<select id='accoladeId".$ii."' $selStyle name='accoladeId[]' class='' onChange='toggleDisplay(this, 2); this.style.backgroundColor=this.children[this.selectedIndex].style.backgroundColor;'>\n".$str;
+                                                        
+                                echo $selStr;
+                            ?>
+                            </td>
+    						<td><input type="text" id="accoladeAmount" class="meddiumbox" name="accoladeAmount[]" value="<?php echo $beerAccolade->get_amount() ?>"/></td>
+    						<td style="width:10%;vertical-align: middle;">
+                                <button name="delete" type="button" class="btn" style="white-space:nowrap" value="<?php echo $beer->get_id()?>" onClick="removeRow(this)">Delete</button>
+                            </td>
+    					</tr>
+					<?php
+						}
+					?>
+					</table>
+				</td>
+			</tr>
+			<tr> 
+				<td>	
+	 				<input type="button" id="newRow1" name="newRow2" class="btn" value="Add Accolade" onclick="addRow('accoladeList')" />
 				</td>
 			</tr>
 			<tr>
@@ -617,6 +700,18 @@ require __DIR__.'/scripts.php';
 		$(btn).closest('tr').remove();
 		if($("#pendingChangesDiv")[0] != null)$("#pendingChangesDiv")[0].style.display="";
 	}
+	function removeImage(id){
+	    var form = document.createElement("form");
+	    var element2 = document.createElement("input"); 
+	    form.method = "POST";
+	    form.action = "image_remove.php?id="+id+"&type=beer";   
+	    element2.value="beer_form.php?id="+id;
+	    element2.name="redirect";
+	    form.appendChild(element2);  
+	    document.body.appendChild(form);
+
+	    form.submit();
+  	}
 </script>
 
 	<!-- End Js -->

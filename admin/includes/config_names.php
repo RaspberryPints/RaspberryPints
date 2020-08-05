@@ -74,6 +74,8 @@ abstract class ConfigNames
 	const ShowTapNumCol = 'showTapNumCol';
 	const TapNumColNum = 'TapNumColNum';
 	const ShowTastingNotes = 'showTastingNotes';
+	const ShowAccoladeCol = 'showAccoladeCol';
+	const AccoladeColNum = 'AccoladeColNum';
 	const UseFanControl = 'useFanControl';
 	const UseFanPin = 'useFanPin';
 	const UseFlowMeter = 'useFlowMeter';

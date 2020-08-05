@@ -4,6 +4,7 @@ require_once __DIR__.'/tap_manager.php';
 require_once __DIR__.'/fermentable_manager.php';
 require_once __DIR__.'/hop_manager.php';
 require_once __DIR__.'/yeast_manager.php';
+require_once __DIR__.'/accolade_manager.php';
 require_once __DIR__.'/../models/beer.php';
 
 class BeerManager extends Manager{

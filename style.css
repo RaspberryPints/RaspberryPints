@@ -36,6 +36,7 @@ table .name{
 	text-align: left;
 	vertical-align: middle;	
 	padding: 5px;
+	font-size:70px;
 }
 table td.name{
 	text-align: left;
@@ -193,6 +194,11 @@ img {
 
 .tap-num{
 	vertical-align: middle;
+}
+.accolades{
+	width: 250px;
+	text-align: center;
+	vertical-align: middle;	
 }
 
 .tapcircle {

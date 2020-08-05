@@ -65,7 +65,8 @@
 				"rating" => $b['rating'],
 				"srmRgb" => $b['srmRgb'],
 				"valvePinState" => $b['valvePinState'],
-				"plaatoAuthToken" => $b['plaatoAuthToken']
+			    "plaatoAuthToken" => $b['plaatoAuthToken'],
+			    "accolades" => $b['accolades']
 			);
 			if($config[ConfigNames::UsePlaato]) {
     			if(isset($b['plaatoAuthToken']) && $b['plaatoAuthToken'] !== NULL && $b['plaatoAuthToken'] != '')
@@ -130,7 +131,8 @@
 				"capNumber" => $b['capNumber'],
 				"rating" => $b['rating'],
 				"srmRgb" => $b['srmRgb'],
-				"valvePinState" => $b['valvePinState']
+				"valvePinState" => $b['valvePinState'],
+				"accolades" => $b['accolades']
 			);
 			$bottles[$rowNumber] = $beeritem;
       		$rowNumber = $rowNumber+1;

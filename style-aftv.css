@@ -118,6 +118,9 @@ table thead th{
 table .tap-num{
 	width: 50px;
 }
+table .accolades{
+	width: 80px;
+}
 table .srm{
 	width: 85px;
 	text-align: center;
@@ -144,6 +147,9 @@ table .keg{
 }
 
 table td.tap-num{
+	vertical-align: middle;
+}
+table td.accolades{
 	vertical-align: middle;
 }
 

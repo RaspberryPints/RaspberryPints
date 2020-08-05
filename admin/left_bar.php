@@ -38,6 +38,7 @@
 			<li><a href="hops_list.php">Hops</a></li>
 			<li><a href="fermentables_list.php">Fermentables</a></li>
 			<li><a href="yeasts_list.php">Yeasts</a></li>
+			<li><a href="accolades_list.php">Accolades</a></li>
 		</ul>
 	</li>
     <li>

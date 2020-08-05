@@ -6,7 +6,7 @@ require_once __DIR__.'/../admin/includes/html_helper.php';
 $config = getAllConfigs();
 $htmlHelper = new HtmlHelper();
 $beerColSpan = 1;
-$MAX_COLUMNS = 6;
+$MAX_COLUMNS = 7;
 $editting = (isset($editingTable) && $editingTable);
 
 $maxTapCol = isset($config[ConfigNames::HozTapListCol])?$config[ConfigNames::HozTapListCol]+1:1;
@@ -20,7 +20,7 @@ if($editting) $maxTapCol = 1;
 		<?php for($tapCol = 0; $tapCol< $maxTapCol && $numberOfBeers > $tapCol; $tapCol++){ ?>
 			<?php $beerColSpan = 1; ?>
 			<?php for($col = 1; $col <= $MAX_COLUMNS; $col++){ ?>
-    			<?php if($config[ConfigNames::ShowTapNumCol] &&
+    			<?php if(($editting || $config[ConfigNames::ShowTapNumCol]) &&
 				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::TapNumColNum])){ ?>
     				<th class="tap-num">
     					<!--TAP<br>#-->
@@ -29,7 +29,7 @@ if($editting) $maxTapCol = 1;
 					</th>
     			<?php } ?>
     			
-    			<?php if($config[ConfigNames::ShowSrmCol] &&
+    			<?php if(($editting || $config[ConfigNames::ShowSrmCol]) &&
 				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::SrmColNum])){ ?>
     				<th class="srm">
     					COLOR
@@ -38,7 +38,7 @@ if($editting) $maxTapCol = 1;
 					</th>
     			<?php } ?>
     			
-    			<?php if($config[ConfigNames::ShowIbuCol] &&
+    			<?php if(($editting || $config[ConfigNames::ShowIbuCol]) &&
 				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::IbuColNum])){ ?>
     				<th class="ibu">
     					<?php if($config[ConfigNames::ShowBuGuValue]){ ?>
@@ -68,7 +68,7 @@ if($editting) $maxTapCol = 1;
         				</th>
         			<?php } ?>
     			<?php }?>
-    			<?php if($config[ConfigNames::ShowAbvCol] &&
+    			<?php if(($editting || $config[ConfigNames::ShowAbvCol]) &&
 				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AbvColNum])){ ?>
     				<th class="abv">
     					ABV
@@ -83,12 +83,21 @@ if($editting) $maxTapCol = 1;
     				</th>
     			<?php } ?>
     			
-    			<?php if($config[ConfigNames::ShowKegCol] &&
+    			<?php if(($editting || $config[ConfigNames::ShowKegCol]) &&
 				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::KegColNum])){ ?>
     				<th class="keg">
     					DRINKS<hr>REMAINING
 						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::KegColNum)?>
     					<input type="hidden" name="<?php echo ConfigNames::KegColNum;?>" id="<?php echo ConfigNames::KegColNum;?>" value="<?php echo abs($config[ConfigNames::KegColNum]);?>"/>
+    				</th>
+    			<?php } ?>
+    			
+    			<?php if(($editting || $config[ConfigNames::ShowAccoladeCol]) &&
+				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AccoladeColNum])){ ?>
+    				<th class="accolades">
+    					Accolades
+						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::AccoladeColNum)?>
+    					<input type="hidden" name="<?php echo ConfigNames::AccoladeColNum;?>" id="<?php echo ConfigNames::AccoladeColNum;?>" value="<?php echo abs($config[ConfigNames::AccoladeColNum]);?>"/>
     				</th>
     			<?php } ?>
 			<?php } ?>
@@ -111,7 +120,7 @@ if($editting) $maxTapCol = 1;
         			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG  && !isset($beer) ) continue;
         		?>
 				<?php for($col = 1; $col <= $MAX_COLUMNS; $col++){ ?>
-				<?php if($config[ConfigNames::ShowTapNumCol] &&
+				<?php if(($editting || $config[ConfigNames::ShowTapNumCol]) &&
 				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::TapNumColNum])){ ?>
 					<td class="tap-num">
 					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ 
@@ -141,7 +150,7 @@ if($editting) $maxTapCol = 1;
 					</td>
 				<?php } ?>
 			
-				<?php if($config[ConfigNames::ShowSrmCol] &&
+				<?php if(($editting || $config[ConfigNames::ShowSrmCol]) &&
 				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::SrmColNum])){ ?>
 					<td class="srm">
 					<?php if(isset($beer) && $beer['beername'] && $beer['srm'] > 0){ ?>						
@@ -161,11 +170,11 @@ if($editting) $maxTapCol = 1;
 					</td>
 				<?php } ?>
 			
-				<?php if($config[ConfigNames::ShowIbuCol] &&
+				<?php if(($editting || $config[ConfigNames::ShowIbuCol]) &&
 				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::IbuColNum])){ ?>
 					<td class="ibu">
 					<?php if(isset($beer) && $beer['beername']){ ?>
-						<?php if($config[ConfigNames::ShowBuGuValue] && $beer['ibu'] != '' && $beer['og']){ ?>
+						<?php if(($editting || $config[ConfigNames::ShowBuGuValue]) && $beer['ibu'] != '' && $beer['og']){ ?>
 						<h3>
 							<?php 
     							$sgOg = convert_gravity($beer['og'], $beer['ogUnit'], UnitsOfMeasure::GravitySG);
@@ -226,7 +235,7 @@ if($editting) $maxTapCol = 1;
                             <h1><?php echo $beer['beername']; ?></h1>
                         <?php } ?>
                         
-                        <?php if($config[ConfigNames::ShowBeerStyle] && $beer['style']){ ?>
+                        <?php if(($editting || $config[ConfigNames::ShowBeerStyle]) && $beer['style']){ ?>
                             <h2 class="subhead"><?php echo str_replace("_","",$beer['style']); ?></h2>
                         <?php } ?>
                         
@@ -307,7 +316,7 @@ if($editting) $maxTapCol = 1;
     							?>
     						</h3>
     						<?php } ?>
-    					<?php if($config[ConfigNames::ShowGravity] && $beer['og'] > 0){ ?>
+    					<?php if(($editting || $config[ConfigNames::ShowGravity]) && $beer['og'] > 0){ ?>
     						<h3>OG:<?php echo convert_gravity($beer['og'], $beer['ogUnit'], $config[ConfigNames::DisplayUnitGravity]); echo $config[ConfigNames::DisplayUnitGravity] != UnitsOfMeasure::GravitySG?$config[ConfigNames::DisplayUnitGravity]:''; ?></h3>
     					<?php } ?>
     				<?php } ?>
@@ -315,7 +324,7 @@ if($editting) $maxTapCol = 1;
 				</td>								
 			<?php } ?>
 				
-			<?php if($config[ConfigNames::ShowKegCol] &&
+			<?php if(($editting || $config[ConfigNames::ShowKegCol]) &&
 				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::KegColNum])){ ?>
 				<td class="keg" >
 				<?php if(isset($beer) && $beer['beername']){ ?>
@@ -329,7 +338,7 @@ if($editting) $maxTapCol = 1;
 				<?php } ?>
 				<?php if(isset($beer) && $beer['beername'] && 
 				         $beer['startAmount'] > 0){ ?>
-					<?php if($config[ConfigNames::ShowLastPouredValue] &&
+					<?php if(($editting || $config[ConfigNames::ShowLastPouredValue]) &&
 					         $tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG &&
 					         isset($beer['lastPour']) && $beer['lastPour'] != ''){ ?>
     					<h3><?php echo $beer['lastPour']?></h3>
@@ -405,6 +414,31 @@ if($editting) $maxTapCol = 1;
 				<?php }?>
 				</td>
 			<?php } ?>
+			
+				<?php if(($editting || $config[ConfigNames::ShowAccoladeCol]) &&
+				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AccoladeColNum])){ ?>
+					<td class="accolades">
+    				<table>
+					<?php 
+    					$accolades = explode(",",$beer['accolades']);
+    					foreach( $accolades as $accolade)
+    					{
+    					    $accParts = explode("~", $accolade);
+    					    if(count($accParts) < 3) continue;
+    					    $style = "";
+    					    $imgs = glob ( 'img/accolade/accolade'.$accParts[0].'.*' );
+    					    if(count($imgs) > 0) $style .= ($style != ""?";":"").'background:url('.$imgs[0].') no-repeat bottom left; background-size:contain; -webkit-border-radius:0px; -mox-border-radius:0px; width:100%; height:10px';
+    					    ?>
+    					    <tr>
+    					    <td style="vertical-align: middle; border-right: none"><?php echo $accParts[2] ?></td>
+    					    <td style="vertical-align: middle; border-left: none; <?php echo $style; ?>" ><?php if($style=="")echo $accParts[1];?></td>
+    					    </tr>
+                    <?php 
+    				    }
+					 ?>
+    				</table>
+					</td>
+				<?php } ?>
 			<?php } //End for column loop ?>
 			<?php if($maxTapCol > 1 && $tapCol != $maxTapCol-1){ echo "<td style=width:70px;></td>"; } ?>
 			<?php } //End for tap column loop ?>

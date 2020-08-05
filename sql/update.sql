@@ -701,6 +701,137 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ( 'amountPerPint', '0', 'Amount per pint. > 0 then display pints remaining', '0', NOW(), NOW() );
 
+
+
+CREATE TABLE IF NOT EXISTS `accolades` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` tinytext NOT NULL,
+	`type` tinytext NULL,
+	`srm` decimal(3,1) NULL,
+	`notes` text NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beerAccolades` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`beerId` int(11) NOT NULL,
+    `accoladeId`int(11) NOT NULL,
+	`amount` tinytext NULL,
+	
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
+	FOREIGN KEY (`accoladeId`) REFERENCES accolades(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+CREATE OR REPLACE VIEW `vwAccolades` 
+AS
+ SELECT 
+    a.*,
+    srm.rgb
+ FROM accolades a LEFT JOIN srmRgb srm
+        ON a.srm = srm.srm;
+INSERT INTO accolades VALUES('1','Gold','Medal','3.0','','2020-08-04 14:13:55','2020-08-04 14:14:34');
+INSERT INTO accolades VALUES('2','Silver','Medal','4.2','','2020-08-04 14:14:34','2020-08-04 14:14:34');
+INSERT INTO accolades VALUES('3','Bronze','Medal','9.6','','2020-08-04 14:14:34','2020-08-04 14:14:34');
+INSERT INTO accolades VALUES('4','BOS','Medal','9.6','','2020-08-04 14:14:34','2020-08-04 14:14:34');
+        
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+( 'showAccoladeCol', '0', 'Show Accolades Col', '1', NOW(), NOW() ),
+('AccoladeColNum', '7', 'Column number for Accolades', 0, NOW(), NOW() );
+
+CREATE OR REPLACE VIEW vwGetActiveTaps
+AS
+
+SELECT
+	t.id,
+	b.id as 'beerId',
+	b.name,
+	b.untID,
+	bs.name as 'style',
+	br.name as 'breweryName',
+	br.imageUrl as 'breweryImageUrl',
+	b.rating,
+	b.notes,
+	b.abv,
+	b.og as og,
+	b.ogUnit as ogUnit,
+	b.fg as fg,
+	b.fgUnit as fgUnit,
+	b.srm as srm,
+	b.ibu as ibu,
+	IFNULL(k.startAmount, 0)        as startAmount,
+	IFNULL(k.startAmountUnit, '')   as startAmountUnit,
+    CASE WHEN k.hasContinuousLid = 0 THEN IFNULL(k.currentAmount, 0) ELSE IFNULL(k.startAmount, 0)  END      as remainAmount,
+    IFNULL(k.currentAmountUnit, '') as remainAmountUnit,
+	t.tapNumber,
+	t.tapRgba,
+    tc.flowPin as pinId,
+	s.rgb as srmRgb,
+	tc.valveOn,
+	tc.valvePinState,
+    tc.plaatoAuthToken,
+    GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount)) as accolades
+FROM taps t
+	LEFT JOIN tapconfig tc ON t.id = tc.tapId
+	LEFT JOIN kegs k ON k.id = t.kegId
+	LEFT JOIN beers b ON b.id = k.beerId
+	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
+	LEFT JOIN breweries br ON br.id = b.breweryId
+	LEFT JOIN srmRgb s ON s.srm = b.srm
+	LEFT JOIN beeraccolades ba ON b.id = ba.beerId
+    LEFT JOIN accolades a on ba.accoladeId = a.id
+WHERE t.active = true
+GROUP BY t.id
+ORDER BY t.id;
+        
+CREATE OR REPLACE VIEW vwGetFilledBottles
+AS
+
+SELECT
+	t.id,
+	b.id as 'beerId',
+	b.name,
+	b.untID,
+	bs.name as 'style',
+	br.name as 'breweryName',
+	br.imageUrl as 'breweryImageUrl',
+	b.rating,
+	b.notes,
+	b.abv,
+	b.og as og,
+	b.ogUnit as ogUnit,
+	b.fg as fg,
+	b.fgUnit as fgUnit,
+	b.srm as srm,
+	b.ibu as ibu,
+	bt.volume,
+	bt.volumeUnit,
+	t.startAmount,
+	IFNULL(null, 0) as amountPoured,
+	t.currentAmount as remainAmount,
+	t.capNumber,
+	t.capRgba,
+    NULL as pinId,
+	s.rgb as srmRgb,
+	1 as valveOn,
+	1 as valvePinState,
+    NULL,
+    GROUP_CONCAT(CONCAT(a.id,'~'a.name,'~',ba.amount)) as accolades
+FROM bottles t
+	LEFT JOIN beers b ON b.id = t.beerId
+	LEFT JOIN bottleTypes bt ON bt.id = t.bottleTypeId
+	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
+	LEFT JOIN breweries br ON br.id = b.breweryId
+	LEFT JOIN srmRgb s ON s.srm = b.srm
+	LEFT JOIN beeraccolades ba ON b.id = ba.beerId
+    LEFT JOIN accolades a on ba.accoladeId = a.id
+WHERE t.active = true
+GROUP BY t.id
+ORDER BY t.id;
+
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ( 'updateDate', '', '', '1', NOW(), NOW() );
 UPDATE `config` SET `configValue` = NOW() WHERE `configName` = 'updateDate';

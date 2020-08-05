@@ -6,7 +6,7 @@
 	$config = getAllConfigs();
 	$htmlHelper = new HtmlHelper();
 	$row = 0;
-	$MAX_COLUMNS = 6;
+	$MAX_COLUMNS = 7;
 	$editting = (isset($editingTable) && $editingTable);
 ?>
 
@@ -22,7 +22,7 @@
     	<?php }else if($col == 1){?>
     		<tbody>
     	<?php }?>
-		<?php if($config[ConfigNames::ShowTapNumCol] &&
+		<?php if(($editting || $config[ConfigNames::ShowTapNumCol]) &&
 	              beerListShouldDisplayRow($editting, $col, $config[ConfigNames::TapNumColNum])){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			<?php if($editting || $config[ConfigNames::ShowBeerTableHead]){?>
@@ -67,7 +67,7 @@
 		</tr>
 		<?php }?>
 		    			
-		<?php if($config[ConfigNames::ShowSrmCol] &&
+		<?php if(($editting || $config[ConfigNames::ShowSrmCol]) &&
 	              beerListShouldDisplayRow($editting, $col, $config[ConfigNames::SrmColNum])){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			
@@ -102,7 +102,7 @@
 		</tr>
 		<?php } ?>
 			
-		<?php if($config[ConfigNames::ShowIbuCol] &&
+		<?php if(($editting || $config[ConfigNames::ShowIbuCol]) &&
 	              beerListShouldDisplayRow($editting, $col, $config[ConfigNames::IbuColNum])){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			<?php if($editting || $config[ConfigNames::ShowBeerTableHead]){?>
@@ -121,7 +121,7 @@
     		?>
     			<td class="ibu">
 				<?php if(isset($beer) && $beer['beername']){ ?>
-					<?php if($config[ConfigNames::ShowBuGuValue] && $beer['ibu'] != '' && $beer['og']){ ?>
+					<?php if(($editting || $config[ConfigNames::ShowBuGuValue]) && $beer['ibu'] != '' && $beer['og']){ ?>
 					<h3>
 						<?php 
 							$sgOg = convert_gravity($beer['og'], $beer['ogUnit'], UnitsOfMeasure::GravitySG);
@@ -151,7 +151,7 @@
 		</tr>
 		<?php } ?>
 			
-		<?php if($config[ConfigNames::ShowBeerName] &&
+		<?php if(($editting || $config[ConfigNames::ShowBeerName]) &&
 	              beerListShouldDisplayRow($editting, $col, $config[ConfigNames::BeerInfoColNum])){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			<?php if($editting || $config[ConfigNames::ShowBeerTableHead]){?>
@@ -202,7 +202,7 @@
                                 <h1 style="text-align: center"><?php echo $beer['beername']; ?></h1>
                             <?php } ?>
                             
-                            <?php if($config[ConfigNames::ShowBeerStyle] && $beer['style']){ ?>
+                            <?php if(($editting || $config[ConfigNames::ShowBeerStyle]) && $beer['style']){ ?>
                                 <h2 class="subhead"><?php echo str_replace("_","",$beer['style']); ?></h2>
                             <?php } ?>
                             
@@ -226,7 +226,7 @@
 		</tr>
 		<?php } ?>
 			
-		<?php if($config[ConfigNames::ShowAbvCol] &&
+		<?php if(($editting || $config[ConfigNames::ShowAbvCol]) &&
 	              beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AbvColNum])){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			<?php if($editting || $config[ConfigNames::ShowBeerTableHead]){?>
@@ -306,7 +306,7 @@
 						?>
 					</h3>
 					<?php } ?>
-					<?php if($config[ConfigNames::ShowGravity] && $beer['og'] > 0){ ?>
+					<?php if(($editting || $config[ConfigNames::ShowGravity]) && $beer['og'] > 0){ ?>
 						<h3>OG:<?php echo convert_gravity($beer['og'], $beer['ogUnit'], $config[ConfigNames::DisplayUnitGravity]); echo $config[ConfigNames::DisplayUnitGravity] != UnitsOfMeasure::GravitySG?$config[ConfigNames::DisplayUnitGravity]:''; ?></h3>
     				<?php } ?>
 				<?php } ?>
@@ -316,7 +316,7 @@
 		</tr>
 		<?php } ?>
 			
-		<?php if($config[ConfigNames::ShowKegCol] &&
+		<?php if(($editting || $config[ConfigNames::ShowKegCol]) &&
 	              beerListShouldDisplayRow($editting, $col, $config[ConfigNames::KegColNum])){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			<?php if($editting || $config[ConfigNames::ShowBeerTableHead]){?>
@@ -342,7 +342,7 @@
 				<?php } ?>
 				<?php if(isset($beer) && $beer['beername'] && 
 				         $beer['startAmount'] > 0){ ?>
-					<?php if($config[ConfigNames::ShowLastPouredValue] &&
+					<?php if(($editting || $config[ConfigNames::ShowLastPouredValue]) &&
 					         $tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG &&
 					         isset($beer['lastPour']) && $beer['lastPour'] != ''){ ?>
     					<h3><?php echo $beer['lastPour']?></h3>
@@ -421,6 +421,48 @@
 			<?php } ?>
 		</tr>
 		<?php } ?>
+		
+		<?php if(($editting || $config[ConfigNames::ShowAccoladeCol]) &&
+		    beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AccoladeColNum])){ ?>
+		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
+			<?php if($editting || $config[ConfigNames::ShowAccoladeCol]){?>
+			<td>
+				Accolades<br>
+				<input type="hidden" name="<?php echo ConfigNames::AccoladeColNum;?>" id="<?php echo ConfigNames::AccoladeColNum;?>" value="<?php echo abs($config[ConfigNames::AccoladeColNum]);?>"/>
+			</td>
+			<?php }?>
+    		<?php for($i = 1; $i <= $numberOfBeers; $i++) {
+    			$beer = null;
+    			if( isset($beers[$i]) ) $beer = $beers[$i];
+    			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG  && !isset($beer) ) continue;
+    		?>
+				<td class="accolades">
+    			<table>
+    			    <tr>
+				<?php 
+				$accolades = explode(",",$beer['accolades']);
+				for($ii = 0; $ii<count($accolades);$ii++){
+				    $accolade = $accolades[$ii];
+				    $accParts = explode("~", $accolade);
+				    if(count($accParts) < 3) continue;  
+				    $style = "";
+				    $imgs = glob ( 'img/accolade/accolade'.$accParts[0].'.*' );
+				    if(count($imgs) > 0) $style .= ($style != ""?";":"").'background:url('.$imgs[0].') no-repeat bottom left; background-size:contain; -webkit-border-radius:0px; -mox-border-radius:0px; height:10px';
+				    ?>
+    			    <td style="vertical-align: middle; align-content: left; border-right: none; padding: 0"><?php echo $accParts[2] ?></td>
+    				<td style="vertical-align: middle; align-content: left; text-align: left; border-left: none; <?php echo $style; ?>" ><?php if($style=="")echo $accParts[1];?></td>
+                <?php 
+                //Dont create a new row if we are on the last item (it would be empty)
+                    if(($ii+1) % 3 == 0 && $ii+1 < count($accolades)) echo "</tr><tr>";
+				}
+				?>
+    			    </tr>
+    			</table>
+				</td>
+				<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::AccoladeColNum)?>
+    		<?php }?>
+		</tr>
+		<?php }?>
 	<?php }?>
 	</tbody>
 </table>
