@@ -733,10 +733,10 @@ AS
     srm.rgb
  FROM accolades a LEFT JOIN srmRgb srm
         ON a.srm = srm.srm;
-INSERT INTO accolades VALUES('1','Gold','Medal','3.0','','2020-08-04 14:13:55','2020-08-04 14:14:34');
-INSERT INTO accolades VALUES('2','Silver','Medal','4.2','','2020-08-04 14:14:34','2020-08-04 14:14:34');
-INSERT INTO accolades VALUES('3','Bronze','Medal','9.6','','2020-08-04 14:14:34','2020-08-04 14:14:34');
-INSERT INTO accolades VALUES('4','BOS','Medal','9.6','','2020-08-04 14:14:34','2020-08-04 14:14:34');
+INSERT IGNORE INTO accolades VALUES('1','Gold','Medal','3.0','','2020-08-04 14:13:55','2020-08-04 14:14:34');
+INSERT IGNORE INTO accolades VALUES('2','Silver','Medal','4.2','','2020-08-04 14:14:34','2020-08-04 14:14:34');
+INSERT IGNORE INTO accolades VALUES('3','Bronze','Medal','9.6','','2020-08-04 14:14:34','2020-08-04 14:14:34');
+INSERT IGNORE INTO accolades VALUES('4','BOS','Medal','9.6','','2020-08-04 14:14:34','2020-08-04 14:14:34');
         
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ( 'showAccoladeCol', '0', 'Show Accolades Col', '1', NOW(), NOW() ),
@@ -781,7 +781,7 @@ FROM taps t
 	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
 	LEFT JOIN breweries br ON br.id = b.breweryId
 	LEFT JOIN srmRgb s ON s.srm = b.srm
-	LEFT JOIN beeraccolades ba ON b.id = ba.beerId
+	LEFT JOIN beerAccolades ba ON b.id = ba.beerId
     LEFT JOIN accolades a on ba.accoladeId = a.id
 WHERE t.active = true
 GROUP BY t.id
@@ -819,14 +819,14 @@ SELECT
 	1 as valveOn,
 	1 as valvePinState,
     NULL,
-    GROUP_CONCAT(CONCAT(a.id,'~'a.name,'~',ba.amount)) as accolades
+    GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount)) as accolades
 FROM bottles t
 	LEFT JOIN beers b ON b.id = t.beerId
 	LEFT JOIN bottleTypes bt ON bt.id = t.bottleTypeId
 	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
 	LEFT JOIN breweries br ON br.id = b.breweryId
 	LEFT JOIN srmRgb s ON s.srm = b.srm
-	LEFT JOIN beeraccolades ba ON b.id = ba.beerId
+	LEFT JOIN beerAccolades ba ON b.id = ba.beerId
     LEFT JOIN accolades a on ba.accoladeId = a.id
 WHERE t.active = true
 GROUP BY t.id
