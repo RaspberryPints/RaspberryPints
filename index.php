@@ -177,6 +177,22 @@
 		<link rel="shortcut icon" href="img/pint.ico">
 <!-- <meta name="viewport" content="initial-scale=0.7,width=device-width,height=device-height,target-densitydpi=device-dpi,user-scalable=yes" />  -->		
 		<script type="text/javascript" src="admin/scripts/ws.js"></script>	
+		<script type="text/javascript">
+			function toggleFullScreen() {
+        	  var doc = window.document;
+        	  var docEl = doc.documentElement;
+
+        	  var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+        	  var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+        	  if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+        	    requestFullScreen.call(docEl);
+        	  }
+        	  else {
+        	    cancelFullScreen.call(doc);
+        	  }
+        	}
+        </script>
 	</head> 
 
 <!--<body> -->
@@ -191,7 +207,7 @@
 						<a href="admin/admin.php"><img src="<?php echo $config[ConfigNames::LogoUrl] . "?" . time(); ?>" height="100" alt=""></a>
 					<?php } ?>
 				</div>
-				<div class="HeaderCenter">
+				<div class="HeaderCenter" onClick="toggleFullScreen()">
 					<?php
 						if (strlen($config[ConfigNames::HeaderText]) > ($config[ConfigNames::HeaderTextTruncLen])) {
 							echo htmlentities(substr($config[ConfigNames::HeaderText],0,$config[ConfigNames::HeaderTextTruncLen]) . "...");
@@ -248,7 +264,7 @@
     				<?php $pour = count($poursList)>0?array_values($poursList)[0]:null;?>
     				<?php if(null !== $pour) {?>
     					<td class="poursbeername">	
-    						<h1 style="font-size: .5em"><?php echo $pour->get_beerName(); ?></h1>
+    						<h1 style="font-size: 1em"><?php echo $pour->get_beerName(); ?></h1>
     					</td>
                         <td class="poursamount">
                             <h1><?php echo $pour->get_amountPouredDisplay(); ?></h1>
