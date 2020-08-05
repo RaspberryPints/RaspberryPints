@@ -1321,6 +1321,7 @@ installTempProbes(){
 		if ! grep -q '^\s*dtoverlay=w1-gpio' $BOOT_CONFIG_FILE; then
 		  echo 'dtoverlay=w1-gpio' >> $BOOT_CONFIG_FILE
 		fi
+		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "UPDATE config SET configValue='1' WHERE configName='useTempProbes';";
 	else
 		echo "Will Not Setup Temp Probes"
 		echo
