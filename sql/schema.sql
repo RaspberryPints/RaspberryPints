@@ -1511,7 +1511,7 @@ FROM taps t
 	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
 	LEFT JOIN breweries br ON br.id = b.breweryId
 	LEFT JOIN srmRgb s ON s.srm = b.srm
-	LEFT JOIN beeraccolades ba ON b.id = ba.beerId
+	LEFT JOIN beerAccolades ba ON b.id = ba.beerId
     LEFT JOIN accolades a on ba.accoladeId = a.id
 WHERE t.active = true
 GROUP BY t.id
@@ -1562,7 +1562,7 @@ FROM bottles t
 	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
 	LEFT JOIN breweries br ON br.id = b.breweryId
 	LEFT JOIN srmRgb s ON s.srm = b.srm
-	LEFT JOIN beeraccolades ba ON b.id = ba.beerId
+	LEFT JOIN beerAccolades ba ON b.id = ba.beerId
     LEFT JOIN accolades a on ba.accoladeId = a.id
 WHERE t.active = true
 GROUP BY t.id
