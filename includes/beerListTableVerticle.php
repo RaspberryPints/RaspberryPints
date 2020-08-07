@@ -447,10 +447,10 @@
 				    if(count($accParts) < 3) continue;  
 				    $style = "";
 				    $imgs = glob ( 'img/accolade/accolade'.$accParts[0].'.*' );
-				    if(count($imgs) > 0) $style .= ($style != ""?";":"").'background:url('.$imgs[0].') no-repeat bottom left; background-size:contain; -webkit-border-radius:0px; -mox-border-radius:0px; height:10px';
+				    if(count($imgs) > 0) $img = $imgs[0];
 				    ?>
     			    <td style="vertical-align: middle; align-content: left; border-right: none; padding: 0"><?php echo $accParts[2] ?></td>
-    				<td style="vertical-align: middle; align-content: left; text-align: left; border-left: none; <?php echo $style; ?>" ><?php if($style=="")echo $accParts[1];?></td>
+    				<td style="vertical-align: middle; align-content: left; text-align: left; border-left: none;"><span class="tooltip"><img style="height: 40px" src="<?php echo $img; ?>" /><span class="tooltiptext" ><?php echo $accParts[1];?></span></span><?php if($img=="")echo $accParts[1];?></td>
                 <?php 
                 //Dont create a new row if we are on the last item (it would be empty)
                     if(($ii+1) % 3 == 0 && $ii+1 < count($accolades)) echo "</tr><tr>";

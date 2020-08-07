@@ -421,17 +421,18 @@ if($editting) $maxTapCol = 1;
     				<table>
 					<?php 
     					$accolades = explode(",",$beer['accolades']);
+    					$img = "";
     					foreach( $accolades as $accolade)
     					{
     					    $accParts = explode("~", $accolade);
     					    if(count($accParts) < 3) continue;
     					    $style = "";
     					    $imgs = glob ( 'img/accolade/accolade'.$accParts[0].'.*' );
-    					    if(count($imgs) > 0) $style .= ($style != ""?";":"").'background:url('.$imgs[0].') no-repeat bottom left; background-size:contain; -webkit-border-radius:0px; -mox-border-radius:0px; width:100%; height:10px';
+    					    if(count($imgs) > 0) $img = $imgs[0];
     					    ?>
     					    <tr>
     					    <td style="vertical-align: middle; border-right: none"><?php echo $accParts[2] ?></td>
-    					    <td style="vertical-align: middle; border-left: none; <?php echo $style; ?>" ><?php if($style=="")echo $accParts[1];?></td>
+    					    <td style="vertical-align: middle; border-left: none;" ><span class="tooltip"><img style="height: 40px" src="<?php echo $img; ?>" /><span class="tooltiptext" ><?php echo $accParts[1];?></span></span><?php if(img=="")echo $accParts[1];?></td>
     					    </tr>
                     <?php 
     				    }
