@@ -25,12 +25,13 @@ if (isset ( $_POST ['save'] )) {
 	        $item = new Accolade();
 	        $newItem = true;
 	    }
+	    if( $_POST['name'][$ii] == '') $_POST['name'][$ii] = 'new';
 	    $item->set_name($_POST['name'][$ii]);
 	    $item->set_rank($_POST['rank'][$ii]);
 	    $item->set_srm($_POST['srm'][$ii]);
 	    $item->set_type($_POST['type'][$ii]);
 	    $item->set_notes($_POST['notes'][$ii]);
-	    if(!$newItem || ($newItem && $item->get_name() != '')) if(!$manager->save($item))$error=true;
+	    if(!$manager->save($item))$error=true;
 	    $ii++;
 	}
 	if(!$error){
@@ -193,11 +194,11 @@ include 'top_menu.php';
             							?> 
                                         <input type="text" id="name<?php echo $item->get_id() ?>" class="largebox" name="name[]" value="<?php echo $item->get_name() ?>" <?php echo $style != ""?'style="'.$style.'"':""; ?> />
                                     </td>
-                                    <td>
+                                    <td id="imgs">
             							<div>
                                         <a onclick="saveAndUploadImage(<?php echo $item->get_id();?>)"><span class="tooltip"><img src="img/icons/upload.png" /><span class="tooltiptext">Upload Accolade Image</span></span></a>
                                     	<?php if($hasImg) {?>
-                                    		<a onclick="saveAndRemoveImage(<?php echo $item->get_id();?>)"><span class="tooltip"><img src="img/icons/icon_missing.png" /><span class="tooltiptext">Remove Accolade Image</span></span></a>
+                                    		<a onclick="saveAndRemoveImage(<?php echo $item->get_id();?>)"><span class="tooltip"><img id="removeImg" src="img/icons/icon_missing.png" /><span class="tooltiptext">Remove Accolade Image</span></span></a>
                                     	<?php }?>
                                     	</div>
                                     </td>
@@ -276,7 +277,14 @@ include 'scripts.php';
 		$("[name^='newRow']").click(function(){addRow();});
 		function addRow(){		
 			var $table = $('#tableList')
-			$table.append(rowStructure.clone());
+			var $clone = rowStructure.clone()
+			$($clone[0].cells).find('input').each(function() {
+			    $(this).css("background-image", "none");
+			   });
+			$($clone[0].cells).find('img').each(function() {
+			    $(this).hide();
+			   });
+			$table.append($clone);
 			if($("#pendingChangesDiv")[0] != null)$("#pendingChangesDiv")[0].style.display="";
 		}
 		function removeRow(btn){		
