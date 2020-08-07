@@ -26,6 +26,7 @@ if (isset ( $_POST ['save'] )) {
 	        $newItem = true;
 	    }
 	    $item->set_name($_POST['name'][$ii]);
+	    $item->set_rank($_POST['rank'][$ii]);
 	    $item->set_srm($_POST['srm'][$ii]);
 	    $item->set_type($_POST['type'][$ii]);
 	    $item->set_notes($_POST['notes'][$ii]);
@@ -159,6 +160,7 @@ include 'top_menu.php';
                             <th style="width:35%; vertical-align: middle;">Name</th>
                             <th style="vertical-align: middle;"></th>
                             <th style="width:10%; vertical-align: middle;">Type</th>
+                            <th style="width:10%; vertical-align: middle;">Rank</th>
                             <th style="width:10%; vertical-align: middle;">Color</th>
                             <th style="width:35%; vertical-align: middle;">Notes</th>
                             <th style="width:10%; vertical-align: middle;"></th>
@@ -201,6 +203,9 @@ include 'top_menu.php';
                                     </td>
                                     <td style="width:10%;vertical-align: middle;">
                                         <input type="text" id="type<?php echo $item->get_id() ?>" class="smallbox" name="type[]" value="<?php echo $item->get_type() ?>" />
+                                    </td>
+                                    <td style="width:10%;vertical-align: middle;">
+                                        <input type="text" id="rank<?php echo $item->get_id() ?>" class="smallbox" name="rank[]" value="<?php echo $item->get_rank() ?>" />
                                     </td>
                                     <td style="width:10%;vertical-align: middle;">
                                     <?php

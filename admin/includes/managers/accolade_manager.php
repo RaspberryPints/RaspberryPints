@@ -8,10 +8,10 @@ class AccoladeManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["name", "type", "rgb", "notes"];
+		return ["name", "type", "rank", "rgb", "notes"];
 	}
 	protected function getUpdateColumns(){
-	    return ["name", "type", "srm", "notes"];
+	    return ["name", "type", "rank", "srm", "notes"];
 	}
 	protected function getInsertColumns(){return $this->getUpdateColumns();}
 	protected function getTableName(){

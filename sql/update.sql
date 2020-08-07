@@ -714,6 +714,7 @@ CREATE TABLE IF NOT EXISTS `accolades` (
 	
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+CALL addColumnIfNotExist(DATABASE(), 'accolades', 'rank', 'int(11) DEFAULT NULL' );
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `beerAccolades` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -737,7 +738,8 @@ INSERT IGNORE INTO accolades VALUES('1','Gold','Medal','3.0','','2020-08-04 14:1
 INSERT IGNORE INTO accolades VALUES('2','Silver','Medal','4.2','','2020-08-04 14:14:34','2020-08-04 14:14:34');
 INSERT IGNORE INTO accolades VALUES('3','Bronze','Medal','9.6','','2020-08-04 14:14:34','2020-08-04 14:14:34');
 INSERT IGNORE INTO accolades VALUES('4','BOS','Medal','9.6','','2020-08-04 14:14:34','2020-08-04 14:14:34');
-        
+UPDATE accolades SET rank = id WHERE rank IS NULL;
+
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ( 'showAccoladeCol', '0', 'Show Accolades Col', '1', NOW(), NOW() ),
 ('AccoladeColNum', '7', 'Column number for Accolades', 0, NOW(), NOW() );
@@ -773,7 +775,7 @@ SELECT
 	tc.valveOn,
 	tc.valvePinState,
     tc.plaatoAuthToken,
-    GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount)) as accolades
+    GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount) ORDER BY a.rank) as accolades
 FROM taps t
 	LEFT JOIN tapconfig tc ON t.id = tc.tapId
 	LEFT JOIN kegs k ON k.id = t.kegId
@@ -819,7 +821,7 @@ SELECT
 	1 as valveOn,
 	1 as valvePinState,
     NULL,
-    GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount)) as accolades
+    GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount) ORDER BY a.rank) as accolades
 FROM bottles t
 	LEFT JOIN beers b ON b.id = t.beerId
 	LEFT JOIN bottleTypes bt ON bt.id = t.bottleTypeId

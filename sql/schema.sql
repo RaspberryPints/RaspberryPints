@@ -775,6 +775,7 @@ CREATE TABLE IF NOT EXISTS `beerYeasts` (
 CREATE TABLE IF NOT EXISTS `accolades` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` tinytext NOT NULL,
+	`rank` int(11) NULL,
 	`type` tinytext NULL,
 	`srm` decimal(3,1) NULL,
 	`notes` text NULL,
@@ -1503,7 +1504,7 @@ SELECT
 	tc.valveOn,
 	tc.valvePinState,
     tc.plaatoAuthToken,
-    GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount)) as accolades
+    GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount) ORDER BY a.rank) as accolades
 FROM taps t
 	LEFT JOIN tapconfig tc ON t.id = tc.tapId
 	LEFT JOIN kegs k ON k.id = t.kegId
@@ -1555,7 +1556,7 @@ SELECT
 	1 as valveOn,
 	1 as valvePinState,
     NULL,
-    GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount)) as accolades
+    GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount) ORDER BY a.rank) as accolades
 FROM bottles t
 	LEFT JOIN beers b ON b.id = t.beerId
 	LEFT JOIN bottleTypes bt ON bt.id = t.bottleTypeId
