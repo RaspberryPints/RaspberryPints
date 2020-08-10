@@ -734,10 +734,10 @@ AS
     srm.rgb
  FROM accolades a LEFT JOIN srmRgb srm
         ON a.srm = srm.srm;
-INSERT IGNORE INTO accolades VALUES('1','Gold','Medal','3.0','','2020-08-04 14:13:55','2020-08-04 14:14:34');
-INSERT IGNORE INTO accolades VALUES('2','Silver','Medal','4.2','','2020-08-04 14:14:34','2020-08-04 14:14:34');
-INSERT IGNORE INTO accolades VALUES('3','Bronze','Medal','9.6','','2020-08-04 14:14:34','2020-08-04 14:14:34');
-INSERT IGNORE INTO accolades VALUES('4','BOS','Medal','9.6','','2020-08-04 14:14:34','2020-08-04 14:14:34');
+INSERT IGNORE INTO accolades (id, name, type, srm, notes, createdDate, modifiedDate) VALUES('1','Gold','Medal','3.0','','2020-08-04 14:13:55','2020-08-04 14:14:34');
+INSERT IGNORE INTO accolades (id, name, type, srm, notes, createdDate, modifiedDate) VALUES('2','Silver','Medal','4.2','','2020-08-04 14:14:34','2020-08-04 14:14:34');
+INSERT IGNORE INTO accolades (id, name, type, srm, notes, createdDate, modifiedDate) VALUES('3','Bronze','Medal','9.6','','2020-08-04 14:14:34','2020-08-04 14:14:34');
+INSERT IGNORE INTO accolades (id, name, type, srm, notes, createdDate, modifiedDate) VALUES('4','BOS','Medal','9.6','','2020-08-04 14:14:34','2020-08-04 14:14:34');
 UPDATE accolades SET rank = id WHERE rank IS NULL;
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
