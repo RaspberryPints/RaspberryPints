@@ -432,7 +432,7 @@ if($editting) $maxTapCol = 1;
     					    ?>
     					    <tr>
     					    <td style="vertical-align: middle; border-right: none"><?php echo $accParts[2] ?></td>
-    					    <td style="vertical-align: middle; border-left: none;" ><span class="tooltip"><img style="height: 40px" src="<?php echo $img; ?>" /><span class="tooltiptext" ><?php echo $accParts[1];?></span></span><?php if(img=="")echo $accParts[1];?></td>
+    					    <td style="vertical-align: middle; border-left: none;" ><span class="tooltip"><img style="height: 40px" src="<?php echo $img; ?>" /><span class="tooltiptext" ><?php echo $accParts[1];?></span></span><?php if($img=="")echo $accParts[1];?></td>
     					    </tr>
                     <?php 
     				    }
