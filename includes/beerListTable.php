@@ -422,20 +422,28 @@ if($editting) $maxTapCol = 1;
 					<?php 
     					$accolades = explode(",",$beer['accolades']);
     					$img = "";
-    					foreach( $accolades as $accolade)
-    					{
+    					$maxAccRows = $config[ConfigNames::NumAccoladeDisplay];
+    					for($accCol = 0; $accCol < $maxAccRows; $accCol++){
+    				?>
+    					<tr>
+    					<?php 
+    					for($ii = $accCol; $ii < count($accolades); $ii+=$maxAccRows){
+    					    $accolade = $accolades[$ii];
     					    $accParts = explode("~", $accolade);
     					    if(count($accParts) < 3) continue;
     					    $style = "";
     					    $imgs = glob ( 'img/accolade/accolade'.$accParts[0].'.*' );
     					    if(count($imgs) > 0) $img = $imgs[0];
     					    ?>
-    					    <tr>
     					    <td style="vertical-align: middle; border-right: none"><?php echo $accParts[2] ?></td>
     					    <td style="vertical-align: middle; border-left: none;" ><span class="tooltip"><img style="height: 40px" src="<?php echo $img; ?>" /><span class="tooltiptext" ><?php echo $accParts[1];?></span></span><?php if($img=="")echo $accParts[1];?></td>
-    					    </tr>
+
                     <?php 
-    				    }
+    					    }
+				 	?>
+					 	</tr>
+					 <?php 
+    					}
 					 ?>
     				</table>
 					</td>

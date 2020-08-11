@@ -70,6 +70,7 @@ Configuration Updated
 		$Client_Secret=$configs[ConfigNames::ClientSecret];
 		$BreweryID=$configs[ConfigNames::BreweryID];
 		$amountPerPint=$configs[ConfigNames::AmountPerPint];
+		$numAccoladeDisplay=$configs[ConfigNames::NumAccoladeDisplay];
 	?>
 	<a id="amountPerPint"></a> 
 		<h2>Remaining Amount Display</h2><br><br>
@@ -98,6 +99,16 @@ Configuration Updated
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
 			<hr />
+    	<a id="numAccoladesDisplay"></a> 
+    		<h2>Number of Accolades per <?php echo $configs[ConfigNames::ShowVerticleTapList]?"Row":"Column" ?></h2><br><br>
+			<p><b>The number of accolades to display per <?php echo $configs[ConfigNames::ShowVerticleTapList]?"Row":"Column" ?> inside the accolade <?php echo $configs[ConfigNames::ShowVerticleTapList]?"Row":"Column" ?>:</b></p>
+    			<form method="post" action="includes/config_update.php" id="numAccoladesDisplayForm">
+    				<input type="text" class="largebox" value="<?php echo $numAccoladeDisplay; ?>" name="configValue"> &nbsp; 
+    				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::NumAccoladeDisplay.'"/>'; ?>
+    				<?php echo '<input type="hidden" name="jumpto" value="#numAccoladesDisplay"/>'; ?>
+    				<input type="submit" class="btn" name="Submit" value="Submit">
+    			</form><br><br>
+    			<hr />
 		<a id="untappd"></a>
 		<h2>Untappd Settings</h2>
 		<p><b>Untappd ClientID:</b> </p>

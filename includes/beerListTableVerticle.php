@@ -453,7 +453,7 @@
     				<td style="vertical-align: middle; align-content: left; text-align: left; border-left: none;"><span class="tooltip"><img style="height: 40px" src="<?php echo $img; ?>" /><span class="tooltiptext" ><?php echo $accParts[1];?></span></span><?php if($img=="")echo $accParts[1];?></td>
                 <?php 
                 //Dont create a new row if we are on the last item (it would be empty)
-                    if(($ii+1) % 3 == 0 && $ii+1 < count($accolades)) echo "</tr><tr>";
+                if(($ii+1) % $config[ConfigNames::NumAccoladeDisplay] == 0 && $ii+1 < count($accolades)) echo "</tr><tr>";
 				}
 				?>
     			    </tr>
