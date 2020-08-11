@@ -116,5 +116,6 @@ abstract class ConfigNames
 	const ShowBeerTableHead      = 'showBeerTableHead';
 	const HozTapListCol      = 'hozTapListCol';
 	const AmountPerPint      = 'amountPerPint';
+	const NumAccoladeDisplay      = 'numAccoladeDisplay';
 }
 ?>
