@@ -837,8 +837,8 @@ GROUP BY t.id
 ORDER BY t.id;
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
-( 'updateDate', '', '', '1', NOW(), NOW() );
-UPDATE `config` SET `configValue` = NOW() WHERE `configName` = 'updateDate';
+( 'updateDate', '', '', '0', NOW(), NOW() );
+UPDATE `config` SET `configValue` = NOW(), showOnPanel=0 WHERE `configName` = 'updateDate';
 
 
 UPDATE `config` SET `configValue` = '3.0.9.0' WHERE `configName` = 'version';
