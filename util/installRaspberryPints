@@ -571,7 +571,7 @@ configureNginx(){
 	
 		#echo -e "PHP Socket $PHPSOCKET"
 		if [ $FERMTRACK_INSTALLED -ne 1 ] ;  then
-			cp "./nginx-confs/default" "/etc/nginx/sites-available/$NGIXConfigName" &>> "$HOMEPATH/$SCRIPTNAME.log"
+			cp "${WWWPATH}/nginx-confs/default" "/etc/nginx/sites-available/$NGIXConfigName" &>> "$HOMEPATH/$SCRIPTNAME.log"
 			FIND_STR="#PHPSOCKET#"
 			REPL_STR="$PHPSOCKET"
 			sed -i "s_${FIND_STR}_${REPL_STR}_" "/etc/nginx/sites-available/$NGIXConfigName"
@@ -598,7 +598,7 @@ configureNginx(){
 			#echo -e  "Updated $NGIXConfigName With location /$NGINX_SUB"
 		fi
 		#if the config doesnt already have php enabled
-		if ! grep -q "\s*location.*php" "$NGIXConfig"; then
+		if ! grep -q "^\s*location.*php" "$NGIXConfig"; then
 			#echo -e grep -q "\s*location.*php" "$NGIXConfig" result $?
 			#echo -e  "\nUpdated $NGIXConfigName With PHP- Start"
 			#remove the last } so we can add in our configuration
@@ -617,7 +617,7 @@ configureNginx(){
 		    echo "}" >> $NGIXConfig
 			#echo -e  "Updated $NGIXConfigName With PHP - Complete"
 		fi
-		if ! grep -q "\s*location.*\.ht" "$NGIXConfig"; then
+		if ! grep -q "^\s*location.*\.ht" "$NGIXConfig"; then
 			#echo -e grep -q "\s*location.*\.ht" "$NGIXConfig" result $?
 			#echo -e  "\nUpdated $NGIXConfigName With htaccess deny - start"
 			#remove the last } so we can add in our configuration
