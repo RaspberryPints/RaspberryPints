@@ -261,6 +261,16 @@
     					<td class="poursbeername">	
     						<h1 style="text-align: right">Last Pour</h1>
     					</td>
+					<?php 
+					if(!$config[ConfigNames::ShowPourListOnHome]){
+					    $poursManager = new PourManager();
+					    $page = 1;
+					    $limit = 1;
+					    $totalRows = 0;
+					    $poursList = $poursManager->getLastPours($page, $limit, $totalRows);
+					    $numberOfPours = count($poursList);
+            		}
+            		?>
     				<?php $pour = count($poursList)>0?array_values($poursList)[0]:null;?>
     				<?php if(null !== $pour) {?>
     					<td class="poursbeername">	
