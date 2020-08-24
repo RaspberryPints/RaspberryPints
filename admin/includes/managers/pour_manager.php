@@ -325,4 +325,19 @@ class PourManager extends Manager{
     		}
 		}
 	}
+	
+	function updatePour($id, $pourAmount, $conversion) {
+	    $ret = true;
+	    $sql="SELECT * FROM pours where id = $id";
+	    $pour = $this->executeQueryWithSingleResult($sql);
+	    unset($sql);
+	    $updateSql = "";
+	    if( $pour ){
+	        if($pour->get_conversion()   != $conversion) 	$updateSql .= ($updateSql!=""?",":"")."conversion = NULLIF('" . $conversion . "', '')";
+	        if($pour->get_amountPoured() != $pourAmount) 	$updateSql .= ($updateSql!=""?",":"")."amountPoured = NULLIF('" . $pourAmount . "', '')";
+	        if($updateSql != "")$sql = "UPDATE pours SET ".$updateSql." WHERE id = " . $id;
+	    }
+	    if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
+	    return $ret;
+	}
 }
