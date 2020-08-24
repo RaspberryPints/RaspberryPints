@@ -74,6 +74,8 @@ include 'top_menu.php';
                     <th>Tap<br>Description</th>
                     <th>Last Pour<br>Volume(<?php echo $config[ConfigNames::DisplayUnitVolume]?>)</th>
                     <th>Last Pour<br><?php echo $config[ConfigNames::DisplayUnitVolume]?>/Pulse</th>
+                    <th>Last Pour<br>Pulse/<?php echo $config[ConfigNames::DisplayUnitVolume]?></th>
+                    <th>Tap<br>Pulses/<?php echo ucfirst(is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?UnitsOfMeasure::VolumeGallon:UnitsOfMeasure::VolumeLiter); ?></th>
                     <th>Last Pour<br>Pulses</th>
                 </tr>
             </thead>
@@ -107,12 +109,18 @@ include 'top_menu.php';
                         </td>
                         <td>
                             <input type="hidden" id="lastPourId" name="lastPourId" value="<?php echo $lastPour != NULL?$lastPour->get_id():"-1";?>" />
-                            <input type="text" name="displayAmount" id="displayAmount" class="smallbox" value="<?php echo $lastPour != NULL?$lastPour->get_amountPouredDisplay():"No Last Pour";?>" onkeyup="updatePulses(<?php echo $lastPour != NULL?$lastPour->get_amountPouredDisplay():"-1";?>,<?php echo $lastPour != NULL?$lastPour->get_pulses():"-1";?>)"/>
+                            <input type="text" name="displayAmount" id="displayAmount" class="smallbox" value="<?php echo $lastPour != NULL?$lastPour->get_amountPouredDisplay():"No Last Pour";?>" onkeyup="updatePulses(<?php echo $lastPour != NULL?$lastPour->get_amountPouredDisplay():"-1";?>,<?php echo $lastPour != NULL?$lastPour->get_pulses():"-1";?>, <?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"false":"true")?>)"/>
                             <input type="hidden" name="originalAmount" value="<?php echo $lastPour != NULL?$lastPour->get_amountPoured():"-1";?>" />
                             <input type="hidden" name="displayAmountUnit" value="<?php echo $config[ConfigNames::DisplayUnitVolume]?>" />
                         </td>
                         <td>
-                        	<input type="text"name="newVolPerPulse" id="newVolPerPulse" class="smallbox" value="<?php echo $lastPour != NULL?$lastPour->get_amountPouredDisplay()/$lastPour->get_pulses():"No Last Pour";?>" onkeyup="updateVolume(<?php echo $lastPour != NULL?$lastPour->get_amountPouredDisplay():"-1";?>,<?php echo $lastPour != NULL?$lastPour->get_pulses():"-1";?>)" />
+                        	<input type="text"name="newVolPerPulse" id="newVolPerPulse" class="smallbox" value="<?php echo $lastPour != NULL?$lastPour->get_amountPouredDisplay()/$lastPour->get_pulses():"No Last Pour";?>" onkeyup="updateVolumeFromVolPerPulse(<?php echo $lastPour != NULL?$lastPour->get_amountPouredDisplay():"-1";?>,<?php echo $lastPour != NULL?$lastPour->get_pulses():"-1";?>, <?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"false":"true")?>)" />
+                        </td>
+                        <td>
+                        	<input type="text"name="newPulsePerVol" id="newPulsePerVol" class="smallbox" value="<?php echo $lastPour != NULL?$lastPour->get_pulses()/$lastPour->get_amountPouredDisplay():"No Last Pour";?>" onkeyup="updateVolumeFromPulsePerVol(<?php echo $lastPour != NULL?$lastPour->get_amountPouredDisplay():"-1";?>,<?php echo $lastPour != NULL?$lastPour->get_pulses():"-1";?>, <?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"false":"true")?>)" />
+                        </td>
+                        <td>
+                        	<input type="text" readonly="readonly" name="newPulsePerGal" id="newPulsePerGal" class="smallbox" value="<?php echo $lastPour != NULL?$tap->get_count():"No Last Pour";?>" onkeyup="updateVolume(<?php echo $lastPour != NULL?$lastPour->get_amountPouredDisplay():"-1";?>,<?php echo $lastPour != NULL?$lastPour->get_pulses():"-1";?>)" />
                         </td>
                         <td>
                             <?php echo $lastPour != NULL?$lastPour->get_pulses():"No Last Pour";?>
@@ -149,13 +157,23 @@ include 'left_bar.php';
 include 'scripts.php';
 ?>
 <script>
-function updateVolume(originalVolume, originalPulses)
+function updateVolumeFromVolPerPulse(originalVolume, originalPulses, convertToGals)
 {
 	$("#displayAmount")[0].value = ($("#newVolPerPulse")[0].value*originalPulses) ;
+	$("#newPulsePerVol")[0].value = (originalPulses/$("#displayAmount")[0].value) ;
+	$("#newPulsePerGal")[0].value = (!convertToGals?128:1000)*(originalPulses/$("#displayAmount")[0].value);
 }
-function updatePulses(originalVolume, originalPulses)
+function updateVolumeFromPulsePerVol(originalVolume, originalPulses, convertToGals)
+{
+    $("#displayAmount")[0].value = (originalPulses/$("#newPulsePerVol")[0].value) ;
+	$("#newVolPerPulse")[0].value = ($("#displayAmount")[0].value/originalPulses);
+	$("#newPulsePerGal")[0].value = (!convertToGals?128:1000)*(originalPulses/$("#displayAmount")[0].value);
+}
+function updatePulses(originalVolume, originalPulses, convertToGals)
 {
 	$("#newVolPerPulse")[0].value = ($("#displayAmount")[0].value/originalPulses);
+	$("#newPulsePerVol")[0].value = (originalPulses/$("#displayAmount")[0].value) ;
+	$("#newPulsePerGal")[0].value = (!convertToGals?128:1000)*(originalPulses/$("#displayAmount")[0].value);
 }
 </script>
 	<!-- End Js -->
