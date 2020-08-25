@@ -2,6 +2,8 @@
 require_once __DIR__.'/manager.php';
 require_once __DIR__.'/../models/user.php';
 
+const USER_ID_SYSTEM = 0;
+    
 class UserManager extends Manager{
 	
 	protected function getPrimaryKeys(){

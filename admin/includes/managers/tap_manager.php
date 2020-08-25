@@ -2,6 +2,7 @@
 require_once __DIR__.'/manager.php';
 require_once __DIR__.'/../models/tap.php';
 require_once __DIR__.'/tapEvent_manager.php';
+require_once __DIR__.'/user_manager.php';
 require_once __DIR__.'/../models/tapEvent.php';
 
 class TapManager extends Manager{
@@ -127,7 +128,7 @@ class TapManager extends Manager{
 		$tapEvent->set_tapId($tap->get_id());
 		$tapEvent->set_kegId($kegId);
 		$tapEvent->set_beerId($beerId);
-		$tapEvent->set_userId(isset($_SESSION['myuserid'])?$_SESSION['myuserid']:"System");
+		$tapEvent->set_userId(isset($_SESSION['myuserid'])?$_SESSION['myuserid']:USER_ID_SYSTEM);
 		$keg = $kegManager->GetByID($kegId);
 		if($keg) $tapEvent->set_amount($keg->get_currentAmount());
 		if($keg) $tapEvent->set_amountUnit(is_unit_imperial($keg->get_currentAmountUnit())?UnitsOfMeasure::VolumeGallon:UnitsOfMeasure::VolumeLiter);
