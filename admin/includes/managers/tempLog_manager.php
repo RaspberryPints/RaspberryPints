@@ -34,7 +34,7 @@ class TempLogManager extends Manager{
 	    $where = "";
 	    if($startTime && $startTime != "" && $startTime != " ") $where = $where.($where != ""?"AND ":"")."takenDate >= '$startTime' ";
 	    if($endTime && $endTime != "" && $endTime != " ") $where = $where.($where != ""?"AND ":"")."takenDate < '$endTime' ";
-	    if($probe)  $where = $where.($where != ""?"AND ":"")."probe = $probe ";
+	    if($probe)  $where = $where.($where != ""?"AND ":"")."probe = '$probe' ";
 	    if($where != "") $sql = $sql."WHERE $where ";
 	    $sql = $sql."ORDER BY takenDate DESC ";
 	    $totalRows = 0;

@@ -80,7 +80,7 @@ include 'top_menu.php';
                         <td>Temperature Probe:</td>
                         <td>
                         	<?php 
-                        	echo $htmlHelper->ToSelectList("probe", "probe", $tempProbes, "name", "name", $probe, "Select One");
+                        	echo $htmlHelper->ToSelectList("probe", "probe", $tempProbes, "notes", "notes", $probe, "Select One");
 							?>
                         </td>
                         <td>
