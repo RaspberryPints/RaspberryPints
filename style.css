@@ -300,10 +300,6 @@ img {
 }	
 .abv-indicator{
 	display: inline-block;
-	position: relative;
-	height:100%;
-	width:45%;
-	background: url(img/abv/stroke.png) no-repeat bottom left;
 }
 .abv-indicator .abv-full{
 	position: absolute;
