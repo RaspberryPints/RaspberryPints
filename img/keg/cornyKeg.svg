@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   sodipodi:docname="cornyKeg.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.65293835"
+     inkscape:cx="412.7368"
+     inkscape:cy="550.54886"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       d="M 147.90162,47.105885 H 70.85565 m 0,217.410485 h 77.04597 M 88.813246,36.346879 c -4.714802,-0.10731 -3.674582,-16.781569 0,-16.747452 13.709204,-0.05681 27.426014,0.114402 41.130774,-10e-7 3.67458,-0.03412 4.7148,16.640143 0,16.747453 -13.71125,-0.04445 -27.4195,0.243148 -41.130774,0 z M 73.822709,283.97394 70.85565,264.51637 V 47.105884 l 2.47124,-31.467127 c 24.034494,-0.06728 48.06899,-0.03062 72.10349,-10e-7 l 2.47124,31.467128 V 264.51637 l -2.96706,19.45757 c -23.70393,0 -47.407924,0 -71.111851,0 z"
+       id="outline" />
+    <path
+       id="liquid"
+       d="M 70.855651,47.105885 H 147.90162 V 264.51636 H 70.855651 Z" />
+    <path
+       id="keg_left"
+       d="M 70.855651,47.105885 H 147.90162 V 264.51636 H 70.855651 Z" />
+    <path
+       id="keg_right"
+       d="M 70.855651,47.105885 H 147.90162 V 264.51636 H 70.855651 Z" />
+  </g>
+</svg>
