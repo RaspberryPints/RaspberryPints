@@ -339,6 +339,7 @@ CREATE TABLE IF NOT EXISTS `beers` (
 	`srm` decimal(7,1) NULL,
 	`ibu` int(4) NULL,
 	`rating` decimal(3,1) NULL,
+	`containerId` int(11) NULL DEFAULT 1,
 	`active` tinyint(1) NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
@@ -824,6 +825,39 @@ CREATE TABLE IF NOT EXISTS `bottleTypes` (
 INSERT INTO `bottleTypes` ( displayName, volume, total, used, createdDate, modifiedDate ) VALUES
 ( 'standard (12oz)', '12.0', '40', '0', NOW(), NOW() ),
 ( 'flip top (16oz)', '16.0', '5', '0', NOW(), NOW() );
+
+CREATE TABLE IF NOT EXISTS `containerTypes` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`displayName` text NOT NULL,
+	`volume` decimal(6,2) NOT NULL,
+	`volumeUnit` tinytext,
+	`total` int(11) NOT NULL,
+	`used` int(11) NOT NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+
+--
+-- Dumping data for table `bottleTypes`
+--
+
+INSERT INTO `containerTypes` ( displayName, volume, total, used, createdDate, modifiedDate ) VALUES
+( 'standardpint', '16.0', '0', '0', NOW(), NOW() ),
+( 'chalice', '16.0', '0', '0', NOW(), NOW() ),
+( 'nonic', '16.0', '0', '0', NOW(), NOW() ),
+( 'spiegelau', '16.0', '0', '0', NOW(), NOW() ),
+( 'pilsner', '16.0', '0', '0', NOW(), NOW() ),
+( 'goblet', '16.0', '0', '0', NOW(), NOW() ),
+( 'snifter', '16.0', '0', '0', NOW(), NOW() ),
+( 'stange', '16.0', '0', '0', NOW(), NOW() ),
+( 'stein', '16.0', '0', '0', NOW(), NOW() ),
+( 'tulip', '16.0', '0', '0', NOW(), NOW() ),
+( 'weizenglass', '16.0', '0', '0', NOW(), NOW() ),
+( 'willibecher', '16.0', '0', '0', NOW(), NOW() ),
+( 'wineglass', '16.0', '0', '0', NOW(), NOW() );
 
 CREATE TABLE IF NOT EXISTS `rfidReaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1507,6 +1541,8 @@ SELECT
 	tc.valveOn,
 	tc.valvePinState,
     tc.plaatoAuthToken,
+    ct.displayName as containerType,
+    k.make as kegType,
     GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount) ORDER BY a.rank) as accolades
 FROM taps t
 	LEFT JOIN tapconfig tc ON t.id = tc.tapId
@@ -1559,6 +1595,8 @@ SELECT
 	1 as valveOn,
 	1 as valvePinState,
     NULL,
+    NULL as containerType,
+    NULL as kegType,
     GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount) ORDER BY a.rank) as accolades
 FROM bottles t
 	LEFT JOIN beers b ON b.id = t.beerId

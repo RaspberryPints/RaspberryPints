@@ -9,6 +9,7 @@ require_once __DIR__.'/includes/managers/beerAccolade_manager.php';
 require_once __DIR__.'/includes/models/beerFermentable.php';
 require_once __DIR__.'/includes/models/beerHop.php';
 require_once __DIR__.'/includes/models/beerYeast.php';
+require_once __DIR__.'/includes/managers/containerType_manager.php';
 
 $htmlHelper = new HtmlHelper();
 $beerManager = new BeerManager();
@@ -23,6 +24,7 @@ $beerYeastManager = new BeerYeastManager();
 $beerAccoladeManager = new BeerAccoladeManager();
 $breweryManager = new BreweryManager();
 $srmManager = new SrmManager();
+$containerTypeManager= new ContainerTypeManager();
 $beer = null;
 $config = getAllConfigs();
 
@@ -149,6 +151,7 @@ $beerAccolades  = $beerAccoladeManager->GetAllByBeerId($beer->get_id());
 
 $breweryList = $breweryManager->GetAllActive();
 $srmList = $srmManager->getAll();
+$cTypes = $containerTypeManager->GetAllActive();
 ?>
 	<!-- Start Header  -->
 <body>
@@ -288,6 +291,23 @@ include 'top_menu.php';
                     <?php
 					   	echo $htmlHelper->ToColorSelectList("srm", "srm", $srmList, "srm", "srm", $beer->get_srm(), "Select SRM", "", "rgb"); 
 					?>							
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b>Container :</b>
+				</td>
+				<td>
+					<!--<table>
+					<tr><td>
+					 <img width="50px" src="../img/srm/containerSvg.php?container=<?php echo "nonic"; ?>&rgb=<?php echo $beer->get_srm(); ?>" />
+					
+					</td><td>-->
+                    <?php
+                        echo $htmlHelper->ToSelectList("containerId", "containerId", $cTypes, "name", "id", $beer->get_containerId(), null); 
+					?>	
+					<!--</td></tr>
+					</table>-->						
 				</td>
 			</tr>
 			<tr>

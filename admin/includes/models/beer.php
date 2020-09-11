@@ -17,6 +17,7 @@ class Beer
 	private $_ibu;
 	private $_rating;
 	private $_active;
+	private $_containerId;
 	private $_createdDate; 
 	private $_modifiedDate; 
 	private $_breweryId;
@@ -73,7 +74,10 @@ class Beer
 	
 	public function get_breweryId(){ return $this->_breweryId; }
 	public function set_breweryId($_breweryId){ $this->_breweryId = $_breweryId; }
-
+	
+	public function get_containerId(){ return $this->_containerId; }
+	public function set_containerId($_containerId){ $this->_containerId = $_containerId; }
+	
 	public function setFromArray($postArr)  
 	{  
 		if( isset($postArr['id']) )
@@ -166,6 +170,12 @@ class Beer
 			$this->set_active($postArr['active']);
 		else
 			$this->set_active(null);
+			
+		if( isset($postArr['containerId']) )
+		    $this->set_containerId($postArr['containerId']);
+	    else
+	        $this->set_containerId(null);
+			        
 			
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);

@@ -66,6 +66,8 @@
 				"srmRgb" => $b['srmRgb'],
 				"valvePinState" => $b['valvePinState'],
 			    "plaatoAuthToken" => $b['plaatoAuthToken'],
+			    "containerType" => $b['containerType'],
+			    "kegType" => $b['kegType'],
 			    "accolades" => $b['accolades']
 			);
 			if($config[ConfigNames::UsePlaato]) {
@@ -131,7 +133,10 @@
 				"capNumber" => $b['capNumber'],
 				"rating" => $b['rating'],
 				"srmRgb" => $b['srmRgb'],
-				"valvePinState" => $b['valvePinState'],
+			    "valvePinState" => $b['valvePinState'],
+			    "plaatoAuthToken" => $b['plaatoAuthToken'],
+			    "containerType" => $b['containerType'],
+			    "kegType" => $b['kegType'],
 				"accolades" => $b['accolades']
 			);
 			$bottles[$rowNumber] = $beeritem;

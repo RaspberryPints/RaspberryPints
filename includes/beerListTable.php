@@ -158,8 +158,7 @@ if($editting) $maxTapCol = 1;
 							<?php if($config[ConfigNames::ShowSrmImg]){?>
 								<?php echo '<img src="'.($editting?'../':'').'img/srm/'.($beer['srm']>40?40:floor($beer['srm'])).'-srm.png" />'?>
 							<?php }else{?>
-								<?php echo '<div class="srm-indicator" style="background-color:'.$htmlHelper->CreateRGB($beer['srmRgb']).'"></div>'?>
-								<div class="srm-stroke"></div> 
+						   		<img width="100%" src="img/srm/containerSvg.php?container=<?php echo $beer['containerType']; ?>&rgb=<?php echo $beer['srmRgb']; ?>" />
 							<?php }?>
 						</div>
 						
@@ -352,24 +351,22 @@ if($editting) $maxTapCol = 1;
 					<?php } ?>
 					<?php 
     					if($config[ConfigNames::ShowKegImg]){
-    						$kegImgClass = "";
+    					    $kegImgColor = "0,255,0";
     						$percentRemaining = 0.0;
     						if($beer['startAmount'] && $beer['startAmount'] > 0)$percentRemaining = ($beer['remainAmount'] / $beer['startAmount']) * 100;
     						if( $beer['remainAmount'] <= 0 ) {
-    							$kegImgClass = $tapOrBottle."-empty";
-    							$percentRemaining = 100; 
+    						    $percentRemaining = 0;
     						} else if( $percentRemaining < 15 ) {
-    							$kegImgClass = "-red";
+    						    $kegImgColor = "255,0,0";
     						} else if( $percentRemaining < 25 ) {
-    							$kegImgClass = "-orange";
+    						    $kegImgColor = "255,165,0";
     						} else if( $percentRemaining < 45 ) {
-    							$kegImgClass = "-yellow";
+    						    $kegImgColor = "255,255,0";
     						} else if ( $percentRemaining < 100 ) {
-    							$kegImgClass = "-green";
+    						    $kegImgColor = "0,255,0";
     						} else if( $percentRemaining >= 100 ) {
-    							$kegImgClass = "-full";
+    						    $kegImgColor = "0,255,0";
     						}
-    						$kegImgClass = strtolower($tapOrBottle).$kegImgClass;
     						$kegOn = "";
     						if($config[ConfigNames::UseTapValves]){
     						    if ( $tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG &&
@@ -381,14 +378,20 @@ if($editting) $maxTapCol = 1;
 					?>
     					<div class="keg-container">
     						<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
-    							<div class="keg-indicator">
-    								<div class="keg-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%; width: 100%" >
+    							<?php 
+							     $kegType="keg";
+							     if(strtolower(substr($beer['kegType'], 0, 4)) == "corn") $kegType = "corny";
+							    ?>
+    							<div class="keg-indicator" style="background: url(img/keg/kegSvg.php?container=<?php echo $kegType?>&empty) no-repeat bottom left;"> 
+								<div class="keg-full" style="height:100%; width: 100%; background: url(img/keg/kegSvg.php?container=<?php echo $kegType?>&fill=<?php echo $percentRemaining; ?>&rgb=<?php echo $kegImgColor ?>) no-repeat bottom left;" >
     								       <div class="<?php echo $kegOn ?>"></div>
+    								       <?php if($percentRemaining>=100){?><div style="height:100%;"><h1 style="height:100%;text-align: center;padding-top: 50%; color:white;  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">FULL</h1></div><?php }?>
+    									   <?php if($percentRemaining<=0){?><div style="height:100%;"><h1 style="height:100%;text-align: center;padding-top: 50%; color:White;  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">MT</h1></div><?php }?>
     								</div>
     							</div>
     						<?php } else { ?>
     							<div class="bottle-indicator">
-    								<div class="bottle-full <?php echo $kegImgClass ?>" style="height:<?php echo $percentRemaining; ?>%">
+    								<div class="bottle-full" style="height:100%; background: url(img/bottle/bottleSvg.php?container=bottle&fill=<?php echo $percentRemaining; ?>&rgb=<?php echo $kegImgColor ?>) no-repeat bottom left;">
     								</div>
     							</div>
     						<?php } ?>

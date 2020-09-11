@@ -746,6 +746,38 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ('numAccoladeDisplay', '3', 'Number of Accolades to display in a row/column', 0, NOW(), NOW() );
 
+
+CREATE TABLE IF NOT EXISTS `containerTypes` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`displayName` text NOT NULL,
+	`volume` decimal(6,2) NOT NULL,
+	`volumeUnit` tinytext,
+	`total` int(11) NOT NULL,
+	`used` int(11) NOT NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+INSERT IGNORE INTO `containerTypes` ( displayName, volume, total, used, createdDate, modifiedDate ) VALUES
+( 'standardpint', '16.0', '0', '0', NOW(), NOW() ),
+( 'chalice', '16.0', '0', '0', NOW(), NOW() ),
+( 'nonic', '16.0', '0', '0', NOW(), NOW() ),
+( 'pilsner', '16.0', '0', '0', NOW(), NOW() ),
+( 'spiegelau', '16.0', '0', '0', NOW(), NOW() ),
+( 'goblet', '16.0', '0', '0', NOW(), NOW() ),
+( 'snifter', '16.0', '0', '0', NOW(), NOW() ),
+( 'stange', '16.0', '0', '0', NOW(), NOW() ),
+( 'stein', '16.0', '0', '0', NOW(), NOW() ),
+( 'tulip', '16.0', '0', '0', NOW(), NOW() ),
+( 'weizenglass', '16.0', '0', '0', NOW(), NOW() ),
+( 'willibecher', '16.0', '0', '0', NOW(), NOW() ),
+( 'wineglass', '16.0', '0', '0', NOW(), NOW() );
+
+
+CALL addColumnIfNotExist(DATABASE(), 'beers', 'containerId', 'int(11) NULL DEFAULT 1' );
+
 CREATE OR REPLACE VIEW vwGetActiveTaps
 AS
 
@@ -777,6 +809,8 @@ SELECT
 	tc.valveOn,
 	tc.valvePinState,
     tc.plaatoAuthToken,
+    ct.displayName as containerType,
+    k.make as kegType,
     GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount) ORDER BY a.rank) as accolades
 FROM taps t
 	LEFT JOIN tapconfig tc ON t.id = tc.tapId
@@ -787,6 +821,7 @@ FROM taps t
 	LEFT JOIN srmRgb s ON s.srm = b.srm
 	LEFT JOIN beerAccolades ba ON b.id = ba.beerId
     LEFT JOIN accolades a on ba.accoladeId = a.id
+    LEFT JOIN containerTypes ct on ct.id = b.containerId
 WHERE t.active = true
 GROUP BY t.id
 ORDER BY t.id;
@@ -823,6 +858,8 @@ SELECT
 	1 as valveOn,
 	1 as valvePinState,
     NULL,
+    NULL as containerType,
+    NULL as kegType,
     GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount) ORDER BY a.rank) as accolades
 FROM bottles t
 	LEFT JOIN beers b ON b.id = t.beerId
@@ -835,6 +872,8 @@ FROM bottles t
 WHERE t.active = true
 GROUP BY t.id
 ORDER BY t.id;
+
+
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ( 'updateDate', '', '', '0', NOW(), NOW() );
