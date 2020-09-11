@@ -265,33 +265,17 @@ if($editting) $maxTapCol = 1;
     					?>	
     					<?php if(($config[ConfigNames::ShowAbvImg])) { ?>
     						<div class="abv-container">
-    							<?php
-    							if($abv > 0){
-    								$numCups = 0;
-    								$remaining = $abv * 20;
-    								do{
-    									if( $remaining < 100 ){
-    											$level = $remaining;
-    									}else{
-    											$level = 100;
-    									}
-    									?>
-    									<div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div>
-    									<?php
-    									
-    									$remaining = $remaining - $level;
-    									$numCups++;
-    								}while($remaining > 0 && $numCups < 2);
-    								
-    								if( $remaining > 0 ){
-    								?>
-    								<div class="abv-offthechart"></div>
-    								<?php
-    								}
-            					}else{
-                                    echo "N/A";
-            					}
-    							?>
+							<?php
+							if($abv){
+							?>
+								<div class="abv-indicator" style="  background: url(img/abv/agvSvg.php?container=abv&empty) no-repeat bottom left;"><div class="abv-full" style="height:100%;  background: url(img/abv/abvSvg.php?container=abv&fill=<?php echo $abv * 20; ?>&rgb=255,165,0) no-repeat bottom left;"></div></div>
+							<?php
+							}else{
+							?>
+							  N/A
+							<?php 
+							}
+							?>
     						</div>
     					<?php } 
     					if((!$config[ConfigNames::ShowAbvImg] ||
