@@ -760,20 +760,20 @@ CREATE TABLE IF NOT EXISTS `containerTypes` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
-INSERT IGNORE INTO `containerTypes` ( displayName, volume, total, used, createdDate, modifiedDate ) VALUES
-( 'standardpint', '16.0', '0', '0', NOW(), NOW() ),
-( 'chalice', '16.0', '0', '0', NOW(), NOW() ),
-( 'nonic', '16.0', '0', '0', NOW(), NOW() ),
-( 'pilsner', '16.0', '0', '0', NOW(), NOW() ),
-( 'spiegelau', '16.0', '0', '0', NOW(), NOW() ),
-( 'goblet', '16.0', '0', '0', NOW(), NOW() ),
-( 'snifter', '16.0', '0', '0', NOW(), NOW() ),
-( 'stange', '16.0', '0', '0', NOW(), NOW() ),
-( 'stein', '16.0', '0', '0', NOW(), NOW() ),
-( 'tulip', '16.0', '0', '0', NOW(), NOW() ),
-( 'weizenglass', '16.0', '0', '0', NOW(), NOW() ),
-( 'willibecher', '16.0', '0', '0', NOW(), NOW() ),
-( 'wineglass', '16.0', '0', '0', NOW(), NOW() );
+INSERT IGNORE INTO `containerTypes` ( id,displayName, volume, total, used, createdDate, modifiedDate ) VALUES
+( 1,'standardpint', '16.0', '0', '0', NOW(), NOW() ),
+( 2,'chalice', '16.0', '0', '0', NOW(), NOW() ),
+( 3,'nonic', '16.0', '0', '0', NOW(), NOW() ),
+( 4,'pilsner', '16.0', '0', '0', NOW(), NOW() ),
+( 5,'spiegelau', '16.0', '0', '0', NOW(), NOW() ),
+( 6,'goblet', '16.0', '0', '0', NOW(), NOW() ),
+( 7,'snifter', '16.0', '0', '0', NOW(), NOW() ),
+( 8,'stange', '16.0', '0', '0', NOW(), NOW() ),
+( 9,'stein', '16.0', '0', '0', NOW(), NOW() ),
+( 10,'tulip', '16.0', '0', '0', NOW(), NOW() ),
+( 11,'weizenglass', '16.0', '0', '0', NOW(), NOW() ),
+( 12,'willibecher', '16.0', '0', '0', NOW(), NOW() ),
+( 13,'wineglass', '16.0', '0', '0', NOW(), NOW() );
 
 
 CALL addColumnIfNotExist(DATABASE(), 'beers', 'containerId', 'int(11) NULL DEFAULT 1' );
