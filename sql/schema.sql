@@ -1553,6 +1553,7 @@ FROM taps t
 	LEFT JOIN srmRgb s ON s.srm = b.srm
 	LEFT JOIN beerAccolades ba ON b.id = ba.beerId
     LEFT JOIN accolades a on ba.accoladeId = a.id
+    LEFT JOIN containerTypes ct on ct.id = b.containerId
 WHERE t.active = true
 GROUP BY t.id
 ORDER BY t.id;
