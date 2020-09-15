@@ -41,8 +41,8 @@ class PourManager extends Manager{
 		if($where != "") $sql = $sql."WHERE $where ";
 		$sql = $sql."ORDER BY createdDate DESC ";
 		$totalRows = 0;
-		if($results = $this->executeQueryWithResults($sql)){
-		    $totalRows = count($results);
+		if($results = $this->executeNonObjectQueryWithArrayResults("SELECT COUNT(*) as totalRows FROM ".$this->getViewName())){
+		    if(count($results) > 0) $totalRows = $results[0]['totalRows'];
 		}
 		$limitClause = $this->getLimitClause($limit, $page);
 		if($limitClause == "") return $results;
@@ -88,8 +88,8 @@ class PourManager extends Manager{
 	    $sql = $sql."GROUP BY userName";
 	    if($groupBy) $sql = $sql.", ".$groupBy;
 	    $totalRows = 0;
-	    if($results = $this->executeQueryWithResults($sql)){
-	        $totalRows = count($results);
+	    if($results = $this->executeNonObjectQueryWithArrayResults("SELECT COUNT(*) as totalRows FROM ".$this->getViewName())){
+	        if(count($results) > 0) $totalRows = $results[0]['totalRows'];
 	    }
 	    $limitClause = $this->getLimitClause($limit, $page);
 	    if($limitClause == "") return $results;
@@ -136,8 +136,8 @@ class PourManager extends Manager{
 	    $sql = $sql."GROUP BY tapNumber, tapId";
 	    if($groupBy) $sql = $sql.", ".$groupBy;
 	    $totalRows = 0;
-	    if($results = $this->executeQueryWithResults($sql)){
-	        $totalRows = count($results);
+	    if($results = $this->executeNonObjectQueryWithArrayResults("SELECT COUNT(*) as totalRows FROM ".$this->getViewName())){
+	        if(count($results) > 0) $totalRows = $results[0]['totalRows'];
 	    }
 	    $limitClause = $this->getLimitClause($limit, $page);
 	    if($limitClause == "") return $results;
@@ -193,8 +193,8 @@ class PourManager extends Manager{
 	        $sql = $sql.($groupBy == 'beerStyle'?"":", ").$groupBy;
 	    }
 	    $totalRows = 0;
-	    if($results = $this->executeQueryWithResults($sql)){
-	        $totalRows = count($results);
+	    if($results = $this->executeNonObjectQueryWithArrayResults("SELECT COUNT(*) as totalRows FROM ".$this->getViewName())){
+	        if(count($results) > 0) $totalRows = $results[0]['totalRows'];
 	    }
 	    $limitClause = $this->getLimitClause($limit, $page);
 	    if($limitClause == "") return $results;

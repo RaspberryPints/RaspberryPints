@@ -38,8 +38,8 @@ class TempLogManager extends Manager{
 	    if($where != "") $sql = $sql."WHERE $where ";
 	    $sql = $sql."ORDER BY takenDate DESC ";
 	    $totalRows = 0;
-	    if($results = $this->executeQueryWithResults($sql)){
-	        $totalRows = count($results);
+	    if($results = $this->executeNonObjectQueryWithArrayResults("SELECT COUNT(*) as totalRows FROM ".$this->getViewName())){
+	        if(count($results) > 0) $totalRows = $results[0]['totalRows'];
 	    }
 	    $limitClause = $this->getLimitClause($limit, $page);
 	    if($limitClause == "") return $results;
