@@ -30,6 +30,7 @@
 			<li><a href="brewery_list.php">Breweries</a></li>
 			<li><a href="bottle_list.php">Bottles</a></li>
 			<li><a href="user_list.php" title="drinker-acct">Drinker Accounts</a></li>
+			<li><a href="beer_style_list.php">Beer Styles</a></li>
 		</ul>
 	</li>
 	<li>

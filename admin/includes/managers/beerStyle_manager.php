@@ -8,7 +8,7 @@ class BeerStyleManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["name", "catNum", "category", "beerStyleList", "ogMin", "ogMax", "fgMin", "fgMax", "abvMin", "abvMax", "ibuMin", "ibuMax", "srmMin", "srmMax"];
+		return ["name", "catNum", "category", "beerStyleList", "ogMin", "ogMinUnit", "ogMax", "ogMaxUnit", "fgMin", "fgMinUnit", "fgMax", "fgMaxUnit", "abvMin", "abvMax", "ibuMin", "ibuMax", "srmMin", "srmMax", "active"];
 	}
 	protected function getTableName(){
 		return "beerStyles";
@@ -52,5 +52,20 @@ class BeerStyleManager extends Manager{
         if ($style) return $style;
         
         return null;
+	}
+	function GetByNameOrCatNumInList($styleName, $catNum, $list){
+	    $sql = "SELECT id from beerStyles where name='$styleName' and catNum='$catNum' AND beerStyleList='$list';";
+	    $style = $this->executeQueryWithSingleResult($sql);
+	    if ($style) return $style;
+	    
+	    $sql = "SELECT id from beerStyles where name='$styleName' AND beerStyleList='$list';";
+	    $style = $this->executeQueryWithSingleResult($sql);
+	    if ($style) return $style;
+	    
+	    $sql = "SELECT id from beerStyles where catNum='$catNum' AND beerStyleList='$list';";
+	    $style = $this->executeQueryWithSingleResult($sql);
+	    if ($style) return $style;
+	    
+	    return null;
 	}
 }

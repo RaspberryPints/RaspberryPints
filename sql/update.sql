@@ -777,6 +777,19 @@ INSERT IGNORE INTO `containerTypes` ( id,displayName, volume, total, used, creat
 
 
 CALL addColumnIfNotExist(DATABASE(), 'beers', 'containerId', 'int(11) NULL DEFAULT 1' );
+CALL addColumnIfNotExist(DATABASE(), 'beerStyles', 'active', 'tinyint(1) NOT NULL DEFAULT 1' );
+CALL addColumnIfNotExist(DATABASE(), 'beerStyles', 'ogMinUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'beerStyles', 'ogMaxUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'beerStyles', 'fgMinUnit', 'tinytext' );
+CALL addColumnIfNotExist(DATABASE(), 'beerStyles', 'fgMaxUnit', 'tinytext' );
+
+UPDATE beerStyles SET ogMinUnit='sg' WHERE ogMinUnit IS NULL;
+UPDATE beerStyles SET ogMaxUnit='sg' WHERE ogMaxUnit IS NULL;
+UPDATE beerStyles SET fgMinUnit='sg' WHERE fgMinUnit IS NULL;
+UPDATE beerStyles SET fgMaxUnit='sg' WHERE fgMaxUnit IS NULL;
+
+ALTER TABLE beerStyles MODIFY srmMin decimal(7,1) NOT NULL ;
+ALTER TABLE beerStyles MODIFY srmMax decimal(7,1) NOT NULL ;
 
 CREATE OR REPLACE VIEW vwGetActiveTaps
 AS
