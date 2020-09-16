@@ -268,7 +268,7 @@ if($editting) $maxTapCol = 1;
 							<?php
 							if($abv){
 							?>
-								<div class="abv-indicator" style="  background: url(img/abv/agvSvg.php?container=abv&empty) no-repeat bottom left;"><div class="abv-full" style="height:100%;  background: url(img/abv/abvSvg.php?container=abv&fill=<?php echo $abv * 20; ?>&rgb=255,165,0) no-repeat bottom left;"></div></div>
+								<div class="abv-indicator" style="  background: url(img/abv/abvSvg.php?container=abv&empty) no-repeat bottom left;"><div class="abv-full" style="height:100%;  background: url(img/abv/abvSvg.php?container=abv&fill=<?php echo $abv * 20; ?>&rgb=255,165,0) no-repeat bottom left;"></div></div>
 							<?php
 							}else{
 							?>
