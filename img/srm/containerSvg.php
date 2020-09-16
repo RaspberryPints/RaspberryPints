@@ -49,7 +49,7 @@ if($fn == "stein")$view="0 0 200 512";
            stroke-opacity: 0.8;
            stroke-width: 3;
   }
-  #liquid { fill: rgb(<?php echo $_GET['rgb'] ?>);
+  #liquid { fill: rgb(<?php echo isset($_GET['empty'])?"":$_GET['rgb'] ?>);
             <?php if(isset($_GET['empty'])) { echo "opacity: 0.0;"; }?>
             stroke: #ffffff;
             stroke-opacity: 1;
