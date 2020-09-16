@@ -379,8 +379,6 @@ ALTER TABLE tempLog CHANGE COLUMN `humidity` `humidity` decimal(6,2) NULL ;
 CALL addColumnIfNotExist(DATABASE(), 'config', 'validation', 'varchar(65)' );
 
 
-DELETE FROM config where configName like 'displayUnit%';
-
 INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `validation`, `createdDate`, `modifiedDate`) VALUES
 ( 'displayUnitVolume', 'oz', 'Volume Units', '0', 'Imperial;oz|Metric;ml', NOW(), NOW() ),
 ( 'displayUnitPressure', 'psi', 'Pressure Units', '0', 'psi|Pa', NOW(), NOW() ),
