@@ -83,7 +83,7 @@
     			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG  && !isset($beer) ) continue;
     		?>
     			<td class="srm">
-				<?php if(isset($beer) && $beer['srm'] > 0){ ?>						
+				<?php if(isset($beer) && $beer['srm'] >= 0){ ?>						
 					<div class="srm-container">
 						<?php if($config[ConfigNames::ShowSrmImg]){?>
 							<?php echo '<img src="'.($editting?'../':'').'img/srm/'.($beer['srm']>40?40:floor($beer['srm'])).'-srm.png" />'?>
