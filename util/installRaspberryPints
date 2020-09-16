@@ -1104,6 +1104,7 @@ doperms() {
     find "$WWWPATH" -type d -exec chmod 2770 {} \; || warn
     find "$WWWPATH" -type f -exec chmod 640 {} \;||warn
     find "$WWWPATH" -type f -regex ".*\.\(py\|sh\)" -exec chmod 770 {} \;||warn
+    find "$WWWPATH/util" -type f -regex ".*installRaspberryPints.*" -exec chmod 750 {} \;||warn
     usermod -a -G www-data "$REALUSER"
 }
 
