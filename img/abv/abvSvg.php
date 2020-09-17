@@ -33,13 +33,13 @@ $numCups= isset($_GET['fill'])?intval($_GET['fill'])/100:1;
   </linearGradient>
   <linearGradient id="rgbToTransVerticle" x2="0" y2="1">
     <stop offset="0%" stop-color="rgba(<?php echo "0,0,0,0" ?>)" />
-    <stop offset="<?php echo $numCups>=1?0:($numCups-floor($numCups))*100; ?>%" stop-color="rgba(<?php echo "0,0,0,0" ?>)" />
-    <stop offset="<?php echo $numCups>=1?0:($numCups-floor($numCups))*100; ?>%" stop-color="rgb(<?php echo $rgbBackground ?>)" />
+    <stop offset="<?php echo $numCups>=1?0:100-(($numCups-floor($numCups))*100); ?>%" stop-color="rgba(<?php echo "0,0,0,0" ?>)" />
+    <stop offset="<?php echo $numCups>=1?0:100-(($numCups-floor($numCups))*100); ?>%" stop-color="rgb(<?php echo $rgbBackground ?>)" />
   </linearGradient>
   <linearGradient id="rgbToTransVerticle2" x2="0" y2="1">
     <stop offset="0%" stop-color="rgba(<?php echo "0,0,0,0" ?>)" />
-    <stop offset="<?php echo $numCups>=2?0:($numCups-floor($numCups))*100; ?>%" stop-color="rgba(<?php echo "0,0,0,0" ?>)" />
-    <stop offset="<?php echo $numCups>=2?0:($numCups-floor($numCups))*100; ?>%" stop-color="rgb(<?php echo $rgbBackground ?>)" />
+    <stop offset="<?php echo $numCups>=2?0:100-(($numCups-floor($numCups))*100); ?>%" stop-color="rgba(<?php echo "0,0,0,0" ?>)" />
+    <stop offset="<?php echo $numCups>=2?0:100-(($numCups-floor($numCups))*100); ?>%" stop-color="rgb(<?php echo $rgbBackground ?>)" />
   </linearGradient>
   <linearGradient id="rgbToTransVerticle3" x2="0" y2="1">
     <stop offset="0%" stop-color="rgba(<?php echo "0,0,0,0" ?>)" />
