@@ -266,7 +266,7 @@ if($editting) $maxTapCol = 1;
     					<?php if(($config[ConfigNames::ShowAbvImg])) { ?>
     						<div class="abv-container">
 							<?php
-							if($abv){
+							if(NULL !== $abv && $abv>=0){
 							?>
 								<div class="abv-indicator" style="  background: url(img/abv/abvSvg.php?container=abv&empty) no-repeat bottom left;"><div class="abv-full" style="height:100%;  background: url(img/abv/abvSvg.php?container=abv&fill=<?php echo $abv * 20; ?>&rgb=255,165,0) no-repeat bottom left;"></div></div>
 							<?php
@@ -280,7 +280,7 @@ if($editting) $maxTapCol = 1;
     					<?php } 
     					if((!$config[ConfigNames::ShowAbvImg] ||
     					     $config[ConfigNames::ShowAbvTxtWImg] )){ ?>
-    						<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?> ABV</h2>
+    						<?php if(NULL !== $abv && $abv>=0){?><h2><?php echo number_format($abv, 1, '.', ',')."%"; ?> ABV</h2><?php }?>
     					<?php } ?>
     					<?php if(isset($beer)){ ?>
     						<?php if($config[ConfigNames::ShowCalories]){ ?>
