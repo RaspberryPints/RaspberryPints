@@ -1601,7 +1601,7 @@ SELECT
 	1 as valveOn,
 	1 as valvePinState,
     NULL,
-    NULL as containerType,
+    'bottle' as containerType,
     NULL as kegType,
     GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount) ORDER BY a.rank) as accolades
 FROM bottles t
