@@ -285,7 +285,7 @@ class FlowMonitor(object):
                     msg = self.readline_notimeout()
                     if not msg:
                         continue
-                    if not processMsg(msg):
+                    if not self.processMsg(msg):
                         return
                 else:
                     time.sleep(1)
@@ -434,7 +434,7 @@ class FlowMonitor(object):
                 
                 if not msg:
                     continue
-                if not processMsg(msg):
+                if not self.processMsg(msg):
                     return
         finally:
             debug( "Closing serial connection to Arduino..." )
