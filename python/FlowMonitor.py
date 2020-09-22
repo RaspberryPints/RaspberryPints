@@ -381,6 +381,11 @@ class FlowMonitor(object):
             
         elif ( reading[0] == "WP" and len(reading) >= 3 ):
             #debug( "got a Write Pins Request: "+ msg )
+            part = 1
+            MODE = int(self.splitMsg[part])
+            part += 1
+            COUNT = int(self.splitMsg[part])
+            part += 1
             WritePinsThread("WP", reading, self.dispatch).start()
             msg = "DONE;%d;%d|" % (COUNT, MODE)
             #debug( "Sending "+ msg )
