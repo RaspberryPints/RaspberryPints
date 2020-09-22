@@ -19,7 +19,11 @@ import os.path
 import traceback
 import glob
 from hx711 import HX711
-import paho.mqtt.client as mqtt # Added library for mqtt
+MQTT_IMPORT_SUCCESSFUL = True
+try:
+    import paho.mqtt.client as mqtt # Added library for mqtt
+except:
+    MQTT_IMPORT_SUCCESSFUL = False
 
 GPIO_IMPORT_SUCCESSFUL = True
 try:
