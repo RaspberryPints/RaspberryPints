@@ -36,6 +36,8 @@ RASPBIANPACKAGES=" phpmyadmin chromium-browser "
 APACHEPACKAGESBEFORE=" apache2 "
 APACHEPACKAGESAFTER=" libapache2-mod-php "
 NGINXPACKAGES=" nginx php-fpm "
+MQTTPACKAGES=" mosquitto mosquitto-clients "
+MQTTPYTHONPACKAGES=" requests paho-mqtt "
      
 FLOW_MEATERS_PACKAGES="arduino python-serial python-mysqldb php-cli 
 					   xdotool dos2unix python-mod-pywebsocket i2c-tools"
@@ -88,6 +90,11 @@ MYSQL_RP_PASS="RaspberryPints"
 USE_FLOW_METERS=N
 USE_RFID=N
 
+MQTT_CONFIG_PATH="/etc/mosquitto/conf.d/rpints.conf"
+MQTT_SERVER="localhost"
+MQTT_PORT=1883
+MQTT_USERNAME="RaspberryPints"
+MQTT_PASSWORD="RaspberryPints"
 ############
 ### Init
 ############
@@ -484,10 +491,10 @@ packages() {
     if [ $(($nowTime - $lastUpdate)) -gt 604800 ] ; then
         echo -e "\nLast apt update was over a week ago. Running apt update before updating"
         echo -e "dependencies."
-        apt-get update -q||die
+        apt-get update -q < /dev/tty||die
         echo -e "\nRunning apt upgrade to upgrade any previously installed system tools and"
         echo -e "installed dependencies."
-        apt-get upgrade -y||die
+        apt-get upgrade -y  < /dev/tty||die
         didUpdate=1
     fi
     
@@ -571,7 +578,7 @@ configureNginx(){
 	
 		#echo -e "PHP Socket $PHPSOCKET"
 		if [ $FERMTRACK_INSTALLED -ne 1 ] ;  then
-			cp "${WWWPATH}/nginx-confs/default" "/etc/nginx/sites-available/$NGIXConfigName" &>> "$HOMEPATH/$SCRIPTNAME.log"
+		    wget -O "/etc/nginx/sites-available/$NGIXConfigName" https://raw.githubusercontent.com/rtlindne/RaspberryPints/master/util/nginx-confs/default &>> "$HOMEPATH/$SCRIPTNAME.log"
 			FIND_STR="#PHPSOCKET#"
 			REPL_STR="$PHPSOCKET"
 			sed -i "s_${FIND_STR}_${REPL_STR}_" "/etc/nginx/sites-available/$NGIXConfigName"
@@ -1125,7 +1132,7 @@ installFlowmeters(){
 		apt-get install --assume-yes ${FLOW_MEATERS_PACKAGES}
 	
 		#upgrade all base
-		apt-get upgrade
+		apt-get upgrade -y  < /dev/tty
 	
 		# enable I2C on Raspberry Pi
 		echo '>>> Enable I2C'
@@ -1192,7 +1199,8 @@ installFlowmeters(){
 						
 			CONNECTION_OPTIONS=(1 "Serial"
 					 2 "USB"
-			         3 "Bluetooth")
+			         3 "Bluetooth"
+			         4 "MQTT (Photon)")
 			user_choice=$(dialog --clear \
 			                --backtitle "Connection" \
 			                --title "Shield Communication" \
@@ -1212,9 +1220,71 @@ installFlowmeters(){
 					3)
 						comm_option="/dev/rfcomm0"
 						;;
+					4)
+						comm_option="MQTT"
+						;;
 			esac
 			sed -E -i 's/(.*flowmon.port.*)/#\1/' "${WWWPATH}/python/Config.py"	
 		  	echo "config['flowmon.port'] = '$comm_option'" >> "${WWWPATH}/python/Config.py"
+		  	
+			if [ $user_choice = 4 ];
+			then
+			    for pkg in $MQTTPYTHONPACKAGES; do
+			        pkgOk=$(pip show "$pkg" | \
+			        grep "Name: ")
+			        if [ -z "$pkgOk" ]; then
+			            echo -e "\nInstalling '$pkg'."
+			            pip install "$pkg" < /dev/tty ||die
+			        fi
+			    done
+			
+				mqtt_local="N"
+				if ! promptYN "Will this pi host the MQTT Server" "Y";
+				then
+					read -e -p "MQTT Server?: " -i ${MQTT_SERVER} MQTT_SERVER < /dev/tty
+				else
+					mqtt_local="Y"
+					# Now install any necessary packages if they are not installed
+				    echo -e "\nChecking and installing required dependencies via apt."
+				    for pkg in $MQTTPACKAGES; do
+				        pkgOk=$(dpkg-query -W --showformat='${Status}\n' "$pkg" | \
+				        grep "install ok installed")
+				        if [ -z "$pkgOk" ]; then
+				            echo -e "\nInstalling '$pkg'."
+				            apt-get install "$pkg" -y -q=2 < /dev/tty ||die
+				        fi
+				    done
+					read -e -p "MQTT Port?: " -i ${MQTT_PORT} MQTT_PORT < /dev/tty
+					#configure mosquitto for MQTT 
+					echo '' > $MQTT_CONFIG_PATH
+					echo 'allow_anonymous false' >> $MQTT_CONFIG_PATH
+					echo 'password_file /etc/mosquitto/pwfile' >> $MQTT_CONFIG_PATH
+					echo "listener $MQTT_PORT" >> $MQTT_CONFIG_PATH
+					
+				fi
+				read -e -p "MQTT Username?: " -i ${MQTT_USERNAME} MQTT_USERNAME < /dev/tty
+		        read -s -e -p "MQTT Password for server ${MQTT_SERVER}?: " MQTT_PASSWORD < /dev/tty
+		        if [ "$MQTT_PASSWORD" == "" ]; then
+		         	MQTT_PASSWORD="default" 
+		        fi
+		        echo
+		        if [ "${mqtt_local}" = "Y" ];
+		        then
+		        	if [ ! -f "/etc/mosquitto/pwfile" ]; then 
+		        		echo "" > /etc/mosquitto/pwfile
+		        	fi
+					mosquitto_passwd -b /etc/mosquitto/pwfile $MQTT_USERNAME $MQTT_PASSWORD
+					/etc/init.d/mosquitto restart
+				fi
+				sed -E -i 's/(.*mqtt.host.*)/#\1/' "${WWWPATH}/python/Config.py"	
+	  			echo "config['mqtt.host'] = '$MQTT_SERVER'" >> "${WWWPATH}/python/Config.py"
+				sed -E -i 's/(.*mqtt.port.*)/#\1/' "${WWWPATH}/python/Config.py"	
+	  			echo "config['mqtt.port'] = '$MQTT_PORT'" >> "${WWWPATH}/python/Config.py"
+				sed -E -i 's/(.*mqtt.user.*)/#\1/' "${WWWPATH}/python/Config.py"	
+	  			echo "config['mqtt.user'] = '$MQTT_USERNAME'" >> "${WWWPATH}/python/Config.py"
+				sed -E -i 's/(.*mqtt.password.*)/#\1/' "${WWWPATH}/python/Config.py"	
+	  			echo "config['mqtt.password'] = '$MQTT_PASSWORD'" >> "${WWWPATH}/python/Config.py"
+			fi
 	
 		fi
 		if [ -f "${WWWPATH}/python/flowmon" ];
@@ -1238,7 +1308,10 @@ installFlowmeters(){
 			update-rc.d flowmon defaults
 		fi
 		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "UPDATE config SET configValue='1' WHERE configName='useFlowMeter' OR configName='showKegCol';";
-		read -e -p "For alamode set the 5V_link jumper to on (see page 11 of the Alamode Manual). Enter to continue" ANSWER < /dev/tty
+		if [ $user_choice != 4 ];
+		then
+			read -e -p "For alamode set the 5V_link jumper to on (see page 11 of the Alamode Manual). Enter to continue" ANSWER < /dev/tty
+		fi
 	else
 		echo "Will Not Install Flow Meters"
 		echo
@@ -1579,8 +1652,8 @@ updateRpints(){
         3 )  ;; #Not sure how to update this one since its static		
 	esac
 	case ${REPO_CHOICE} in
-        1 ) git stash; git pull; mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -s -L < ${WWWPATH}/sql/update.sql > /dev/null 2>&1; cp -f /tmp/RPints_Config.py  ./python/Config.py; if  [ -z "$WWWPATH_SET" ]; then git difftool --dir-diff -y stash; fi; ;;
-        2 ) git stash; git pull; cp -f /tmp/RPints_Config.py  ./python/Config.py; if  [ -z "$WWWPATH_SET" ]; then git difftool --dir-diff -y stash; fi; ;;
+        1 ) git stash; git pull; mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -s -L < ${WWWPATH}/sql/update.sql > /dev/null 2>&1; cp -f /tmp/RPints_Config.py  ./python/Config.py; if  [ -z "$WWWPATH_SET" ]; then git difftool --dir-diff -y stash < /dev/tty; fi; ;;
+        2 ) git stash; git pull; cp -f /tmp/RPints_Config.py  ./python/Config.py; if  [ -z "$WWWPATH_SET" ]; then git difftool --dir-diff -y stash < /dev/tty; fi; ;;
         3 )  ;; #Not sure how to update this one since its static		
 	esac
 	#bring over any images that were undone but do not overwrite except background and logo
