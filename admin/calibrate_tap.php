@@ -15,9 +15,7 @@ if (isset ( $_POST ['saveTapCalibration'] ) ){
     $originalPulses = $_POST ['originalPulses'];
     $countpergallon = (is_unit_imperial($countpergallonUnit)?128:1000)*($originalPulses/$pourAmount);
     //In local UOM convert to gallon to match database
-    $countpergallon = convert_count($countpergallon, $countpergallonUnit, UnitsOfMeasure::VolumeGallon);
     $pourAmount = convert_volume($pourAmount, $countpergallonUnit, UnitsOfMeasure::VolumeGallon);
-    $countpergallonUnit = UnitsOfMeasure::VolumeGallon;
     
     $tapManager->saveTapConfig ( $tap->get_id(), $tap->get_flowPinId(), $tap->get_valvePinId(), $tap->get_valveOn(), $countpergallon, $countpergallonUnit, $tap->get_plaatoAuthToken() );
     $pourManager->updatePour($_POST ['lastPourId'], $pourAmount, $countpergallon);
@@ -120,7 +118,7 @@ include 'top_menu.php';
                         	<input type="text"name="newPulsePerVol" id="newPulsePerVol" class="smallbox" value="<?php echo $lastPour != NULL?$lastPour->get_pulses()/$lastPour->get_amountPouredDisplay():"No Last Pour";?>" onkeyup="updateVolumeFromPulsePerVol(<?php echo $lastPour != NULL?$lastPour->get_amountPouredDisplay():"-1";?>,<?php echo $lastPour != NULL?$lastPour->get_pulses():"-1";?>, <?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"false":"true")?>)" />
                         </td>
                         <td>
-                        	<input type="text" readonly="readonly" name="newPulsePerGal" id="newPulsePerGal" class="smallbox" value="<?php echo $lastPour != NULL?$tap->get_count():"No Last Pour";?>" onkeyup="updateVolume(<?php echo $lastPour != NULL?$lastPour->get_amountPouredDisplay():"-1";?>,<?php echo $lastPour != NULL?$lastPour->get_pulses():"-1";?>)" />
+                        	<input type="text" readonly="readonly" name="newPulsePerGal" id="newPulsePerGal" class="smallbox" value="<?php echo $lastPour != NULL?convert_count($tap->get_count(), $tap->get_countUnit(), $config[ConfigNames::DisplayUnitVolume]):"No Last Pour";?>" onkeyup="updateVolume(<?php echo $lastPour != NULL?$lastPour->get_amountPouredDisplay():"-1";?>,<?php echo $lastPour != NULL?$lastPour->get_pulses():"-1";?>)" />
                         </td>
                         <td>
                             <?php echo $lastPour != NULL?$lastPour->get_pulses():"No Last Pour";?>
