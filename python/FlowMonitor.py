@@ -728,12 +728,12 @@ class OneWireTemperatureThread (threading.Thread):
                     #if valid temp save it to the database
                     if temp != None and temp >= self.bound_lo and temp <= self.bound_hi:
                         temps.append([probeName, temp, 'C', takenDate])
-                        if tempStatus[probeName] != True:
-                            debug("Adding " + probeName +" Temp-" + str(temp) + "low:" + str(self.bound_lo) + " high:"+str(self.bound_hi)) 
+                        if probeName not in tempStatus:
+                            debug("Adding " + probeName +" Temp[" + str(temp) + "] low:" + str(self.bound_lo) + " high:"+str(self.bound_hi) ) 
                         tempStatus[probeName] = True
                     elif tempStatus.get(probeName, False):
                         tempStatus[probeName] = False
-                        debug("Not Adding " + probeName + " Temp " + str(temp) + "lo:"+self.bound_lo + "high:" + self.bound_hi )
+                        debug("Not Adding " + probeName + " Temp[" + str(temp) + "] low:"+str(self.bound_lo) + " high:" + str(self.bound_hi) )
                 self.dispatch.saveTemps(temps)
                 
                 time.sleep(self.delay)
