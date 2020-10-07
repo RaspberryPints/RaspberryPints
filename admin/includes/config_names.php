@@ -117,5 +117,6 @@ abstract class ConfigNames
 	const HozTapListCol      = 'hozTapListCol';
 	const AmountPerPint      = 'amountPerPint';
 	const NumAccoladeDisplay      = 'numAccoladeDisplay';
+	const AGVColorSRM      = 'AGVColorSRM';
 }
 ?>
