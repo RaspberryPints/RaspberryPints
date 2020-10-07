@@ -20,7 +20,7 @@ $numCups= isset($_GET['fill'])?intval($_GET['fill'])/100:1;
 
 $fn = preg_replace('/\W+/','',$_GET['container']);
 //Really shouldnt do this to center a single glass but this was quick
-$view=($numCups<1?"-85":"0")." 0 400 300"; 
+$view=($numCups<=1?"-85":"0")." 0 400 300"; 
 if($fn == "chalice")$view=($numCups<1?"-85":"10")." 0 400 300";
 if($fn == "snifter")$view=($numCups<1?"-85":"0")." 0 420 300";
 if($fn == "stein")$view=($numCups<1?"-85":"0")." 0 420 300";
