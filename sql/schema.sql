@@ -436,7 +436,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'allowSamplePour', '1', 'Allow Sample Pour from List', '1', NOW(), NOW() ),
 ( 'saveNonUserRfids', '1', 'If unknown RFID tags should be saved into the database', '1', NOW(), NOW() ),
 ( 'showPourListOnHome', '1', 'Show list of pours on home screen', '1', NOW(), NOW() ),
-( 'AGVColorSRM', '1', 'Use beers SRM color to fill in the AGV indicator', '1', NOW(), NOW() );
+( 'ABVColorSRM', '1', 'Use beers SRM color to fill in the ABV indicator', '1', NOW(), NOW() );
 
 INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
 ('autoKickKegs', '1', 'Kick Kegs from Tap when kill is detected', 1, NOW(), NOW() ),

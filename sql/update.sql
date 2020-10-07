@@ -886,7 +886,7 @@ ORDER BY t.id;
 
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
-( 'AGVColorSRM', '1', 'Use beers SRM color to fill in the AGV indicator', '1', NOW(), NOW() );
+( 'ABVColorSRM', '1', 'Use beers SRM color to fill in the ABV indicator', '1', NOW(), NOW() );
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ( 'updateDate', '', '', '0', NOW(), NOW() );
