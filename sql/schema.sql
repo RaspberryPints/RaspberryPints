@@ -487,13 +487,13 @@ INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`,
 ( 'showVerticleTapList', '0', 'Show Tap List Direction', '1', 'Vertical|Horizontal', NOW(), NOW() );
 
 INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
-('TapNumColNum', '1', 'Column number for Tap Number', 1, NOW(), NOW() ),
-('SrmColNum', '2', 'Column number for SRM', 1, NOW(), NOW() ),
-('IbuColNum', '3', 'Column number for IBU', 1, NOW(), NOW() ),
-('BeerInfoColNum', '4', 'Column number for Beer Info', 1, NOW(), NOW() ),
-('AbvColNum', '5', 'Column number for ABV', 1, NOW(), NOW() ),
-('KegColNum', '6', 'Column number for Keg', 1, NOW(), NOW() ),
-('AccoladeColNum', '7', 'Column number for Accolades', 1, NOW(), NOW() );
+('TapNumColNum', '1', 'Column number for Tap Number', 0, NOW(), NOW() ),
+('SrmColNum', '2', 'Column number for SRM', 0, NOW(), NOW() ),
+('IbuColNum', '3', 'Column number for IBU', 0, NOW(), NOW() ),
+('BeerInfoColNum', '4', 'Column number for Beer Info', 0, NOW(), NOW() ),
+('AbvColNum', '5', 'Column number for ABV', 0, NOW(), NOW() ),
+('KegColNum', '6', 'Column number for Keg', 0, NOW(), NOW() ),
+('AccoladeColNum', '7', 'Column number for Accolades', 0, NOW(), NOW() );
 
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ('numAccoladeDisplay', '3', 'Number of Accolades to display in a row/column', 0, NOW(), NOW() );
@@ -1548,7 +1548,7 @@ SELECT
 	tc.valvePinState,
     tc.plaatoAuthToken,
     ct.displayName as containerType,
-    CASE WHEN lower(k.make) LIKE 'corn%' THEN 'Corny' WHEN lower(k.make) LIKE '%firestone%' THEN 'Corny' ELSE 'Keg' END as kegType,
+    CASE WHEN lower(k.make) LIKE 'corn%' THEN 'corny' WHEN lower(k.make) LIKE '%firestone%' THEN 'Corny' ELSE 'Keg' END as kegType,
     GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount) ORDER BY a.rank) as accolades
 FROM taps t
 	LEFT JOIN tapconfig tc ON t.id = tc.tapId
