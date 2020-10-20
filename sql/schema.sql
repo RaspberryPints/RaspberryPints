@@ -1548,7 +1548,7 @@ SELECT
 	tc.valvePinState,
     tc.plaatoAuthToken,
     ct.displayName as containerType,
-    CASE WHEN lower(k.make) LIKE 'corn%' THEN 'corny' WHEN lower(k.make) LIKE '%firestone%' THEN 'Corny' ELSE 'keg' END as kegType,
+    CASE WHEN lower(k.make) LIKE 'corn%' THEN 'corny' WHEN lower(k.make) LIKE '%firestone%' THEN 'corny' ELSE 'keg' END as kegType,
     GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount) ORDER BY a.rank) as accolades
 FROM taps t
 	LEFT JOIN tapconfig tc ON t.id = tc.tapId
