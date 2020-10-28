@@ -1,9 +1,11 @@
 <?php
 require_once __DIR__.'/header.php';
+require_once __DIR__.'/includes/managers/pour_manager.php';
 $htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
 $beerManager = new BeerManager();
 $kegManager = new KegManager();
+$pourManager = new PourManager();
 
 $config = getAllConfigs();
 
@@ -15,6 +17,14 @@ if( isset($_POST['enableTap']) && $_POST['enableTap'] != ""){
 	//The element holds the tap Id
 	$tapManager->enableTap($_POST['enableTap']);
 	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
+}
+
+if(isset($_POST['manualPour'])){
+    $RFID = $_POST['rfid'];
+    $PIN = $_POST['pin'];
+    $PULSE_COUNT =$_POST['pulseCount'];
+    $pourManager->pour($RFID, $PIN, $PULSE_COUNT);
+    exit;
 }
 
 if( isset($_POST['disableTap']) && $_POST['disableTap'] != ""){
@@ -405,15 +415,18 @@ include 'top_menu.php';
                     <?php if($config[ConfigNames::UseFlowMeter]) { ?>
                         <th id="flowPin" <?php if($allTapsConfigured) echo 'style=display:none ' ?>>Flow Pin</th>
                         <th id="flowCount" <?php if($allTapsConfigured) echo 'style=display:none ' ?>>Count<br>Per <?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"Gal":"L");?></th>
+                    	<th>Calibrate</th>
+                    	<?php if($config[ConfigNames::AllowManualPours]) { ?>
+                    	<th>Manual<br/>Pour</th>
+                    	<?php }?>
                     <?php } ?>
                     <?php if($config[ConfigNames::UseTapValves]) { ?>
                         <th id="valvepin" <?php if($allTapsConfigured) echo 'style=display:none ' ?>>Valve Pin</th>
                         <th id="valvepinPi" <?php if($allTapsConfigured) echo 'style=display:none ' ?>>Valve<br>PI Pin?</th>
                     	<th>Valve<br/>Control</th>
-                    	<th>Calibrate</th>
-                        <?php if($config[ConfigNames::UsePlaato]) { ?>
-                    		<th>Plaato<br/>Auth<br/>Token</th>
-                        <?php } ?>
+                    <?php } ?>
+                    <?php if($config[ConfigNames::UsePlaato]) { ?>
+                		<th>Plaato<br/>Auth<br/>Token</th>
                     <?php } ?>
                 </tr>
             </thead>
@@ -564,6 +577,18 @@ include 'top_menu.php';
                                 	    <input type="hidden" id="countpergallonUnit<?php echo $tap->get_id();?>" class="smallbox" name="countpergallonUnit[]" value="<?php echo $config[ConfigNames::DisplayUnitVolume]; ?>" />
                                     <?php } ?>
                                 </td>
+                                <td>
+                                    <?php if( isset($tap) ) { ?>
+                                        <button name="calibrate[]" id="calibrate<?php echo $tap->get_id();?>" type="button" class="btn" style="white-space:nowrap;" value="1" onClick="calibrateTap(this, <?php echo $tap->get_id()?>)">Calibrate</button>
+                                    <?php } ?>
+                                </td>
+                    			<?php if($config[ConfigNames::AllowManualPours]) { ?>
+                                <td>
+                                    <?php if( isset($tap) && $tap->get_beerId() && $tap->get_flowPinId() && $tap->get_count() ) { ?>
+                                        <button name="manualPour[]" id="manualPour<?php echo $tap->get_id();?>" type="button" class="btn" style="white-space:nowrap;" value="1" onClick="manualPourTap(this, <?php echo $tap->get_id()?>, <?php echo $tap->get_flowPinId()?>, <?php echo $tap->get_count()?>, <?php echo is_unit_imperial($tap->get_countUnit())?"true":"false"?>)">Enter Pour</button>
+                                    <?php } ?>
+                                </td>
+                                <?php } ?>
                         <?php } ?>
                         <?php if($config[ConfigNames::UseTapValves]) { ?>
                             <td <?php if($allTapsConfigured) echo 'style=display:none ' ?>>
@@ -576,22 +601,9 @@ include 'top_menu.php';
                                 	<input type="checkbox" id="valvepinPi<?php echo $tap->get_id();?>" class="xsmallbox" name="valvepinPi[<?php echo $tap->get_id();?>]" value="1" <?php if($tap->get_valvePinId() < 0)echo "checked"; ?>  />
                                 <?php } ?>
                             </td>
-                        <?php } ?>
-          				<?php 
-                            if($config[ConfigNames::UseTapValves]) {
-                            ?>
                             <td>
                                 <?php if( isset($tap) ) { ?>
                                     <button name="tapOverride[]" id="tapOverride<?php echo $tap->get_id();?>" type="button" class="btn" style="white-space:nowrap;" value="<?php echo $tap->get_valveOn(); ?>" onClick="changeTapState(this, <?php echo $tap->get_id()?>)"><?php echo ($tap->get_valveOn() < 1?TAP_TEXT_ENABLE:TAP_TEXT_DISABLE);?></button>
-                                <?php } ?>
-                            </td>
-                        <?php } ?>
-          				<?php 
-          				if($config[ConfigNames::UseFlowMeter]) {
-                            ?>
-                            <td>
-                                <?php if( isset($tap) ) { ?>
-                                    <button name="calibrate[]" id="calibrate<?php echo $tap->get_id();?>" type="button" class="btn" style="white-space:nowrap;" value="1" onClick="calibrateTap(this, <?php echo $tap->get_id()?>)">Calibrate</button>
                                 <?php } ?>
                             </td>
                         <?php } ?>
@@ -907,6 +919,39 @@ include 'scripts.php';
 	    document.body.appendChild(form);
 
 	    form.submit();
+  	}
+	function manualPourTap(btn, tapId, pinId, pulseCount, imperialUnits){
+		var promptAmount = prompt("How many <?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"oz":"ml")?> was poured?", <?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"12":"355")?> );
+		var displayImperial = <?php echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?"true":"false")?>;
+		var amount = parseInt(promptAmount);
+		if (!isNaN(amount)) { 
+			if( displayImperial != imperialUnits ){
+				//if displayingImperial amount (entered) is in oz but the tap is configured for ml 
+				if( displayImperial ){
+					amount = amount * 29.5735
+				}else{
+					amount = amount / 29.5735
+				}
+			}
+			var pulses = (amount/(imperialUnits?128:1000))*pulseCount;
+			data = { "manualPour": 1, "rfid" : -1, "pin" : pinId, "pulseCount" : pulses }
+			$.ajax(
+		            {
+	                   type: "POST",
+	                   url: "tap_list.php",
+	                   data: data,// data to send to above script page if any
+	                   cache: false,
+	    
+	                   success: function(response)
+	                   {
+		                   //alert("Pour Registered");
+	                   },
+	                   failure: function(response)
+	                   {
+		                   //alert("Pour Failed");
+	                   }
+		             });
+		  }
   	}
   	
 	$("input[name='countpergallon[]']").change(inputChanged);

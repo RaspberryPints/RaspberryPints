@@ -889,6 +889,9 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 ( 'ABVColorSRM', '1', 'Use beers SRM color to fill in the ABV indicator', '1', NOW(), NOW() );
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+( 'allowManualPours', '0', 'Allow Enter Of Manual Pours', '0', NOW(), NOW() );
+
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ( 'updateDate', '', '', '0', NOW(), NOW() );
 UPDATE `config` SET `configValue` = NOW(), showOnPanel=0 WHERE `configName` = 'updateDate';
 

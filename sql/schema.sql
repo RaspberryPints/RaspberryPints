@@ -418,6 +418,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'useFlowMeter','0','Use Flow Monitoring', '1', NOW(),NOW() ),
 ( 'usePlaato', '0', 'Use Plaato Values', '1', NOW(), NOW() ),
 ( 'usePlaatoTemp', '0', 'Use Plaato Temp', '1', NOW(), NOW() ),
+( 'allowManualPours', '0', 'Allow Enter Of Manual Pours', '0', NOW(), NOW() ),
 ( 'ClientID', '','Client ID', '0', NOW(), NOW() ),
 ( 'ClientSecret','','Client Secret','0',NOW(),NOW() ),
 ( 'BreweryID', '','Brewery ID','0',NOW(),NOW() ),

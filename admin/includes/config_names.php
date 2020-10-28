@@ -84,6 +84,7 @@ abstract class ConfigNames
 	const UseTapValves = 'useTapValves';
 	const UsePlaato = 'usePlaato';
 	const UsePlaatoTemp = 'usePlaatoTemp';
+	const AllowManualPours = 'allowManualPours';
 	const ValvesPowerPin = 'valvesPowerPin';
 	const Use3WireValves = 'use3WireValves';
 	const ValvesOnTime = 'valvesOnTime';
