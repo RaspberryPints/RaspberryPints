@@ -273,7 +273,7 @@
 					    $limit = 1;
 					    $totalRows = 0;
 					    $poursList = $poursManager->getLastPours($page, $limit, $totalRows);
-					    $numberOfPours = count($poursList);
+					    $numberOfPours = 0;//count($poursList);
             		}
             		?>
     				<?php $pour = count($poursList)>0?array_values($poursList)[0]:null;?>
