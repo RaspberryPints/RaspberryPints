@@ -1357,7 +1357,7 @@ installMotionSensor(){
 	if promptYN "Do you want to use Motion Detection?" "N";
 	then
 		echo "Will Install Motion Detection"
-		apt-get install xscreensaver
+		apt-get install --assume-yes xscreensaver
 
 		if promptYN "Do you want to use day_trippr's configuration?" "Y"; then
 			cp ${DIRECTORY}/util/.xscreensaver /home/pi/.xscreensaver
