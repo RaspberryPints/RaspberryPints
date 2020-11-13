@@ -13,7 +13,7 @@ class Pintlabs_Service_Untappd
      *
      * @var string
      */
-    const URI_BASE = 'http://api.untappd.com/v4';
+    const URI_BASE = 'https://api.untappd.com/v4';
 
     /**
      * Client ID
@@ -894,7 +894,7 @@ class Pintlabs_Service_Untappd
         // If the http_code var is not found, the response from the server was unparsable
         if (!isset($this->_lastParsedResponse->meta->code) && !isset($this->_lastParsedResponse->meta->http_code)) {
             require_once __DIR__.'/Untappd/Exception.php';
-            throw new Pintlabs_Service_Untappd_Exception('Error parsing response from server.');
+            throw new Pintlabs_Service_Untappd_Exception('Error parsing response from server.[' . $this->_lastRawResponse.']');
         }
 
         $code = (isset($this->_lastParsedResponse->meta->http_code)) ? $this->_lastParsedResponse->meta->http_code : $this->_lastParsedResponse->meta->code;
