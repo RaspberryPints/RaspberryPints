@@ -69,6 +69,7 @@ Configuration Updated
 		$Client_ID=$configs[ConfigNames::ClientID];
 		$Client_Secret=$configs[ConfigNames::ClientSecret];
 		$BreweryID=$configs[ConfigNames::BreweryID];
+		$RedirectUri=$configs[ConfigNames::RedirectUri];
 		$amountPerPint=$configs[ConfigNames::AmountPerPint];
 		$numAccoladeDisplay=$configs[ConfigNames::NumAccoladeDisplay];
 	?>
@@ -129,6 +130,13 @@ Configuration Updated
 			<form method="post" action="includes/config_update.php">
 				<input type="text" class="largebox" value="<?php echo $BreweryID; ?>" name="configValue"> &nbsp; 
 				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::BreweryID.'"/>'; ?>
+				<?php echo '<input type="hidden" name="jumpto" value="#untappd"/>'; ?>
+				<input type="submit" class="btn" name="Submit" value="Submit">
+			</form>
+		<p><b>Untappd Redirect:</b> </p>
+			<form method="post" action="includes/config_update.php">
+				<input type="text" class="largebox" value="<?php echo $RedirectUri; ?>" name="configValue"> &nbsp; 
+				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::RedirectUri.'"/>'; ?>
 				<?php echo '<input type="hidden" name="jumpto" value="#untappd"/>'; ?>
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
