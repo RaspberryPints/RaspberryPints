@@ -47,5 +47,5 @@ $view="10 00 200 300";
           opacity: <?php echo isset($_GET['empty']) ? "0.0" : ".40";  ?>;
   }
 ]]></style>
-<?php readfile("svg_paths/$fn.paths"); ?>
+<?php if( !empty($fn) && file_exists("svg_paths/$fn.paths"))readfile("svg_paths/$fn.paths"); ?>
 </svg>
