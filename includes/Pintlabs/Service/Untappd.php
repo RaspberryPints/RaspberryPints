@@ -98,13 +98,14 @@ class Pintlabs_Service_Untappd
      *
      * @return string URI
      */
-    public function authenticateUri()
+    public function authenticateUri($state=null)
     {
         $args = array(
             'client_id'     => $this->_clientId,
             'client_secret' => $this->_clientSecret,
             'response_type' => 'code',
             'redirect_url'  => $this->_redirectUri,
+            'state'  => base64_encode ($state),
         );
 
         return 'https://untappd.com/oauth/authenticate/?' . http_build_query($args);
@@ -116,7 +117,7 @@ class Pintlabs_Service_Untappd
      * @param string $code
      * @return string access token
      */
-    public function getAccessToken($code)
+    public function getAccessToken($code, $state=null)
     {
         $args = array(
             'response_type' => 'code',
@@ -124,6 +125,7 @@ class Pintlabs_Service_Untappd
             'client_id'     => $this->_clientId,
             'client_secret' => $this->_clientSecret,
             'code'          => $code,
+            'state'          => $state,
         );
 
         $uri = 'https://untappd.com/oauth/authorize/';
@@ -841,7 +843,8 @@ class Pintlabs_Service_Untappd
         $this->_lastParsedResponse = null;
 
         if ($requireAuth) {
-            if (empty($this->_accessToken)) {
+            if (empty($this->_accessToken) &&
+                empty($args['access_token'])) {
                 require_once __DIR__.'/Untappd/Exception.php';
                 throw new Pintlabs_Service_Untappd_Exception('This method requires an access token');
             }
@@ -849,6 +852,9 @@ class Pintlabs_Service_Untappd
 
         if (!empty($this->_accessToken)) {            
             $args['access_token'] = $this->_accessToken;
+        }
+        else if (!empty($args['access_token'])) {
+            //do nothing its already set
         } else {
             // Append the API key to the args passed in the query string
             $args['client_id'] = $this->_clientId;
@@ -868,10 +874,28 @@ class Pintlabs_Service_Untappd
             $this->_lastRequestUri = self::URI_BASE . '/' . $method;
         }
 
-        $this->_lastRequestUri .= '?' . http_build_query($args);
-
         // Set curl options and execute the request
         $ch = curl_init();
+        if( $requireAuth ) {
+            $defaults = array(
+                CURLOPT_URL => 'http://myremoteservice/',
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => $args,
+            );
+            $ids = array();
+            $ids['access_token'] = $args['access_token'];
+            $ids['client_id'] = $this->_clientId;
+            $ids['client_secret'] = $this->_clientSecret;
+            curl_setopt_array($ch, ($defaults));
+            $defaults = array(
+                CURLOPT_URL => 'http://myremoteservice/',
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => $args,
+            );
+            $this->_lastRequestUri .= '?' . http_build_query($ids);
+        }else{
+            $this->_lastRequestUri .= '?' . http_build_query($args);
+        }
         curl_setopt($ch, CURLOPT_URL, $this->_lastRequestUri);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
