@@ -15,6 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } else if(isset($_POST['edituser'])){
         $user = $userManager->GetById($_POST['id']);
+    } elseif(isset($_POST["untappd"])){
+        $_SESSION['untappdUser'] = $_POST['id'];
+        $ut = new Pintlabs_Service_Untappd($config);
+        redirect($ut->authenticateUri(session_id()));
     } else {
         $user = new User();
         $user->setFromArray($_POST);
@@ -26,23 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         if ($redirect)
             redirect('user_list.php');
-    }
-}elseif(isset($_GET["untappd"])){
-    $ut = new Pintlabs_Service_Untappd($config);
-    redirect($ut->authenticateUri());
+    } 
 } else {
-    $user = new user();
-    $user->setFromArray($_POST);
+    $user = $userManager->GetById($_GET['id']);
 }
 if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != '')
     $_SESSION['HTTP_REFERER'] = $_SERVER['HTTP_REFERER'];
 
-
-if(isset($_GET["code"])){
-    $ut = new Pintlabs_Service_Untappd($config);
-    $a = $ut->getAccessToken($_GET["code"]);
-    $user->set_unTapAccessToken($a->response->access_token);
-}
 
 ?>
 <!-- Start Header  -->
@@ -136,8 +130,9 @@ include 'top_menu.php';
 							name="unTapAccessToken"
 							value="<?php echo $user->get_unTapAccessToken() ?>" />
 							<?php if($config[ConfigNames::ClientID] && $config[ConfigNames::ClientSecret]){?>
-								<a class="btn" href="user_form.php?untappd=true" target="_blank">Retreive</a></td>
+								<input name="untappd" type="submit" class="btn" value="Retrieve" />
 							<?php }?>
+						</td>
 					</tr>
 					<tr>
 						<td><b>Mug Id:</b></td>
