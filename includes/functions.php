@@ -70,7 +70,7 @@ function beerRATING($config, $untID, $rating=NULL, $displayOnly=TRUE ) {
     	    $img = "";
     		ob_start();
     		// This section calls for the rating from Untappd																		
-    		if($config[ConfigNames::ClientID] && $beer->untID!='0'){ 
+    		if($config[ConfigNames::ClientID] && $untID!='0'){ 
     			$ut = new Pintlabs_Service_Untappd($config);
     			$rs = 0;
     			try{
@@ -126,7 +126,7 @@ function beerRATING($config, $untID, $rating=NULL, $displayOnly=TRUE ) {
 	}else if($filetimemod == 0 || time()<$filetimemod) {
 		ob_start();
 		$img = 'https://d1c8v1qci5en44.cloudfront.net/site/assets/images/temp/badge-beer-default.png';
-		if($config[ConfigNames::ClientID] && $beer->untID!='0'){ 
+		if($config[ConfigNames::ClientID] && $untID!='0'){ 
 			$ut = new Pintlabs_Service_Untappd($config);
 			try {
     			$feed = $ut->beerInfo($untID)->response->beer;
