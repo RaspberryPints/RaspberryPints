@@ -421,6 +421,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'allowManualPours', '0', 'Allow Enter Of Manual Pours', '0', NOW(), NOW() ),
 ( 'ClientID', '','Client ID', '0', NOW(), NOW() ),
 ( 'ClientSecret','','Client Secret','0',NOW(),NOW() ),
+( 'RedirectUri','','Redirect URI','0',NOW(),NOW() ),
 ( 'BreweryID', '','Brewery ID','0',NOW(),NOW() ),
 ( 'adminThemeColor', 'styles.css', 'Admin Color', '0', NOW(), NOW() ),
 ( 'useHighResolution', '0', '4k Monitor Support', '1', NOW(), NOW() ),

@@ -895,5 +895,9 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 ( 'updateDate', '', '', '0', NOW(), NOW() );
 UPDATE `config` SET `configValue` = NOW(), showOnPanel=0 WHERE `configName` = 'updateDate';
 
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+( 'ClientID', '','Client ID', '0', NOW(), NOW() ),
+( 'ClientSecret','','Client Secret','0',NOW(),NOW() ),
+( 'RedirectUri','','Redirect URI','0',NOW(),NOW() )
 
 UPDATE `config` SET `configValue` = '3.0.9.0' WHERE `configName` = 'version';
