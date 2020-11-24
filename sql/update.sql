@@ -900,4 +900,7 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 ( 'ClientSecret','','Client Secret','0',NOW(),NOW() ),
 ( 'RedirectUri','','Redirect URI','0',NOW(),NOW() );
 
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+( 'showUntappdBreweryFeed', '0 ', 'Show brewery Untappd feed above header', '0', NOW(), NOW() );
+
 UPDATE `config` SET `configValue` = '3.0.9.0' WHERE `configName` = 'version';

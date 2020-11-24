@@ -418,9 +418,17 @@ align: right;
 }
 
 .beerfeed {
-color: #ccc;
-font-size: 12px;
 
+/*Untappd Quasi Styling*/
+height: 55px;
+width: 99%;
+background-color: rgba(245,242,232,.3);
+border: 2px #FFCC00 solid;
+border-radius: 1em;
+color: #F5F2E8;
+font: .3em Helvetica;
+text-shadow: 0px 0px white;
+justify-content: center;
 }
 
 

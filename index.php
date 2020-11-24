@@ -214,11 +214,16 @@
 				</div>
 				<div class="HeaderCenter" onClick="toggleFullScreen()">
 					<?php
-						if (strlen($config[ConfigNames::HeaderText]) > ($config[ConfigNames::HeaderTextTruncLen])) {
+					    if( $config[ConfigNames::ShowUntappdBreweryFeed] ){
+						    require_once __DIR__.'/includes/functions.php';
+						    utBreweryFeed($config, $config[ConfigNames::BreweryID]);
+						}
+					    if (strlen($config[ConfigNames::HeaderText]) > ($config[ConfigNames::HeaderTextTruncLen])) {
 							echo htmlentities(substr($config[ConfigNames::HeaderText],0,$config[ConfigNames::HeaderTextTruncLen]) . "...");
 						} else {
 							echo htmlentities($config[ConfigNames::HeaderText]);
 						}
+						
 					?>
 				</div>
           		<?php 

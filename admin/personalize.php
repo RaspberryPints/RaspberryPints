@@ -99,6 +99,29 @@ Configuration Updated
 				<?php echo '<input type="hidden" name="jumpto" value="#header"/>'; ?>
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form>
+			<?php 
+			if(!empty($BreweryID)){
+      			$result = getConfig(ConfigNames::ShowUntappdBreweryFeed);
+    			if($result) {
+    			    $row=$result;
+    			    $options = array();
+    			    $options[0] = 'On';
+    			    $options[1] = 'Off';
+    			    $validation = $row['validation'];
+    			    if( $validation !== NULL && $validation != ''){
+    			        $valids = explode('|', $validation);
+    			        for( $i = 0; $i < count($valids); $i++ ){
+    			            $options[$i] = $valids[$i];
+    			        }
+    			    }
+    			    echo '<h3>' . $row['displayName'] . ":"  .'<span id="' . $row['configName'] . 'Success" style="display:none; color: #8EA534;"> (Updated)</span>'. '</h3>'.
+    				    $options[0].'<input type="radio" ' . ($row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="1" onclick="changeConfiguration(this)">' .
+    				    $options[1].'<input type="radio" ' . (!$row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="0" onclick="changeConfiguration(this)">'. 
+    				
+    				'<br><br>';
+        			} 
+			}
+			?>
 			<hr />
     	<a id="numAccoladesDisplay"></a> 
     		<h2>Number of Accolades per <?php echo $configs[ConfigNames::ShowVerticleTapList]?"Row":"Column" ?></h2><br><br>
