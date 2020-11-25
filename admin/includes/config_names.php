@@ -20,6 +20,7 @@ abstract class ConfigNames
 	const FanOnTime = 'fanOnTime';
 	const HeaderText = 'headerText';
 	const HeaderTextTruncLen = 'headerTextTruncLen';
+	const ShowUntappdBreweryFeed = 'showUntappdBreweryFeed';
 	const LogoUrl = 'logoUrl';
 	const NumberOfShelves = 'numberOfShelves';
 	const NumberOfTaps = 'numberOfTaps';
