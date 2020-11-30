@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != '')
     $_SESSION['HTTP_REFERER'] = $_SERVER['HTTP_REFERER'];
-
+if($user==null)$user = new User();
 
 ?>
 <!-- Start Header  -->
