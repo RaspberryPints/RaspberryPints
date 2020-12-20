@@ -323,8 +323,13 @@ class PintDispatch(object):
         con = connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)
         result = cursor.execute(sql)
+        rows = cursor.fetchall()
         if(cursor.rowcount <= 0):
             cursor.execute("INSERT INTO tempProbes (name, type) VALUES('"+probe+"', 0)")
+        else:
+            if(rows[0]['active'] == 0) :
+                updateCursor = con.cursor(mdb.cursors.DictCursor)
+                updateCursor.execute("UPDATE tempProbes SET active=1 WHERE name ='" + probe+"'")           
         con.commit()
         con.close()        
     def saveTemp(self, probe, temp, tempUnit, takenDate):

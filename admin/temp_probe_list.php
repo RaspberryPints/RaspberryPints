@@ -7,7 +7,10 @@ $config = getAllConfigs();
 
 $reconfig = false;
 $activeProbesIds = $tempProbeManager->GetAllActiveIDs();
-if (isset ( $_POST ['save'] )) {
+if (isset($_POST['inactivateTempProbe'])) {
+    $tempProbeManager->Inactivate($_POST['inactivateTempProbe']);
+}
+else if (isset ( $_POST ['save'] )) {
 	$error = false;
 	foreach($activeProbesIds as $id){
 		if(!isset($_POST ['id']) || !in_array($id, $_POST ['id'])){
@@ -174,6 +177,9 @@ include 'top_menu.php';
                                     <td style="width:20%; vertical-align: middle;">
                                         <input type="text" id="adjustment<?php echo $probe->get_id(); ?>" class="smallbox" name="Adjustment[]" value="<?php echo $probe->get_manualAdj() ?>" />
                                     </td>
+                    				<td class="rightborder thick" style="vertical-align:middle; align-content:center; font-size:1.2em; padding-bottom: 2px">
+                    					<button class="inactivateKeg btn" name="inactivateTempProbe" type="submit" value="<?php echo $probe->get_id()?>" >Delete</button>
+                    				</td>
                                 </tr>
                         <?php
                             }
