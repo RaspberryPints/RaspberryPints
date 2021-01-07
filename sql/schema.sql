@@ -866,7 +866,10 @@ INSERT INTO `containerTypes` ( id, displayName, volume, total, used, createdDate
 ( 10,'tulip', '16.0', '0', '0', NOW(), NOW() ),
 ( 11,'weizenglass', '16.0', '0', '0', NOW(), NOW() ),
 ( 12,'willibecher', '16.0', '0', '0', NOW(), NOW() ),
-( 13,'wineglass', '16.0', '0', '0', NOW(), NOW() );
+( 13,'wineglass', '16.0', '0', '0', NOW(), NOW() ),
+( 14,'flute', '16.0', '0', '0', NOW(), NOW() ),
+( 15,'teku', '16.0', '0', '0', NOW(), NOW() ),
+( 16,'thistle', '16.0', '0', '0', NOW(), NOW() );
 
 CREATE TABLE IF NOT EXISTS `rfidReaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,

@@ -773,6 +773,11 @@ INSERT IGNORE INTO `containerTypes` ( id,displayName, volume, total, used, creat
 ( 12,'willibecher', '16.0', '0', '0', NOW(), NOW() ),
 ( 13,'wineglass', '16.0', '0', '0', NOW(), NOW() );
 
+INSERT IGNORE INTO `containerTypes` ( id,displayName, volume, total, used, createdDate, modifiedDate ) VALUES
+( 14,'flute', '16.0', '0', '0', NOW(), NOW() ),
+( 15,'teku', '16.0', '0', '0', NOW(), NOW() ),
+( 16,'thistle', '16.0', '0', '0', NOW(), NOW() );
+
 
 CALL addColumnIfNotExist(DATABASE(), 'beers', 'containerId', 'int(11) NULL DEFAULT 1' );
 CALL addColumnIfNotExist(DATABASE(), 'beerStyles', 'active', 'tinyint(1) NOT NULL DEFAULT 1' );
@@ -902,5 +907,7 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ( 'showUntappdBreweryFeed', '0 ', 'Show brewery Untappd feed above header', '0', NOW(), NOW() );
+
+CALL addColumnIfNotExist(DATABASE(), 'beerStyles', 'boardNumber', 'int(11) DEFAULT 0' );
 
 UPDATE `config` SET `configValue` = '3.0.9.0' WHERE `configName` = 'version';
