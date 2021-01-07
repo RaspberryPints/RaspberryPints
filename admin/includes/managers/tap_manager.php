@@ -61,12 +61,16 @@ class TapManager extends Manager{
 			$ret = $ret && $this->executeQueryNoResult($sql);
 		}
 		
-		$sql="UPDATE taps SET active = CASE WHEN id <= $newTapNumber THEN 1 ELSE 0 END, modifiedDate = NOW() WHERE id > 0";
+		$sql="UPDATE taps SET active = CASE WHEN id <= $newTapNumber THEN 1 ELSE 0 END, kegId=CASE WHEN id <= $newTapNumber THEN kegId ELSE NULL END, modifiedDate = NOW() WHERE id > 0";
 		$ret = $ret && $this->executeQueryNoResult($sql);
 		
 		if($ret){
 			saveConfigValue(ConfigNames::NumberOfTaps, $newTapNumber);
-			$_SESSION['successMessage'] = "Number of Taps Updated to $newTapNumber";			
+			$_SESSION['successMessage'] = "Number of Taps Updated to $newTapNumber";	
+			
+			//Clear the kegs from the tap they are in
+			$sql="UPDATE kegs SET onTapId = null, kegStatusCode='NEEDS_CLEANING' WHERE onTapId IS NOT NULL AND onTapId NOT IN (SELECT id FROM taps WHERE active = 1)";
+			$ret = $ret && $this->executeQueryNoResult($sql);
 		}
 		
 		return $ret;
