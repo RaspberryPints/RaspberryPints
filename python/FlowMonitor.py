@@ -741,6 +741,9 @@ class OneWireTemperatureThread (threading.Thread):
         except Exception, e:
             log("Unable to Run 1Wire Temperature")
             debug("1Wire Temperature: " +str(e))
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)
+             
             return
             
 #Based on logic from bscuderi
