@@ -535,6 +535,7 @@ class RFIDCheckThread (threading.Thread):
                     
         except Exception, e:
             debug("RFID Reader: " +str(e))
+            debug(traceback.format_exc())
         finally:
             MIFAREReader.Close_MFRC522()
                 
@@ -594,6 +595,7 @@ class MotionDetectionPIRThread (threading.Thread):
                 time.sleep(100)
         except:
             log("Unable to run Motion Detection")
+            debug(traceback.format_exc())
             return
         
         
@@ -649,6 +651,7 @@ class LoadCellCheckThread (threading.Thread):
         except Exception as ex:
             log("Unable to run Load Cell Checker")
             debug(str(ex))
+            debug(traceback.format_exc())
             return
         
 #See https://www.homebrewtalk.com/forum/threads/web-accessible-temperature-logger-for-raspberry-pi.469523/ for source information
@@ -741,9 +744,7 @@ class OneWireTemperatureThread (threading.Thread):
         except Exception, e:
             log("Unable to Run 1Wire Temperature")
             debug("1Wire Temperature: " +str(e))
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)
-             
+            debug(traceback.format_exc())
             return
             
 #Based on logic from bscuderi
@@ -802,6 +803,7 @@ class MQTTListenerThread (threading.Thread):
         except Exception, e:
             log("Unable to Run MQTT Listener")
             debug("MQTT Listener: " +str(e))
+            debug(traceback.format_exc())
     
     def on_subscribe(self, client, userdata, mid, granted_qos):
         debug("Subscribed to Topic: " + self.topics + " with QoS: " + str(granted_qos))
