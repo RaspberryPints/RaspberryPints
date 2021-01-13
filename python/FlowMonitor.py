@@ -689,6 +689,8 @@ class OneWireTemperatureThread (threading.Thread):
         except:
             return None
     
+        if len(lines) <= 0:
+            return None
         # get the status from the end of line 1 
         status = lines[0][-4:-1]
     
