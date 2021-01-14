@@ -250,9 +250,10 @@ class PourManager extends Manager{
 		$pour->set_userId(($user?$user->get_id():(new UserManager)->getUnknownUserId()));
 		$pour->set_beerId($beerId);
 		$this->save($pour);
-		
+
 		if($keg){
-    		$keg->set_currentAmount($keg->get_currentAmount() - $amount);
+		    $kegAmount = convert_volume($amount, $amountUnit, $keg->get_currentAmountUnit(), true);
+		    $keg->set_currentAmount($keg->get_currentAmount() - $kegAmount);
     		$kegManager->save($keg);
 		}
 	
@@ -319,8 +320,9 @@ class PourManager extends Manager{
 		    global $mysqli;
 		    $_SESSION['errorMessage'] = 'Unable To Save Pour:'.$mysqli->error;
 		} else{
-    		if($keg){
-        		$keg->set_currentAmount($keg->get_currentAmount() - $amount);
+		    if($keg){
+		        $kegAmount = convert_volume($amount, $amountUnit, $keg->get_currentAmountUnit(), true);
+		        $keg->set_currentAmount($keg->get_currentAmount() - $kegAmount);
         		$kegManager->save($keg);
     		}
 		}
