@@ -5,9 +5,11 @@
 <div id="welcome"> &nbsp; Welcome, <br />
 	&nbsp;
 	<?php
-		$sql="SELECT `name` FROM `users` WHERE username='$_SESSION[myusername]'";
-		$result=mysql_query($sql);
-		echo mysql_result($result, 0, 'name');
+		$sql="SELECT name FROM users WHERE username='" . $_SESSION[myusername] . "'";
+		$result=mysqli_query($con,$sql);
+		$row = mysqli_fetch_row($result);
+		echo $row[0];
+		mysqli_free_result($result);
 	?>
 </div>
 
