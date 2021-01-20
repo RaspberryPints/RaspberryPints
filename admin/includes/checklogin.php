@@ -11,20 +11,15 @@ require 'conn.php';
 $myusername=$_POST['myusername'];
 $mypassword=md5($_POST['mypassword']);
 
-echo "name: " . $myusername;
-
 // To protect MySQL injection (more detail about MySQL injection)
 $myusername = stripslashes($myusername);
 $mypassword = stripslashes($mypassword);
-
-echo "name: " . $myusername;
 
 $myusername = mysqli_real_escape_string($con,$myusername);
 $mypassword = mysqli_real_escape_string($con,$mypassword);
 
 
 $sql="SELECT * FROM " . $tbl_name ." WHERE username='" . $myusername . "' and password='" . $mypassword . "'";
-echo $sql;
 $result=mysqli_query($con,$sql);
 
 // Mysql_num_row is counting table row

@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$keg = new Keg();
 	$keg->setFromArray($_POST);
 	$kegManager->Save($con, $keg);
-//	redirect('keg_list.php');
+	redirect('keg_list.php');
 }
 
 if( isset($_GET['id'])){
