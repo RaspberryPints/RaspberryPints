@@ -161,7 +161,7 @@ include 'top_menu.php';
 						<td style="vertical-align:middle; align-content:center; font-size:1.2em">
 							<b><?php echo $keg->get_model() ?></b>
 						</td>
-						<td class="rightborder thick" style="vertical-align:middle1.2em; align-content:center; font-size:">
+						<td class="rightborder thick" style="vertical-align:middle; align-content:center; font-size:1.2em">
 							<button class="btn" name="editKeg" type="submit" value="<?php echo $keg->get_id()?>" >Edit</button>
                         </td>
 					</tr>
