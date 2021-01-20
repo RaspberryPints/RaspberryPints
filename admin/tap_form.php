@@ -1,5 +1,8 @@
 <?php
 session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
@@ -29,21 +32,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if( isset($_POST['saveTap']) ){
 		$tap = new Tap();
 		$tap->setFromArray($_POST);
-		$tapManager->Save($tap);
+		$tapManager->Save($con,$tap);
 	}
 	redirect('tap_list.php');
 }
 
 
-$beerList = $beerManager->GetAllActive();
-$kegList = $kegManager->GetAllAvailable();
+$beerList = $beerManager->GetAllActive($con);
+$kegList = $kegManager->GetAllAvailable($con);
 
 $tapNumber = $_GET['tapNumber'];
 if( isset($_GET['id'])){
-	$tap = $tapManager->GetById($_GET['id']);
+	$tap = $tapManager->GetById($con,$_GET['id']);
 	
 	if( !array_key_exists($tap->get_kegId(), $kegList) ){
-		$kegList[$tap->get_kegId()] = $kegManager->GetById($tap->get_kegId());
+		$kegList[$tap->get_kegId()] = $kegManager->GetById($con,$tap->get_kegId());
 	}
 	
 }else{
@@ -55,8 +58,8 @@ if( isset($_GET['id'])){
 // Code to set config values
 $config = array();
 		$sql = "SELECT * FROM config";
-		$qry = mysql_query($sql);
-		while($c = mysql_fetch_array($qry)){
+		$qry = mysqli_query($con,$sql);
+		while($c = mysqli_fetch_array($qry)){
 			$config[$c['configName']] = $c['configValue'];
 		}
 
@@ -99,9 +102,9 @@ include 'header.php';
 		Fields marked with <b><font color="red">*</font></b> are required.<br><br>
 
 	<form id="tap-form" method="POST">
-		<input type="hidden" name="id" value="<?php echo $tap->get_id() ?>" />
-		<input type="hidden" name="tapNumber" value="<?php echo $tap->get_tapNumber() ?>" />
-		<input type="hidden" name="active" value="<?php echo $tap->get_active() ?>" />
+		<input type="hidden" name="id" value="<?php echo $tap->get_id(); ?>" />
+		<input type="hidden" name="tapNumber" value="<?php echo $tap->get_tapNumber(); ?>" />
+		<input type="hidden" name="active" value="<?php echo $tap->get_active(); ?>" />
 		
 		<table width="800" border="0" cellspacing="0" cellpadding="0">
 			<tr>
@@ -117,7 +120,7 @@ include 'header.php';
 					<b>Color</b> (SRM): <b><font color="red">*</font></b>
 				</td>
 				<td>
-					<input type="text" id="srm" class="mediumbox" name="srm" value="<?php echo $tap->get_srm() ?>" />
+					<input type="text" id="srm" class="mediumbox" name="srm" value="<?php echo $tap->get_srm(); ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -125,7 +128,7 @@ include 'header.php';
 					<b>Bitterness</b> (IBU): <b><font color="red">*</font></b>
 				</td>
 				<td>
-					<input type="text" id="ibu" class="mediumbox" name="ibu" value="<?php echo $tap->get_ibu() ?>" />
+					<input type="text" id="ibu" class="mediumbox" name="ibu" value="<?php echo $tap->get_ibu(); ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -133,7 +136,7 @@ include 'header.php';
 					<b>OG</b> (SG): <b><font color="red">*</font></b>
 				</td>
 				<td>
-					<input type="text" id="og" class="mediumbox" name="og" value="<?php echo $tap->get_og() ?>" />
+					<input type="text" id="og" class="mediumbox" name="og" value="<?php echo $tap->get_og(); ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -141,7 +144,7 @@ include 'header.php';
 					<b>FG</b> (SG): <b><font color="red">*</font></b>
 				</td>
 				<td>
-					<input type="text" id="fg" class="mediumbox" name="fg" value="<?php echo $tap->get_fg() ?>" />
+					<input type="text" id="fg" class="mediumbox" name="fg" value="<?php echo $tap->get_fg(); ?>" />
 				</td>
 			</tr>
 			<tr>

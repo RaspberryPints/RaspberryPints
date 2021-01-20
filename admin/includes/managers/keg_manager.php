@@ -3,12 +3,12 @@ require_once __DIR__.'/../models/keg.php';
 
 class KegManager{
 
-	function GetAll(){
+	function GetAll(mysqli $con){
 		$sql="SELECT * FROM kegs ORDER BY label";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($con,$sql);
 		
 		$kegs = array();
-		while($i = mysql_fetch_array($qry)){
+		while($i = mysqli_fetch_array($qry)){
 			$keg = new Keg();
 			$keg->setFromArray($i);
 			$kegs[$keg->get_id()] = $keg;
@@ -17,12 +17,12 @@ class KegManager{
 		return $kegs;
 	}
 	
-	function GetAllActive(){
+	function GetAllActive(mysqli $con){
 		$sql="SELECT * FROM kegs WHERE active = 1 ORDER BY label";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($con,$sql);
 		
 		$kegs = array();
-		while($i = mysql_fetch_array($qry)){
+		while($i = mysqli_fetch_array($qry)){
 			$keg = new Keg();
 			$keg->setFromArray($i);
 			$kegs[$keg->get_id()] = $keg;
@@ -31,17 +31,17 @@ class KegManager{
 		return $kegs;
 	}
 	
-	function GetAllAvailable(){
+	function GetAllAvailable(mysqli $con){
 		$sql="SELECT * FROM kegs WHERE active = 1
 			AND kegStatusCode != 'SERVING'
 			AND kegStatusCode != 'NEEDS_CLEANING'
 			AND kegStatusCode != 'NEEDS_PARTS'
 			AND kegStatusCode != 'NEEDS_REPAIRS'
 		ORDER BY label";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($con,$sql);
 		
 		$kegs = array();
-		while($i = mysql_fetch_array($qry)){
+		while($i = mysqli_fetch_array($qry)){
 			$keg = new Keg();
 			$keg->setFromArray($i);
 			$kegs[$keg->get_id()] = $keg;
@@ -50,11 +50,11 @@ class KegManager{
 		return $kegs;
 	}
 			
-	function GetById($id){
-		$sql="SELECT * FROM kegs WHERE id = $id";
-		$qry = mysql_query($sql);
+	function GetById(mysqli $con, $id){
+		$sql="SELECT * FROM kegs WHERE id = " .$id;
+		$qry = mysqli_query($con,$sql);
 		
-		if( $i = mysql_fetch_array($qry) ){		
+		if( $i = mysqli_fetch_array($qry) ){		
 			$keg = new Keg();
 			$keg->setFromArray($i);
 			return $keg;
@@ -64,7 +64,7 @@ class KegManager{
 	}
 	
 	
-	function Save($keg){
+	function Save(mysqli $con, $keg){
 		$sql = "";
 		if($keg->get_id()){
 			$sql = 	"UPDATE kegs " .
@@ -100,22 +100,22 @@ class KegManager{
 		
 		//echo $sql; exit();
 		
-		mysql_query($sql);
+		mysqli_query($con,$sql);
 	}
 	
-	function Inactivate($id){
-		$sql = "SELECT * FROM taps WHERE kegId = $id AND active = 1";
-		$qry = mysql_query($sql);
+	function Inactivate(mysqli $con, $id){
+		$sql = "SELECT * FROM taps WHERE kegId = " . $id . " AND active = 1";
+		$qry = mysqli_query($con,$sql);
 		
-		if( mysql_fetch_array($qry) ){		
+		if( mysqli_fetch_array($qry) ){		
 			$_SESSION['errorMessage'] = "Keg is associated with an active tap and could not be deleted.";
 			return;
 		}
 	
-		$sql="UPDATE kegs SET active = 0 WHERE id = $id";
+		$sql="UPDATE kegs SET active = 0 WHERE id = " . $id;
 		//echo $sql; exit();
 		
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($con,$sql);
 		
 		$_SESSION['successMessage'] = "Keg successfully deleted.";
 	}

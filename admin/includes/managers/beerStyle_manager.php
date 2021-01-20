@@ -3,12 +3,12 @@ require_once __DIR__.'/../models/beerStyle.php';
 
 class BeerStyleManager{
 
-	function GetAll(){
+	function GetAll(mysqli $con){
 		$sql="SELECT * FROM beerStyles ORDER BY name";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($con,$sql);
 		
 		$beerStyles = array();
-		while($i = mysql_fetch_array($qry)){
+		while($i = mysqli_fetch_array($qry)){
 			$beerStyle = new beerStyle();
 			$beerStyle->setFromArray($i);
 			$beerStyles[$beerStyle->get_id()] = $beerStyle;
@@ -19,11 +19,11 @@ class BeerStyleManager{
 
 
 
-	function GetById($id){
-		$sql="SELECT * FROM beerStyles WHERE id = $id";
-		$qry = mysql_query($sql);
+	function GetById(mysqli $con, $id){
+		$sql="SELECT * FROM beerStyles WHERE id = " . $id;
+		$qry = mysqli_query($con,$sql);
 		
-		if( $i = mysql_fetch_array($qry) ){
+		if( $i = mysqli_fetch_array($qry) ){
 			$beerStyle = new beerStyle();
 			$beerStyle->setFromArray($i);
 			return $beerStyle;

@@ -1,5 +1,8 @@
 <?php
 session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
@@ -25,10 +28,10 @@ $kegTypeManager = new KegTypeManager();
 
 
 if (isset($_POST['inactivateKeg'])) {
-	$kegManager->Inactivate($_POST['id']);		
+	$kegManager->Inactivate($con, $_POST['id']);		
 }
 
-$kegs = $kegManager->GetAllActive();
+$kegs = $kegManager->GetAllActive($con);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -91,13 +94,13 @@ include 'header.php';
 							foreach ($kegs as $keg){
 								
 								if( $keg->get_kegStatusCode() != null ){
-									$kegStatus = $kegStatusManager->GetByCode($keg->get_kegStatusCode());
+									$kegStatus = $kegStatusManager->GetByCode($con, $keg->get_kegStatusCode());
 								}else{
 									$kegStatus = new KegStatus();
 								}
 								
 								if( $keg->get_kegTypeId() != null ){
-									$kegType = $kegTypeManager->GetById($keg->get_kegTypeId());
+									$kegType = $kegTypeManager->GetById($con, $keg->get_kegTypeId());
 								}else{
 									$kegType = new KegType();
 								}

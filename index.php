@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 	if (!file_exists(__DIR__.'/includes/config.php')) {
 		header('Location: install/index.php', true, 303);
 		die();
@@ -19,19 +23,19 @@
 	
 	if($db){
 		// Connect to the database
-		db();
+		$link = db();
 		
 		
 		$config = array();
 		$sql = "SELECT * FROM config";
-		$qry = mysql_query($sql);
-		while($c = mysql_fetch_array($qry)){
+		$qry = mysqli_query($link,$sql);
+		while($c = mysqli_fetch_array($qry)){
 			$config[$c['configName']] = $c['configValue'];
 		}
 		
 		$sql =  "SELECT * FROM vwGetActiveTaps";
-		$qry = mysql_query($sql);
-		while($b = mysql_fetch_array($qry))
+		$qry = mysqli_query($link,$sql);
+		while($b = mysqli_fetch_array($qry))
 		{
 			$beeritem = array(
 				"id" => $b['id'],
@@ -52,7 +56,7 @@
 		}
 		
 		$tapManager = new TapManager();
-		$numberOfTaps = $tapManager->GetTapNumber();
+		$numberOfTaps = $tapManager->GetTapNumber($link);
 	}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -116,13 +120,13 @@
 						
 						<?php if($config[ConfigNames::ShowSrmCol]){ ?>
 							<th class="srm">
-								GRAVITY<hr>COLOR
+								COLOR
 							</th>
 						<?php } ?>
 						
 						<?php if($config[ConfigNames::ShowIbuCol]){ ?>
 							<th class="ibu">
-								BALANCE<hr>BITTERNESS
+								BITTERNESS
 							</th>
 						<?php } ?>
 						
@@ -157,7 +161,7 @@
 							
 								<?php if($config[ConfigNames::ShowSrmCol]){ ?>
 									<td class="srm">
-										<h3><?php echo $beer['og']; ?> OG</h3>
+										<!-- <h3><?php echo $beer['og']; ?> OG</h3 -->
 										
 										<div class="srm-container">
 											<div class="srm-indicator" style="background-color: rgb(<?php echo $beer['srmRgb'] != "" ? $beer['srmRgb'] : "0,0,0" ?>)"></div>
@@ -170,17 +174,17 @@
 							
 								<?php if($config[ConfigNames::ShowIbuCol]){ ?>
 									<td class="ibu">
-										<h3>
+										<!-- <h3>
 											<?php 
-												if( $beer['og'] > 1 ){
-													echo number_format((($beer['ibu'])/(($beer['og']-1)*1000)), 2, '.', '');
-												}else{
-													echo '0.00';
-												}
+											//	if( $beer['og'] > 1 ){
+										//			echo number_format((($beer['ibu'])/(($beer['og']-1)*1000)), 2, '.', '');
+										//		}else{
+										//			echo '0.00';
+										//		}
 											?> 
 											BU:GU
 										</h3>
-										
+										--->
 										<div class="ibu-container">
 											<div class="ibu-indicator"><div class="ibu-full" style="height:<?php echo $beer['ibu'] > 100 ? 100 : $beer['ibu']; ?>%"></div></div>
 												
@@ -205,13 +209,22 @@
 								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3><?php
-											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
-											$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
-											if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
-												$calfromalc = 0;
-												$calfromcarbs = 0;
-												}
-											echo number_format($calfromalc + $calfromcarbs), " kCal";
+										//	$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
+										//	$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
+										//	if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
+										//		$calfromalc = 0;
+										//		$calfromcarbs = 0;
+										//		}
+										//	echo number_format($calfromalc + $calfromcarbs), " kCal";
+											$ogp = (-463.37) + (668.72 * $beer['og']) - (205.35 * $beer['og'] * $beer['og']);
+											$fgp = (-463.37) + (668.72 * $beer['fg']) - (205.35 * $beer['fg'] * $beer['fg']);
+											$re = (0.1808 * $ogp) + (0.8192 * $fgp);
+											$abv = ($beer['og'] - $beer['fg']) / 0.75;
+											$abw = (0.79 * $abv) / $beer['fg'];
+											$cal = (6.9 * ($abw  * 100) + 4 * ($re - 0.1)) * $beer['fg'] * 3.55;
+											$carb = (($re - 0.1) * $beer['fg'] * 3.55);
+											echo  number_format($cal), " Cal";
+											echo "<br>" . number_format($carb), " Carbs";
 											?>
 										</h3>
 										<div class="abv-container">

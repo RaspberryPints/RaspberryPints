@@ -7,8 +7,8 @@ $password=md5($_POST['password']);
 $email=($_POST['email']);
 	
 // update data in mysql database
-$sql="UPDATE users SET password='$password' WHERE email='$email'";
-$result=mysql_query($sql);
+$sql="UPDATE users SET password='" . $password . "' WHERE email='" . $email . "'";
+$result=mysqli_query($con,$sql);
 
 // if successfully updated.
 if($result){

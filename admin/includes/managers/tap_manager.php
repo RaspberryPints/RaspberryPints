@@ -4,14 +4,14 @@ require_once __DIR__.'/../models/tap.php';
 
 class TapManager{
 	
-	function Save($tap){
+	function Save(mysqli $con, $tap){
 		$sql = "";
 		
 		$sql="UPDATE kegs k SET k.kegStatusCode = 'SERVING', modifiedDate = NOW() WHERE id = " . $tap->get_kegId();
-		mysql_query($sql);
+		mysqli_query($con, $sql);
 	
 		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE active = 1 AND tapNumber = " . $tap->get_tapNumber();
-		mysql_query($sql);		
+		mysqli_query($con, $sql);		
 		
 		if($tap->get_id()){
 			$sql = 	"UPDATE taps " .
@@ -36,16 +36,16 @@ class TapManager{
 		
 		//echo $sql; exit();
 		
-		mysql_query($sql);
+		mysqli_query($con, $sql);
 	}
 	
-	function GetById($id){
+	function GetById(mysqli $con, $id){
 		$id = (int) preg_replace('/\D/', '', $id);
 	
-		$sql="SELECT * FROM taps WHERE id = $id";
-		$qry = mysql_query($sql);
+		$sql="SELECT * FROM taps WHERE id = " . $id;
+		$qry = mysqli_query($con, $sql);
 		
-		if( $i = mysql_fetch_array($qry) ){
+		if( $i = mysqli_fetch_array($qry) ){
 			$tap = new Tap();
 			$tap->setFromArray($i);
 			return $tap;
@@ -54,34 +54,35 @@ class TapManager{
 		return null;
 	}
 
-	function updateTapNumber($newTapNumber){
+	function updateTapNumber(mysqli $con, $newTapNumber){
 		$sql="UPDATE config SET configValue = $newTapNumber, modifiedDate = NOW() WHERE configName = '".ConfigNames::NumberOfTaps."'";
-		mysql_query($sql);
+		mysqli_query($con, $sql);
 
-		$sql="UPDATE kegs SET kegStatusCode = 'SANITIZED', modifiedDate = NOW() WHERE id IN (SELECT kegId FROM Taps WHERE tapNumber > $newTapNumber AND active = 1) ";
-		mysql_query($sql);
+		$sql="UPDATE kegs SET kegStatusCode = 'SANITIZED', modifiedDate = NOW() WHERE id IN (SELECT kegId FROM Taps WHERE tapNumber > " .
+			$newTapNumber . " AND active = 1) ";
+		mysqli_query($con, $sql);
 		
-		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE active = 1 AND tapNumber > $newTapNumber";
-		mysql_query($sql);
+		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE active = 1 AND tapNumber > " . $newTapNumber;
+		mysqli_query($con, $sql);
 	}
 
-	function getTapNumber(){
-		$sql="SELECT configValue FROM config WHERE configName = '".ConfigNames::NumberOfTaps."'";
+	function getTapNumber(mysqli $con){
+		$sql="SELECT configValue FROM config WHERE configName = '" . ConfigNames::NumberOfTaps . "'";
 
-		$qry = mysql_query($sql);
-		$config = mysql_fetch_array($qry);
+		$qry = mysqli_query($con, $sql);
+		$config = mysqli_fetch_array($qry);
 		
 		if( $config != false ){
 			return $config['configValue'];
 		}
 	}
 
-	function getActiveTaps(){
+	function getActiveTaps(mysqli $con){
 		$sql="SELECT * FROM taps WHERE active = 1";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($con, $sql);
 		
 		$taps = array();
-		while($i = mysql_fetch_array($qry)){
+		while($i = mysqli_fetch_array($qry)){
 			$tap = new Tap();
 			$tap->setFromArray($i);
 			$taps[$tap->get_tapNumber()] = $tap;
@@ -90,11 +91,11 @@ class TapManager{
 		return $taps;
 	}
 	
-	function closeTap($id){
-		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE id = $id";
-		mysql_query($sql);
+	function closeTap(mysqli $con, $id){
+		$sql="UPDATE taps SET active = 0, modifiedDate = NOW() WHERE id = " . $id;
+		mysqli_query($con, $sql);
 		
-		$sql="UPDATE kegs k, taps t SET k.kegStatusCode = 'NEEDS_CLEANING' WHERE t.kegId = k.id AND t.Id = $id";
-		mysql_query($sql);
+		$sql="UPDATE kegs k, taps t SET k.kegStatusCode = 'NEEDS_CLEANING' WHERE t.kegId = k.id AND t.Id = " . $id;
+		mysqli_query($con, $sql);
 	}
 }
