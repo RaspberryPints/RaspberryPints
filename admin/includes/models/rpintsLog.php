@@ -74,7 +74,7 @@ class RPintsLog
 	   	    '"id": "' . $this->get_id() . '",' .
 	   	    '"process": "' . $this->get_process() . '",' .
 	   	    '"category": "' . encode($this->get_category()) . '",' .
-	   	    '"text": "' . $this->get_text() . '",' .
+	   	    '"text": ' .  json_encode($this->get_text()) . ',' .
 	   	    '"occurances": "' . $this->get_occurances() . '",' .
 	   	    '"createdDate": "' . $this->get_createdDate() . '",' .
 	   	    '"modifiedDate": "' . $this->get_modifiedDate() . '"' .

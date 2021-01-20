@@ -25,7 +25,7 @@ class RPintsLogManager extends Manager{
 	    $sql="SELECT DISTINCT category FROM ".$this->getViewName()." ";
 	    return $this->executeNonObjectQueryWithSingleResults($sql);
 	}
-	function getLastLogMessagesFiltered($page, $limit, &$totalRows, $startTime, $endTime, $process, $category, $lastId = NULL){
+	function getLastLogMessagesFiltered($page, $limit, &$totalRows, $startTime, $endTime, $process, $category, $lastId = NULL, $lastDate = NULL){
 	    $sql="SELECT * FROM ".$this->getViewName()." ";
 	    $where = "";
 	    if($startTime && $startTime != "" && $startTime != " ") $where = $where.($where != ""?"AND ":"")."modifiedDate >= '$startTime' ";
@@ -33,6 +33,7 @@ class RPintsLogManager extends Manager{
 	    if($process)  $where = $where.($where != ""?"AND ":"")."process = '$process' ";
 	    if($category)  $where = $where.($where != ""?"AND ":"")."category = '$category' ";
 	    if($lastId)  $where = $where.($where != ""?"AND ":"")."id > '$lastId' ";
+	    if($lastDate)  $where = $where.($where != ""?($lastId?"OR ":"AND "):"")."modifiedDate > '$lastDate' ";
 	    if($where != "") $sql = $sql."WHERE $where ";
 	    $sql = $sql."ORDER BY modifiedDate DESC, id DESC ";
 	    $totalRows = 0;
