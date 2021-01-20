@@ -1,5 +1,4 @@
 <?php header("Content-type: image/svg+xml"); ?>
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <?php
 $foamRgb="";
