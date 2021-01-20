@@ -39,6 +39,15 @@ __Known Bugs:__
 
 __Version History:__
 
+	v2.0.1 (Patch 1):
+		- Fixed mysql to use mysqli
+		- Misc fixes and updatesd
+		- Changes to index.php to unclutter the display
+		- Updates to calorie calcluation and added carb calculation
+
+	v2.0.0:
+		- Revision notes unavailable
+
 	v1.0.3 (hotfix):
 		- Fixed broken links to (external) official website.
 
