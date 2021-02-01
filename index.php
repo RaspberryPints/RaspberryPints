@@ -261,12 +261,12 @@ error_reporting(E_ALL);
                                                                                         $cal = (6.9 * ($abw  * 100) + 4 * ($re - 0.1)) * $beer['fg'] * 3.55;
                                                                                         $carb = (($re - 0.1) * $beer['fg'] * 3.55);
 
-											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
-											$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
-											if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
-												$calfromalc = 0;
-												$calfromcarbs = 0;
-												}
+											//$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
+											//$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
+											//if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
+											//	$calfromalc = 0;
+											//	$calfromcarbs = 0;
+											//	}
 											echo number_format($cal, " Cal");
 											echo "<br>" . number_format($carb), " Carbs");
 											?>
