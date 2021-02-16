@@ -5,7 +5,7 @@ class HtmlHelper{
 
 	function ToSelectList($selectName, $items, $nameProperty, $valueProperty, $selectedValue, $defaultName = null, $cssClasses = ""){
 		
-		$str = "<select id='$selectName' name='$selectName' class='$cssClasses'>";
+		$str = "<select id='" . $selectName ."' name='" . $selectName ."' class='" . $cssClasses . "'>";
 		
 			if( $defaultName ){
 				$str .= "<option value=''>" . $defaultName . "</option>";
@@ -15,7 +15,7 @@ class HtmlHelper{
 				$value = $item->{"get_$valueProperty"}();
 				$name = $item->{"get_$nameProperty"}();
 				
-				$str .= "<option value='$value' ";
+				$str .= "<option value='" . $value . "' ";
 				
 				if( $selectedValue == $value ){
 					$str .= "selected ";
@@ -62,7 +62,7 @@ class HtmlHelper{
 	}
 	
 	function CreateMessage($class, $message){
-		return "<div class='$class status'><span>$message</span></div>";
+		return "<div class='$class status'><span>" . $message . "</span></div>";
 	}
 	
 }

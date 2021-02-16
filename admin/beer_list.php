@@ -1,5 +1,8 @@
 <?php
 session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
@@ -21,10 +24,10 @@ $beerManager = new BeerManager();
 $beerStyleManager = new BeerStyleManager();
 
 if (isset($_POST['inactivateBeer'])) {
-	$beerManager->Inactivate($_POST['id']);		
+	$beerManager->Inactivate($con, $_POST['id']);		
 }
 
-$beers = $beerManager->GetAllActive();
+$beers = $beerManager->GetAllActive($con);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -87,7 +90,7 @@ include 'header.php';
 									</th>
 									<th width="35%" style="vertical-align: middle;">
 										<b><?php 
-											$beerStyle = $beerStyleManager->GetById($beer->get_beerStyleId());
+											$beerStyle = $beerStyleManager->GetById($con, $beer->get_beerStyleId());
 											if (strpos($beerStyle->get_name(),'Non-beer') !== false)
 												echo str_replace("_Non-beer: ","",$beerStyle->get_name());
 											else

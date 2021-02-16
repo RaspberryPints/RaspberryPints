@@ -1,5 +1,9 @@
 <?php
 session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
@@ -23,7 +27,7 @@ $beerManager = new BeerManager();
 $kegManager = new KegManager();
 
 if( isset($_POST['updateNumberOfTaps'])) {
-	$tapManager->updateTapNumber($_POST['numberOfTaps']);	
+	$tapManager->updateTapNumber($con, $_POST['numberOfTaps']);	
 }else if( isset($_POST['newTap'])){
 	$tapNumber=$_POST['tapNumber'];
 	redirect("tap_form.php?tapNumber=$tapNumber");
@@ -34,11 +38,11 @@ if( isset($_POST['updateNumberOfTaps'])) {
 	redirect("tap_form.php?tapNumber=$tapNumber&id=$id");
 
 }else if( isset($_POST['closeTap'])){
-	$tapManager->closeTap($_POST['id']);	
+	$tapManager->closeTap($con,$_POST['id']);	
 }
 
-$numberOfTaps = $tapManager->getTapNumber();
-$activeTaps = $tapManager->getActiveTaps();
+$numberOfTaps = $tapManager->getTapNumber($con);
+$activeTaps = $tapManager->getActiveTaps($con);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -84,8 +88,8 @@ include 'header.php';
 	
 	<?php 
 		$tapsErrorMsg = "";
-		$beers = $beerManager->GetAll();
-		$kegs = $kegManager->GetAll();
+		$beers = $beerManager->GetAll($con);
+		$kegs = $kegManager->GetAll($con);
 		
 		if( count($beers) == 0 ){
 			$tapsErrorMsg .= "At least 1 beer needs to be created, before you can assign a tap. <a href='beer_form.php'>Click here to create a beer</a><br/>";
@@ -125,8 +129,8 @@ include 'header.php';
 							<form method="POST">
 								<?php if( array_key_exists($c, $activeTaps) ){
 										$tap = $activeTaps[$c];							
-										$beer = $beerManager->GetById($tap->get_beerId());
-										$keg = $kegManager->GetById($tap->get_kegId());
+										$beer = $beerManager->GetById($con,$tap->get_beerId());
+										$keg = $kegManager->GetById($con,$tap->get_kegId());
 								?>
 										<input type="hidden" name="id" value="<?php echo $tap->get_id()?>" />
 										<input type="hidden" name="tapNumber" value="<?php echo $c?>" />

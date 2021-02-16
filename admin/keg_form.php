@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
@@ -25,18 +30,18 @@ $kegTypeManager = new KegTypeManager();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$keg = new Keg();
 	$keg->setFromArray($_POST);
-	$kegManager->Save($keg);
+	$kegManager->Save($con, $keg);
 	redirect('keg_list.php');
 }
 
 if( isset($_GET['id'])){
-	$keg = $kegManager->GetById($_GET['id']);
+	$keg = $kegManager->GetById($con, $_GET['id']);
 }else{
 	$keg = new Keg();
 }
 
-$kegStatusList = $kegStatusManager->GetAll();
-$kegTypeList = $kegTypeManager->GetAll();
+$kegStatusList = $kegStatusManager->GetAll($con);
+$kegTypeList = $kegTypeManager->GetAll($con);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 	if (!file_exists(__DIR__.'/includes/config.php')) {
 		header('Location: install/index.php', true, 303);
 		die();
@@ -19,19 +23,19 @@
 	
 	if($db){
 		// Connect to the database
-		db();
+		$link = db();
 		
 		
 		$config = array();
 		$sql = "SELECT * FROM config";
-		$qry = mysql_query($sql);
-		while($c = mysql_fetch_array($qry)){
+		$qry = mysqli_query($link,$sql);
+		while($c = mysqli_fetch_array($qry)){
 			$config[$c['configName']] = $c['configValue'];
 		}
 		
 		$sql =  "SELECT * FROM vwGetActiveTaps";
-		$qry = mysql_query($sql);
-		while($b = mysql_fetch_array($qry))
+		$qry = mysqli_query($link,$sql);
+		while($b = mysqli_fetch_array($qry))
 		{
 			$beeritem = array(
 				"id" => $b['id'],
@@ -52,7 +56,7 @@
 		}
 		
 		$tapManager = new TapManager();
-		$numberOfTaps = $tapManager->GetTapNumber();
+		$numberOfTaps = $tapManager->GetTapNumber($link);
 	}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -116,13 +120,13 @@
 						
 						<?php if($config[ConfigNames::ShowSrmCol]){ ?>
 							<th class="srm">
-								GRAVITY<hr>COLOR
+								COLOR
 							</th>
 						<?php } ?>
 						
 						<?php if($config[ConfigNames::ShowIbuCol]){ ?>
 							<th class="ibu">
-								BALANCE<hr>BITTERNESS
+								BITTERNESS
 							</th>
 						<?php } ?>
 						
@@ -157,7 +161,7 @@
 							
 								<?php if($config[ConfigNames::ShowSrmCol]){ ?>
 									<td class="srm">
-										<h3><?php echo $beer['og']; ?> OG</h3>
+										<!-- <h3><?php echo $beer['og']; ?> OG</h3 -->
 										
 										<div class="srm-container">
 											<div class="srm-indicator" style="background-color: rgb(<?php echo $beer['srmRgb'] != "" ? $beer['srmRgb'] : "0,0,0" ?>)"></div>
@@ -180,10 +184,9 @@
 											?> 
 											BU:GU
 										</h3>
-										
 										<div class="ibu-container">
 											<div class="ibu-indicator"><div class="ibu-full" style="height:<?php echo $beer['ibu'] > 100 ? 100 : $beer['ibu']; ?>%"></div></div>
-												
+
 											<?php 
 												/*
 												if( $remaining > 0 ){
@@ -195,23 +198,30 @@
 										<h2><?php echo $beer['ibu']; ?> IBU</h2>
 									</td>
 								<?php } ?>
-							
 								<td class="name">
 									<h1><?php echo $beer['beername']; ?></h1>
 									<h2 class="subhead"><?php echo str_replace("_","",$beer['style']); ?></h2>
 									<p><?php echo $beer['notes']; ?></p>
 								</td>
-							
 								<?php if(($config[ConfigNames::ShowAbvCol]) && ($config[ConfigNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3><?php
-											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
-											$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
-											if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
-												$calfromalc = 0;
-												$calfromcarbs = 0;
-												}
-											echo number_format($calfromalc + $calfromcarbs), " kCal";
+										//	$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
+										//	$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
+										//	if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
+										//		$calfromalc = 0;
+										//		$calfromcarbs = 0;
+										//		}
+										//	echo number_format($calfromalc + $calfromcarbs), " kCal";
+											$ogp = (-463.37) + (668.72 * $beer['og']) - (205.35 * $beer['og'] * $beer['og']);
+											$fgp = (-463.37) + (668.72 * $beer['fg']) - (205.35 * $beer['fg'] * $beer['fg']);
+											$re = (0.1808 * $ogp) + (0.8192 * $fgp);
+											$abv = ($beer['og'] - $beer['fg']) / 0.75;
+											$abw = (0.79 * $abv) / $beer['fg'];
+											$cal = (6.9 * ($abw  * 100) + 4 * ($re - 0.1)) * $beer['fg'] * 3.55;
+											$carb = (($re - 0.1) * $beer['fg'] * 3.55);
+											echo  number_format($cal), " Cal";
+											echo "<br>" . number_format($carb), " Carbs";
 											?>
 										</h3>
 										<div class="abv-container">
@@ -226,11 +236,11 @@
 																$level = 100;
 														}
 														?><div class="abv-indicator"><div class="abv-full" style="height:<?php echo $level; ?>%"></div></div><?php
-														
+
 														$remaining = $remaining - $level;
 														$numCups++;
 												}while($remaining > 0 && $numCups < 2);
-												
+
 												if( $remaining > 0 ){
 													?><div class="abv-offthechart"></div><?php
 												}
@@ -239,17 +249,26 @@
 										<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?> ABV</h2>
 									</td>
 								<?php } ?>
-								
+
 								<?php if(($config[ConfigNames::ShowAbvCol]) && ! ($config[ConfigNames::ShowAbvImg])){ ?>
 									<td class="abv">
 										<h3><?php
-											$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
-											$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
-											if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
-												$calfromalc = 0;
-												$calfromcarbs = 0;
-												}
-											echo number_format($calfromalc + $calfromcarbs), " kCal";
+											$ogp = (-463.37) + (668.72 * $beer['og']) - (205.35 * $beer['og'] * $
+                                                                                        $fgp = (-463.37) + (668.72 * $beer['fg']) - (205.35 * $beer['fg'] * $
+                                                                                        $re = (0.1808 * $ogp) + (0.8192 * $fgp);
+                                                                                        $abv = ($beer['og'] - $beer['fg']) / 0.75;
+                                                                                        $abw = (0.79 * $abv) / $beer['fg'];
+                                                                                        $cal = (6.9 * ($abw  * 100) + 4 * ($re - 0.1)) * $beer['fg'] * 3.55;
+                                                                                        $carb = (($re - 0.1) * $beer['fg'] * 3.55);
+
+											//$calfromalc = (1881.22 * ($beer['fg'] * ($beer['og'] - $beer['fg'])))/(1.775 - $beer['og']);
+											//$calfromcarbs = 3550.0 * $beer['fg'] * ((0.1808 * $beer['og']) + (0.8192 * $beer['fg']) - 1.0004);
+											//if ( ($beer['og'] == 1) && ($beer['fg'] == 1 ) ) {
+											//	$calfromalc = 0;
+											//	$calfromcarbs = 0;
+											//	}
+											echo number_format($cal, " Cal");
+											echo "<br>" . number_format($carb), " Carbs");
 											?>
 										</h3>
 										<div class="abv">
@@ -260,22 +279,20 @@
 										<h2><?php echo number_format($abv, 1, '.', ',')."%"; ?> ABV</h2>
 									</td>
 								<?php } ?>
-								
+
 								<?php if($config[ConfigNames::ShowKegCol]){ ?>
 									<td class="keg">
-										
-										
 										<h3><?php echo number_format((($beer['startAmount'] - $beer['remainAmount']) * 128)); ?> fl oz poured</h3>
 										<?php 
 											// Code for new kegs that are not full
                                                                                         $tid = $beer['id'];
                                                                                         $sql = "Select kegId from taps where id=".$tid." limit 1";
-                                                                                        $kegID = mysql_query($sql);
-                                                                                        $kegID = mysql_fetch_array($kegID);
+                                                                                        $kegID = mysqli_query($con, $sql);
+                                                                                        $kegID = mysqli_fetch_array($kegID);
                                                                                         //echo $kegID[0];
                                                                                         $sql = "SELECT `kegTypes`.`maxAmount` as kVolume FROM  `kegs`,`kegTypes` where  kegs.kegTypeId = kegTypes.id and kegs.id =".$kegID[0]."";
-                                                                                        $kvol = mysql_query($sql);
-                                                                                        $kvol = mysql_fetch_array($kvol);
+                                                                                        $kvol = mysqli_query($sql);
+                                                                                        $kvol = mysqli_fetch_array($kvol);
                                                                                         $kvol = $kvol[0];
                                                                                         $kegImgClass = "";
                                                                                         if ($beer['startAmount']>=$kvol) {

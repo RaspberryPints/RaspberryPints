@@ -1,5 +1,8 @@
 <?php
 session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 if(!isset( $_SESSION['myusername'] )){
 	header("location:index.php");
 }
@@ -21,17 +24,17 @@ $beerStyleManager = new BeerStyleManager();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$beer = new Beer();
 	$beer->setFromArray($_POST);
-	$beerManager->Save($beer);
+	$beerManager->Save($con, $beer);
 	redirect('beer_list.php');
 }
 
 if( isset($_GET['id'])){
-	$beer = $beerManager->GetById($_GET['id']);
+	$beer = $beerManager->GetById($con, $_GET['id']);
 }else{
 	$beer = new Beer();
 }
 
-$beerStyleList = $beerStyleManager->GetAll();
+$beerStyleList = $beerStyleManager->GetAll($con);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

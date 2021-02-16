@@ -35,9 +35,28 @@ __Known Bugs:__
 	- Firefox has difficulty rendering our SRM image masks correctly.
 		Due to a deficiency in the way Firefox handles z-values with images and is a known
 		issue within the MDN.
+        - There are still some problems with the installer related to database
+	  access and configuration that I haven't looked at yet.
 
+	- Tap management is really wonky.  The form does not autopopulate the
+	  values for the beer slected from the drop down.  You have to manually
+	  re-enter them for it to work.  The form will submit and put your keg
+	  into 'serving' state but not show on your tap list.
+
+    	- I haven't tested anything related to the flow meters, so I'm not sure if
+	  any of that still works. Would appreciate a tester here in the meantime
+	  as I do not have flow meters installed in my setup (yet).
 
 __Version History:__
+
+	v2.0.1 (Patch 1):
+		- Fixed mysql to use mysqli
+		- Misc fixes and updatesd
+		- Changes to index.php to unclutter the display
+		- Updates to calorie calcluation and added carb calculation
+
+	v2.0.0:
+		- Revision notes unavailable
 
 	v1.0.3 (hotfix):
 		- Fixed broken links to (external) official website.
