@@ -13,7 +13,6 @@ except:
     GPIO_IMPORT_SUCCESSFUL = False
 from Config import config
 
-
 def debug(msg, process="HX711"):
     if(config['loadcell.debug']):
         log(msg, process, True)
