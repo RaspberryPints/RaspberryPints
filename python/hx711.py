@@ -344,7 +344,7 @@ class HX711(object):
                     # Despite it, this reading was ok and data can be used.
                     result = self.get_raw_data_mean(6)  # set for the next reading.
                     if result == False:
-                    return False
+                        return False
         return True
 
     def _read(self):
