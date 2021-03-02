@@ -373,15 +373,15 @@ class HX711(object):
             if GPIO_IMPORT_SUCCESSFUL:
                 GPIO.output(self._pd_sck, True)
                 GPIO.output(self._pd_sck, False)
-            end_counter = time.clock()
-            if end_counter - start_counter >= 0.00006:  # check if the hx 711 did not turn off...
-                # if pd_sck pin is HIGH for 60 us and more than the HX 711 enters power down mode.
-                debug('Not enough fast while reading data')
-                debug('Time elapsed: {}'.format(end_counter - start_counter))
-                return False
-            # Shift the bits as they come to data_in variable.
-            # Left shift by one bit then bitwise OR with the new bit.
-            data_in = (data_in << 1) | GPIO.input(self._dout)
+                end_counter = time.clock()
+                if end_counter - start_counter >= 0.00006:  # check if the hx 711 did not turn off...
+                    # if pd_sck pin is HIGH for 60 us and more than the HX 711 enters power down mode.
+                    debug('Not enough fast while reading data')
+                    debug('Time elapsed: {}'.format(end_counter - start_counter))
+                    return False
+                # Shift the bits as they come to data_in variable.
+                # Left shift by one bit then bitwise OR with the new bit.
+                data_in = (data_in << 1) | GPIO.input(self._dout)
 
         if self._wanted_channel == 'A' and self._gain_channel_A == 128:
             if not self._set_channel_gain(1):  # send only one bit which is 1
