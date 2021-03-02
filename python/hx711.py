@@ -19,7 +19,7 @@ def debug(msg, process="HX711"):
                  
 def log(msg, process="HX711", isDebug=False):
     if ("RFIDCheck" not in msg and "Status" not in msg) or log.lastMsg != msg:
-        if log.logger is not None :
+        if logger is not none :
             log.logger.log(msg, process, isDebug)
         log.lastMsg = msg
     else:
@@ -81,15 +81,14 @@ class HX711(object):
         self._scale_ratio_B = 1  # scale ratio for channel B
         self._data_filter = outliers_filter  # default it is used outliers_filter
 
-        if GPIO_IMPORT_SUCCESSFUL:
-            GPIO.setup(self._pd_sck, GPIO.OUT)  # pin _pd_sck is output only
-            GPIO.setup(self._dout, GPIO.IN)  # pin _dout is input only
+        GPIO.setup(self._pd_sck, GPIO.OUT)  # pin _pd_sck is output only
+        GPIO.setup(self._dout, GPIO.IN)  # pin _dout is input only
         self.select_channel(select_channel)
         self.set_gain_A(gain_channel_A)
         if scale_ratio != '':
             self.set_scale_ratio(scale_ratio)
         if tare_offset != '':
-            self.set_offset(int(tare_offset))
+            self.set_offset(tare_offset)
         debug("Init Finished Command " + str(pd_sck_pin) + " Rsp " + str(dout_pin))
         
     def select_channel(self, channel):
@@ -311,7 +310,7 @@ class HX711(object):
         Returns: bool True if ready else False when not ready        
         """
         # if DOUT pin is low data is ready for reading
-        if GPIO_IMPORT_SUCCESSFUL and GPIO.input(self._dout) == 0:
+        if GPIO.input(self._dout) == 0:
             return True
         else:
             return False
@@ -331,9 +330,8 @@ class HX711(object):
         """
         for _ in range(num):
             start_counter = time.clock()
-            if GPIO_IMPORT_SUCCESSFUL:
-                GPIO.output(self._pd_sck, True)
-                GPIO.output(self._pd_sck, False)
+            GPIO.output(self._pd_sck, True)
+            GPIO.output(self._pd_sck, False)
             end_counter = time.clock()
             # check if hx 711 did not turn off...
             if end_counter - start_counter >= 0.00006:
@@ -355,8 +353,7 @@ class HX711(object):
         Returns: (bool || int) if it returns False then it is false reading.
             if it returns int then the reading was correct
         """
-        if GPIO_IMPORT_SUCCESSFUL:
-            GPIO.output(self._pd_sck, False)  # start by setting the pd_sck to 0
+        GPIO.output(self._pd_sck, False)  # start by setting the pd_sck to 0
         ready_counter = 0
         while (not self._ready() and ready_counter <= 40):
             time.sleep(0.01)  # sleep for 10 ms because data is not ready
@@ -370,18 +367,17 @@ class HX711(object):
         for _ in range(24):
             start_counter = time.clock()
             # request next bit from hx 711
-            if GPIO_IMPORT_SUCCESSFUL:
-                GPIO.output(self._pd_sck, True)
-                GPIO.output(self._pd_sck, False)
-                end_counter = time.clock()
-                if end_counter - start_counter >= 0.00006:  # check if the hx 711 did not turn off...
-                    # if pd_sck pin is HIGH for 60 us and more than the HX 711 enters power down mode.
-                    debug('Not enough fast while reading data')
-                    debug('Time elapsed: {}'.format(end_counter - start_counter))
-                    return False
-                # Shift the bits as they come to data_in variable.
-                # Left shift by one bit then bitwise OR with the new bit.
-                data_in = (data_in << 1) | GPIO.input(self._dout)
+            GPIO.output(self._pd_sck, True)
+            GPIO.output(self._pd_sck, False)
+            end_counter = time.clock()
+            if end_counter - start_counter >= 0.00006:  # check if the hx 711 did not turn off...
+                # if pd_sck pin is HIGH for 60 us and more than the HX 711 enters power down mode.
+                debug('Not enough fast while reading data')
+                debug('Time elapsed: {}'.format(end_counter - start_counter))
+                return False
+            # Shift the bits as they come to data_in variable.
+            # Left shift by one bit then bitwise OR with the new bit.
+            data_in = (data_in << 1) | GPIO.input(self._dout)
 
         if self._wanted_channel == 'A' and self._gain_channel_A == 128:
             if not self._set_channel_gain(1):  # send only one bit which is 1
@@ -635,18 +631,16 @@ class HX711(object):
         """
         power down method turns off the hx711.
         """
-        if GPIO_IMPORT_SUCCESSFUL:
-            GPIO.output(self._pd_sck, False)
-            GPIO.output(self._pd_sck, True)
-            time.sleep(0.01)
+        GPIO.output(self._pd_sck, False)
+        GPIO.output(self._pd_sck, True)
+        time.sleep(0.01)
 
     def power_up(self):
         """
         power up function turns on the hx711.
         """
-        if GPIO_IMPORT_SUCCESSFUL:
-            GPIO.output(self._pd_sck, False)
-            time.sleep(0.01)
+        GPIO.output(self._pd_sck, False)
+        time.sleep(0.01)
 
     def reset(self):
         """
