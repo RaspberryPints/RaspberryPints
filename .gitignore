@@ -4,3 +4,4 @@ includes/config.php
 /.project
 /.pydevproject
 /bin/
+/WebContent/
