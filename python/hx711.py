@@ -89,7 +89,7 @@ class HX711(object):
         if scale_ratio != '':
             self.set_scale_ratio(scale_ratio)
         if tare_offset != '':
-            self.set_offset(tare_offset)
+            self.set_offset(int(tare_offset))
         debug("Init Finished Command " + str(pd_sck_pin) + " Rsp " + str(dout_pin))
         
     def select_channel(self, channel):
