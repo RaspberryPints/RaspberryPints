@@ -3,3 +3,4 @@ admin/includes/conn.php
 includes/config.php
 /.project
 /.pydevproject
+/bin/
