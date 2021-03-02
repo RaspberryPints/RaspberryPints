@@ -20,7 +20,7 @@ def debug(msg, process="HX711"):
                  
 def log(msg, process="HX711", isDebug=False):
     if ("RFIDCheck" not in msg and "Status" not in msg) or log.lastMsg != msg:
-        if logger is not none :
+        if log.logger is not None :
             log.logger.log(msg, process, isDebug)
         log.lastMsg = msg
     else:
