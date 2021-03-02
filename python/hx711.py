@@ -329,21 +329,21 @@ class HX711(object):
         Returns: bool True if HX711 is ready for the next reading
             False if HX711 is not ready for the next reading
         """
-        for _ in range(num):
-            start_counter = time.clock()
-            if GPIO_IMPORT_SUCCESSFUL:
+        if GPIO_IMPORT_SUCCESSFUL:
+            for _ in range(num):
+                start_counter = time.clock()
                 GPIO.output(self._pd_sck, True)
                 GPIO.output(self._pd_sck, False)
-            end_counter = time.clock()
-            # check if hx 711 did not turn off...
-            if end_counter - start_counter >= 0.00006:
-                # if pd_sck pin is HIGH for 60 us and more than the HX 711 enters power down mode.
-                debug('Not enough fast while setting gain and channel')
-                debug('Time elapsed: {}'.format(end_counter - start_counter))
-                # hx711 has turned off. First few readings are inaccurate.
-                # Despite it, this reading was ok and data can be used.
-                result = self.get_raw_data_mean(6)  # set for the next reading.
-                if result == False:
+                end_counter = time.clock()
+                # check if hx 711 did not turn off...
+                if end_counter - start_counter >= 0.00006:
+                    # if pd_sck pin is HIGH for 60 us and more than the HX 711 enters power down mode.
+                    debug('Not enough fast while setting gain and channel')
+                    debug('Time elapsed: {}'.format(end_counter - start_counter))
+                    # hx711 has turned off. First few readings are inaccurate.
+                    # Despite it, this reading was ok and data can be used.
+                    result = self.get_raw_data_mean(6)  # set for the next reading.
+                    if result == False:
                     return False
         return True
 
@@ -367,10 +367,10 @@ class HX711(object):
 
         # read first 24 bits of data
         data_in = 0  # 2's complement data from hx 711
-        for _ in range(24):
-            start_counter = time.clock()
+        if GPIO_IMPORT_SUCCESSFUL:
+            for _ in range(24):
             # request next bit from hx 711
-            if GPIO_IMPORT_SUCCESSFUL:
+                start_counter = time.clock()
                 GPIO.output(self._pd_sck, True)
                 GPIO.output(self._pd_sck, False)
                 end_counter = time.clock()
