@@ -86,7 +86,7 @@ class HX711(object):
             GPIO.setup(self._dout, GPIO.IN)  # pin _dout is input only
         self.select_channel(select_channel)
         self.set_gain_A(gain_channel_A)
-        if scale_ratio != '':
+        if scale_ratio != '' and scale_ratio is not None:
             self.set_scale_ratio(scale_ratio)
         if tare_offset != '' and tare_offset is not None:
             self.set_offset(int(tare_offset))
