@@ -4,7 +4,7 @@ $htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
 $kegManager = new KegManager();
 
-$config = getAllConfigs();
+//$config = getAllConfigs();
 
 $reconfig = false;
 if (isset ( $_POST ['tare'] )) {
@@ -13,11 +13,11 @@ if (isset ( $_POST ['tare'] )) {
 }
 if (isset ( $_POST ['save'] )) {
 	$error = false;
-
+	
 	$ii = 0;
 	while(isset($_POST ['id'][$ii]))
 	{
-	    if($_POST ['id'][$ii] == "" || $_POST['loadCellCmdPin'][$ii] == "" || $_POST['loadCellRspPin'][$ii] == "")
+	    if($_POST ['id'][$ii] == "")
 	    {
 	        $ii++;
 	        continue;
