@@ -160,7 +160,7 @@ class Tap
         else
             $this->set_loadCellRspPin(null);
         
-        if( isset($postArr['loadCellTareOffset']) )
+        if( isset($postArr['loadCellScaleRatio']) )
             $this->set_loadCellScaleRatio($postArr['loadCellScaleRatio']);
         else
             $this->set_loadCellScaleRatio(null);
