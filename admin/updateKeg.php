@@ -41,7 +41,7 @@ if( isset($argv) && count($argv) >= 2 ){
                 $finalGravity = $beer->get_fg()?$beer->get_fg():'';
                 $finalGravityUnit = $beer->get_fgUnit()?$beer->get_fgUnit():'';
                 $vol = getVolumeByWeight($NEW_WEIGHT, $NEW_WEIGHT_UNIT, $keg->get_emptyWeight(), $keg->get_emptyWeightUnit(), $keggingTemperature, $keggingTemperatureUnit, $config[ConfigNames::BreweryAltitude], $config[ConfigNames::BreweryAltitudeUnit], $beerCO2PSI, $beerCO2PSIUnit, $finalGravity, $finalGravityUnit, $config[ConfigNames::DisplayUnitVolume]);
-    			if($vol && !is_nan($vol)){
+    			if($vol && !is_nan($vol) && $vol < 100000){
     			    $keg->set_currentAmount($vol);
         			// Refreshes connected pages
         			if(isset($config[ConfigNames::AutoRefreshLocal]) && $config[ConfigNames::AutoRefreshLocal]){
