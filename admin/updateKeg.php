@@ -49,7 +49,10 @@ if( isset($argv) && count($argv) >= 2 ){
         			}
     			}
             }
-            $kegManager->Save($keg);
+            if( !$kegManager->Save($keg) )
+            {
+                echo "Could not update Weight for ".$keg->get_id()."(".$keg->get_label().")" . ($mysqli->error != ""?' ['.$mysqli->error.']':'')."\n" ;
+            }
         }
     }    
 }
