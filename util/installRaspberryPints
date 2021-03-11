@@ -1615,11 +1615,11 @@ getExistingSystemVariables(){
 	MYSQL_DB_NAME=$(grep -oE '\$db_name=.*;' ${WWWPATH}/admin/includes/conn.php | tail -1 | sed 's/$db_name="//g;s/";//g')
 	
 	MYSQL_CMD="-h${MYSQL_SERVER}"
-	if [ "${MYSQL_USER}" != "" ]; then 
-		MYSQL_CMD="${MYSQL_CMD} -u${MYSQL_USER}"
+	if [ "${MYSQL_RP_USER}" != "" ]; then 
+		MYSQL_CMD="${MYSQL_CMD} -u${MYSQL_RP_USER}"
 	fi
-	if [ "${MYSQL_PASS}" != "" ] ; then 
-		MYSQL_CMD="${MYSQL_CMD} -p${MYSQL_PASS}"
+	if [ "${MYSQL_RP_PASS}" != "" ] ; then 
+		MYSQL_CMD="${MYSQL_CMD} -p${MYSQL_RP_PASS}"
 	fi
 	
 	REPO_CHOICE=$(mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -sse "SELECT configValue FROM config WHERE configName='repo'")
