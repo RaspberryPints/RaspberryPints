@@ -328,7 +328,7 @@ class PourManager extends Manager{
 		}
 	}
 	
-	function updatePour($id, $pourAmount, $conversion) {
+	function updatePour($id, $pourAmount, $pourAmountUnit, $conversion) {
 	    $ret = true;
 	    $sql="SELECT * FROM pours where id = $id";
 	    $pour = $this->executeQueryWithSingleResult($sql);
@@ -337,6 +337,7 @@ class PourManager extends Manager{
 	    if( $pour ){
 	        if($pour->get_conversion()   != $conversion) 	$updateSql .= ($updateSql!=""?",":"")."conversion = NULLIF('" . $conversion . "', '')";
 	        if($pour->get_amountPoured() != $pourAmount) 	$updateSql .= ($updateSql!=""?",":"")."amountPoured = NULLIF('" . $pourAmount . "', '')";
+	        if($pour->get_amountPouredUnit() != $pourAmountUnit) 	$updateSql .= ($updateSql!=""?",":"")."amountPouredUnit = NULLIF('" . $pourAmountUnit . "', '')";
 	        if($updateSql != "")$sql = "UPDATE pours SET ".$updateSql." WHERE id = " . $id;
 	    }
 	    if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);

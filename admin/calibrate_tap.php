@@ -14,11 +14,12 @@ if (isset ( $_POST ['saveTapCalibration'] ) ){
     $countpergallonUnit = $_POST ['displayAmountUnit'];
     $originalPulses = $_POST ['originalPulses'];
     $countpergallon = (is_unit_imperial($countpergallonUnit)?128:1000)*($originalPulses/$pourAmount);
+    $dbUnit = is_unit_imperial($countpergallonUnit)?UnitsOfMeasure::VolumeGallon:UnitsOfMeasure::VolumeLiter;
     //In local UOM convert to gallon to match database
-    $pourAmount = convert_volume($pourAmount, $countpergallonUnit, UnitsOfMeasure::VolumeGallon);
+    $pourAmount = convert_volume($pourAmount, $countpergallonUnit, $dbUnit);
     
     $tapManager->saveTapConfig ( $tap->get_id(), $tap->get_flowPinId(), $tap->get_valvePinId(), $tap->get_valveOn(), $countpergallon, $countpergallonUnit, $tap->get_plaatoAuthToken() );
-    $pourManager->updatePour($_POST ['lastPourId'], $pourAmount, $countpergallon);
+    $pourManager->updatePour($_POST ['lastPourId'], $pourAmount, $dbUnit, $countpergallon);
 }
 if (isset ( $_POST ['saveTapCalibration'] ) ||
     isset ( $_POST [ 'revert'] ) ) {
