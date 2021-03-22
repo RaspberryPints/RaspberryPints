@@ -69,13 +69,15 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 			     $keg->set_Weight($_POST['currentWeight'][$ii]);
 			     $keg->set_WeightUnit($_POST['currentWeightUnit'][$ii]);
 			}
-    		if (isset ( $_POST ['fermentationPSI'][$ii] ) && 
+			if (isset ( $_POST ['fermentationPSI'][$ii] ) &&
+			    !$config[ConfigNames::UseDefWeightSettings] &&
     		    $_POST ['fermentationPSI'][$ii] != $_POST ['fermentationPSIOriginal'][$ii]) {
     		    $keg->set_fermentationPSI($_POST ['fermentationPSI'][$ii]);
     		    $keg->set_fermentationPSIUnit($_POST ['fermentationPSIUnit'][$ii]);
     		}
     		
     	    if (isset ( $_POST ['keggingTemp'][$ii] ) &&
+    	        !$config[ConfigNames::UseDefWeightSettings] &&
     	        $_POST ['keggingTemp'][$ii] != $_POST ['keggingTempOriginal'][$ii]) {
     		    $keg->set_keggingTemp($_POST ['keggingTemp'][$ii]);
     		    $keg->set_keggingTempUnit($_POST ['keggingTempUnit'][$ii]);
