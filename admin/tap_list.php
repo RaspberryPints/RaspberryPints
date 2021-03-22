@@ -70,14 +70,12 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 			     $keg->set_WeightUnit($_POST['currentWeightUnit'][$ii]);
 			}
     		if (isset ( $_POST ['fermentationPSI'][$ii] ) && 
-    		    $_POST['defaultFermentiationPSI'][$ii] != 0 &&
     		    $_POST ['fermentationPSI'][$ii] != $_POST ['fermentationPSIOriginal'][$ii]) {
     		    $keg->set_fermentationPSI($_POST ['fermentationPSI'][$ii]);
     		    $keg->set_fermentationPSIUnit($_POST ['fermentationPSIUnit'][$ii]);
     		}
     		
     	    if (isset ( $_POST ['keggingTemp'][$ii] ) &&
-    	        $_POST['defaultKeggingTemp'][$ii] != 0 &&
     	        $_POST ['keggingTemp'][$ii] != $_POST ['keggingTempOriginal'][$ii]) {
     		    $keg->set_keggingTemp($_POST ['keggingTemp'][$ii]);
     		    $keg->set_keggingTempUnit($_POST ['keggingTempUnit'][$ii]);
@@ -93,7 +91,7 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 		}
 		$tapManager->Save($tap);
 		
-		$tapNumber = "";
+		//$tapNumber = "";
 		$flowpin = 0;
 		$valveon = 0;
 		$valvepin = 0;
@@ -151,7 +149,11 @@ if (isset ( $_POST ['saveSettings'] ) || isset ( $_POST ['configuration'] )) {
 }
 
 if($reconfig){
-	file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=all' );
+    file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=all' );
+    // Refreshes connected pages
+//    if(isset($config[ConfigNames::AutoRefreshLocal]) && $config[ConfigNames::AutoRefreshLocal]){
+      //  exec(__DIR__."/../includes/refresh.sh");
+    //}
 }
 
 $activeTaps = $tapManager->GetAllActive();
@@ -409,7 +411,7 @@ include 'top_menu.php';
                         <th>Current<br>Weight(<?php echo $config[ConfigNames::DisplayUnitWeight]?>)</th>
     					<?php if(!$config[ConfigNames::UseDefWeightSettings]) { ?>
                             <th><div class="tooltip">Fermenter<br>PSI<span class="tooltiptext">0 If not fermenting under pressure</span></div></th>
-                            <th><div class="tooltip">Kegging<br>Temp<span class="tooltiptext">Temperature of Beer when kegged<br>room temp if not cold crashing or keg conditioning</span></div></th>
+                            <th><div class="tooltip">Kegging<br>Temp(<?php echo $config[ConfigNames::DisplayUnitTemperature]?>)<span class="tooltiptext">Temperature of Beer when kegged<br>room temp if not cold crashing or keg conditioning</span></div></th>
                         <?php } ?>
                     <?php } ?>
                     <?php if($config[ConfigNames::UseFlowMeter]) { ?>
