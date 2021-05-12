@@ -25,7 +25,6 @@ class BeerStyleManager extends Manager{
 	}
 	
 	function GetBeerStyleList(){
-		global $mysqli;
 		$sql="SELECT DISTINCT beerStyleList FROM beerStyles ORDER BY beerStyleList";
 		return $this->executeNonObjectQueryWithSingleResults($sql);
 	}
