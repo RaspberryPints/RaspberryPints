@@ -25,6 +25,19 @@
 					<?php
 						if(isset($_GET['wrong']))echo '<span class="bigtxt red">(Wrong Username Or Password)</span>';
 					?>
+					<?php 
+					$refer = null;
+					if( null !== $_GET['ret'] && !empty($_GET['ret']) && strpos($_GET['ret'], 'http') === false && strpos($_GET['ret'], 'www.') === false)
+					{
+					    $refer = $_GET['ret'];
+					}
+					else if($_SERVER['HTTP_REFERER'] && !strpos($_SERVER['HTTP_REFERER'], "checklogin"))
+					{
+					    $refer = $_SERVER['HTTP_REFERER'];
+					}
+					if( null !== $refer ){?>
+					<input type="hidden" name="jumpto" value="<?php echo $refer;?>"/>
+					<?php }?>
 					<input type="submit" class="loginbtn" value="Log In" /><br />
 					<img src="img/lock.png" height="50" width="50">
 					<p><a href="reset_account.php" title="Forgoteen Password?">Forgotten Password?</a></p>

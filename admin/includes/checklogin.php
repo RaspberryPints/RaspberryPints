@@ -1,7 +1,9 @@
 <?php
 session_start();
+/** @var mixed $session */
 $session=session_id();
 $time=time();
+/** @var mixed $time_check */
 $time_check=$time-1800; //SET TIME 10 Minute
 
 require_once __DIR__.'/managers/user_manager.php';
@@ -23,9 +25,16 @@ if($user){
 	if($user->get_isAdmin()){
 		$_SESSION['showadmin'] =true;
 	}
+	if( !isset($_POST["jumpto"]) || empty($_POST["jumpto"]) )
+	{
 		echo "<script>location.href='../admin.php';</script>";
+	}
+	else
+	{
+		echo "<script>location.href='".$_POST["jumpto"]."';</script>";
+	}
 }
 else {
-	echo "<script>location.href='../index.php?wrong';</script>";
+    echo "<script>location.href='".("../index.php?wrong".(( isset($_POST["jumpto"]) && !empty($_POST["jumpto"]) )?"&ret=".$_POST["jumpto"]:""))."';</script>";
 }
 ?>
