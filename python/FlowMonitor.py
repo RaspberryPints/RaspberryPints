@@ -19,6 +19,10 @@ import os.path
 import traceback
 import glob
 from hx711 import HX711
+from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR, SHUT_RDWR
+import json
+LOAD_CELL_EQUIP_TYPE_TAP = 0
+LOAD_CELL_EQUIP_TYPE_GT  = 1
 MQTT_IMPORT_SUCCESSFUL = True
 try:
     import paho.mqtt.client as mqtt # Added library for mqtt
@@ -39,8 +43,8 @@ except:
     
 from Config import config
 
-def debug(msg, process="FlowMonitor", logDB=True):
-    if(config['dispatch.debug']):
+def debug(msg, process="FlowMonitor", logDB=True, debugConfig='flowmon.debug'):
+    if(config[debugConfig]):
         log(msg, process, True, logDB)
                  
 def log(msg, process="FlowMonitor", isDebug=False, logDB=True):
@@ -70,15 +74,17 @@ class FlowMonitor(object):
         self.motionDetectors = []
         self.loadCellThreads = []
         self.readers = []
+        self.iSpindels = []
         self.tempProbeThread = None
         
-    def readline_notimeout(self):
+    def readline_notimeout(self, serialTrace=False):
         eol = b'\r\n'
         leneol = len(eol)
         line = bytearray()
         while True:
             c = self.arduino.read(1)
-            #debug(repr(c))
+            if serialTrace:
+                debug(repr(c), "FlowMonitor", False)
             if c:
                 line += c
                 if line[-leneol:] == eol:
@@ -227,7 +233,7 @@ class FlowMonitor(object):
     def monitor(self, flowMetersEnabld=True):
         running = True
         
-        if flowMetersEnabld :
+        if flowMetersEnabld and GPIO_IMPORT_SUCCESSFUL:
             if self.alaIsAlive is False:
                 debug( "resetting Arduino" )
                 if config['flowmon.port'] == "MQTT":
@@ -262,6 +268,15 @@ class FlowMonitor(object):
                 loadCell.start()
                 self.loadCellThreads.append(loadCell)
             
+            configMD = self.dispatch.getGasTankLoadCellConfig()
+            for item in configMD:
+                loadCell = LoadCellCheckThread( "LC-" + str(item["id"]), updateDir=config['pints.dir'], 
+                                                dispatch=self.dispatch, tapId=item["id"], commandPin=item["loadCellCmdPin"], 
+                                                responsePin=item["loadCellRspPin"], unit=item["loadCellUnit"], logger=log.logger,
+                                                scaleRatio=item["loadCellScaleRatio"], tareOffset=item["loadCellTareOffset"], equipType=LOAD_CELL_EQUIP_TYPE_GT )
+                loadCell.start()
+                self.loadCellThreads.append(loadCell)
+            
         self.readers = []
         if RFID_IMPORT_SUCCESSFUL:
             dbReaders = self.dispatch.getRFIDReaders()
@@ -270,9 +285,17 @@ class FlowMonitor(object):
                         self.readers.append( RFIDCheckThread( "RFID-" + str(item["name"]), self.rfiddir, rfidSPISSPin=int(item["pin"]) ) )
                 self.alamodeUseRFID = True
         
+        self.iSpindels = []
+        dbiSpindels = self.dispatch.getiSpindelConnectors()
+        for item in dbiSpindels:
+            if (item["address"] != '' and item["port"]):
+                connector = iSpindelListenerThread( "iSpindal-" + str(item["address"]) + ":" + str(item["port"]), self, self.dispatch, item["address"], int(item["port"]), item["allowedConnections"])
+                connector.start()
+                self.iSpindels.append( connector )
+            
         self.reconfigTempProbes()
         
-        if flowMetersEnabld :
+        if flowMetersEnabld and GPIO_IMPORT_SUCCESSFUL:
             self.reconfigAlaMode()
             debug( "listening to Arduino" )
         else:
@@ -280,9 +303,9 @@ class FlowMonitor(object):
         
         try:
             while running:   
-                if config['flowmon.port'] != "MQTT":
+                if config['flowmon.port'] != "MQTT" and flowMetersEnabld and GPIO_IMPORT_SUCCESSFUL:
                     #msg = self.arduino.readline()
-                    msg = self.readline_notimeout()
+                    msg = self.readline_notimeout(False)
                     if not msg:
                         continue
                     if not self.processMsg(msg):
@@ -308,6 +331,9 @@ class FlowMonitor(object):
                 if item.isAlive():
                     item.exit()
             for item in self.loadCellThreads:
+                if item.isAlive():
+                    item.exit()
+            for item in self.iSpindels:
                 if item.isAlive():
                     item.exit()
             if self.tempProbeThread is not None and self.tempProbeThread.isAlive():
@@ -570,11 +596,24 @@ class WritePinsThread (threading.Thread):
                 
 #Following is based on code from day_trippr (coverted to thread and allow configurable pin)
 class MotionDetectionPIRThread (threading.Thread):
-    def __init__(self, threadID, pirPin = 7):
+    def __init__(self, threadID, pirPin = 7, ledPin=0, soundFile='', 
+                mqttCommand='', mqttEvent='', mqttUser='', mqttPass='', mqttHost='', mqttPort='', mqttInterval=100):
         threading.Thread.__init__(self)
         self.threadID = threadID
         self.pirPin = pirPin
         self.shutdown_required = False
+        self.ledPin = ledPin
+        self.soundFile = soundFile
+        self.mqttCommand = mqttCommand
+        self.mqttEvent = mqttEvent
+        self.mqttClient = None
+        if self.mqttCommand != '':
+            # Initiate MQTT Client
+            self.mqttClient = mqtt.Client()
+            #user and Pass
+            self.mqttc.username_pw_set(username=mqttUser,password=mqttPass)            
+            # mqttClient with MQTT Broker
+            self.mqttClient.connect(mqttHost, mqttPort, mqttInterval)
       
     def exit(self):
         self.shutdown_required = True
@@ -584,6 +623,18 @@ class MotionDetectionPIRThread (threading.Thread):
         #Wake up every users monitor, need to loop through the users otherwise the command wont know who is currently logged in
         #To see full command replace ;'s with new lines
         os.system('export DISPLAY=":0.0"; for dir in /home/*/; do export XAUTHORITY=$dir.Xauthority; xscreensaver-command -deactivate > /dev/null 2>&1; done;')
+        
+        if self.ledPin <> 0:
+            self.dispatch.updatepin(int(self.ledPin), True)
+        if self.soundFile != '':
+            os.system(mpg321 + self.soundFile)
+        else:
+            time.sleep(1)
+        if self.mqttClient != None and self.mqttCommand != '':
+            self.mqttc.publish(self.mqttEvent,self.mqttCommand)
+        if self.ledPin <> 0:
+            self.dispatch.updatepin(int(self.ledPin), False)
+        
         time.sleep(1)
 
     def run(self):
@@ -598,10 +649,9 @@ class MotionDetectionPIRThread (threading.Thread):
             debug(traceback.format_exc())
             return
         
-        
 class LoadCellCheckThread (threading.Thread):
     def __init__(self, threadID, dispatch, updateDir, tapId = 1, commandPin = 7, responsePin = 8, delay=1, 
-                 updateVariance=.01, unit="lb", logger=None, scaleRatio=1, tareOffset=0):
+                 updateVariance=.01, unit="lb", logger=None, scaleRatio=1, tareOffset=0, equipType=LOAD_CELL_EQUIP_TYPE_TAP):
         threading.Thread.__init__(self)
         self.threadID = threadID
         self.dispatch = dispatch
@@ -614,6 +664,7 @@ class LoadCellCheckThread (threading.Thread):
         self.unit = unit
         self.checkTare = False
         self.shutdown_required = False
+        self.equipType = equipType
         self.hx711 = HX711(name=threadID, dout_pin=responsePin, pd_sck_pin=commandPin, logger=logger,scale_ratio=scaleRatio,tare_offset=tareOffset) 
         
     def exit(self):
@@ -632,20 +683,31 @@ class LoadCellCheckThread (threading.Thread):
     
     def run(self):
         log("Load Cell Checker " + self.threadID + " is Running")
-        lastWeight = -1
+        lastWeight = -1.0
         try:
             while not self.shutdown_required:
                 if self.checkTare:
+                    if self.equipType == LOAD_CELL_EQUIP_TYPE_TAP:
                     if self.dispatch.getTareRequest(self.tapId):
                         self.tare()
                         self.dispatch.setTareRequest(self.tapId, False)
                         self.setCheckTare(False)
+                    else:
+                        if self.dispatch.getGasTankTareRequest(self.tapId):
+                            self.tare()
+                            self.dispatch.setGasTankTareRequest(self.tapId, False)
+                            self.setCheckTare(False)
                     
                 weight = self.getWeight()
+                debug(self.threadID+": Weight="+str(weight))
                 #if weight is valid and the difference between the last read is significant enough to update
-                if weight > 0 and abs(lastWeight - weight) > self.updateVariance :
+                if weight > 0 and (lastWeight == -1.0 or abs(lastWeight - weight) > self.updateVariance) :
                     #The following 2 lines passes the PIN and WEIGHT to the php script
+                    if self.equipType == LOAD_CELL_EQUIP_TYPE_GT:
+                        subprocess.call(["php", self.updateDir + '/admin/updateGasTank.php', str(self.tapId), str(weight), self.unit])
+                    else:
                     subprocess.call(["php", self.updateDir + '/admin/updateKeg.php', str(self.tapId), str(weight), self.unit])
+                    debug(self.threadID+": Updating "+str(self.tapId)+" Weight="+str(weight)+" "+self.unit)
                     lastWeight = weight
                 time.sleep(self.delay)
         except Exception as ex:
@@ -715,6 +777,7 @@ class OneWireTemperatureThread (threading.Thread):
             os.system('sudo modprobe w1-gpio')
             os.system('sudo modprobe w1-therm')
             tempStatus = {}
+            statePins = {}
             while not self.shutdown_required:
                 takenDate = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
                 temps = []
@@ -723,7 +786,7 @@ class OneWireTemperatureThread (threading.Thread):
                 for probeDir in devicelist:
                     probeName = os.path.basename(probeDir)
                     if(firstTime):
-                        self.dispatch.addTempProbeAsNeeded(probeName)
+                        statePins[probeName] = self.dispatch.addTempProbeAsNeeded(probeName)
                     # append /w1slave to the device file
                     device = probeDir + '/w1_slave'
                     temp = self.get_temp(device)
@@ -732,7 +795,10 @@ class OneWireTemperatureThread (threading.Thread):
                         temp = self.get_temp(device)
                     #if valid temp save it to the database
                     if temp != None and temp >= self.bound_lo and temp <= self.bound_hi:
-                        temps.append([probeName, temp, 'C', takenDate])
+                        pinState = None
+                        if statePins[probeName] > 0:
+                            pinState = self.dispatch.readpin(MCP_PIN) 
+                        temps.append([probeName, temp, 'C', takenDate, pinState])
                         if probeName not in tempStatus:
                             debug("Adding " + probeName +" Temp[" + str(temp) + "] low:" + str(self.bound_lo) + " high:"+str(self.bound_hi) ) 
                         tempStatus[probeName] = True
@@ -782,7 +848,7 @@ class MQTTListenerThread (threading.Thread):
             self.mqttc.on_connect = self.on_connect
             self.mqttc.on_subscribe = self.on_subscribe
             
-            #user and [ass
+            #user and Pass
             self.mqttc.username_pw_set(username=self.user,password=self.password)
             
             # Connect with MQTT Broker
@@ -822,3 +888,427 @@ class MQTTListenerThread (threading.Thread):
         
     def read(self, numCharacters):
         return ""
+    
+    
+    
+#Based on https://github.com/DottoreTozzi/iSpindel-TCP-Server
+ISPINDEL_ACK = chr(6)  # ASCII ACK (Acknowledge)
+ISPINDEL_NAK = chr(21)  # ASCII NAK (Not Acknowledged)
+ISPINDEL_BUFF_SIZE = 256  # Buffer Size
+class iSpindelListenerThread (threading.Thread):
+    def __init__(self, threadID, flowMonitor, dispatch, host, port, allowedConnections=5):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.flowMonitor = flowMonitor
+        self.dispatch = dispatch
+        self.host = host
+        self.port = port
+        self.allowedConnections = allowedConnections
+        self.shutdown_required = False
+    
+    def keepAlive(self):
+        self.shutdown_required = False
+    def exit(self):
+        self.shutdown_required = True
+        if self.serversock != None:
+            self.serversock.shutdown(SHUT_RDWR)
+        
+        
+    def run(self):
+        log("iSpindel Listener Thread " + self.threadID + " is Running")
+
+        while not self.shutdown_required:
+            ADDR = (self.host, self.port)
+            self.serversock = socket(AF_INET, SOCK_STREAM)
+            self.serversock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+            self.serversock.bind(ADDR)
+            self.serversock.listen(self.allowedConnections)
+            try:
+                clientsock, addr = self.serversock.accept()
+            except:
+                debug('Socket Accept interrupted normally', debugConfig='iSpindel.debug')
+                continue
+            
+            inpstr = ''
+            success = 0
+            spindle_name = ''
+            spindle_id = 0
+            angle = 0.0
+            temperature = 0.0
+            battery = 0.0
+            gravity = 0.0
+            user_token = ''
+            interval = 0
+            rssi = 0
+            timestart = time.clock()
+            config_sent = 0
+            try:
+                device = None
+                while not self.shutdown_required:
+                    data = clientsock.recv(ISPINDEL_BUFF_SIZE)
+                    if not data: break  # client closed connection
+                    #debug(repr(addr) + ' received:' + repr(data), debugConfig='iSpindel.debug')
+                    if "close" == data.rstrip():
+                        clientsock.send(ISPINDEL_ACK)
+                        debug(repr(addr) + ' ACK sent. Closing.', debugConfig='iSpindel.debug')
+                        break  # close connection
+                    try:
+                        inpstr += str(data.rstrip())
+                        if inpstr[0] != "{":
+                            clientsock.send(ISPINDEL_NAK)
+                            debug(repr(addr) + ' Not JSON.', debugConfig='iSpindel.debug')
+                            break  # close connection
+                        if inpstr.find("}") != -1:
+                            debug(repr(addr) + 'Received:' + inpstr, debugConfig='iSpindel.debug')
+                            jinput = json.loads(inpstr)
+                            spindle_name = jinput['name']
+                            spindle_id = jinput['ID']
+                            angle = jinput['angle']
+                            temperature = jinput['temperature']
+                            temperatureUnit = jinput['temp_units']
+                            battery = jinput['battery']
+            
+                            try:
+                                gravity = jinput['gravity']
+                                interval = jinput['interval']
+                                rssi = jinput['RSSI']
+                            except:
+                                # older firmwares might not be transmitting all of these
+                                debug("Consider updating your iSpindel's Firmware.", debugConfig='iSpindel.debug')
+                            try:
+                                # get user token for connection to ispindle.de public server
+                                user_token = jinput['token']
+                            except:
+                                # older firmwares < 5.4 or field not filled in
+                                user_token = '*'
+                                
+                            device = self.dispatch.getiSpindelDevice(spindle_id, user_token, spindle_name, gravity)
+                            # looks like everything went well :)
+                            #
+                            # Should we reply with a config JSON?
+                            #
+                            if device["remoteConfigEnabled"]:
+                                resp = ISPINDEL_ACK
+                                try:
+                                    config = self.dispatch.getiSpindelUnsentConfig(spindle_id)
+                                    if config != None:
+                                        jresp = {}
+                                        jresp["interval"] = config["interval"]
+                                        jresp["token"] = config["token"]
+                                        jresp["polynomial"] = config["polynomial"]
+                                        resp = json.dumps(jresp)
+                                        debug(repr(addr) + ' JSON Response: ' + resp, debugConfig='iSpindel.debug')
+                                        config_sent = 1
+                                    else:
+                                        debug(repr(addr) + ' No unsent data for iSpindel "' + spindle_name + '". Sending ACK.', debugConfig='iSpindel.debug')
+                                except Exception as e:
+                                    debug(repr(addr) + " Can't send config response. Something went wrong:", debugConfig='iSpindel.debug')
+                                    debug(repr(addr) + " Error: " + str(e), debugConfig='iSpindel.debug')
+                                    debug(repr(addr) + " Sending ACK.", debugConfig='iSpindel.debug')
+                                clientsock.send(resp)
+                            else:
+                                clientsock.send(ISPINDEL_ACK)
+                                debug(repr(addr) + ' Sent ACK.', debugConfig='iSpindel.debug')
+                            #
+                            debug(repr(addr) + ' ' + spindle_name + ' (ID:' + str(spindle_id) + ') : Data Transfer OK. Time: '+str(time.clock() - timestart), debugConfig='iSpindel.debug')
+                            success = 1
+                            break  # close connection
+                    except Exception as e:
+                        # something went wrong
+                        # traceback.print_exc() # this would be too verbose, so let's do this instead:
+                        debug(repr(addr) + ' Error: ' + str(e), debugConfig='iSpindel.debug')
+                        debug(traceback.format_exc(), debugConfig='iSpindel.debug')
+                        clientsock.send(ISPINDEL_NAK)
+                        debug(repr(addr) + ' NAK sent.', debugConfig='iSpindel.debug')
+                        break  # close connection server side after non-success
+                if clientsock != None:
+                    clientsock.close()
+                #debug(repr(addr) + " - closed connection", debugConfig='iSpindel.debug')  # log on console
+            
+                if config_sent:
+                    # update sent status in config table
+                    self.dispatch.updateiSpindeConfigMarkSent(spindle_id)
+            
+                if success:
+                    # We have the complete spindle data now, so let's make it available
+                    
+                    if device["csvEnabled"]:
+                        OUTPATH   = device["csvOutpath"]  # CSV output file path; filename will be name_id.csv
+                        DELIMITER = device["csvDelimiter"]  # CSV delimiter (normally use ; for Excel)
+                        NEWLINE   = '\r\n' if device["csvNewLine"] == 0 else '\n'  # newline type ( 0 = \r\n for windows clients, 1 = \n)
+                        DATETIME  = device["csvIncludeDateTime"]  # Leave this at 1 to include Excel compatible timestamp in CSV
+                
+                
+                        try:
+                            filename = OUTPATH + spindle_name + '_' + str(spindle_id) + '.csv'
+                            debug(repr(addr) + ' - writing CSV:' + filename, debugConfig='iSpindel.debug')
+                            if not os.path.exists(filename):
+                                with open(filename, 'a') as csv_file:
+                                    outstr = ''
+                                    if DATETIME == 1:
+                                        outstr += "DateTime" + DELIMITER
+                                    outstr += "spindle_name" + DELIMITER
+                                    outstr += "spindle_id" + DELIMITER
+                                    outstr += "angle" + DELIMITER
+                                    outstr += "temperature" + DELIMITER
+                                    outstr += "battery" + DELIMITER
+                                    outstr += "gravity" + DELIMITER
+                                    outstr += "User Token" + DELIMITER
+                                    outstr += "interval" + DELIMITER
+                                    outstr += "rssi" + DELIMITER
+                                    outstr += "Beer ID" + DELIMITER
+                                    outstr += "Beer Name" + DELIMITER
+                                    outstr += "Batch"
+                                    outstr += NEWLINE
+                                    csv_file.writelines(outstr)
+                                    debug(repr(addr) + ' - CSV headers written. ' + filename, debugConfig='iSpindel.debug')
+                                
+                            with open(filename, 'a') as csv_file:
+                                # this would sort output. But we do not want that...
+                                # import csv
+                                # csvw = csv.writer(csv_file, delimiter=DELIMITER)
+                                # csvw.writerow(jinput.values())
+                                outstr = ''
+                                if DATETIME == 1:
+                                    outstr += datetime.datetime.now().strftime('%x %X') + DELIMITER
+                                outstr += str(spindle_name) + DELIMITER
+                                outstr += str(spindle_id) + DELIMITER
+                                outstr += str(angle) + DELIMITER
+                                outstr += str(temperature) + DELIMITER
+                                outstr += str(battery) + DELIMITER
+                                outstr += str(gravity) + DELIMITER
+                                outstr += user_token + DELIMITER
+                                outstr += str(interval) + DELIMITER
+                                outstr += str(rssi) + DELIMITER
+                                outstr += (str(device["beerId"]) if device["beerId"] is not None else '') + DELIMITER
+                                outstr += (str(device["beerName"]) if device["beerId"] is not None else '') + DELIMITER
+                                outstr += (str(device["batchName"]) if device["batchName"] is not None else '')
+                                outstr += NEWLINE
+                                csv_file.writelines(outstr)
+                                debug(repr(addr) + ' - CSV data written.', debugConfig='iSpindel.debug')
+                        except Exception as e:
+                            debug(repr(addr) + ' CSV Error: ' + str(e), debugConfig='iSpindel.debug')
+                            debug(traceback.format_exc(), debugConfig='iSpindel.debug')
+                
+                    if device["sqlEnabled"]:                
+                        try:
+                            debug(repr(addr) + ' - writing to database', debugConfig='iSpindel.debug')
+                            # standard field definitions:
+                            fieldlist = ['createdDate', 'name', 'iSpindelId', 'angle', 'temperature', 'temperatureUnit', 'battery', 'gravity', 'gravityUnit', 'beerId' ]
+                            valuelist = [datetime.datetime.now(), spindle_name, spindle_id, angle, temperature, temperatureUnit, battery, gravity, device["gravityUnit"], device["beerId"]]
+            
+                            # do we have a user token defined? (Fw > 5.4.x)
+                            # this is for later use (public server) but if it exists, let's store it for testing purposes
+                            # this also should ensure compatibility with older fw versions and not-yet updated databases
+                            if user_token != '':
+                                fieldlist.append('userToken')
+                                valuelist.append(user_token)
+            
+                            # If we have firmware 5.8 or higher:
+                            if rssi != 0:
+                                fieldlist.append('`interval`')  # this is a reserved SQL keyword so it requires additional quotes
+                                valuelist.append(interval)
+                                fieldlist.append('RSSI')
+                                valuelist.append(rssi)
+            
+                            self.dispatch.insertiSpindelData(fieldlist, valuelist)
+                            debug(repr(spindle_name) + ' - DB data written.', debugConfig='iSpindel.debug')
+                        except Exception as e:
+                            debug(repr(addr) + ' Database Error: ' + str(e) + '\nDid you update your database?', debugConfig='iSpindel.debug')
+                            debug(traceback.format_exc(), debugConfig='iSpindel.debug')
+            
+                    if device["brewPiLessEnabled"]:
+                        try:
+                            debug(repr(addr) + ' - forwarding to BREWPILESS at http://' + device["brewPiLessAddress"], debugConfig='iSpindel.debug')
+                            import urllib2
+                            outdata = {
+                                'name': spindle_name,
+                                'angle': angle,
+                                'temperature': temperature,
+                                'battery': battery,
+                                'gravity': gravity,
+                            }
+                            out = json.dumps(outdata)
+                            debug(repr(addr) + ' - sending: ' + out, debugConfig='iSpindel.debug')
+                            url = 'http://' + device["brewPiLessAddress"] + '/gravity'
+                            req = urllib2.Request(url)
+                            req.add_header('Content-Type', 'application/json')
+                            req.add_header('User-Agent', spindle_name)
+                            response = urllib2.urlopen(req, out)
+                            debug(repr(addr) + ' - received: ' + response.read(), debugConfig='iSpindel.debug')
+            
+                        except Exception as e:
+                            debug(repr(addr) + ' Error while forwarding to URL ' + url + ' : ' + str(e), debugConfig='iSpindel.debug')
+            
+                    if device["craftBeerPiEnabled"]:
+                        try:
+                            debug(repr(addr) + ' - forwarding to CraftBeerPi3 at http://' + device["craftBeerPiAddress"], debugConfig='iSpindel.debug')
+                            import urllib2
+                            outdata = {
+                                'name' : spindle_name,
+                                'angle' : angle if device["craftBeerPiSendAngle"] else gravity,
+                                'temperature' : temperature,
+                                'battery' : battery,
+                            }
+                            out = json.dumps(outdata)
+                            debug(repr(addr) + ' - sending: ' + out, debugConfig='iSpindel.debug')
+                            url = 'http://' + device["craftBeerPiAddress"] + '/api/hydrometer/v1/data'
+                            req = urllib2.Request(url)
+                            req.add_header('Content-Type', 'application/json')
+                            req.add_header('User-Agent', spindle_name)
+                            response = urllib2.urlopen(req, out)
+                            debug(repr(addr) + ' - received: ' + response.read(), debugConfig='iSpindel.debug')
+            
+                        except Exception as e:
+                            debug(repr(addr) + ' Error while forwarding to URL ' + url + ' : ' + str(e), debugConfig='iSpindel.debug')
+            
+            
+                    if device["unidotsEnabled"]:
+                        try:
+                            token = user_token if device["unidotsUseiSpindleToken"] else device["unidotsToken"]
+                            if token != '':
+                                if token[:1] != '*':
+                                    debug(repr(addr) + ' - sending to ubidots', debugConfig='iSpindel.debug')
+                                    import urllib2
+                                    outdata = {
+                                        'tilt': angle,
+                                        'temperature': temperature,
+                                        'battery': battery,
+                                        'gravity': gravity,
+                                        'interval': interval,
+                                        'rssi': rssi
+                                    }
+                                    out = json.dumps(outdata)
+                                    debug(repr(addr) + ' - sending: ' + out, debugConfig='iSpindel.debug')
+                                    url = 'http://things.ubidots.com/api/v1.6/devices/' + spindle_name + '?token=' + token
+                                    req = urllib2.Request(url)
+                                    req.add_header('Content-Type', 'application/json')
+                                    req.add_header('User-Agent', spindle_name)
+                                    response = urllib2.urlopen(req, out)
+                                    debug(repr(addr) + ' - received: ' + response.read(), debugConfig='iSpindel.debug')
+                        except Exception as e:
+                            debug(repr(addr) + ' Ubidots Error: ' + str(e), debugConfig='iSpindel.debug')
+            
+                    if device["forwardEnabled"]:
+                        try:
+                            debug(repr(addr) + ' - forwarding to ' + device["forwardAddress"] + ":" + device["forwardPort"], debugConfig='iSpindel.debug')
+                            outdata = {
+                                'name': spindle_name,
+                                'ID': spindle_id,
+                                'angle': angle,
+                                'temperature': temperature,
+                                'battery': battery,
+                                'gravity': gravity,
+                                'token': user_token,
+                                'interval': interval,
+                                'recipe': recipe,
+                                'RSSI': rssi
+                            }
+                            out = json.dumps(outdata)
+                            debug(repr(addr) + ' - sending: ' + out, debugConfig='iSpindel.debug')
+                            s = socket(AF_INET, SOCK_STREAM)
+                            s.connect((device["forwardAddress"], device["forwardPort"]))
+                            s.send(out)
+                            rcv = s.recv(ISPINDEL_BUFF_SIZE)
+                            s.close()
+                            if rcv[0] == ISPINDEL_ACK:
+                                debug(repr(addr) + ' - received ACK - OK!', debugConfig='iSpindel.debug')
+                            elif rcv[0] == ISPINDEL_NAK:
+                                debug(repr(addr) + ' - received NAK - Not OK...', debugConfig='iSpindel.debug')
+                            else:
+                                debug(repr(addr) + ' - received: ' + rcv, debugConfig='iSpindel.debug')
+                        except Exception as e:
+                            debug(repr(addr) + ' Error while forwarding to ' + device["forwardAddress"] + ': ' + str(e), debugConfig='iSpindel.debug')
+            
+                    if device["fermentTrackEnabled"]:
+                        try:
+                            
+                            token = user_token if device["fermentTrackUseiSpindleToken"] else device["fermentTrackToken"]
+                            if token != '':
+                                if token[:1] != '*':
+                                    debug(repr(addr) + ' - sending to fermentrack', debugConfig='iSpindel.debug')
+                                    import urllib2
+                                    outdata = {
+                                        "ID": spindle_id,
+                                        "angle": angle,
+                                        "battery": battery,
+                                        "gravity": gravity,
+                                        "name": spindle_name,
+                                        "temperature": temperature,
+                                        "token": token
+                                    }
+                                    out = json.dumps(outdata)
+                                    debug(repr(addr) + ' - sending: ' + out, debugConfig='iSpindel.debug')
+                                    url = 'http://' + device["fermentTrackAddress"] + ':' + device["fermentTrackPort"] + '/ispindel/'
+                                    debug(repr(addr) + ' to : ' + url, debugConfig='iSpindel.debug')
+                                    req = urllib2.Request(url)
+                                    req.add_header('Content-Type', 'application/json')
+                                    req.add_header('User-Agent', spindle_name)
+                                    response = urllib2.urlopen(req, out)
+                                    debug(repr(addr) + ' - received: ' + response.read(), debugConfig='iSpindel.debug')
+                        except Exception as e:
+                            debug(repr(addr) + ' Fermentrack Error: ' + str(e), debugConfig='iSpindel.debug')
+            
+                    if device["brewSpyEnabled"]:
+                        try:
+                            token = user_token if device["brewSpyUseiSpindleToken"] else device["brewSpyToken"]
+                            if token != '':
+                                if token[:1] != '*':
+                                    debug(repr(addr) + ' - sending to brewspy', debugConfig='iSpindel.debug')
+                                    import urllib2
+                                    outdata = {
+                                        "ID": spindle_id,
+                                        "angle": angle,
+                                        "battery": battery,
+                                        "gravity": gravity,
+                                        "name": spindle_name,
+                                        "temperature": temperature,
+                                        "token": token,
+                                        "RSSI": rssi
+                                    }
+                                    out = json.dumps(outdata)
+                                    debug(repr(addr) + ' - sending: ' + out, debugConfig='iSpindel.debug')
+                                    url = 'http://' + device["brewSpyAddress"] + ':' + device["brewSpyPort"] + '/api/ispindel/'
+                                    debug(repr(addr) + ' to : ' + url, debugConfig='iSpindel.debug')
+                                    req = urllib2.Request(url)
+                                    req.add_header('Content-Type', 'application/json')
+                                    req.add_header('User-Agent', spindle_name)
+                                    response = urllib2.urlopen(req, out)
+                                    debug(repr(addr) + ' - received: ' + response.read(), debugConfig='iSpindel.debug')
+                        except Exception as e:
+                            debug(repr(addr) + ' Brewspy Error: ' + str(e), debugConfig='iSpindel.debug')
+            
+                    if device["brewFatherEnabled"]:
+                        try:
+                            token = user_token if device["brewFatherUseiSpindleToken"] else device["brewFatherToken"]
+                            if token != '':
+                                if token[:1] != '*':
+                                    debug(repr(addr) + ' - sending to brewfather', debugConfig='iSpindel.debug')
+                                    import urllib2
+                                    outdata = {
+                                        "ID": spindle_id,
+                                        "angle": angle,
+                                        "battery": battery,
+                                        "gravity": gravity,
+                                        "name": spindle_name + device["brewFatherSuffix"],
+                                        "temperature": temperature,
+                                        "token": token
+                                    }
+                                    out = json.dumps(outdata)
+                                    debug(repr(addr) + ' - sending: ' + out, debugConfig='iSpindel.debug')
+                                    url = 'http://' + device["brewFatherAddress"] + ':' + device["brewFatherPort"] + '/ispindel?id=' + token
+                                    debug(repr(addr) + ' to : ' + url, debugConfig='iSpindel.debug')
+                                    req = urllib2.Request(url)
+                                    req.add_header('Content-Type', 'application/json')
+                                    req.add_header('User-Agent', spindle_name)
+                                    response = urllib2.urlopen(req, out)
+                                    debug(repr(addr) + ' - received: ' + response.read(), debugConfig='iSpindel.debug')
+                        except Exception as e:
+                            debug(repr(addr) + ' Brewfather Error: ' + str(e), debugConfig='iSpindel.debug')
+
+            except Exception, e:
+                log("Unable to Run iSpindel Listener")
+                debug("iSpindel Listener: " +str(e), debugConfig='iSpindel.debug')
+                debug(traceback.format_exc(), debugConfig='iSpindel.debug')
+                return
+            
