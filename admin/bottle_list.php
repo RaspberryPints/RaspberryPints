@@ -5,7 +5,7 @@ $htmlHelper = new HtmlHelper();
 $bottleManager = new BottleManager();
 $bottleTypeManager = new BottleTypeManager();
 $beerManager = new BeerManager();
-$srmManager = new SrmManager();
+//$srmManager = new SrmManager();
 
 $activeBottleIds = $bottleManager->GetAllActiveIds();
 if (isset ( $_POST ['saveBottles'] ) ) {
