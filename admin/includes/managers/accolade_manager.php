@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/manager.php';
-require_once __DIR__.'/../models/fermentable.php';
+require_once __DIR__.'/../models/accolade.php';
 
 class AccoladeManager extends Manager{
 	
