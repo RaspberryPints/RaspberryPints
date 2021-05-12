@@ -51,7 +51,7 @@ else
 	$ii = 0;
 	while ($xml && ($recipe = $xml->RECIPE[$ii++]))
 	{
-		$styleId = '';
+		//$styleId = '';
 		$catNum = $recipe->STYLE->CATEGORY . ($recipe->STYLE->LETTER?$recipe->STYLE->LETTER:$recipe->STYLE->STYLE_LETTER);
 		$styleName = encode($recipe->STYLE->NAME);
 
