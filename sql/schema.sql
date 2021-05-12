@@ -352,6 +352,65 @@ CREATE TABLE IF NOT EXISTS `beers` (
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
+
+CREATE TABLE IF NOT EXISTS `beerBatches` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`beerId` int(11) NULL,
+	`batchNumber` int(11) NULL,
+	`name` varchar(40) NOT NULL,
+	`notes` text NULL,
+	`startAmount` decimal(10,5) NULL,
+	`startAmountUnit` tinytext NULL,
+	`currentAmount` decimal(10,5) NULL,
+	`currentAmountUnit` tinytext NULL,
+	`fermentationTempMin` decimal(14,2) DEFAULT NULL,
+	`fermentationTempMinUnit` tinytext,
+	`fermentationTempSet` decimal(14,2) DEFAULT NULL,
+	`fermentationTempSetUnit` tinytext,
+	`fermentationTempMax` decimal(14,2) DEFAULT NULL,
+	`fermentationTempMaxUnit` tinytext,
+	`abv` decimal(3,1) NULL,
+	`og` decimal(4,3) NULL,
+	`ogUnit` tinytext NULL,
+	`fg` decimal(7,3) NULL,
+	`fgUnit` tinytext NULL,
+	`srm` decimal(7,1) NULL,
+	`ibu` int(4) NULL,
+	`rating` decimal(3,1) NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,	
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+CREATE TABLE `beerBatchDateTypes` (
+  `type` int(11) NOT NULL AUTO_INCREMENT,
+  `displayName` text NOT NULL,
+  `createdDate` timestamp NULL DEFAULT NULL,
+  `modifiedDate` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`type`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+INSERT INTO beerBatchDateTypes VALUES('1','Brewed','2021-01-21 09:56:22','2021-01-21 09:56:22');
+INSERT INTO beerBatchDateTypes VALUES('2','Primary','2021-01-21 09:56:22','2021-01-21 09:56:22');
+INSERT INTO beerBatchDateTypes VALUES('3','Secondary','2021-01-21 09:56:22','2021-01-21 09:56:22');
+INSERT INTO beerBatchDateTypes VALUES('4','Kegged','2021-01-21 09:56:22','2021-01-21 09:56:22');
+INSERT INTO beerBatchDateTypes VALUES('5','Bottle','2021-01-21 09:56:22','2021-01-21 09:56:22');
+INSERT INTO beerBatchDateTypes VALUES('6','Gone','2021-01-21 09:56:22','2021-01-21 09:56:22');
+        
+CREATE TABLE `beerBatchDates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `beerBatchId` int(11) DEFAULT NULL,
+  `type` int(11) NOT NULL,
+  `createdDate` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `beerBatchId` (`beerBatchId`),
+  KEY `type` (`type`),
+  CONSTRAINT `beerBatchDates_ibfk_1` FOREIGN KEY (`beerBatchId`) REFERENCES `beerBatches` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `beerBatchDates_ibfk_2` FOREIGN KEY (`type`) REFERENCES `beerBatchDateTypes` (`type`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 -- --------------------------------------------------------
 
 --
@@ -611,6 +670,7 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 	`keggingTempUnit` tinytext DEFAULT NULL,
 	`onTapId` int(11) NULL,
 	`beerId` int(11) NULL,
+    `beerBatchId` int(11) DEFAULT NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
     `hasContinuousLid` int(11) DEFAULT 0,
 	`createdDate` TIMESTAMP NULL,
@@ -639,8 +699,8 @@ CREATE TABLE IF NOT EXISTS `tapconfig` (
   `loadCellCmdPin` int(11) DEFAULT NULL,
   `loadCellRspPin` int(11) DEFAULT NULL,
   `loadCellTareReq` int(11) DEFAULT NULL,
-  `loadCellScaleRatio` int(11) DEFAULT NULL,
-  `loadCellTareOffset` int(11) DEFAULT NULL,
+  `loadCellScaleRatio` float DEFAULT NULL,
+  `loadCellTareOffset` float DEFAULT NULL,
   `loadCellUnit` tinytext DEFAULT NULL,
   `loadCellTareDate` TIMESTAMP NULL,
   `plaatoAuthToken` tinytext NULL,
@@ -675,6 +735,7 @@ CREATE TABLE IF NOT EXISTS `pours` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`tapId` int(11) NOT NULL,
 	`beerId` int(11) NOT NULL,
+	`beerBatchId` int(11) NOT NULL,
 	`pinId` int(11) NOT NULL,
 	`amountPoured` decimal(9,7) NOT NULL,
 	`amountPouredUnit` tinytext NULL,
@@ -779,6 +840,19 @@ CREATE TABLE IF NOT EXISTS `beerYeasts` (
 	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
 	FOREIGN KEY (`yeastsId`) REFERENCES yeasts(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+CREATE TABLE `beerBatchYeasts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `beerBatchId` int(11) NOT NULL,
+  `yeastsId` int(11) NOT NULL,
+  `amount` tinytext,
+  PRIMARY KEY (`id`),
+  KEY `beerBatchId` (`beerBatchId`),
+  KEY `yeastsId` (`yeastsId`),
+  CONSTRAINT `beerBatchYeasts_ibfk_1` FOREIGN KEY (`beerBatchId`) REFERENCES `beerBatches` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `beerBatchYeasts_ibfk_2` FOREIGN KEY (`yeastsId`) REFERENCES `yeasts` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 --
 -- Table structure for table `bottleTypes`
 --
@@ -894,6 +968,15 @@ CREATE TABLE IF NOT EXISTS `motionDetectors` (
 	`type` int(11) NOT NULL DEFAULT 0,
 	`pin` int(11) NULL,
 	`priority` int(11) NULL DEFAULT 0,
+	`ledPin` int(11) NULL DEFAULT 0,
+	`soundFile` tinytext,
+	`mqttCommand` tinytext,
+	`mqttEvent` tinytext,
+	`mqttUser` tinytext,
+	`mqttPass` tinytext,
+	`mqttHost` tinytext,
+	`mqttPort` tinytext,
+	`mqttInterval` int(11) NOT NULL DEFAULT 100,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
@@ -907,8 +990,11 @@ CREATE TABLE IF NOT EXISTS `tapEvents` (
   `tapId` int(11) NOT NULL,
   `kegId` int(11) NOT NULL,
   `beerId` int(11) NOT NULL,
+  `beerBatchId` int(11) NOT NULL,
   `amount` decimal(7,5) DEFAULT NULL,
   `amountUnit` tinytext NULL,
+  `beerBatchAmount` decimal(7,5) DEFAULT NULL,
+  `beerBatchAmountUnit` tinytext NULL,
   `userId` int(11) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,	
@@ -925,6 +1011,7 @@ CREATE TABLE IF NOT EXISTS `bottles` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`bottleTypeId` int(11) NOT NULL,
 	`beerId` int(11) NOT NULL,
+	`beerBatchId` int(11) NOT NULL,
 	`capRgba` varchar(16) NULL,
 	`capNumber` int(11) NULL,
 	`startAmount` int(11) NULL DEFAULT 0,
@@ -1513,7 +1600,7 @@ INSERT INTO ioPins ( shield, pin, name, col, row, rgb, pinSide, notes, createdDa
 
 ('Alamode', 12, 'MISO', 2, 5, '', 'left', '', NOW(), NOW()),
 
-('Alamode', 13, 'SCK/LED', 2, 4, '', 'left', 'Triggering LED will interfer with SPI', NOW(),NOW()),
+('Alamode', 13, 'SCK/LED', 2, 4, '', 'left', 'Triggering LED will interfere with SPI', NOW(),NOW()),
 
 ('Alamode', 14, 'GND/0v', 2, 3, '126,126,126', 'left', '', NOW(), NOW()),
 
@@ -1574,6 +1661,7 @@ CREATE TABLE IF NOT EXISTS `tempProbes` (
 	`notes` text NULL,
 	`manualAdj` decimal(4,2) NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
+	`statePin` int(11) DEFAULT 0,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	PRIMARY KEY (`id`)
@@ -1585,6 +1673,7 @@ CREATE TABLE IF NOT EXISTS `tempLog` (
 	`temp` decimal(6,2) NOT NULL,
 	`tempUnit` varchar(1) DEFAULT  'C',
 	`humidity` decimal(6,2) NULL,
+	`statePinState` int(11) NULL DEFAULT 0,
 	`takenDate` TIMESTAMP NOT NULL,	
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
@@ -1614,20 +1703,21 @@ SELECT
 	t.id,
 
 	b.id as 'beerId',
+	bb.id as 'beerBatchId',
 	b.name,
 	b.untID,
 	bs.name as 'style',
 	br.name as 'breweryName',
 	br.imageUrl as 'breweryImageUrl',
-	b.rating,
-	b.notes,
-	b.abv,
-	b.og as og,
-	b.ogUnit as ogUnit,
-	b.fg as fg,
-	b.fgUnit as fgUnit,
-	b.srm as srm,
-	b.ibu as ibu,
+	COALESCE(bb.rating, b.rating) AS rating,
+	COALESCE(bb.notes, b.notes) AS notes,
+	COALESCE(bb.abv, b.abv) AS abv,
+	COALESCE(bb.og, b.og) as og,
+	COALESCE(CASE WHEN bb.og IS NULL THEN NULL ELSE bb.ogUnit END, b.ogUnit) as ogUnit,
+	COALESCE(bb.fg, b.fg) as fg,
+	COALESCE(CASE WHEN bb.fg IS NULL THEN NULL ELSE bb.fgUnit END, b.fgUnit) as fgUnit,
+	COALESCE(bb.srm, b.srm) as srm,
+	COALESCE(bb.ibu, b.ibu) as ibu,
 	IFNULL(k.startAmount, 0)        as startAmount,
 	IFNULL(k.startAmountUnit, '')   as startAmountUnit,
     CASE WHEN k.hasContinuousLid = 0 THEN IFNULL(k.currentAmount, 0) ELSE IFNULL(k.startAmount, 0)  END      as remainAmount,
@@ -1646,6 +1736,7 @@ FROM taps t
 	LEFT JOIN tapconfig tc ON t.id = tc.tapId
 	LEFT JOIN kegs k ON k.id = t.kegId
 	LEFT JOIN beers b ON b.id = k.beerId
+	LEFT JOIN beerBatches bb ON bb.id = k.beerBatchId
 	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
 	LEFT JOIN breweries br ON br.id = b.breweryId
 	LEFT JOIN srmRgb s ON s.srm = b.srm
@@ -1669,20 +1760,21 @@ SELECT
 	t.id,
 
 	b.id as 'beerId',
+	bb.id as 'beerBatchId',
 	b.name,
 	b.untID,
 	bs.name as 'style',
 	br.name as 'breweryName',
 	br.imageUrl as 'breweryImageUrl',
-	b.rating,
-	b.notes,
-	b.abv,
-	b.og as og,
-	b.ogUnit as ogUnit,
-	b.fg as fg,
-	b.fgUnit as fgUnit,
-	b.srm as srm,
-	b.ibu as ibu,
+	COALESCE(bb.rating, b.rating) AS rating,
+	COALESCE(bb.notes, b.notes) AS notes,
+	COALESCE(bb.abv, b.abv) AS abv,
+	COALESCE(bb.og, b.og) as og,
+	COALESCE(CASE WHEN bb.og IS NULL THEN NULL ELSE bb.ogUnit END, b.ogUnit) as ogUnit,
+	COALESCE(bb.fg, b.fg) as fg,
+	COALESCE(CASE WHEN bb.fg IS NULL THEN NULL ELSE bb.fgUnit END, b.fgUnit) as fgUnit,
+	COALESCE(bb.srm, b.srm) as srm,
+	COALESCE(bb.ibu, b.ibu) as ibu,
 	bt.volume,
 	bt.volumeUnit,
 	t.startAmount,
@@ -1700,6 +1792,7 @@ SELECT
     GROUP_CONCAT(CONCAT(a.id,'~',a.name,'~',ba.amount) ORDER BY a.rank) as accolades
 FROM bottles t
 	LEFT JOIN beers b ON b.id = t.beerId
+	LEFT JOIN beerBatches bb ON b.id = t.beerBatchId
 	LEFT JOIN bottleTypes bt ON bt.id = t.bottleTypeId
 	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId
 	LEFT JOIN breweries br ON br.id = b.breweryId
@@ -1715,7 +1808,8 @@ AS
  SELECT 
 	t.*, 
 	tc.*, 
-	k.beerId 
+	k.beerId, 
+	k.beerBatchId 
  FROM taps t 
  LEFT JOIN tapconfig tc ON (t.id = tc.tapId) 
  LEFT JOIN kegs k ON (t.kegId = k.id);
@@ -1734,7 +1828,9 @@ AS
     k.notes,
     k.kegStatusCode,
     k.weight,
+    k.weightUnit,
     k.beerId,
+    k.beerBatchId,
     k.onTapId,
     t.tapNumber,
     k.active,
@@ -1782,11 +1878,23 @@ AS
   UNION
   (SELECT CASE WHEN tc.valvePin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Tap ', t.tapNumber, ' Valve')      AS Hardware, ABS(tc.valvePin) AS pin FROM tapconfig tc LEFT JOIN taps t ON (tc.tapId = t.id))
   UNION
+  (SELECT CASE WHEN tc.loadCellCmdPin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Tap ', t.tapNumber, ' Load Cell Command')      AS Hardware, ABS(tc.loadCellCmdPin) AS pin FROM tapconfig tc LEFT JOIN taps t ON (tc.tapId = t.id))
+  UNION
+  (SELECT CASE WHEN tc.loadCellRspPin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Tap ', t.tapNumber, ' Load Cell Response')      AS Hardware, ABS(tc.loadCellRspPin) AS pin FROM tapconfig tc LEFT JOIN taps t ON (tc.tapId = t.id))
+  UNION
   (SELECT CASE WHEN pin        <> 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('RFID ', name, ' Trigger')          AS Hardware, ABS(pin) AS pin FROM rfidReaders)
   UNION
-  (SELECT CASE WHEN pin        <> 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('RFID ', name, ' Trigger')          AS Hardware, ABS(pin) AS pin FROM motionDetectors)
+  (SELECT CASE WHEN pin        <> 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('PIR ', name, ' Trigger')           AS Hardware, ABS(pin) AS pin FROM motionDetectors)
   UNION
-  (SELECT CASE WHEN configValue<> 0 THEN 'Pi' ELSE '' END AS shield, displayName                                AS Hardware, ABS(configValue) AS pin FROM config WHERE configName IN ('valvesPowerPin', 'useFanPin'));
+  (SELECT CASE WHEN pin        <> 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('PIR ', name, ' LED')               AS Hardware, ABS(ledPin) AS pin FROM motionDetectors)
+  UNION
+  (SELECT CASE WHEN pin        <> 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Temp Probe ', name, ' State')               AS Hardware, ABS(statePin) AS pin FROM tempProbes)
+  UNION
+  (SELECT CASE WHEN configValue<> 0 THEN 'Pi' ELSE '' END AS shield, displayName                                AS Hardware, ABS(configValue) AS pin FROM config WHERE configName IN ('valvesPowerPin', 'useFanPin'))
+  UNION
+  (SELECT CASE WHEN gt.loadCellCmdPin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Gas Tank ', COALESCE(gt.label, gt.id), ' Load Cell Command')      AS Hardware, ABS(gt.loadCellCmdPin) AS pin FROM gasTanks gt)
+  UNION
+  (SELECT CASE WHEN gt.loadCellRspPin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Gas Tank ', COALESCE(gt.label, gt.id), ' Load Cell Response')      AS Hardware, ABS(gt.loadCellRspPin) AS pin FROM gasTanks gt);
 
 CREATE OR REPLACE VIEW vwIoPins
 AS
@@ -1828,8 +1936,11 @@ SELECT
   te.tapId,
   te.kegId,
   te.beerId,
+  te.beerBatchId,
   te.amount,
   te.amountUnit,
+  te.beerBatchAmount,
+  te.beerBatchAmountUnit,
   CASE WHEN te.type = 2 THEN (SELECT amount FROM tapEvents WHERE id = (SELECT MAX(id) FROM tapEvents WHERE id < te.id AND type = 1 AND tapId = te.tapId AND kegId = te.kegId AND beerId = te.beerId)) ELSE NULL END AS newAmount,
   CASE WHEN te.type = 2 THEN (SELECT amountUnit FROM tapEvents WHERE id = (SELECT MAX(id) FROM tapEvents WHERE id < te.id AND type = 1 AND tapId = te.tapId AND kegId = te.kegId AND beerId = te.beerId)) ELSE NULL END AS newAmountUnit,
   te.userId,
@@ -1857,6 +1968,7 @@ SELECT
     temp,
     tempUnit,
     humidity,
+    statePinState,
     takenDate
 FROM tempLog tl 
 LEFT JOIN tempProbes tp ON tl.probe = tp.name;
@@ -1870,6 +1982,460 @@ AS
     srm.rgb
  FROM accolades a LEFT JOIN srmRgb srm
         ON a.srm = srm.srm;
+        
+CREATE TABLE `iSpindel_Data` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`createdDate` datetime NOT NULL,
+	`name` varchar(64) COLLATE ascii_bin NOT NULL,
+	`iSpindelId` INT UNSIGNED NOT NULL,
+	`angle` double NOT NULL,
+	`temperature` double NOT NULL,
+	`temperatureUnit` tinytext DEFAULT NULL,
+	`battery` double NOT NULL,
+	`resetFlag` boolean,
+	`gravity` double NOT NULL DEFAULT 0,
+	`userToken` varchar(64) COLLATE ascii_bin,
+	`interval` int,
+	`RSSI` int,
+	`beerId` int(11) NULL,
+	`beerBatchId` int(11) NULL,
+	`beerName` text NULL,
+	`gravityUnit` tinytext NULL,
+	PRIMARY KEY (`id`)
+	) 
+ENGINE=InnoDB DEFAULT CHARSET=ascii 
+COLLATE=ascii_bin COMMENT='iSpindel Data';
+
+CREATE TABLE `iSpindel_Device` (
+	`iSpindelId` int NOT NULL,
+	`name` varchar(64) NULL,
+	`active` int NOT NULL DEFAULT 1,
+	`beerId` int(11) NULL,
+	`beerBatchId` int(11) NULL,
+	`gravityUnit` tinytext NULL,
+    `const1` double NULL,
+    `const2` double NULL,
+    `const3` double NULL,
+    `interval` int NULL,
+    `token` varchar(64) NULL,
+    `polynomial` varchar(64) NULL,
+    `sent` boolean NOT NULL DEFAULT FALSE,
+	`remoteConfigEnabled` int NOT NULL DEFAULT 0,
+	`sqlEnabled` int NOT NULL DEFAULT 1,
+	`csvEnabled` int NOT NULL DEFAULT 0,
+	`csvOutpath` varchar(256) NULL,
+	`csvDelimiter` varchar(1) NOT NULL DEFAULT ',',
+	`csvNewLine` int NOT NULL DEFAULT 0,
+	`csvIncludeDateTime` int NOT NULL DEFAULT 1,
+    `unidotsEnabled` int NOT NULL DEFAULT 0,
+    `unidotsUseiSpindelToken` int NOT NULL DEFAULT 0,
+    `unidotsToken` varchar(256) NULL,
+	`forwardEnabled` int NOT NULL DEFAULT 0,
+    `forwardAddress` varchar(256) NULL,
+    `forwardPort` varchar(256) NULL,
+	`fermentTrackEnabled` int NOT NULL DEFAULT 0,
+    `fermentTrackAddress` varchar(256) NULL,
+    `fermentTrackPort` varchar(256) NULL,
+    `fermentTrackUseiSpindelToken` int NOT NULL DEFAULT 0,
+    `fermentTrackToken` varchar(256) NULL,
+	`brewPiLessEnabled` int NOT NULL DEFAULT 0,
+    `brewPiLessAddress` varchar(256) NULL,
+	`craftBeerPiEnabled` int NOT NULL DEFAULT 0,
+    `craftBeerPiAddress` varchar(256) NULL,
+	`craftBeerPiSendAngle` int NOT NULL DEFAULT 0,
+	`brewSpyEnabled` int NOT NULL DEFAULT 0,
+    `brewSpyAddress` varchar(256) NULL,
+    `brewSpyPort` varchar(256) NULL,
+    `brewSpyUseiSpindelToken` int NOT NULL DEFAULT 0,
+    `brewSpyToken` varchar(256) NULL,
+	`brewFatherEnabled` int NOT NULL DEFAULT 0,
+    `brewFatherAddress` varchar(256) NULL,
+    `brewFatherPort` varchar(256) NULL,
+    `brewFatherUseiSpindelToken` int NOT NULL DEFAULT 0,
+    `brewFatherToken` varchar(256) NULL,
+    `brewFatherSuffix` varchar(256) NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	PRIMARY KEY (`iSpindelId`),
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
+	FOREIGN KEY (`beerBatchId`) REFERENCES beerBatches(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=ascii COLLATE=ascii_bin COMMENT='iSpindel Devices Data';
+
+
+
+CREATE TABLE `iSpindel_Connector` (
+	`id` int NOT NULL AUTO_INCREMENT,
+    `address` varchar(256) NULL,
+    `port` varchar(256) NULL,
+    `allowedConnections` int(11) NOT NULL DEFAULT 5,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=ascii COLLATE=ascii_bin COMMENT='iSpindel Connectors Data';
+
+
+CREATE OR REPLACE VIEW vwiSpindel_Device
+AS
+SELECT
+    idev.*,
+    MAX(idat.temperature) as currentTemperature,
+    MAX(idat.temperatureUnit) as currentTemperatureUnit,
+    MIN(idat.gravity) as currentGravity,
+	MIN(idat.gravityUnit) AS currentGravityUnit
+FROM iSpindel_Device idev 
+LEFT JOIN iSpindel_Data idat ON idev.iSpindelId = idat.iSpindelId 
+WHERE idat.iSpindelId IS NULL OR idat.createdDate = (SELECT max(createdDate) FROM iSpindel_Data idat2 where iSpindelId = idat.iSpindelId)
+GROUP BY idev.iSpindelId;
+
+
+CREATE TABLE IF NOT EXISTS `fermenterTypes` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`displayName` text NOT NULL,
+	`maxAmount` decimal(6,2) NOT NULL,
+	`maxAmountUnit`  tinytext NULL,
+	`emptyWeight` decimal(11, 4) NULL,
+	`emptyWeightUnit` tinytext NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `fermenterTypes`
+--
+
+INSERT INTO `fermenterTypes` ( displayName, maxAmount, maxAmountUnit, emptyWeight, emptyWeightUnit, createdDate, modifiedDate ) VALUES
+( 'Conical (5 gal)', '5', 'gal', '8.1571', 'lb', NOW(), NOW() ),
+( 'Conical (10 gal)', '10', 'gal', '16.3142', 'lb', NOW(), NOW() ),
+( 'Conical (15 gal)', '15', 'gal', '16.3142', 'lb', NOW(), NOW() ),
+( 'Conical (30 gal)', '30', 'gal', '16.3142', 'lb', NOW(), NOW() ),
+( 'Carboy (5 gal)', '5', 'gal', '8.1571', 'lb', NOW(), NOW() ),
+( 'Carboy (6 gal)', '6', 'gal', '8.1571', 'lb', NOW(), NOW() ),
+( 'Barrel (30 gal)', '30', 'gal', '8.1571', 'lb', NOW(), NOW() );
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fermenterStatuses`
+--
+
+CREATE TABLE IF NOT EXISTS `fermenterStatuses` (
+	`code` varchar(20) NOT NULL,
+	`name` text NOT NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`code`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `kegStatuses`
+--
+
+INSERT INTO `fermenterStatuses` ( code, name, createdDate, modifiedDate ) VALUES
+( 'PRIMARY', 'Primary', NOW(), NOW() ),
+( 'SECONDARY', 'Secondary', NOW(), NOW() ),
+( 'DRY_HOPPING', 'Dry Hopping', NOW(), NOW() ),
+( 'CONDITIONING', 'Conditioning', NOW(), NOW() ),
+( 'BULK_AGING', 'Bulk Aging', NOW(), NOW() ),
+( 'FLOODED', 'Flooded', NOW(), NOW() ),
+( 'SANITIZED', 'Sanitized', NOW(), NOW() ),
+( 'CLEAN', 'Clean', NOW(), NOW() ),
+( 'NEEDS_CLEANING', 'Needs Cleaning', NOW(), NOW() ),
+( 'NEEDS_PARTS', 'Needs Parts', NOW(), NOW() ),
+( 'NEEDS_REPAIRS', 'Needs Repairs', NOW(), NOW() );
+
+
+CREATE TABLE IF NOT EXISTS `fermenters` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`label` varchar(40) NOT NULL,
+	`fermenterTypeId` int(11) NOT NULL,
+	`make` text NULL,
+	`model` text NULL,
+	`serial` text NULL,
+	`notes` text NULL,
+	`fermenterStatusCode` varchar(20) NULL,
+	`weight` decimal(11,4) NULL,
+	`weightUnit` tinytext NULL,
+	`emptyWeight` decimal(11,4) NULL,
+	`emptyWeightUnit` tinytext NULL,
+	`maxVolume` decimal(11,4) NULL,
+	`maxVolumeUnit` tinytext NULL,
+	`startAmount` decimal(10,5) NULL,
+	`startAmountUnit` tinytext NULL,
+	`currentAmount` decimal(10,5) NULL,
+	`currentAmountUnit` tinytext NULL,
+	`fermentationPSI` decimal(14,2) DEFAULT NULL,
+	`fermentationPSIUnit` tinytext NULL,
+	`beerId` int(11) NULL,
+	`beerBatchId` int(11) NULL,
+	`active` tinyint(1) NOT NULL DEFAULT 1,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`fermenterStatusCode`) REFERENCES fermenterStatuses(`Code`) ON DELETE CASCADE,
+	FOREIGN KEY (`fermenterTypeId`) REFERENCES fermenterTypes(`id`) ON DELETE CASCADE,
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
+	FOREIGN KEY (`beerBatchId`) REFERENCES beerBatches(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `gasTankTypes` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`displayName` text NOT NULL,
+	`maxAmount` decimal(6,2) NOT NULL,
+	`maxAmountUnit`  tinytext NULL,
+	`emptyWeight` decimal(11, 4) NULL,
+	`emptyWeightUnit` tinytext NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `kegTypes`
+--
+
+INSERT INTO `gasTankTypes` ( displayName, maxAmount, maxAmountUnit, emptyWeight, emptyWeightUnit, createdDate, modifiedDate ) VALUES
+( 'CO2 (5 lb)', '5', 'lb', '8.1571', 'lb', NOW(), NOW() ),
+( 'CO2 (10 lb)', '10', 'lb', '16.3142', 'lb', NOW(), NOW() ),
+( 'CO2 (20 lb)', '20', 'lb', '16.3142', 'lb', NOW(), NOW() ),
+( 'Nitro (5 lb)', '5', 'lb', '8.1571', 'lb', NOW(), NOW() ),
+( 'Nitro (10 lb)', '10', 'lb', '16.3142', 'lb', NOW(), NOW() ),
+( 'Nitro (20 lb)', '20', 'lb', '16.3142', 'lb', NOW(), NOW() );
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `kegStatuses`
+--
+
+CREATE TABLE IF NOT EXISTS `gasTankStatuses` (
+	`code` varchar(20) NOT NULL,
+	`name` text NOT NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`code`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `kegStatuses`
+--
+
+INSERT INTO `gasTankStatuses` ( code, name, createdDate, modifiedDate ) VALUES
+( 'DISPENSING', 'Dispensing', NOW(), NOW() ),
+( 'FULL', 'Full', NOW(), NOW() ),
+( 'PARTIAL', 'Partial', NOW(), NOW() ),
+( 'EMPTY', 'Empty', NOW(), NOW() ),
+( 'NEEDS_CERTIFICATION', 'Needs Certification', NOW(), NOW() ),
+( 'NEEDS_PARTS', 'Needs Parts', NOW(), NOW() ),
+( 'NEEDS_REPAIRS', 'Needs Repairs', NOW(), NOW() );
+
+
+CREATE TABLE IF NOT EXISTS `gasTanks` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`label` varchar(40) NOT NULL,
+	`gasTankTypeId` int(11) NOT NULL,
+	`make` text NULL,
+	`model` text NULL,
+	`serial` text NULL,
+	`notes` text NULL,
+	`gasTankStatusCode` varchar(20) NULL,
+	`weight` decimal(11,4) NULL,
+	`weightUnit` tinytext NULL,
+	`maxWeight` decimal(11,4) NULL,
+	`maxWeightUnit` tinytext NULL,
+	`emptyWeight` decimal(11,4) NULL,
+	`emptyWeightUnit` tinytext NULL,
+	`maxVolume` decimal(11,4) NULL,
+	`maxVolumeUnit` tinytext NULL,
+	`startAmount` decimal(10,5) NULL,
+	`startAmountUnit` tinytext NULL,
+	`currentAmount` decimal(10,5) NULL,
+	`currentAmountUnit` tinytext NULL,
+        `loadCellCmdPin` int(11) DEFAULT NULL,
+        `loadCellRspPin` int(11) DEFAULT NULL,
+        `loadCellTareReq` int(11) DEFAULT NULL,
+        `loadCellScaleRatio` float DEFAULT NULL,
+        `loadCellTareOffset` float DEFAULT NULL,
+        `loadCellUnit` tinytext DEFAULT NULL,
+        `loadCellTareDate` TIMESTAMP NULL,
+	`active` tinyint(1) NOT NULL DEFAULT 1,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`gasTankStatusCode`) REFERENCES gasTankStatuses(`Code`) ON DELETE CASCADE,
+	FOREIGN KEY (`gasTankTypeId`) REFERENCES gasTankTypes(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+ 
+
+CREATE OR REPLACE VIEW vwGasTanks 
+AS
+select 
+	g.id AS id,
+	g.label AS label,
+	g.gasTankTypeId AS gasTankTypeId,
+	g.make AS make,
+	g.model AS model,
+	g.serial AS serial,
+	g.notes AS notes,
+	g.gasTankStatusCode AS gasTankStatusCode,
+	g.weight AS weight,
+	g.weightUnit AS weightUnit,
+	g.maxWeight AS maxWeight,
+	g.maxWeightUnit AS maxWeightUnit,
+	g.active AS active,
+	(case when ((isnull(g.emptyWeight) or (g.emptyWeight = '') or (g.emptyWeight = 0)) and (gt.emptyWeight is not null)) then gt.emptyWeight else g.emptyWeight end) AS emptyWeight,
+	(case when ((isnull(g.emptyWeight) or (g.emptyWeight = '') or (g.emptyWeight = 0)) and (gt.emptyWeight is not null)) then gt.emptyWeightUnit else g.emptyWeightUnit end) AS emptyWeightUnit,
+	(case when ((isnull(g.maxVolume) or (g.maxVolume = '') or (g.maxVolume = 0)) and (gt.maxAmount is not null)) then gt.maxAmount else g.maxVolume end) AS maxVolume,
+	(case when ((isnull(g.maxVolume) or (g.maxVolume = '') or (g.maxVolume = 0)) and (gt.maxAmount is not null)) then gt.maxAmountUnit else g.maxVolumeUnit end) AS maxVolumeUnit,
+	g.startAmount AS startAmount,
+	g.startAmountUnit AS startAmountUnit,
+	g.currentAmount AS currentAmount,
+	g.currentAmountUnit AS currentAmountUnit,
+        g.loadCellCmdPin AS loadCellCmdPin,
+        g.loadCellRspPin AS loadCellRspPin,
+        g.loadCellTareReq AS loadCellTareReq,
+        g.loadCellScaleRatio AS loadCellScaleRatio,
+        g.loadCellTareOffset AS loadCellTareOffset,
+        g.loadCellUnit AS loadCellUnit,
+        g.loadCellTareDate AS loadCellTareDate,
+	g.modifiedDate AS modifiedDate,
+	g.createdDate AS createdDate 
+from (gasTanks g 
+		left join gasTankTypes gt on((g.GasTankTypeId = gt.id)));
+
+
+CREATE OR REPLACE VIEW vwbeerBatches 
+AS 
+select 
+	bb.id AS id,
+	bb.beerId AS beerId,
+	bb.batchNumber AS batchNumber,
+	bb.name AS name,
+	bb.notes AS notes,
+	bb.startAmount AS startAmount,
+	bb.startAmountUnit AS startAmountUnit,
+	bb.currentAmount AS currentAmount,
+	bb.currentAmountUnit AS currentAmountUnit,
+	bb.fermentationTempMin AS fermentationTempMin,
+	bb.fermentationTempMinUnit AS fermentationTempMinUnit,
+	bb.fermentationTempSet AS fermentationTempSet,
+	bb.fermentationTempSetUnit AS fermentationTempSetUnit,
+	bb.fermentationTempMax AS fermentationTempMax,
+	bb.fermentationTempMaxUnit AS fermentationTempMaxUnit,
+	bb.abv AS abv,
+	bb.og AS og,
+	bb.ogUnit AS ogUnit,
+	bb.fg AS fg,
+	bb.fgUnit AS fgUnit,
+	bb.srm AS srm,
+	bb.ibu AS ibu,
+	bb.rating AS rating,
+	bb.createdDate AS createdDate,
+	bb.modifiedDate AS modifiedDate,
+	b.name AS beerName 
+from (beerBatches bb left join beers b on((b.id = bb.beerId)));
+
+
+CREATE OR REPLACE VIEW vwiSpindel_Device 
+AS 
+select 
+	idev.iSpindelId AS iSpindelId,
+	idev.active AS active,
+	idev.beerId AS beerId,
+	idev.const1 AS const1,
+	idev.const2 AS const2,
+	idev.const3 AS const3,
+	idev.interval AS `interval`,
+	idev.token AS token,
+	idev.polynomial AS polynomial,
+	idev.sent AS sent,
+	idev.remoteConfigEnabled AS remoteConfigEnabled,
+	idev.sqlEnabled AS sqlEnabled,
+	idev.csvEnabled AS csvEnabled,
+	idev.csvOutpath AS csvOutpath,
+	idev.csvDelimiter AS csvDelimiter,
+	idev.csvNewLine AS csvNewLine,
+	idev.csvIncludeDateTime AS csvIncludeDateTime,
+	idev.unidotsEnabled AS unidotsEnabled,
+	idev.unidotsUseiSpindelToken AS unidotsUseiSpindelToken,
+	idev.unidotsToken AS unidotsToken,
+	idev.forwardEnabled AS forwardEnabled,
+	idev.forwardAddress AS forwardAddress,
+	idev.forwardPort AS forwardPort,
+	idev.fermentTrackEnabled AS fermentTrackEnabled,
+	idev.fermentTrackAddress AS fermentTrackAddress,
+	idev.fermentTrackPort AS fermentTrackPort,
+	idev.fermentTrackUseiSpindelToken AS fermentTrackUseiSpindelToken,
+	idev.fermentTrackToken AS fermentTrackToken,
+	idev.brewPiLessEnabled AS brewPiLessEnabled,
+	idev.brewPiLessAddress AS brewPiLessAddress,
+	idev.craftBeerPiEnabled AS craftBeerPiEnabled,
+	idev.craftBeerPiAddress AS craftBeerPiAddress,
+	idev.craftBeerPiSendAngle AS craftBeerPiSendAngle,
+	idev.brewSpyEnabled AS brewSpyEnabled,
+	idev.brewSpyAddress AS brewSpyAddress,
+	idev.brewSpyPort AS brewSpyPort,
+	idev.brewSpyUseiSpindelToken AS brewSpyUseiSpindelToken,
+	idev.brewSpyToken AS brewSpyToken,
+	idev.brewFatherEnabled AS brewFatherEnabled,
+	idev.brewFatherAddress AS brewFatherAddress,
+	idev.brewFatherPort AS brewFatherPort,
+	idev.brewFatherUseiSpindelToken AS brewFatherUseiSpindelToken,
+	idev.brewFatherToken AS brewFatherToken,
+	idev.brewFatherSuffix AS brewFatherSuffix,
+	idev.createdDate AS createdDate,
+	idev.modifiedDate AS modifiedDate,
+	idev.name AS name,
+	idev.beerBatchId AS beerBatchId,
+	idev.gravityUnit AS gravityUnit,
+	max(idat.temperature) AS currentTemperature,
+	max(idat.temperatureUnit) AS currentTemperatureUnit,
+	min(idat.gravity) AS currentGravity,
+	min(idat.gravityUnit) AS currentGravityUnit
+from (iSpindel_Device idev 
+		left join iSpindel_Data idat on((idev.iSpindelId = idat.iSpindelId))) 
+		where (isnull(idat.iSpindelId) 
+		or (idat.createdDate = (select max(idat2.createdDate) from iSpindel_Data idat2 where (idat2.iSpindelId = idat.iSpindelId)))) group by idev.iSpindelId;
+
+
+CREATE OR REPLACE VIEW vwFermenters 
+AS 
+select  
+    f.id AS id,
+    f.label AS label,
+    f.fermenterTypeId AS fermenterTypeId,
+    f.make AS make,
+    f.model AS model,
+    f.serial AS serial,
+    f.notes AS notes,
+    f.fermenterStatusCode AS fermenterStatusCode,
+    f.weight AS weight,
+    f.weightUnit AS weightUnit,
+    f.beerId AS beerId,
+    f.beerBatchId AS beerBatchId,
+    f.active AS active,
+    (case when ((isnull(f.emptyWeight) or (f.emptyWeight = '') or (f.emptyWeight = 0)) and (ft.emptyWeight is not null)) then ft.emptyWeight else f.emptyWeight end) AS emptyWeight,
+    (case when ((isnull(f.emptyWeight) or (f.emptyWeight = '') or (f.emptyWeight = 0)) and (ft.emptyWeight is not null)) then ft.emptyWeightUnit else f.emptyWeightUnit end) AS emptyWeightUnit,
+    (case when ((isnull(f.maxVolume) or (f.maxVolume = '') or (f.maxVolume = 0)) and (ft.maxAmount is not null)) then ft.maxAmount else f.maxVolume end) AS maxVolume,
+    (case when ((isnull(f.maxVolume) or (f.maxVolume = '') or (f.maxVolume = 0)) and (ft.maxAmount is not null)) then ft.maxAmountUnit else f.maxVolumeUnit end) AS maxVolumeUnit,
+    f.startAmount AS startAmount,
+    f.startAmountUnit AS startAmountUnit,
+    f.currentAmount AS currentAmount,
+    f.currentAmountUnit AS currentAmountUnit,
+    f.fermentationPSI AS fermentationPSI,
+    f.fermentationPSIUnit AS fermentationPSIUnit,
+    f.modifiedDate AS modifiedDate,
+    f.createdDate AS createdDate 
+    from (fermenters f 
+            left join fermenterTypes ft 
+            on((f.fermenterTypeId = ft.id)));
+       
         
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
