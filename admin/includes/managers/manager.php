@@ -25,9 +25,9 @@ abstract class Manager {
 				$value = $dbObject->{'get_'.$col}();
 				$value = $mysqli->escape_string($value);
 				if($value && (is_string($value) || preg_match("/[^0-9]/", $value) || $value == '')){
-					$columns.= "$col = NULLIF('$value','')";
+					$columns.= "`$col` = NULLIF('$value','')";
 				}else{
-					$columns.= "$col = ".(!is_null($value) && $value != ''?$value:"null");				
+					$columns.= "`$col` = ".(!is_null($value) && $value != ''?$value:"null");				
 				}
 			}
 			if($this->hasModifiedColumn())$columns.=(strlen($columns) > 0?',':'')." modifiedDate = NOW() ";
@@ -40,7 +40,7 @@ abstract class Manager {
 			$columns = "";
 			foreach($this->getInsertColumns() as $col){
 				if(strlen($columns) > 0) $columns.= ', ';
-				$columns.= $col;
+				$columns.= "`$col`";
 			}
 			if($this->hasModifiedColumn())$columns.=(strlen($columns) > 0?',':'')." modifiedDate";
 			if($this->hasCreatedColumn())$columns.=(strlen($columns) > 0?',':'')." createdDate";
