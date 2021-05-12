@@ -9,7 +9,7 @@ class MotionDetectorManager extends Manager{
         return ["id"];
     }
     protected function getColumns(){
-        return ["name", "type", "pin", "priority"];
+        return ["name", "type", "pin", "priority", "ledPin", "soundFile", "mqttCommand", "mqttEvent", "mqttUser", "mqttPass", "mqttHost", "mqttPort", "mqttInterval"];
     }
     protected function getTableName(){
         return "motionDetectors";

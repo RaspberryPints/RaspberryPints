@@ -31,6 +31,15 @@ if (isset ( $_POST ['save'] )) {
 	    $reader->set_type($_POST['type'][$ii]);
 	    $reader->set_pin($_POST['pin'][$ii]);
 	    $reader->set_priority($_POST['priority'][$ii]);
+	    $reader->set_ledPin($_POST['ledPin'][$ii]);
+	    $reader->set_soundFile($_POST['soundFile'][$ii]);
+	    $reader->set_mqttCommand($_POST['mqttCommand'][$ii]);
+	    $reader->set_mqttEvent($_POST['mqttEvent'][$ii]);
+	    $reader->set_mqttUser($_POST['mqttUser'][$ii]);
+	    $reader->set_mqttPass($_POST['mqttPass'][$ii]);
+	    $reader->set_mqttHost($_POST['mqttHost'][$ii]);
+	    $reader->set_mqttPort($_POST['mqttPort'][$ii]);
+	    $reader->set_mqttInterval($_POST['mqttInterval'][$ii]);
 	    if(!$newReader || ($newReader && $reader->get_name() != '')) if(!$mdManager->save($reader))$error=true;
 	    $ii++;
 	    $reconfig = true;
@@ -48,7 +57,7 @@ if (isset ( $_POST ['saveSettings'] ) || isset ( $_POST ['configuration'] )) {
     if (isset ( $_POST ['saveSettings'] ) )$reconfig = true;
 }
 if($reconfig){
-    file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=all' );
+    include('triggerAll.php');
 }
 $readers = $mdManager->GetAllActive();
 $numberOfReaders=count($readers);
@@ -94,11 +103,20 @@ include 'top_menu.php';
                 <table style="width:800px" id="tableList">
                 	<thead>
                         <tr>
-                            <th style="width:30%; vertical-align: middle;">Name</th>
-                            <th style="width:30%; vertical-align: middle;">Type</th>
-                            <th style="width:30%; vertical-align: middle;">Pi Pin</th>
-                            <th style="width:30%; vertical-align: middle;">Priority</th>
-                            <th style="width:10%; vertical-align: middle;"></th>
+                            <th style="width:15%; vertical-align: middle;">Name</th>
+                            <!--<th style="width:5%; vertical-align: middle;">Type</th>-->
+                            <th style="width:5%; vertical-align: middle;">Pi Pin</th>
+                            <th style="width:5%; vertical-align: middle;">Priority</th>
+                            <th style="width:5%; vertical-align: middle;">LED Pin</th>
+                            <th style="width:10%; vertical-align: middle;">Sound File</th>
+                            <th style="width:10%; vertical-align: middle;">MQTT<br/>Command</th>
+                            <th style="width:10%; vertical-align: middle;">MQTT<br/>Event</th>
+                            <th style="width:5%; vertical-align: middle;">MQTT<br/>User</th>
+                            <th style="width:5%; vertical-align: middle;">MQTT<br/>Password</th>
+                            <th style="width:10%; vertical-align: middle;">MQTT<br/>Host</th>
+                            <th style="width:5%; vertical-align: middle;">MQTT<br/>Port</th>
+                            <th style="width:5%; vertical-align: middle;">MQTT<br/>Interval</th>
+                            <th style="width:5%; vertical-align: middle;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -111,23 +129,53 @@ include 'top_menu.php';
                             foreach ($readers as $reader){
                         ?>
                                 <tr>
-                                    <td style="width:40%; vertical-align: middle;">
+                                    <td style="width:15%; vertical-align: middle;">
             							<input type="hidden" name="id[]" value="<?php echo $reader->get_id()?>" />
                                         <input type="text" id="name" class="largebox" name="name[]" value="<?php echo $reader->get_name() ?>" />
+            							<input type="hidden" name="type[]" value="0" />
                                     </td>
-                                    <td style="width:25%;vertical-align: middle;">
+                                    <?php if(false) {?>
+                                    <td style="width:5%;vertical-align: middle;">
                                     	<select id="<?php echo $reader->get_id() ?>" name='type[]' class=''>
                                         	<option value='0'>PIR</option>
 <!--                                         	<option value='1'>????</option> --><!-- Not Implemented -->
                                         </select>
                                     </td>
-                                    <td style="width:25%; vertical-align: middle;">
+                                    <?php }?>
+                                    <td style="width:5%; vertical-align: middle;">
                                         <input type="text" id="pin" class="smallbox" name="pin[]" value="<?php echo $reader->get_pin() ?>" />
                                     </td>
-                                    <td style="width:25%; vertical-align: middle;">
+                                    <td style="width:5%; vertical-align: middle;">
                                         <input type="text" id="priority" class="smallbox" name="priority[]" value="<?php echo $reader->get_priority() ?>" />
                                     </td>
-                                    <td style="width:10%;vertical-align: middle;">
+                                    <td style="width:5%; vertical-align: middle;">
+                                        <input type="text" id="ledPin" class="smallbox" name="ledPin[]" value="<?php echo $reader->get_ledPin() ?>" />
+                                    </td>
+                                    <td style="width:10%; vertical-align: middle;">
+                                        <input type="text" id="soundFile" class="smallbox" name="soundFile[]" value="<?php echo $reader->get_soundFile() ?>" />
+                                    </td>
+                                    <td style="width:10%; vertical-align: middle;">
+                                        <input type="text" id="mqttCommand" class="smallbox" name="mqttCommand[]" value="<?php echo $reader->get_mqttCommand() ?>" />
+                                    </td>
+                                    <td style="width:10%; vertical-align: middle;">
+                                        <input type="text" id="mqttEvent" class="smallbox" name="mqttEvent[]" value="<?php echo $reader->get_mqttEvent() ?>" />
+                                    </td>
+                                    <td style="width:5%; vertical-align: middle;">
+                                        <input type="text" id="mqttUser" class="smallbox" name="mqttUser[]" value="<?php echo $reader->get_mqttUser() ?>" />
+                                    </td>
+                                    <td style="width:5%; vertical-align: middle;">
+                                        <input type="text" id="mqttPass" class="smallbox" name="mqttPass[]" value="<?php echo $reader->get_mqttPass() ?>" />
+                                    </td>
+                                    <td style="width:10%; vertical-align: middle;">
+                                        <input type="text" id="mqttHost" class="smallbox" name="mqttHost[]" value="<?php echo $reader->get_mqttHost() ?>" />
+                                    </td>
+                                    <td style="width:5%; vertical-align: middle;">
+                                        <input type="text" id="mqttPort" class="smallbox" name="mqttPort[]" value="<?php echo $reader->get_mqttPort() ?>" />
+                                    </td>
+                                    <td style="width:5%; vertical-align: middle;">
+                                        <input type="text" id="mqttInterval" class="smallbox" name="mqttInterval[]" value="<?php echo $reader->get_mqttInterval() ?>" />
+                                    </td>
+                                    <td style="width:5%;vertical-align: middle;">
                                         <button name="delete" type="button" class="btn" style="white-space:nowrap" value="<?php echo $reader->get_id()?>" onClick="removeRow(this)">Delete</button>
                                     </td>
                                 </tr>
