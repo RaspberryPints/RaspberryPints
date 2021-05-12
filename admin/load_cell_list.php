@@ -1,7 +1,9 @@
 <?php
 require_once __DIR__.'/header.php';
+require_once __DIR__.'/includes/managers/gasTank_manager.php';
 $htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
+$gasTankManager = new GasTankManager();
 $kegManager = new KegManager();
 
 //$config = getAllConfigs();
@@ -9,7 +11,11 @@ $kegManager = new KegManager();
 $reconfig = false;
 if (isset ( $_POST ['tare'] )) {
     $tapManager->set_tapTareRequested($_POST ['tare'], TRUE);
-    file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=tare');
+    triggerPythonAction("tare");
+}
+if (isset ( $_POST ['tareGT'] )) {
+    $gasTankManager->set_GasTankTareRequested($_POST ['tareGT'], TRUE);
+    triggerPythonAction("tare");
 }
 if (isset ( $_POST ['save'] )) {
 	$error = false;
@@ -22,7 +28,8 @@ if (isset ( $_POST ['save'] )) {
 	        $ii++;
 	        continue;
 	    }
-	    if(!$tapManager->saveTapLoadCellInfo($_POST ['id'][$ii], $_POST['loadCellCmdPin'][$ii], $_POST['loadCellRspPin'][$ii], $_POST['loadCellScaleRatio'][$ii], $_POST['loadCellTareOffset'][$ii], $_POST['loadCellUnit'][$ii]))$error=true;
+	    if($_POST ['type'][$ii] == 1 && !$tapManager->saveTapLoadCellInfo($_POST ['id'][$ii], $_POST['loadCellCmdPin'][$ii], $_POST['loadCellRspPin'][$ii], $_POST['loadCellScaleRatio'][$ii], $_POST['loadCellTareOffset'][$ii], $_POST['loadCellUnit'][$ii]))$error=true;
+	    if($_POST ['type'][$ii] == 2 && !$gasTankManager->saveGasTankLoadCellInfo($_POST ['id'][$ii], $_POST['loadCellCmdPin'][$ii], $_POST['loadCellRspPin'][$ii], $_POST['loadCellScaleRatio'][$ii], $_POST['loadCellTareOffset'][$ii], $_POST['loadCellUnit'][$ii]))$error=true;
 	    $ii++;
 	    $reconfig = true;
 	}
@@ -35,11 +42,12 @@ if (isset ( $_POST ['save'] )) {
 } 
 
 if($reconfig){
-    file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=all' );
+    include('triggerAll.php');
 }
 
 $taps = $tapManager->GetAllActive();
-$numberOfTaps=count($taps);
+$gasTanks = $gasTankManager->GetAllActive();
+$numberOfTaps=count($taps)+count($gasTanks);
 ?>
 <body>
 	<!-- Start Header  -->
@@ -91,7 +99,7 @@ include 'top_menu.php';
                             <th style="vertical-align: middle;">Offset</th>
                             <th style="width:200px;vertical-align: middle;">Unit</th>
                             <th style="width:50px; vertical-align: middle;">Tare Date</th>
-                            <th style="width:50px; vertical-align: middle;">Current Weight</th>
+                            <th style="width:50px; vertical-align: middle;">Current Weight(Raw)</th>
                             <th>
                         </tr>
                     </thead>
@@ -99,7 +107,7 @@ include 'top_menu.php';
                         <?php
                             if( $numberOfTaps == 0 ){
                         ?>
-                                <tr><td class="no-results" colspan="99">No Taps to configure load cells for :(</td></tr>
+                                <tr><td class="no-results" colspan="99">No Load Cells configured :(</td></tr>
                         <?php
                             }
                             foreach ($taps as $tap){
@@ -107,7 +115,8 @@ include 'top_menu.php';
                                 <tr>
                                     <td style="vertical-align: middle;">
             							<input type="hidden" name="id[]" value="<?php echo $tap->get_id()?>" />
-                                        <span id="tapName" class="smallbox"><?php echo $tap->get_tapNumber() ?></span>
+            							<input type="hidden" name="type[]" value="1" />
+                                        <span id="tapName" class="mediumbox"><?php echo $tap->get_tapNumber() ?></span>
                                     </td>
                                     <td style="vertical-align: middle;">
                                         <input type="text" id="loadCellCmdPin<?php echo $tap->get_id();?>" class="smallbox" name="loadCellCmdPin[]" value="<?php echo $tap->get_loadCellCmdPin() ?>" />
@@ -154,6 +163,75 @@ include 'top_menu.php';
                                             <button name="tare[]" id="tare<?php echo $tap->get_id();?>" type="button" class="btn" style="white-space:nowrap;" value="1" 
                                             onClick='tare(this, <?php echo $tap->get_id()?>); $(loadCellTareOffset<?php echo $tap->get_id()?>).attr("disabled", "disabled");'>Tare</button>
                                             <span id="tare<?php echo $tap->get_id();?>Success" style="display:none; color: #8EA534;"> (Success<br>Refresh to see Offset)</span>
+                                        <?php } ?>
+                                    </td>
+                                </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+                <table style="width:500px" id="tableList">
+                	<thead>
+                        <tr>
+                            <th style="vertical-align: middle;">Gas Tank</th>
+                            <th style="vertical-align: middle;">Command Pin</th>
+                            <th style="vertical-align: middle;">Response Pin</th>
+                            <th style="vertical-align: middle;">Scale Ratio</th>
+                            <th style="vertical-align: middle;">Offset</th>
+                            <th style="width:200px;vertical-align: middle;">Unit</th>
+                            <th style="width:50px; vertical-align: middle;">Tare Date</th>
+                            <th style="width:50px; vertical-align: middle;">Current Weight(Raw)</th>
+                            <th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            foreach ($gasTanks as $gt){
+                                ?>
+                                <tr>
+                                    <td style="vertical-align: middle;">
+            							<input type="hidden" name="id[]" value="<?php echo $gt->get_id()?>" />
+            							<input type="hidden" name="type[]" value="2" />
+                                        <span id="gasTankLabel" class="mediumbox"><?php echo $gt->get_label() ?></span>
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <input type="text" id="loadCellCmdPin<?php echo $gt->get_id();?>" class="smallbox" name="loadCellCmdPin[]" value="<?php echo $gt->get_loadCellCmdPin() ?>" />
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <input type="text" id="loadCellRspPin<?php echo $gt->get_id();?>" class="smallbox" name="loadCellRspPin[]" value="<?php echo $gt->get_loadCellRspPin() ?>" />
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <input type="text" id="loadCellScaleRatio<?php echo $gt->get_id();?>" class="smallbox" name="loadCellScaleRatio[]" value="<?php echo $gt->get_loadCellScaleRatio() ?>" />
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <input type="text" id="loadCellTareOffset<?php echo $gt->get_id();?>" class="smallbox" name="loadCellTareOffset[]" value="<?php echo $gt->get_loadCellTareOffset() ?>" />
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                    <select name="loadCellUnit[]">
+                                    <?php
+                                        $result = getConfigByName(ConfigNames::DisplayUnitWeight);
+                        				foreach($result as $row) {
+                        				    $options = explode('|', $row['validation']);
+                        				    foreach($options as $option){
+                        				        echo '<option ' . ($gt->get_loadCellUnit()==$option?'selected':'') . ' value="'.$option.'">'.$option.'</option>'; 
+                        					}
+                        			} ?>
+                        			</select>
+                        			</td>
+                                    <td style="vertical-align: middle;">
+                                        <span><?php echo $gt->get_loadCellTareDate() ?></span>
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                    	<span>
+                                    	<?php
+                                    	        echo $gt->get_weight();
+                                    	?>
+                                    	</span>
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <?php if( $gt->get_loadCellCmdPin() != '' ) { ?>
+                                            <button name="tareGT[]" id="tareGT<?php echo $gt->get_id();?>" type="button" class="btn" style="white-space:nowrap;" value="1" 
+                                            onClick='tareGT(this, <?php echo $gt->get_id()?>); $(loadCellTareOffset<?php echo $gt->get_id()?>).attr("disabled", "disabled");'>Tare</button>
+                                            <span id="tareGT<?php echo $gt->get_id();?>Success" style="display:none; color: #8EA534;"> (Success<br>Refresh to see Offset)</span>
                                         <?php } ?>
                                     </td>
                                 </tr>
@@ -231,6 +309,16 @@ include 'scripts.php';
 					<?php echo $comma; ?>loadCellRsp<?php echo $tap->get_id(); ?>: { number: true, min: 1, integer: true  }
 					<?php echo $comma; ?>loadScaleRatio<?php echo $tap->get_id(); ?>: { number: true, min: 1, integer: true  }
 					<?php echo $comma; ?>loadTareOffset<?php echo $tap->get_id(); ?>: { number: true, min: 1, integer: true  }
+			     <?php 
+                } 
+				foreach ($gasTanks as $gt){
+				    if(null == $gt)continue; 
+				?>
+					<?php echo $comma; ?>loadCellCmd<?php echo $gt->get_id(); ?>: { number: true, min: 1, integer: true   }
+					<?php $comma = ","; ?>
+					<?php echo $comma; ?>loadCellRsp<?php echo $gt->get_id(); ?>: { number: true, min: 1, integer: true  }
+					<?php echo $comma; ?>loadScaleRatio<?php echo $gt->get_id(); ?>: { number: true, min: 1, integer: true  }
+					<?php echo $comma; ?>loadTareOffset<?php echo $gt->get_id(); ?>: { number: true, min: 1, integer: true  }
 			     <?php } ?> 
 				}
 			});		
@@ -239,6 +327,22 @@ include 'scripts.php';
 		function tare(button, tapId){
 			var data
 			data = { "tare" : tapId }
+			
+			$.ajax(
+	            {
+	                   type: "POST",
+	                   url: "load_cell_list.php",
+	                   data: data,// data to send to above script page if any
+	                   cache: false,
+	                   success: function(response)
+	                   {
+	                	   document.getElementById(button.id + 'Success').style.display = ""; 
+	                   }
+	             });
+	  	}
+		function tareGT(button, GTId){
+			var data
+			data = { "tareGT" : GTId }
 			
 			$.ajax(
 	            {
