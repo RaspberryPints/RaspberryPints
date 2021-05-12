@@ -501,7 +501,9 @@ INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`,
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ('numAccoladeDisplay', '3', 'Number of Accolades to display in a row/column', 0, NOW(), NOW() );
 
+
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
+
 ( 'amountPerPint', '0', 'Amount per pint. > 0 then display pints remaining', '0', NOW(), NOW() );
 -- --------------------------------------------------------
 
@@ -867,8 +869,11 @@ INSERT INTO `containerTypes` ( id, displayName, volume, total, used, createdDate
 ( 11,'weizenglass', '16.0', '0', '0', NOW(), NOW() ),
 ( 12,'willibecher', '16.0', '0', '0', NOW(), NOW() ),
 ( 13,'wineglass', '16.0', '0', '0', NOW(), NOW() ),
+
 ( 14,'flute', '16.0', '0', '0', NOW(), NOW() ),
+
 ( 15,'teku', '16.0', '0', '0', NOW(), NOW() ),
+
 ( 16,'thistle', '16.0', '0', '0', NOW(), NOW() );
 
 CREATE TABLE IF NOT EXISTS `rfidReaders` (
@@ -1401,83 +1406,163 @@ CREATE TABLE IF NOT EXISTS `ioPins` (
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 INSERT INTO ioPins ( shield, pin, name, col, row, rgb, pinSide, notes, createdDate, modifiedDate ) VALUES
+
 ('Pi', 1, 'PWR/3.3V', 1, 1, '255,200,126', 'right', '', NOW(), NOW()),
+
 ('Pi', 2, 'PWR/5v', 2, 1, '255,200,200', 'left', '', NOW(), NOW()),
+
 ('Pi', 3, 'SDA.1/2', 1, 2, '255,200,255', 'right', '', NOW(), NOW()),
+
 ('Pi', 4, 'PWR/5v', 2, 2, '255,200,200', 'left', '', NOW(), NOW()),
+
 ('Pi', 5, 'SCL.1/3', 1, 3, '255,200,255', 'right', '', NOW(), NOW()),
+
 ('Pi', 6, 'GND/0v', 2, 3, '126,126,126', 'left', '', NOW(), NOW()),
+
 ('Pi', 7, 'GPIO.7/4', 1, 4, '226,255,200', 'right', '', NOW(), NOW()),
+
 ('Pi', 8, 'TxD/14', 2, 4, '200,255,255', 'left', '', NOW(), NOW()),
+
 ('Pi', 9, 'GND/0v', 1, 5, '126,126,126', 'right', '', NOW(), NOW()),
+
 ('Pi', 10, 'RxD/15', 2, 5, '200,255,255', 'left', '', NOW(), NOW()),
+
 ('Pi', 11, 'GPIO.0/17', 1, 6, '226,255,200', 'right', '', NOW(), NOW()),
+
 ('Pi', 12, 'GPIO.1/18', 2, 6, '226,255,200', 'left', '', NOW(), NOW()),
+
 ('Pi', 13, 'GPIO.2/27', 1, 7, '226,255,200', 'right', '', NOW(), NOW()),
+
 ('Pi', 14, 'GND/0v', 2, 7, '126,126,126', 'left', '', NOW(), NOW()),
+
 ('Pi', 15, 'GPIO.3/22', 1, 8, '226,255,200', 'right', '', NOW(), NOW()),
+
 ('Pi', 16, 'GPIO.4/23', 2, 8, '226,255,200', 'left', '', NOW(), NOW()),
+
 ('Pi', 17, 'PWR/3.3v', 1, 9, '255,200,126', 'right', '', NOW(), NOW()),
+
 ('Pi', 18, 'GPIO.5/24', 2, 9, '226,255,200', 'left', '', NOW(), NOW()),
+
 ('Pi', 19, 'MOSI/10', 1, 10, '200,255,255', 'right', '', NOW(), NOW()),
+
 ('Pi', 20, 'GND/0v', 2, 10, '126,126,126', 'left', '', NOW(), NOW()),
+
 ('Pi', 21, 'MISO/9', 1, 11, '200,255,255', 'right', '', NOW(), NOW()),
+
 ('Pi', 22, 'GPIO.6/25', 2, 11, '226,255,200', 'left', '', NOW(), NOW()),
+
 ('Pi', 23, 'SCLK/11', 1, 12, '200,255,255', 'right', '', NOW(), NOW()),
+
 ('Pi', 24, 'CE0/8', 2, 12, '200,255,255', 'left', '', NOW(), NOW()),
+
 ('Pi', 25, 'GND/0v', 1, 13, '126,126,126', 'right', '', NOW(), NOW()),
+
 ('Pi', 26, 'CE1/7', 2, 13, '200,255,255', 'left', '', NOW(), NOW()),
+
 ('Pi', 27, 'SDA.0/0', 1, 14, '255,255,200', 'right', '', NOW(), NOW()),
+
 ('Pi', 28, 'SCL.0/1', 2, 14, '255,255,200', 'left', '', NOW(), NOW()),
+
 ('Pi', 29, 'GPIO.21/5', 1, 15, '226,255,200', 'right', '', NOW(), NOW()),
+
 ('Pi', 30, 'GND/0v', 2, 15, '126,126,126', 'left', '', NOW(), NOW()),
+
 ('Pi', 31, 'GPIO.22/6', 1, 16, '226,255,200', 'right', '', NOW(), NOW()),
+
 ('Pi', 32, 'GPIO.26/12', 2, 16, '226,255,200', 'left', '', NOW(), NOW()),
+
 ('Pi', 33, 'GPIO.23/13', 1, 17, '226,255,200', 'right', '', NOW(), NOW()),
+
 ('Pi', 34, 'GND/0v', 2, 17, '126,126,126', 'left', '', NOW(), NOW()),
+
 ('Pi', 35, 'GPIO.24/19', 1, 18, '226,255,200', 'right', '', NOW(), NOW()),
+
 ('Pi', 36, 'GPIO.27/16', 2, 18, '226,255,200', 'left', '', NOW(), NOW()),
+
 ('Pi', 37, 'GPIO.25/26', 1, 19, '226,255,200', 'right', '', NOW(), NOW()),
+
 ('Pi', 38, 'GPIO.28/20', 2, 19, '226,255,200', 'left', '', NOW(), NOW()),
+
 ('Pi', 39, 'GND/0v', 1, 20, '126,126,126', 'right', '', NOW(), NOW()),
+
 ('Pi', 40, 'GPIO.29/21', 2, 20, '226,255,200', 'left', '', NOW(), NOW()),
+
 ('Alamode', 0, 'RxD', 2, 17, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 1, 'TxD', 2, 16, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 2, '1pps', 2, 15, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 3, 'SQW', 2, 14, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 4, 'GPS_Rx', 2, 13, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 5, 'Pin5', 2, 12, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 6, 'GTP_Tx', 2, 11, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 7, 'Pin7', 2, 10, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 8, 'Pin8', 2, 9, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 9, 'Pin9', 2, 8, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 10, 'SS', 2, 7, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 11, 'MOSI', 2, 6, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 12, 'MISO', 2, 5, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 13, 'SCK/LED', 2, 4, '', 'left', 'Triggering LED will interfer with SPI', NOW(),NOW()),
+
 ('Alamode', 14, 'GND/0v', 2, 3, '126,126,126', 'left', '', NOW(), NOW()),
+
 ('Alamode', 15, 'AREF', 2, 2, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 16, 'AD4/SDA', 2, 1, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 17, 'AD5/SCL', 2, 0, '', 'left', '', NOW(), NOW()),
+
 ('Alamode', 18, 'AD5/SCL', 1, 12, '', 'right', '', NOW(), NOW()),
+
 ('Alamode', 19, 'AD4/SDA', 1, 11, '', 'right', '', NOW(), NOW()),
+
 ('Alamode', 20, 'AD3/PC3', 1, 10, '', 'right', '', NOW(), NOW()),
+
 ('Alamode', 21, 'AD2/PC2', 1, 9, '', 'right', '', NOW(), NOW()),
+
 ('Alamode', 22, 'AD1/PC1', 1, 8, '', 'right', '', NOW(), NOW()),
+
 ('Alamode', 23, 'AD0/PC0', 1, 7, '', 'right', '', NOW(), NOW()),
+
 ('Alamode', 24, 'V in', 1, 6, '', 'right', '', NOW(), NOW()),
+
 ('Alamode', 25, 'GND2', 1, 5, '126,126,126', 'right', '', NOW(), NOW()),
+
 ('Alamode', 26, 'GND1', 1, 4, '126,126,126', 'right', '', NOW(), NOW()),
+
 ('Alamode', 27, 'PWR/5v', 1, 3, '255,200,200', 'right', '', NOW(), NOW()),
+
 ('Alamode', 28, 'PWR/3.3V', 1, 2, '255,200,126', 'right', '', NOW(), NOW()),
+
 ('Alamode', 29, 'RST', 1, 1, '', 'right', '', NOW(), NOW()),
+
 ('Alamode', 30, 'PWR/5v', 1, 0, '', 'right', '', NOW(), NOW()),
+
 ('Alamode', 31, '', 1, 13, '', '', '', NOW(), NOW()),
+
 ('Alamode', 32, '', 1, 14, '', '', '', NOW(), NOW()),
+
 ('Alamode', 33, '', 1, 15, '', '', '', NOW(), NOW()),
+
 ('Alamode', 34, '', 1, 16, '', '', '', NOW(), NOW()),
+
 ('Alamode', 35, '', 1, 17, '', '', '', NOW(), NOW());
+
 UPDATE ioPins SET displayPin=pin;
+
+
+
 
 
 
@@ -1527,6 +1612,7 @@ AS
 
 SELECT
 	t.id,
+
 	b.id as 'beerId',
 	b.name,
 	b.untID,
@@ -1581,6 +1667,7 @@ AS
 
 SELECT
 	t.id,
+
 	b.id as 'beerId',
 	b.name,
 	b.untID,
