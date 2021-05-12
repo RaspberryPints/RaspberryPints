@@ -9,9 +9,6 @@
 	require_once __DIR__.'/includes/managers/rpintsLog_manager.php'; 
 	$htmlHelper = new HtmlHelper();
 	$config = getAllConfigs();
-	$beerColSpan = 1;
-	$i = 0;
-	$totalTemps = 0;
 	
 	$rpintsLogManager  = new RPintsLogManager();
 	
@@ -291,7 +288,9 @@ if(isset( $_SESSION['myusername'] ))include 'left_bar.php';
 			$('#tableLog tbody tr:eq('+position+') td:eq(4)').html(occurances);
 		}
 		
-    	setInterval(addNewLogMessages, 5000)
+    	<?php if ($page == 1 ) {?> 
+    	setInterval(addNewLogMessages, 5000); 
+    	<?php }?>
     	var lastId = <?php echo $maxId?>-2;
     	var lastDate = "<?php echo $maxDate?>";
     	var totalRows = <?php echo $totalRows ?>;
