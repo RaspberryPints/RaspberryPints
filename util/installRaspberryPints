@@ -671,6 +671,7 @@ configureApache(){
     #echo -e "configureApache - Complete."
 }
 configurePHPMyAdmin(){
+	sed -i "s/|\s*\((count(\$analyzed_sql_results\['select_expr'\]\)/| (\1)/g" /usr/share/phpmyadmin/libraries/sql.lib.php
 	# now, enable phpmyadmin if necessary
 	if [ "$WEBSERVER" = "$WEBSERVER_APACHE" ]; then
 		if [ -f /etc/phpmyadmin/apache.conf ]; then
@@ -1182,6 +1183,11 @@ installFlowmeters(){
 			if [ ! -f "${FLOW_METERS_DIRECTORY}/alamode-setup/buster-setup" ]; then 
 				wget -O buster-setup ${FLOW_METERS_BUSTER_REPO}
 			fi
+			if [ -f "${FLOW_METERS_DIRECTORY}/alamode-setup/80-alamode.rules" ]; then 
+				FIND_STR=",MODE:=0666"
+				REPL_STR=",MODE=0666"
+				sed -i "s_${FIND_STR}_${REPL_STR}_" "${FLOW_METERS_DIRECTORY}/alamode-setup/80-alamode.rules"	
+			fi
 		
 			# ensure the files are executable by the owner  
 			find "${WWWPATH}" -type f -exec chmod o+x {} \;
@@ -1203,8 +1209,8 @@ installFlowmeters(){
 			         4 "MQTT (Photon)")
 			user_choice=$(dialog --clear \
 			                --backtitle "Connection" \
-			                --title "Shield Communication" \
-			                --menu "Choose how Rpints communicates to the sheild" \
+			                --title "Arduino Communication" \
+			                --menu "Choose how Rpints communicates to the Arduino" \
 			                20 40 6 \
 			                "${CONNECTION_OPTIONS[@]}" \
 			                2>&1 >/dev/tty);
