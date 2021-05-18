@@ -8,7 +8,7 @@ class TempProbeManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["name", "type", "pin", "manualAdj", "notes"];
+		return ["name", "type", "pin", "manualAdj", "notes", "statePin"];
 	}
 	protected function getTableName(){
 		return "tempProbes";

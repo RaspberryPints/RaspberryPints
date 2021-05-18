@@ -120,5 +120,6 @@ abstract class ConfigNames
 	const AmountPerPint      = 'amountPerPint';
 	const NumAccoladeDisplay      = 'numAccoladeDisplay';
 	const ABVColorSRM      = 'ABVColorSRM';
+	const UpdateBatchWithKeg      = 'UpdateBatchWithKeg';
 }
 ?>

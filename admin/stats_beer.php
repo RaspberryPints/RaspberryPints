@@ -4,27 +4,37 @@
 	require_once __DIR__.'/includes/managers/pour_manager.php'; 
 	require_once __DIR__.'/includes/managers/tap_manager.php'; 
 	require_once __DIR__.'/includes/managers/beer_manager.php'; 
-	require_once __DIR__.'/includes/managers/user_manager.php';
+	//require_once __DIR__.'/includes/managers/user_manager.php';
 	require_once __DIR__.'/../includes/functions.php';
 	$htmlHelper = new HtmlHelper();
 	$config = getAllConfigs();
+	/** @var mixed $beerColSpan */
 	$beerColSpan = 1;
+	/** @var mixed $i */
 	$i = 0;
+	/** @var mixed $totalPoured */
 	$totalPoured = 0;
 	
 	$tapManager  = new TapManager();
 	$beerManager = new BeerManager();
-	$userManager = new UserManager();
+	//$userManager = new UserManager();
 	$beerStyleManager = new BeerStyleManager();
 	$tapList   = $tapManager->GetAll();
-	$beerList  = $beerManager->GetAll();
-	$userList  = $userManager->GetAll();
+	$beerList  = $beerManager->GetAllWithBatches();
+	//$userList  = $userManager->GetAll();
 	$styleList = $beerStyleManager->GetDistinctNamesFromPours();
 	
 	$groupBy 	= (isset($_POST['groupBy'])?$_POST['groupBy']:"beerId");
 	$startTime 	= (isset($_POST['startDate'])?$_POST['startDate']:"");
 	$endTime   	= (isset($_POST['endDate'])?$_POST['endDate']:"");
-	$beerId 	= (isset($_POST['beerId'])?$_POST['beerId']:"");
+	if(isset($_POST['beerId'])){
+	    $beerExploded = explode("~", $_POST['beerId']);
+	    $beerId 	= $beerExploded[0];
+	    $beerBatchId = $beerExploded[1];
+	}else{
+	    $beerId 	= "";
+	    $beerBatchId = "";	   
+	}
 	$tapId 	    = (isset($_POST['tapId'])?$_POST['tapId']:"");
 	$style  	= (isset($_POST['beerStyle'])?$_POST['beerStyle']:NULL);
 	
@@ -37,7 +47,8 @@
 	if($changed) $page = 1;
 	$rowsPerPage = $config[ConfigNames::DefaultRowsPerPage] ;
 	$pourManager = new PourManager();
-	$pours = $pourManager->getPoursByBeerFiltered($page, $rowsPerPage, $totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, NULL, $style);
+	$pours = $pourManager->getPoursByBeerFiltered($page, $rowsPerPage, $totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $beerBatchId, NULL, $style);
+	/** @var mixed $numberOfPours */
 	$numberOfPours = count($pours);
 	$maxPage = ceil(($totalRows)/$rowsPerPage);
 	
@@ -102,7 +113,19 @@ include 'top_menu.php';
                         <td>Beer:</td>
                         <td>
                         	<?php 
-								echo $htmlHelper->ToSelectList("beerId", "beerId", $beerList, "name", "id", $beerId, "All");
+        						$str = "<select id='beerId' name='beerId' class=''>\n";
+        						$str .= "<option value=''>All</option>\n";
+        						foreach($beerList as $item){
+        						    if( !$item ) continue;
+        						    $sel = "";
+        						    if( $beerId != "" && $beerId == ($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId()) && (($beerBatchId == "" && $item->get_beerBatchId()<=0) || $beerBatchId == $item->get_beerBatchId()) )  $sel .= "selected ";
+        						    $desc = $item->get_displayName();
+        						    $str .= "<option value='".($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId())."~".$item->get_beerBatchId()."~".$item->get_fg()."~".$item->get_fgUnit()."' ".$sel.">".$desc."</option>\n";
+        						}
+        						$str .= "</select>\n";
+        						
+        						echo $str;
+								//echo $htmlHelper->ToSelectList("beerId", "beerId", $beerList, "name", "id", $beerId, "All");
 							?>
                         </td>
                      </tr>
@@ -243,7 +266,8 @@ include 'left_bar.php';
               function drawChart() {
                 var data = google.visualization.arrayToDataTable([
                     ['Beer' <?php foreach($groups as $group) echo ", '".$group."'"; ?> ]
-                    <?php foreach ($beers as $beer=>$pours){ 
+                    <?php  /** @var mixed $beer */ 
+                    foreach ($beers as $beer=>$pours){ 
                         echo ",[";
                         echo "'".$pours["-99"]."'";
                         foreach ($groups as $group){

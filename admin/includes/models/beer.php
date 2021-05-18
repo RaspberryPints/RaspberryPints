@@ -3,7 +3,8 @@ require_once __DIR__.'/../functions.php';
 
 class Beer  
 {  
-	private $_id;  
+    private $_id;
+    private $_batchNumber;
 	private $_name;
 	private $_untID;
 	private $_beerStyleId;
@@ -21,14 +22,23 @@ class Beer
 	private $_createdDate; 
 	private $_modifiedDate; 
 	private $_breweryId;
+	private $_lastBatchNumber;
 
 	public function __construct(){}
 
 	public function get_id(){ return $this->_id; }
 	public function set_id($_id){ $this->_id = $_id; }
+	
+	//Placeholders so we dont need to check Type when listing beers
+	public function get_beerId(){ return $this->_id; }
+	public function set_beerId($_id){ $this->_id = $_id; }
+	
+	public function get_beerBatchId(){ return 0; }
+	public function set_beerBatchId($_id){  }
 
 	public function get_name(){ return $this->_name; }
 	public function set_name($_name){ $this->_name = $_name; }
+	public function get_displayName(){ return $this->_name; }
 
 	public function get_untID(){return $this->_untID;}
 	public function set_untID($_untID){ $this->_untID = $_untID; }
@@ -77,6 +87,9 @@ class Beer
 	
 	public function get_containerId(){ return $this->_containerId; }
 	public function set_containerId($_containerId){ $this->_containerId = $_containerId; }
+	
+	public function get_lastBatchNumber(){ return $this->_lastBatchNumber; }
+	public function set_lastBatchNumber($_lastBatchNumber){ $this->_lastBatchNumber = $_lastBatchNumber; }
 	
 	public function setFromArray($postArr)  
 	{  
@@ -192,6 +205,12 @@ class Beer
 			}else{
 				$this->set_breweryId(0);
 			}
+			
+		if( isset($postArr['lastBatchNumber']) ){
+		    $this->set_lastBatchNumber($postArr['lastBatchNumber']);
+		}else{
+		    $this->set_lastBatchNumber(0);
+		}
 	}  
 	
 	function toJson(){

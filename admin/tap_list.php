@@ -15,8 +15,8 @@ const TAP_TEXT_DISABLE = "Stop flow";
 $reconfig = false;
 if( isset($_POST['enableTap']) && $_POST['enableTap'] != ""){
 	//The element holds the tap Id
-	$tapManager->enableTap($_POST['enableTap']);
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
+    $tapManager->enableTap($_POST['enableTap']);
+    triggerPythonAction("valve");
 }
 
 if(isset($_POST['manualPour'])){
@@ -29,8 +29,8 @@ if(isset($_POST['manualPour'])){
 
 if( isset($_POST['disableTap']) && $_POST['disableTap'] != ""){
 	//The element holds the tap Id
-	$tapManager->disableTap($_POST['disableTap']);
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
+    $tapManager->disableTap($_POST['disableTap']);
+    triggerPythonAction("valve");
 }
 
 if (isset ( $_POST ['saveTapConfig'] )) {
@@ -47,7 +47,9 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 		$kegId = null;
 		if(count($kegSelArr) > 0 && isset($kegSelArr[0]))$kegId = $kegSelArr[0];
 		if($kegId){			
-		    $selectedBeerId = explode("~", $_POST['beerId'][$ii])[0];
+		    $beerExloded = explode("~", $_POST['beerId'][$ii]);
+		    $selectedBeerId = $beerExloded[0];
+		    $selectedBatchId = $beerExloded[1];
 			$keg = $kegManager->GetById($kegId);
 			if( $_POST ['startAmount'][$ii] != $_POST ['startAmountOriginal'][$ii]) {
 			    $keg->set_startAmount($_POST['startAmount'][$ii]);
@@ -62,6 +64,28 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 			    $_POST ['currentAmount'][$ii] != $_POST ['currentAmountOriginal'][$ii]) {
 			     $keg->set_currentAmount($_POST['currentAmount'][$ii]);
 			     $keg->set_currentAmountUnit($_POST['currentAmountUnit'][$ii]);
+			     //Check if other on tap kegs have this batch, if so we dont want to update its amount
+			     if( $config[ConfigNames::UpdateBatchWithKeg] &&$selectedBatchId > 0 ){
+			        $batchKegs = $selectedBatchId > 0?count($kegManager->GetByBeerBatchIdOnTap($selectedBatchId))+($keg->get_beerBatchId()!=$selectedBatchId?1:0):0;
+			         //<= 1 in the database check if existing keg has it on or if a different keg will add it
+			        $jj = $ii + 1;
+                    while (isset($_POST['tapId'][$jj])) {
+                        $otherNewBatch = explode("~", $_POST['beerId'][$jj])[1];
+                        $otherOldBatch = explode("~", $_POST['kegId'][$jj])[2];
+                        if ($otherOldBatch == $selectedBatchId) $batchKegs --;
+                        if ($otherNewBatch == $selectedBatchId) $batchKegs ++;
+                        $jj++;
+                    }
+                    if ($batchKegs <= 1) {
+                        $beerBatchManager = new BeerBatchManager();
+                        $beerBatch = $beerBatchManager->GetByID($selectedBatchId);
+                        if ($beerBatch) {
+                            $beerBatch->set_currentAmount($_POST['currentAmount'][$ii]);
+                            $beerBatch->set_currentAmountUnit($_POST['currentAmountUnit'][$ii]);
+                            $beerBatchManager->save($beerBatch);
+                        }
+                    }
+			     }
 			}
 			if( ISSET($_POST ['currentWeight']) && 
 			    ISSET($_POST ['currentWeightOriginal']) &&
@@ -84,8 +108,9 @@ if (isset ( $_POST ['saveTapConfig'] )) {
     		}
 			$kegManager->Save($keg);
 		    if( ( !isset($kegSelArr[1]) || !$kegSelArr[1] || $tap->get_beerId() != $selectedBeerId ) ||
-			    ( !isset($kegSelArr[2]) || !$kegSelArr[2] || $tap->get_kegId() != $kegId ) ){
-			        $tapManager->tapKeg($tap, $kegId, $selectedBeerId);		
+		        ( !isset($kegSelArr[2]) || !$kegSelArr[2] || $tap->get_beerBatchId() != $selectedBatchId ) ||
+		        ( !isset($kegSelArr[3]) || !$kegSelArr[3] || $tap->get_kegId() != $kegId ) ){
+		            $tapManager->tapKeg($tap, $kegId, $selectedBeerId, $selectedBatchId);		
 			}
 		}else if($tap->get_kegId()){
 			//User indicated the tap was untapped
@@ -151,7 +176,7 @@ if (isset ( $_POST ['saveSettings'] ) || isset ( $_POST ['configuration'] )) {
 }
 
 if($reconfig){
-    file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=all' );
+    triggerPythonAction();
     // Refreshes connected pages
 //    if(isset($config[ConfigNames::AutoRefreshLocal]) && $config[ConfigNames::AutoRefreshLocal]){
       //  exec(__DIR__."/../includes/refresh.sh");
@@ -160,7 +185,7 @@ if($reconfig){
 
 $activeTaps = $tapManager->GetAllActive();
 $numberOfTaps = count($activeTaps);
-$beerList = $beerManager->GetAllActive();
+$beerList = $beerManager->GetAllActiveWithBatches();
 $kegList = $kegManager->GetAllActive();
 $allTapsConfigured = $config[ConfigNames::UseFlowMeter];
 foreach($activeTaps as $tap)
@@ -491,7 +516,7 @@ include 'top_menu.php';
                                         }
                                     }
                                     //do not change this line (php line)
-                                    $val = $item->get_id()."~".$item->get_beerId()."~".$item->get_ontapId()."~";
+                                    $val = $item->get_id()."~".$item->get_beerId()."~".$item->get_beerBatchId()."~".$item->get_ontapId()."~";
                                     //Change these lines for Javascript)
                                     $val .= $item->get_emptyWeight().'~'.$item->get_emptyWeightUnit()."~";
                                     $val .= convert_volume($item->get_maxVolume(), $item->get_maxVolumeUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE)."~".$config[ConfigNames::DisplayUnitVolume]."~";
@@ -515,9 +540,9 @@ include 'top_menu.php';
 								foreach($beerList as $item){
 								    if( !$item ) continue;
 								    $sel = "";
-								    if( isset($tap) && $tap->get_beerId() == $item->get_id())  $sel .= "selected ";
-								    $desc = $item->get_name();
-								    $str .= "<option value='".$item->get_id()."~".$item->get_fg()."~".$item->get_fgUnit()."' ".$sel.">".$desc."</option>\n";
+								    if( isset($tap) && $tap->get_beerId() == ($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId()) && (($tap->get_beerBatchId() <= 0 && $item->get_beerBatchId()<=0)  || $tap->get_beerBatchId() == $item->get_beerBatchId()) )  $sel .= "selected ";
+								    $desc = $item->get_displayName();
+								    $str .= "<option value='".($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId())."~".$item->get_beerBatchId()."~".$item->get_fg()."~".$item->get_fgUnit()."' ".$sel.">".$desc."</option>\n";
 								}
 								$str .= "</select>\n";
 								
@@ -799,7 +824,7 @@ include 'scripts.php';
 		var msgDiv = document.getElementById("messageDiv");
 		if(msgDiv != null) msgDiv.style.display = "none"
 		var display = true;
-		//Select array is kegid~beerid(in keg)~tapId(keg is on)~...
+		//Select array is kegid~beerid(in keg)~beerBatchId(in keg)~tapId(keg is on)~...
 		var kegSelArr = selectObject.value.split("~");
 
 		if( kegSelArr[0] == '' ){
@@ -818,8 +843,8 @@ include 'scripts.php';
 			if(otherKegSelArr[0] == kegSelArr[0]) onOtherTap = ii;
 			if(onOtherTap)
 			{
-				while(3 > kegSelArr.length)kegSelArr.push(null);
-				kegSelArr[2] = otherKegSelArr[2];
+				while(4 > kegSelArr.length)kegSelArr.push(null);
+				kegSelArr[3] = otherKegSelArr[3];
 			 	break;
 			}
 		}
@@ -827,27 +852,27 @@ include 'scripts.php';
 			var secOtherTapBeerSelect = document.getElementById(secSelectBeerStart+onOtherTap);
 			if(msgDiv != null)msgDiv.style.display = "";
 			var msgSpan = document.getElementById("messageSpan");
-			if(msgSpan != null) msgSpan.innerHTML = "Keg "+kegSelArr[0]+" currently on Tap "+kegSelArr[2]+" and will be moved to tap "+tapNumber+" and updated to current selected beer"
+			if(msgSpan != null) msgSpan.innerHTML = "Keg "+kegSelArr[0]+" currently on Tap "+kegSelArr[3]+" and will be moved to tap "+tapNumber+" and updated to current selected beer"
 			if(secOtherTapBeerSelect != null)secOtherTapBeerSelect.selectedIndex = 0;
 			if(secOtherTapKegSelect != null)secOtherTapKegSelect.selectedIndex = 0;		
 
-			moveKegAttribute("startAmount", kegSelArr[2], tapId, "text");
-			moveKegAttribute("startAmountOriginal", kegSelArr[2], tapId, "hidden");
-			moveKegAttribute("startAmountUnit", kegSelArr[2], tapId, "hidden");
-			moveKegAttribute("currentAmount", kegSelArr[2], tapId, "text");
-			moveKegAttribute("currentAmountOriginal", kegSelArr[2], tapId, "hidden");
-			moveKegAttribute("currentAmountUnit", kegSelArr[2], tapId, "hidden");
-			moveKegAttribute("currentWeight", kegSelArr[2], tapId, "text");
-			moveKegAttribute("currentWeightOriginal", kegSelArr[2], tapId, "hidden");
-			moveKegAttribute("currentWeightUnit", kegSelArr[2], tapId, "hidden");
-			moveKegAttribute("fermentationPSI", kegSelArr[2], tapId, "text");
-			moveKegAttribute("fermentationPSIOriginal", kegSelArr[2], tapId, "hidden");
-			moveKegAttribute("fermentationPSIUnit", kegSelArr[2], tapId, "hidden");
-			moveKegAttribute("keggingTemp", kegSelArr[2], tapId, "text");
-			moveKegAttribute("keggingTempOriginal", kegSelArr[2], tapId, "hidden");
-			moveKegAttribute("keggingTempUnit", kegSelArr[2], tapId, "hidden");
+			moveKegAttribute("startAmount", kegSelArr[3], tapId, "text");
+			moveKegAttribute("startAmountOriginal", kegSelArr[3], tapId, "hidden");
+			moveKegAttribute("startAmountUnit", kegSelArr[3], tapId, "hidden");
+			moveKegAttribute("currentAmount", kegSelArr[3], tapId, "text");
+			moveKegAttribute("currentAmountOriginal", kegSelArr[3], tapId, "hidden");
+			moveKegAttribute("currentAmountUnit", kegSelArr[3], tapId, "hidden");
+			moveKegAttribute("currentWeight", kegSelArr[3], tapId, "text");
+			moveKegAttribute("currentWeightOriginal", kegSelArr[3], tapId, "hidden");
+			moveKegAttribute("currentWeightUnit", kegSelArr[3], tapId, "hidden");
+			moveKegAttribute("fermentationPSI", kegSelArr[3], tapId, "text");
+			moveKegAttribute("fermentationPSIOriginal", kegSelArr[3], tapId, "hidden");
+			moveKegAttribute("fermentationPSIUnit", kegSelArr[3], tapId, "hidden");
+			moveKegAttribute("keggingTemp", kegSelArr[3], tapId, "text");
+			moveKegAttribute("keggingTempOriginal", kegSelArr[3], tapId, "hidden");
+			moveKegAttribute("keggingTempUnit", kegSelArr[3], tapId, "hidden");
 		}else{
-			var ii = 7; // Use this incase the start value changes. Note the original is the same so dont increment until after original
+			var ii = 8; // Use this incase the start value changes. Note the original is the same so dont increment until after original
 			$("#startAmount"+tapId).val(kegSelArr[ii]); 
 			$("#startAmountOriginal"+tapId).val(kegSelArr[ii]);
 			$("#startAmountUnit"+tapId).val(kegSelArr[++ii]); 
@@ -866,12 +891,14 @@ include 'scripts.php';
 		var beerSelect = document.getElementById(secSelectBeerStart+tapId);
 		var beerSelectOptions = beerSelect.options;
 		var beerId = (kegSelArr.length > 1 && kegSelArr[1] != "")?kegSelArr[1]:null;
+		var beerBatchId = (kegSelArr.length > 2 && kegSelArr[2] != "")?kegSelArr[2]:null;
 		var i = 0;
 		if(beerId != null){
 			var beerSelectOptions = beerSelect.options;
 			for (i = 0; i < beerSelectOptions.length; i++) 
 			{
-				if (beerSelectOptions[i].value.split("~")[0] == beerId) {
+				var beerSplit = beerSelectOptions[i].value.split("~");
+				if (beerSplit[0] == beerId && (beerBatchId<=0||beerSplit[1] == beerBatchId)) {
 					beerSelect.selectedIndex = i;
 					break;
 				}

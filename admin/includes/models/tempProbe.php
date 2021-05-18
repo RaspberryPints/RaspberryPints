@@ -8,6 +8,7 @@ class TempProbe
 	private $_manualAdj;
 	private $_notes;
 	private $_active;
+	private $_statePin;
 	private $_createdDate; 
 	private $_modifiedDate; 
 
@@ -33,6 +34,9 @@ class TempProbe
 	
 	public function get_active(){ return $this->_active; }
 	public function set_active($_active){ $this->_active = $_active; }
+	
+	public function get_statePin(){ return $this->_statePin; }
+	public function set_statePin($_statePin){ $this->_statePin = $_statePin; }
 	
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -61,6 +65,11 @@ class TempProbe
 			$this->set_pin($postArr['pin']);
 		else
 			$this->set_pin(null);
+			
+		if( isset($postArr['statePin']) )
+		    $this->set_statePin($postArr['statePin']);
+		else
+		    $this->set_statePin(null);
 			
 		if( isset($postArr['manualAdj']) )
 			$this->set_manualAdj($postArr['manualAdj']);

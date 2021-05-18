@@ -42,7 +42,8 @@
 		{
 			$beeritem = array(
 				"id" => $b['id'],
-				"beerId" => $b['beerId'],
+			    "beerId" => $b['beerId'],
+			    "beerBatchId" => $b['beerBatchId'],
 				"beername" => $b['name'],
 				"untID" => $b['untID'],
 				"style" => $b['style'],
@@ -110,7 +111,8 @@
 		{
 			$beeritem = array(
 				"id" => $b['id'],
-				"beerId" => $b['beerId'],
+			    "beerId" => $b['beerId'],
+			    "beerBatchId" => $b['beerBatchId'],
 				"beername" => $b['name'],
 				"untID" => $b['untID'],
 				"style" => $b['style'],

@@ -8,7 +8,7 @@ class BottleManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["bottleTypeId", "beerId", "capRgba", "capNumber", "startAmount", "currentAmount"];
+		return ["bottleTypeId", "beerId", "beerBatchId", "capRgba", "capNumber", "startAmount", "currentAmount"];
 	}
 	protected function getTableName(){
 		return "bottles";

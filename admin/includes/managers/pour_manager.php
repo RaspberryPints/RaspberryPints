@@ -14,7 +14,7 @@ class PourManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-	    return ["tapId", "amountPoured", "amountPouredUnit", "pinId", "pulses", "beerId", "conversion", "userId"];
+	    return ["tapId", "amountPoured", "amountPouredUnit", "pinId", "pulses", "beerId", "beerBatchId", "conversion", "userId"];
 	}
 	protected function getTableName(){
 		return "pours";
@@ -30,20 +30,21 @@ class PourManager extends Manager{
 	    return $this->getLastPoursFiltered($page, $limit, $totalRows, null, null, null, null, null);
 	}
 
-	function getLastPoursFiltered($page, $limit, &$totalRows, $startTime, $endTime, $tapId, $beerId, $userId){
+	function getLastPoursFiltered($page, $limit, &$totalRows, $startTime, $endTime, $tapId, $beerId, $userId, $beerBatchId=null){
 		$sql="SELECT * FROM ".$this->getViewName()." ";
 		$where = "";
 		if($startTime && $startTime != "") $where = $where.($where != ""?"AND ":"")."createdDate >= '$startTime' ";
 		if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '$endTime' ";
 		if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
 		if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
+		if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = $beerBatchId ";
 		if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
 		if($where != "") $sql = $sql."WHERE $where ";
 		$sql = $sql."ORDER BY createdDate DESC ";
 		$totalRows = 0;
-		if($results = $this->executeNonObjectQueryWithArrayResults("SELECT COUNT(*) as totalRows FROM ".$this->getViewName())){
-		    if(count($results) > 0) $totalRows = $results[0]['totalRows'];
-		}
+		$results = $this->executeQueryWithResults($sql);
+		$totalRows = count($results);
+		if( $totalRows == 0 || ($limit && $limit > 0 && $totalRows <= $limit) )return $results;
 		$limitClause = $this->getLimitClause($limit, $page);
 		if($limitClause == "") return $results;
 		$sql = $sql.$limitClause;
@@ -53,7 +54,7 @@ class PourManager extends Manager{
 	function getPoursByDrinker($page, $limit, &$totalRows, $groupBy){
 	    return $this->getPoursByDrinkerFiltered($page, $limit, $totalRows, $groupBy, null, null, null, null, null, null);
 	}	
-	function getPoursByDrinkerFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $userId, $style){
+	function getPoursByDrinkerFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $beerBatchId, $userId, $style){
 	    $sql="SELECT (@row_number:=@row_number + 1) AS id, userName, ";
 	    $sql .= "SUM(CASE WHEN amountPouredUnit IN ('oz', 'gal', 'Imperial') THEN amountPoured ELSE amountPoured* 0.2641720000000005 END) as amountPoured ";
 	    $sql .= ", 'gal' AS amountPouredUnit ";
@@ -82,15 +83,16 @@ class PourManager extends Manager{
 	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '$endTime' ";
 	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
 	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
+	    if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = $beerBatchId ";
 	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
 	    if($style) $where = $where.($where != ""?"AND ":"")."beerStyle = '$style' ";
 	    if($where != "") $sql = $sql."WHERE $where ";
 	    $sql = $sql."GROUP BY userName";
 	    if($groupBy) $sql = $sql.", ".$groupBy;
 	    $totalRows = 0;
-	    if($results = $this->executeNonObjectQueryWithArrayResults("SELECT COUNT(*) as totalRows FROM ".$this->getViewName())){
-	        if(count($results) > 0) $totalRows = $results[0]['totalRows'];
-	    }
+	    $results = $this->executeQueryWithResults($sql);
+	    $totalRows = count($results);
+	    if( $totalRows == 0 || ($limit && $limit > 0 && $totalRows <= $limit) )return $results;
 	    $limitClause = $this->getLimitClause($limit, $page);
 	    if($limitClause == "") return $results;
 	    $sql = $sql.$limitClause;
@@ -100,7 +102,7 @@ class PourManager extends Manager{
 	function getPoursByTap($page, $limit, &$totalRows, $groupBy){
 	    return $this->getPoursByTapFiltered($page, $limit, $totalRows, $groupBy, null, null, null, null, null, null);
 	}	
-	function getPoursByTapFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $userId, $style){
+	function getPoursByTapFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $beerBatchId, $userId, $style){
 	    $sql="SELECT (@row_number:=@row_number + 1) AS id, tapNumber, tapId, ";
 	    $sql .= "SUM(CASE WHEN amountPouredUnit IN ('oz', 'gal', 'Imperial') THEN amountPoured ELSE amountPoured* 0.2641720000000005 END) as amountPoured ";
 	    $sql .= ", 'gal' AS amountPouredUnit ";
@@ -130,15 +132,16 @@ class PourManager extends Manager{
 	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '$endTime' ";
 	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
 	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
+	    if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = $beerBatchId ";
 	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
 	    if($style) $where = $where.($where != ""?"AND ":"")."beerStyle = '$style' ";
 	    if($where != "") $sql = $sql."WHERE $where ";
 	    $sql = $sql."GROUP BY tapNumber, tapId";
 	    if($groupBy) $sql = $sql.", ".$groupBy;
 	    $totalRows = 0;
-	    if($results = $this->executeNonObjectQueryWithArrayResults("SELECT COUNT(*) as totalRows FROM ".$this->getViewName())){
-	        if(count($results) > 0) $totalRows = $results[0]['totalRows'];
-	    }
+	    $results = $this->executeQueryWithResults($sql);
+	    $totalRows = count($results);
+	    if( $totalRows == 0 || ($limit && $limit > 0 && $totalRows <= $limit) )return $results;
 	    $limitClause = $this->getLimitClause($limit, $page);
 	    if($limitClause == "") return $results;
 	    $sql = $sql.$limitClause;
@@ -148,7 +151,7 @@ class PourManager extends Manager{
 	function getPoursByBeer($page, $limit, &$totalRows, $groupBy){
 	    return $this->getPoursByBeerFiltered($page, $limit, $totalRows, $groupBy, null, null, null, null, null, null);
 	}
-	function getPoursByBeerFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $userId, $style){
+	function getPoursByBeerFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $beerBatchId, $userId, $style){
 	    $sql="SELECT (@row_number:=@row_number + 1) AS id, ";
 	    $sql .= "SUM(CASE WHEN amountPouredUnit IN ('oz', 'gal', 'Imperial') THEN amountPoured ELSE amountPoured* 0.2641720000000005 END) as amountPoured ";
 	    $sql .= ", 'gal' AS amountPouredUnit ";
@@ -183,6 +186,7 @@ class PourManager extends Manager{
 	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '$endTime' ";
 	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
 	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
+	    if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = $beerBatchId ";
 	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
 	    if($style) $where = $where.($where != ""?"AND ":"")."beerStyle = '$style' ";
 	    if($where != "") $sql = $sql."WHERE $where ";
@@ -193,9 +197,9 @@ class PourManager extends Manager{
 	        $sql = $sql.($groupBy == 'beerStyle'?"":", ").$groupBy;
 	    }
 	    $totalRows = 0;
-	    if($results = $this->executeNonObjectQueryWithArrayResults("SELECT COUNT(*) as totalRows FROM ".$this->getViewName())){
-	        if(count($results) > 0) $totalRows = $results[0]['totalRows'];
-	    }
+	    $results = $this->executeQueryWithResults($sql);
+	    $totalRows = count($results);
+	    if( $totalRows == 0 || ($limit && $limit > 0 && $totalRows <= $limit) )return $results;
 	    $limitClause = $this->getLimitClause($limit, $page);
 	    if($limitClause == "") return $results;
 	    $sql = $sql.$limitClause;
@@ -208,7 +212,7 @@ class PourManager extends Manager{
 	}
 	
 	function pour($USERID, $PIN, $PULSE_COUNT){
-		$config = getAllConfigs();	
+	    //$config = getAllConfigs();	
 		$tapManager = new TapManager();
 		$kegManager = new KegManager();
 		$userManager = new UserManager();
@@ -252,9 +256,19 @@ class PourManager extends Manager{
 		$this->save($pour);
 
 		if($keg){
-		    $kegAmount = convert_volume($amount, $amountUnit, $keg->get_currentAmountUnit(), true);
+		    $kegAmount = convert_volume($amount, is_unit_imperial($tap->get_countUnit())?UnitsOfMeasure::VolumeGallon:UnitsOfMeasure::VolumeLiter, $keg->get_currentAmountUnit(), true);
 		    $keg->set_currentAmount($keg->get_currentAmount() - $kegAmount);
-    		$kegManager->save($keg);
+		    $kegManager->save($keg);
+		    if( $keg->get_beerBatchId() > 0 )
+		    {
+		        $beerBatchManager = new BeerBatchManager();
+		        $beerBatch = $beerBatchManager->GetByID($keg->get_beerBatchId());
+		        if( $beerBatch){
+		            $beerBatchAmount = convert_volume($amount, is_unit_imperial($tap->get_countUnit())?UnitsOfMeasure::VolumeGallon:UnitsOfMeasure::VolumeLiter, $beerBatch->get_currentAmountUnit(), true);
+		            $beerBatch->set_currentAmount($beerBatch->get_currentAmount() - $beerBatchAmount);
+		            $beerBatchManager->save($beerBatch);
+		        }
+		    }
 		}
 	
 		if ($beerId && $beerId != '' && $beerId != '0' && $user) {
@@ -281,7 +295,7 @@ class PourManager extends Manager{
 	}	
 	
 	function pourSample($tapId){
-		$config = getAllConfigs();	
+		//$config = getAllConfigs();	
 		$tapManager = new TapManager();
 		$kegManager = new KegManager();
 		
@@ -292,7 +306,9 @@ class PourManager extends Manager{
 		}
 		$keg = $kegManager->GetByID($tap->get_kegId());
 		$beerId = 0;
+		$beerBatchId = 0;
 		if($keg) $beerId = $keg->get_beerId();
+		if($keg) $beerBatchId = $keg->get_beerBatchId();
 		$pourCountConversion = $tap->get_count();
 		
 		// Sets the amount to be a fraction of a gallon/liter
@@ -315,6 +331,7 @@ class PourManager extends Manager{
 		$pour->set_pulses(-1);
 		$pour->set_conversion($pourCountConversion);
 		$pour->set_beerId($beerId);
+		$pour->set_beerBatchId($beerBatchId);
 		$pour->set_userId((new UserManager)->getUnknownUserId());
 		if(!$this->save($pour)){
 		    global $mysqli;
@@ -323,7 +340,17 @@ class PourManager extends Manager{
 		    if($keg){
 		        $kegAmount = convert_volume($amount, $amountUnit, $keg->get_currentAmountUnit(), true);
 		        $keg->set_currentAmount($keg->get_currentAmount() - $kegAmount);
-        		$kegManager->save($keg);
+		        $kegManager->save($keg);
+		        if( $keg->get_beerBatchId() > 0 )
+		        {
+		            $beerBatchManager = new BeerBatchManager();
+		            $beerBatch = $beerBatchManager->GetByID($keg->get_beerBatchId());
+		            if( $beerBatch){
+		                $beerBatchAmount = convert_volume($amount, is_unit_imperial($tap->get_countUnit())?UnitsOfMeasure::VolumeGallon:UnitsOfMeasure::VolumeLiter, $beerBatch->get_currentAmountUnit(), true);
+		                $beerBatch->set_currentAmount($beerBatch->get_currentAmount() - $beerBatchAmount);
+		                $beerBatchManager->save($beerBatch);
+		            }
+		        }
     		}
 		}
 	}

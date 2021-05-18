@@ -87,8 +87,8 @@ def connectDB():
 
 loggerLastClean = None
 class Logger ():
-    def debug(self, msg, process="PintDispatch", logDB=True):
-        if(config['dispatch.debug']):
+    def debug(self, msg, process="PintDispatch", logDB=True, debugConfig='dispatch.debug'):
+        if(config[debugConfig]):
             self.log(msg, process, True, logDB)
                      
     def log(self, msg, process="PintDispatch", isDebug=False, logDB=True):
@@ -285,6 +285,14 @@ class PintDispatch(object):
         con.close()
         return rows
     
+    def getGasTankLoadCellConfig(self):
+        con = connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        cursor.execute("SELECT id,loadCellCmdPin,loadCellRspPin,loadCellUnit,loadCellScaleRatio,loadCellTareOffset FROM gasTanks WHERE loadCellCmdPin IS NOT NULL ORDER BY id")
+        rows = cursor.fetchall()
+        con.close()
+        return rows
+    
     def getTareRequest(self, tapId):
         con = connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)
@@ -295,6 +303,108 @@ class PintDispatch(object):
             return False
         return rows[0]['loadCellTareReq'] == 1
     
+    def setLoadCellTareOffset(self, tapId, offset):
+        sql = "UPDATE tapconfig SET loadCellTareOffset="+str(offset)
+        sql = sql + " WHERE tapId = " + str(tapId)
+        con = connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        result = cursor.execute(sql)
+        con.commit()
+        con.close()
+        
+    def getGasTankTareRequest(self, id):
+        con = connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        cursor.execute("SELECT id,loadCellTareReq FROM gasTanks WHERE id = " + str(id))
+        rows = cursor.fetchall()
+        con.close()
+        if len(rows) == 0:
+            return False
+        return rows[0]['loadCellTareReq'] == 1
+    
+    def setGasTankTareRequest(self, id, tareRequested):
+        tareReq = "0"
+        if tareRequested:
+            tareReq = "1"
+        sql = "UPDATE gasTanks SET loadCellTareReq="+tareReq
+        if not tareRequested:
+            sql = sql + ",loadCellTareDate=NOW()"
+        sql = sql + " WHERE id = " + str(id)
+        con = connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        result = cursor.execute(sql)
+        con.commit()
+        con.close()
+        
+    def getiSpindelConnectors(self):
+        con = connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        cursor.execute("SELECT * from iSpindel_Connector")
+        rows = cursor.fetchall()
+        con.close()
+        return rows
+    
+    def getiSpindelDevice(self, id, token, name, gravity):
+        self.addiSpindelDeviceAsNeeded(id, token, name, gravity)
+        con = connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        cursor.execute("SELECT i.*, b.name AS beerName, COALESCE(bb.name,bb.batchNumber) as batchName from iSpindel_Device i LEFT JOIN beers b ON i.beerId = b.id LEFT JOIN beerBatches bb ON i.beerBatchId = bb.id WHERE iSpindelId = "+str(id))
+        rows = cursor.fetchall()
+        con.close()
+        if(cursor.rowcount <= 0):
+            return None
+        else:
+            return rows[0]
+
+    def addiSpindelDeviceAsNeeded(self, id, token, name, gravity):
+        sql = "SELECT * FROM iSpindel_Device WHERE iSpindelId='" + str(id) + "';"
+        con = connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        result = cursor.execute(sql)
+        rows = cursor.fetchall()
+        if(cursor.rowcount <= 0):
+            cursor.execute("INSERT INTO iSpindel_Device (iSpindelId, token, name, gravityUnit, createdDate) VALUES("+str(id)+",'"+str(token)+"','"+str(name)+"','"+("sg" if gravity<2 else "p")+"', NOW())")
+        else:
+            if(rows[0]['active'] == 0 or rows[0]['token'] != str(token) or rows[0]['name'] != str(name)) :
+                updateCursor = con.cursor(mdb.cursors.DictCursor)
+                updateCursor.execute("UPDATE iSpindel_Device SET active=1, token='"+str(token)+"', name ='"+name+"' WHERE iSpindelId ='" + str(id) + "'")           
+        con.commit()
+        con.close()
+        
+    def getiSpindelUnsentConfig(self, id):
+        con = connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        cursor.execute("SELECT iSpindelId, `interval`, token, polynomial, sent from iSpindel_Device WHERE sent != TRUE AND iSpindelId = "+str(id))
+        rows = cursor.fetchall()
+        con.close()
+        if(cursor.rowcount <= 0):
+            return None
+        else:
+            return rows[0]
+        
+    def updateiSpindeConfigMarkSent(self, id):
+        con = connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        cursor.execute("UPDATE iSpindel_Device SET sent = TRUE WHERE sent != TRUE AND iSpindelId = "+str(id))
+        con.commit()
+        con.close()
+        
+    def insertiSpindelData(self, fieldlist, valuelist):
+        con = connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        #debug(str(fieldlist))
+        #debug(str(valuelist))
+        # gather the data now and send it to the database
+        fieldstr = ', '.join(fieldlist)
+        valuestr = ', '.join(['%s' for x in valuelist])
+        add_sql = 'INSERT INTO iSpindel_Data (' + fieldstr + ')'
+        add_sql += ' VALUES (' + valuestr + ')'
+        #debug(add_sql)
+        cursor.execute(add_sql, valuelist)
+        con.commit()
+        cursor.close()
+        con.close()
+
     def setTareRequest(self, tapId, tareRequested):
         tareReq = "0"
         if tareRequested:
@@ -309,16 +419,8 @@ class PintDispatch(object):
         con.commit()
         con.close()
         
-    def setLoadCellTareOffset(self, tapId, offset):
-        sql = "UPDATE tapconfig SET loadCellTareOffset="+str(offset)
-        sql = sql + " WHERE tapId = " + str(tapId)
-        con = connectDB()
-        cursor = con.cursor(mdb.cursors.DictCursor)
-        result = cursor.execute(sql)
-        con.commit()
-        con.close()
-        
     def addTempProbeAsNeeded(self, probe):
+        state_pin = 0
         sql = "SELECT * FROM tempProbes WHERE name='"+probe+"';"
         con = connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)
@@ -327,11 +429,17 @@ class PintDispatch(object):
         if(cursor.rowcount <= 0):
             cursor.execute("INSERT INTO tempProbes (name, type) VALUES('"+probe+"', 0)")
         else:
+            if rows[0]['statePin'] != None:
+                state_pin = int(rows[0]['statePin'])
             if(rows[0]['active'] == 0) :
                 updateCursor = con.cursor(mdb.cursors.DictCursor)
                 updateCursor.execute("UPDATE tempProbes SET active=1 WHERE name ='" + probe+"'")           
+                    
         con.commit()
         con.close()        
+        
+        return state_pin
+             
     def saveTemp(self, probe, temp, tempUnit, takenDate):
         insertLogSql = "INSERT INTO tempLog (probe, temp, tempUnit, takenDate) "
         insertLogSql += "VALUES('"+probe+"',"+str(temp)+"+ COALESCE((SELECT manualAdj FROM tempProbes WHERE name = '"+probe+"'), 0), '"+str(tempUnit)+"', '"+takenDate+"');"
@@ -346,8 +454,10 @@ class PintDispatch(object):
         con = connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)
         for temp in temps:
-            insertLogSql = "INSERT INTO tempLog (probe, temp, tempUnit, takenDate) "
-            insertLogSql += "VALUES('"+temp[0]+"',"+str(temp[1])+"+ COALESCE((SELECT manualAdj FROM tempProbes WHERE name = '"+temp[0]+"'), 0), '"+str(temp[2])+"', '"+temp[3]+"');"
+            insertLogSql = "INSERT INTO tempLog (probe, temp, tempUnit, takenDate, statePinState) "
+            insertLogSql += "VALUES('"+temp[0]+"',"+str(temp[1])+"+ COALESCE((SELECT manualAdj FROM tempProbes WHERE name = '"+temp[0]+"'), 0), '"+str(temp[2])+"', '"+temp[3]+"'"
+            insertLogSql += str(temp[4]) if temp[4] != None else "null"
+            insertLogSql += ");"
             result = cursor.execute(insertLogSql)
         con.commit()
         con.close()
@@ -461,7 +571,7 @@ class PintDispatch(object):
                 
 
     def spawnWebSocketServer(self):
-        args = ["-p", "8081", "-d", "/var/www/html/python/ws"]
+        args = ["-p", "8081", "-d", PYTHON_WSH_DIR]
         #only log all errors in the webservice if we are debuging, turn level to critical
         if(not config['dispatch.debug']):
             args.append("--log-level")

@@ -2,8 +2,8 @@
 require_once __DIR__.'/header.php';
 $htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
-$beerManager = new BeerManager();
-$kegManager = new KegManager();
+//$beerManager = new BeerManager();
+//$kegManager = new KegManager();
 
 $config = getAllConfigs();
 
@@ -13,14 +13,14 @@ const TAP_TEXT_DISABLE = "Stop flow";
 $reconfig = false;
 if( isset($_POST['enableTap']) && $_POST['enableTap'] != ""){
 	//The element holds the tap Id
-	$tapManager->enableTap($_POST['enableTap']);
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
+    $tapManager->enableTap($_POST['enableTap']);
+    triggerPythonAction("valve");
 }
 
 if( isset($_POST['disableTap']) && $_POST['disableTap'] != ""){
 	//The element holds the tap Id
-	$tapManager->disableTap($_POST['disableTap']);
-	file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=valve');
+    $tapManager->disableTap($_POST['disableTap']);
+    triggerPythonAction("valve");
 }
 
 if (isset ( $_POST ['saveTapConfig'] )) {
@@ -55,11 +55,11 @@ if (isset ( $_POST ['saveSettings'] ) || isset ( $_POST ['configuration'] )) {
 }
 
 if($reconfig){
-	file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=all' );
+    triggerPythonAction();
 }
 
 $activeTaps = $tapManager->GetAllActive();
-$numberOfTaps = count($activeTaps);
+//$numberOfTaps = count($activeTaps);
 ?>
 <body>
 	<!-- Start Header  -->

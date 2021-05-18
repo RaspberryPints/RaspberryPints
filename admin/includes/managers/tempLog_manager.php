@@ -8,7 +8,7 @@ class TempLogManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["probe", "temp", "tempUnit", "humidity", "takenDate"];
+		return ["probe", "temp", "tempUnit", "humidity", "takenDate", "statePinState"];
 	}
 	protected function getTableName(){
 		return "tempLog";
@@ -36,7 +36,7 @@ class TempLogManager extends Manager{
 	    if($endTime && $endTime != "" && $endTime != " ") $where = $where.($where != ""?"AND ":"")."takenDate < '$endTime' ";
 	    if($probe)  $where = $where.($where != ""?"AND ":"")."probe = '$probe' ";
 	    if($where != "") $sql = $sql."WHERE $where ";
-	    $sql = $sql."ORDER BY takenDate DESC ";
+	    $sql = $sql."ORDER BY takenDate ASC ";
 	    $totalRows = 0;
 	    if($results = $this->executeNonObjectQueryWithArrayResults("SELECT COUNT(*) as totalRows FROM ".$this->getViewName())){
 	        if(count($results) > 0) $totalRows = $results[0]['totalRows'];

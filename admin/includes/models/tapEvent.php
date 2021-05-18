@@ -10,8 +10,11 @@ class TapEvent
     private $_tapId;
     private $_kegId;
     private $_beerId;
+    private $_beerBatchId;
     private $_amount;
     private $_amountUnit;
+    private $_beerBatchAmount;
+    private $_beerBatchAmountUnit;
     private $_newAmount;
     private $_newAmountUnit;
     private $_userId;
@@ -39,15 +42,22 @@ class TapEvent
     public function set_kegId($_kegId){ $this->_kegId = $_kegId; } 
     
     public function get_beerId(){ return $this->_beerId; }
-    public function set_beerId($_beerId){ $this->_beerId = $_beerId; }    
+    public function set_beerId($_beerId){ $this->_beerId = $_beerId; } 
+    
+    public function get_beerBatchId(){ return $this->_beerBatchId; }
+    public function set_beerBatchId($_beerBatchId){ $this->_beerBatchId = $_beerBatchId; }     
     
     public function get_amount(){ return $this->_amount; }
     public function set_amount($_amount){ $this->_amount = $_amount; }
+    public function get_beerBatchAmount(){ return $this->_beerBatchAmount; }
+    public function set_beerBatchAmount($_beerBatchAmount){ $this->_beerBatchAmount = $_beerBatchAmount; }
     public function get_newAmount(){ return $this->_newAmount; }
     public function set_newAmount($_newAmount){ $this->_newAmount = $_newAmount; }
     
     public function get_amountUnit(){ return $this->_amountUnit; }
     public function set_amountUnit($_amountUnit){ $this->_amountUnit = $_amountUnit; }
+    public function get_beerBatchAmountUnit(){ return $this->_beerBatchAmountUnit; }
+    public function set_beerBatchAmountUnit($_beerBatchAmountUnit){ $this->_beerBatchAmountUnit = $_beerBatchAmountUnit; }
     public function get_newAmountUnit(){ return $this->_newAmountUnit; }
     public function set_newAmountUnit($_newAmountUnit){ $this->_newAmountUnit = $_newAmountUnit; }
     
@@ -108,7 +118,12 @@ class TapEvent
         if( isset($postArr['amount']) )
             $this->set_amount($postArr['amount']);
         else
-            $this->set_amount(null);
+            $this->set_amount(null);         
+            
+        if( isset($postArr['beerBatchAmount']) )
+            $this->set_beerBatchAmount($postArr['beerBatchAmount']);
+        else
+            $this->set_beerBatchAmount(null);
             
         if( isset($postArr['newAmount']) )
             $this->set_newAmount($postArr['newAmount']);
@@ -119,6 +134,11 @@ class TapEvent
             $this->set_amountUnit($postArr['amountUnit']);
         else
             $this->set_amountUnit(null);
+            
+        if( isset($postArr['beerBatchAmountUnit']) )
+            $this->set_beerBatchAmountUnit($postArr['beerBatchAmountUnit']);
+        else
+            $this->set_beerBatchAmountUnit(null);
             
         if( isset($postArr['newAmountUnit']) )
             $this->set_newAmountUnit($postArr['newAmountUnit']);
@@ -174,6 +194,7 @@ class TapEvent
             "tapId: "  . $this->get_tapId()  . ", " .
             "kegId: "  . $this->get_kegId()  . ", " .
             "beerId: " . $this->get_beerId() . ", " .
+            "beerBatchId: " . $this->get_beerBatchId() . ", " .
             "amount: " . $this->get_amount() . ", " .
             "amountUnit: " . $this->get_amountUnit() . ", " .
             "userId: " . $this->get_userId() . " " .
