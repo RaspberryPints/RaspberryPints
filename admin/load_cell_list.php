@@ -42,7 +42,7 @@ if (isset ( $_POST ['save'] )) {
 } 
 
 if($reconfig){
-    include('triggerAll.php');
+    triggerPythonAction();
 }
 
 $taps = $tapManager->GetAllActive();

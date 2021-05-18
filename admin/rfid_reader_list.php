@@ -48,7 +48,7 @@ if (isset ( $_POST ['saveSettings'] ) || isset ( $_POST ['configuration'] )) {
     if (isset ( $_POST ['saveSettings'] ) )$reconfig = true;
 }
 if($reconfig){
-    include('triggerAll.php');
+    triggerPythonAction();
 }
 $readers = $rfidManager->GetAllActive();
 $numberOfReaders=count($readers);

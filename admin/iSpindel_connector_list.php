@@ -48,7 +48,7 @@ if (isset ( $_POST ['saveSettings'] ) || isset ( $_POST ['configuration'] )) {
     if (isset ( $_POST ['saveSettings'] ) )$reconfig = true;
 }
 if($reconfig){
-    include('triggerAll.php');
+    triggerPythonAction();
 }
 $iSpindelConnectors = $iSpindelConnectorManager->GetAllActive();
 $numberOfiSpindelConnectors=count($iSpindelConnectors);

@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
                 $orgGasTank->get_loadCellRspPin() != $gasTank->get_loadCellRspPin() || 
                 $orgGasTank->get_loadCellTareOffset() != $gasTank->get_loadCellTareOffset() || 
                 $orgGasTank->get_loadCellScaleRatio() != $gasTank->get_loadCellScaleRatio() ) ){
-            include("triggerAll.php");
+           triggerPythonAction();
         }
         unset($_POST);
         redirect('gasTank_list.php');
@@ -152,7 +152,7 @@ include 'top_menu.php';
 			</tr>
 			<tr>
 				<td>
-					Load Cell Notes: 
+					Notes: 
 				</td>
 				<td>
 					<textarea id="notes" class="text-input textarea" name="notes" style="width:500px;height:100px"><?php echo $gasTank->get_notes() ?></textarea>
