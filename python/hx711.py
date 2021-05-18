@@ -39,6 +39,8 @@ class HX711:
         log.logger = logger
         debug(name + " Starting")
         
+        self.nextEmulationByte = 0
+        
         try:
             self.dout_pin = int(dout_pin)         
         except:
@@ -292,7 +294,11 @@ class HX711:
         
     # Compatibility function, uses channel A version
     def get_weight(self, times=3):
-        return self.get_weight_A(times)
+        if GPIO_IMPORT_SUCCESSFUL:
+            return self.get_weight_A(times)
+        else:
+            self.nextEmulationByte = (self.nextEmulationByte%20)+1
+            return self.nextEmulationByte
 
 
     def get_weight_A(self, times=3):
