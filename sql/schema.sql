@@ -383,7 +383,7 @@ CREATE TABLE IF NOT EXISTS `beerBatches` (
 	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
-CREATE TABLE `beerBatchDateTypes` (
+CREATE TABLE IF NOT EXISTS `beerBatchDateTypes` (
   `type` int(11) NOT NULL AUTO_INCREMENT,
   `displayName` text NOT NULL,
   `createdDate` timestamp NULL DEFAULT NULL,
@@ -398,7 +398,7 @@ INSERT INTO beerBatchDateTypes VALUES('4','Kegged','2021-01-21 09:56:22','2021-0
 INSERT INTO beerBatchDateTypes VALUES('5','Bottle','2021-01-21 09:56:22','2021-01-21 09:56:22');
 INSERT INTO beerBatchDateTypes VALUES('6','Gone','2021-01-21 09:56:22','2021-01-21 09:56:22');
         
-CREATE TABLE `beerBatchDates` (
+CREATE TABLE IF NOT EXISTS `beerBatchDates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `beerBatchId` int(11) DEFAULT NULL,
   `type` int(11) NOT NULL,
@@ -417,7 +417,7 @@ CREATE TABLE `beerBatchDates` (
 -- Table structure for table `config`
 --
 
-CREATE TABLE `config` (
+CREATE TABLE IF NOT EXISTS `config` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`configName` varchar(50) NOT NULL,
 	`configValue` longtext NOT NULL,
@@ -1031,7 +1031,7 @@ CREATE TABLE IF NOT EXISTS `bottles` (
 -- Table structure for table `Users`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS`users` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`username` varchar(65) CHARACTER SET utf8 NOT NULL,
 	`password` varchar(65) CHARACTER SET utf8 NOT NULL DEFAULT '',
@@ -1053,7 +1053,7 @@ CREATE TABLE `users` (
 -- Table structure for table `Users`
 --
 
-CREATE TABLE `userRfids` (
+CREATE TABLE IF NOT EXISTS `userRfids` (
 	`userId` int(11) NOT NULL,
 	`RFID` varchar(128) CHARACTER SET utf8 NOT NULL,
 	`description` varchar(65) CHARACTER SET utf8 NULL,
@@ -1854,67 +1854,6 @@ AS
       LEFT JOIN taps t 
         ON k.onTapId = t.id;
 
-CREATE OR REPLACE VIEW `vwPours`
-AS
-SELECT 
-	p.*, 
-	t.tapNumber, 
-	t.tapRgba,
-	b.name AS beerName, 
-	b.untID AS beerUntID, 
-        bs.name as beerStyle,
-	br.imageUrl AS breweryImageUrl, 
-	COALESCE(u.userName, '') as userName
-FROM pours p 
-	LEFT JOIN taps t ON (p.tapId = t.id) 
-	LEFT JOIN beers b ON (p.beerId = b.id) 
-	LEFT JOIN breweries br ON (b.breweryId = br.id) 
-	LEFT JOIN users u ON (p.userId = u.id)
-	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId;
-  
-CREATE OR REPLACE VIEW vwIoHardwarePins
-AS
-  (SELECT CASE WHEN tc.flowPin  < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Tap ', t.tapNumber, ' Flow Meter') AS Hardware, ABS(tc.flowPin) AS pin FROM tapconfig tc LEFT JOIN taps t ON (tc.tapId = t.id))
-  UNION
-  (SELECT CASE WHEN tc.valvePin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Tap ', t.tapNumber, ' Valve')      AS Hardware, ABS(tc.valvePin) AS pin FROM tapconfig tc LEFT JOIN taps t ON (tc.tapId = t.id))
-  UNION
-  (SELECT CASE WHEN tc.loadCellCmdPin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Tap ', t.tapNumber, ' Load Cell Command')      AS Hardware, ABS(tc.loadCellCmdPin) AS pin FROM tapconfig tc LEFT JOIN taps t ON (tc.tapId = t.id))
-  UNION
-  (SELECT CASE WHEN tc.loadCellRspPin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Tap ', t.tapNumber, ' Load Cell Response')      AS Hardware, ABS(tc.loadCellRspPin) AS pin FROM tapconfig tc LEFT JOIN taps t ON (tc.tapId = t.id))
-  UNION
-  (SELECT CASE WHEN pin        <> 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('RFID ', name, ' Trigger')          AS Hardware, ABS(pin) AS pin FROM rfidReaders)
-  UNION
-  (SELECT CASE WHEN pin        <> 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('PIR ', name, ' Trigger')           AS Hardware, ABS(pin) AS pin FROM motionDetectors)
-  UNION
-  (SELECT CASE WHEN pin        <> 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('PIR ', name, ' LED')               AS Hardware, ABS(ledPin) AS pin FROM motionDetectors)
-  UNION
-  (SELECT CASE WHEN pin        <> 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Temp Probe ', name, ' State')               AS Hardware, ABS(statePin) AS pin FROM tempProbes)
-  UNION
-  (SELECT CASE WHEN configValue<> 0 THEN 'Pi' ELSE '' END AS shield, displayName                                AS Hardware, ABS(configValue) AS pin FROM config WHERE configName IN ('valvesPowerPin', 'useFanPin'))
-  UNION
-  (SELECT CASE WHEN gt.loadCellCmdPin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Gas Tank ', COALESCE(gt.label, gt.id), ' Load Cell Command')      AS Hardware, ABS(gt.loadCellCmdPin) AS pin FROM gasTanks gt)
-  UNION
-  (SELECT CASE WHEN gt.loadCellRspPin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Gas Tank ', COALESCE(gt.label, gt.id), ' Load Cell Response')      AS Hardware, ABS(gt.loadCellRspPin) AS pin FROM gasTanks gt);
-
-CREATE OR REPLACE VIEW vwIoPins
-AS
-SELECT
-	io.shield,
-  io.pin,
-  io.displayPin,
-	io.name,
-  io.col,
-  io.row,
-  io.rgb,
-	io.notes,
-  io.pinSide,
-  GROUP_CONCAT(hard.Hardware ORDER BY hardware, ',') AS hardware
-FROM ioPins io
-LEFT JOIN vwIoHardwarePins hard
-ON ((CONVERT(io.shield USING utf8) = hard.shield OR (LOWER(io.shield) != 'pi' AND hard.shield = '')) and io.pin = hard.pin)
-WHERE (io.shield = 'Pi' OR '1' = (SELECT DISTINCT '1' FROM vwIoHardwarePins WHERE shield = ''))
-GROUP BY shield, pin;
-
 CREATE OR REPLACE VIEW `vwFermentables` 
 AS
  SELECT 
@@ -1983,7 +1922,7 @@ AS
  FROM accolades a LEFT JOIN srmRgb srm
         ON a.srm = srm.srm;
         
-CREATE TABLE `iSpindel_Data` (
+CREATE TABLE IF NOT EXISTS `iSpindel_Data` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`createdDate` datetime NOT NULL,
 	`name` varchar(64) COLLATE ascii_bin NOT NULL,
@@ -2006,7 +1945,7 @@ CREATE TABLE `iSpindel_Data` (
 ENGINE=InnoDB DEFAULT CHARSET=ascii 
 COLLATE=ascii_bin COMMENT='iSpindel Data';
 
-CREATE TABLE `iSpindel_Device` (
+CREATE TABLE IF NOT EXISTS `iSpindel_Device` (
 	`iSpindelId` int NOT NULL,
 	`name` varchar(64) NULL,
 	`active` int NOT NULL DEFAULT 1,
@@ -2063,7 +2002,7 @@ CREATE TABLE `iSpindel_Device` (
 
 
 
-CREATE TABLE `iSpindel_Connector` (
+CREATE TABLE IF NOT EXISTS `iSpindel_Connector` (
 	`id` int NOT NULL AUTO_INCREMENT,
     `address` varchar(256) NULL,
     `port` varchar(256) NULL,
@@ -2437,6 +2376,67 @@ select
             on((f.fermenterTypeId = ft.id)));
        
         
+CREATE OR REPLACE VIEW `vwPours`
+AS
+SELECT 
+	p.*, 
+	t.tapNumber, 
+	t.tapRgba,
+	b.name AS beerName, 
+	b.untID AS beerUntID, 
+        bs.name as beerStyle,
+	br.imageUrl AS breweryImageUrl, 
+	COALESCE(u.userName, '') as userName
+FROM pours p 
+	LEFT JOIN taps t ON (p.tapId = t.id) 
+	LEFT JOIN beers b ON (p.beerId = b.id) 
+	LEFT JOIN breweries br ON (b.breweryId = br.id) 
+	LEFT JOIN users u ON (p.userId = u.id)
+	LEFT JOIN beerStyles bs ON bs.id = b.beerStyleId;
+  
+CREATE OR REPLACE VIEW vwIoHardwarePins
+AS
+  (SELECT CASE WHEN tc.flowPin  < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Tap ', t.tapNumber, ' Flow Meter') AS Hardware, ABS(tc.flowPin) AS pin FROM tapconfig tc LEFT JOIN taps t ON (tc.tapId = t.id))
+  UNION
+  (SELECT CASE WHEN tc.valvePin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Tap ', t.tapNumber, ' Valve')      AS Hardware, ABS(tc.valvePin) AS pin FROM tapconfig tc LEFT JOIN taps t ON (tc.tapId = t.id))
+  UNION
+  (SELECT CASE WHEN tc.loadCellCmdPin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Tap ', t.tapNumber, ' Load Cell Command')      AS Hardware, ABS(tc.loadCellCmdPin) AS pin FROM tapconfig tc LEFT JOIN taps t ON (tc.tapId = t.id))
+  UNION
+  (SELECT CASE WHEN tc.loadCellRspPin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Tap ', t.tapNumber, ' Load Cell Response')      AS Hardware, ABS(tc.loadCellRspPin) AS pin FROM tapconfig tc LEFT JOIN taps t ON (tc.tapId = t.id))
+  UNION
+  (SELECT CASE WHEN pin        <> 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('RFID ', name, ' Trigger')          AS Hardware, ABS(pin) AS pin FROM rfidReaders)
+  UNION
+  (SELECT CASE WHEN pin        <> 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('PIR ', name, ' Trigger')           AS Hardware, ABS(pin) AS pin FROM motionDetectors)
+  UNION
+  (SELECT CASE WHEN pin        <> 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('PIR ', name, ' LED')               AS Hardware, ABS(ledPin) AS pin FROM motionDetectors)
+  UNION
+  (SELECT CASE WHEN pin        <> 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Temp Probe ', name, ' State')               AS Hardware, ABS(statePin) AS pin FROM tempProbes)
+  UNION
+  (SELECT CASE WHEN configValue<> 0 THEN 'Pi' ELSE '' END AS shield, displayName                                AS Hardware, ABS(configValue) AS pin FROM config WHERE configName IN ('valvesPowerPin', 'useFanPin'))
+  UNION
+  (SELECT CASE WHEN gt.loadCellCmdPin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Gas Tank ', COALESCE(gt.label, gt.id), ' Load Cell Command')      AS Hardware, ABS(gt.loadCellCmdPin) AS pin FROM gasTanks gt)
+  UNION
+  (SELECT CASE WHEN gt.loadCellRspPin < 0 THEN 'Pi' ELSE '' END AS shield, CONCAT('Gas Tank ', COALESCE(gt.label, gt.id), ' Load Cell Response')      AS Hardware, ABS(gt.loadCellRspPin) AS pin FROM gasTanks gt);
+  
+CREATE OR REPLACE VIEW vwIoPins
+AS
+SELECT
+	io.shield,
+  io.pin,
+  io.displayPin,
+	io.name,
+  io.col,
+  io.row,
+  io.rgb,
+	io.notes,
+  io.pinSide,
+  GROUP_CONCAT(hard.Hardware ORDER BY hardware, ',') AS hardware
+FROM ioPins io
+LEFT JOIN vwIoHardwarePins hard
+ON ((CONVERT(io.shield USING utf8) = hard.shield OR (LOWER(io.shield) != 'pi' AND hard.shield = '')) and io.pin = hard.pin)
+WHERE (io.shield = 'Pi' OR '1' = (SELECT DISTINCT '1' FROM vwIoHardwarePins WHERE shield = ''))
+GROUP BY shield, pin;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
