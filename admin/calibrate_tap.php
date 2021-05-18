@@ -89,7 +89,7 @@ include 'top_menu.php';
                             <div style="width:115px">
                                <?php 
                                     $style = "";
-                                    $hasImg = false;
+                                   // $hasImg = false;
                                     if(isset($tap) && null !== $tap->get_tapRgba()) $style = "background-color: ".$htmlHelper->CreateRGB($tap->get_tapRgba());
                                     if(isset($tap))
         							{
@@ -97,7 +97,7 @@ include 'top_menu.php';
             							if(count($imgs) > 0)
             							{
             							    $style .= ($style != ""?";":"").'background:url('.$imgs[0].') no-repeat bottom left; background-size:cover; -webkit-border-radius:0px; -mox-border-radius:0px; height:100%; width:50px';
-            							    $hasImg = true;
+            							   // $hasImg = true;
             							}
         							}
     							?> 

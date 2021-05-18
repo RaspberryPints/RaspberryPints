@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/header.php';
-$configs = getAllConfigs();
+//$configs = getAllConfigs();
 $htmlHelper = new HtmlHelper();
 ?> 
 <!-- Start Header  -->

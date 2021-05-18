@@ -241,7 +241,7 @@ include 'top_menu.php';
                                         $str .= "<option value=''>Unassigned RFIDs</option>\n";
                                         foreach($unassignedRfids as $item){
                                             if( !$item ) continue;
-                                            $sel = "";
+                                            //$sel = "";
                                             $rfid = $item['RFID'];
                                             $desc = $item['description'];
                                             $str .= "<option value='".$rfid."'>".$rfid.'-'.$desc."</option>\n";

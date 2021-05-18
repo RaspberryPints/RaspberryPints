@@ -256,6 +256,8 @@ if ($action == 'install')
 	echo "Update config files...";
 	flush();
 	
+	/** @var mixed $mainconfigstring **/
+	/** @var mixed $adminconfig1 **/
 	file_put_contents('../../includes/config.php', $mainconfigstring);
 
 	echo "Success!<br>";
@@ -276,6 +278,7 @@ if ($action == 'install')
 
 	$error = false;
 	$sql = "DROP DATABASE `" . $databasename . "`;";
+	/** @var mixed $result **/
 	$result = $mysqli->query($sql);
 	// ignore errors
 	

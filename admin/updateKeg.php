@@ -13,6 +13,7 @@ $tapManager = new TapManager();
 $kegManager = new KegManager();
 $beerManager = new BeerManager();
 $tap = new Tap();
+/** @var mixed $argv  **/
 if( isset($argv) && count($argv) >= 2 ){    
     //This will be used to choose between CSV or MYSQL DB
     $db = true;
@@ -51,6 +52,7 @@ if( isset($argv) && count($argv) >= 2 ){
             }
             if( !$kegManager->Save($keg) )
             {
+                /** @var mixed $mysqli **/
                 echo "Could not update Weight for ".$keg->get_id()."(".$keg->get_label().")" . ($mysqli->error != ""?' ['.$mysqli->error.']':'')."\n" ;
             }
         }

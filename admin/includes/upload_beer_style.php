@@ -3,7 +3,7 @@ require_once __DIR__.'/../header.php';
 require_once __DIR__.'/managers/beerStyle_manager.php';
 $error=false; 
 const MAX_SRM = 40.0;
-global $mysqli;
+//global $mysqli;
 
 if(!isset($_FILES['uploaded']) || !isset($_FILES['uploaded']['size']) || !isset($_FILES['uploaded']['type']))
 {
@@ -42,7 +42,7 @@ else
 	$ii = 0;
 	while ($xml && ($style = $xml->BEERSTYLE[$ii++]))
 	{
-		$styleId = '';
+		//$styleId = '';
 		$catNum = $style->CATEGORY . ($style->LETTER?$style->LETTER:$style->STYLE_LETTER);
 		$styleName = $style->NAME;
 

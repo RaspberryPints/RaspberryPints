@@ -2,7 +2,7 @@
 require_once __DIR__.'/header.php';
 $htmlHelper = new HtmlHelper();
 $beerStyleManager = new BeerStyleManager();
-$config = getAllConfigs();
+//$config = getAllConfigs();
 if (isset($_POST['inactivateBeerStyle'])) {
     $beerStyleManager->Inactivate($_POST['id']);		
 }

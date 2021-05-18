@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/header.php';
-$htmlHelper = new HtmlHelper();
+//$htmlHelper = new HtmlHelper();
 $breweryManager = new BreweryManager();
 
 

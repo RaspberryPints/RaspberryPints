@@ -5,6 +5,8 @@ require("../includes/conn.php");
 $email_to=$_POST['email_tou'];
 
 
+/** @var mixed $tbl_name **/
+/** @var mixed $mysqli **/
 $sql="SELECT username FROM $tbl_name WHERE email='$email_to'";
 $result=$mysqli->query($sql);
 
@@ -34,7 +36,7 @@ $header="from: Support <shawn@besmartdesigns.com>";
 $messages.="This is your username to your login ( $your_username ) \r\n";
 
 // send email
-$sentmail = mail($to,$subject,$messages,$header);
+mail($to,$subject,$messages,$header);
 
 }
 

@@ -3,13 +3,13 @@
 <?php
 
 /* this just feels wrong */
-$rgb = explode(',',$_GET['rgb']);
-$r = $rgb[0];
-$g = $rgb[1];
-$b = $rgb[2];
-if ($r<60) { $foamRgb = "159,129,112"; }
-elseif ($r<190) { $foamRgb = "255,250,205"; }
-else { $foamRgb = "255,255,255"; }
+//$rgb = explode(',',$_GET['rgb']);
+//$r = $rgb[0];
+//$g = $rgb[1];
+//$b = $rgb[2];
+//if ($r<60) { $foamRgb = "159,129,112"; }
+//elseif ($r<190) { $foamRgb = "255,250,205"; }
+//else { $foamRgb = "255,255,255"; }
 
 $fn = preg_replace('/\W+/','',$_GET['container']);
 $view="20 50 130 256";

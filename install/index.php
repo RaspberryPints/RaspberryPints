@@ -50,6 +50,7 @@
         $username = "";
         $password = "";
         $db_name = "raspberrypints";
+        /** @var mixed $tbl_name **/
         $tbl_name = "";
     ?>
 	<?php

@@ -9,11 +9,13 @@ $userManager = new UserManager();
 $ii = 1;
 
 // Connect to the database
+/** @var mixed $mysqli **/
 $mysqli = db();		
 
 $config = getAllConfigs();	
 
 // Creates arguments from info passed by python script from Flow Meters
+/** @var mixed $argv **/
 $rfid = $argv[$ii++];
 $user = $userManager->getByRFID($rfid);
 

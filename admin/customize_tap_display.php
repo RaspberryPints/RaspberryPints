@@ -1,4 +1,5 @@
 <?php
+/** @var mixed $noHeadEnd **/
 $noHeadEnd = True;
 require_once __DIR__.'/header.php';
 require_once __DIR__.'/../includes/common.php';
@@ -26,7 +27,9 @@ $htmlHelper = new HtmlHelper();
 $config = getAllConfigs();
 //Force to verticle until horizontal is working
 $config[ConfigNames::ShowVerticleTapList] == "1";
+$error = FALSE;
 if (isset ( $_POST ['save'] )) {
+    /** @var mixed $value **/
     foreach( $_POST as $key => $value )
     {
         //if the showColumn is set then multiple the current value by the show value
@@ -108,7 +111,7 @@ include 'top_menu.php';
                     "untID" => 0,
                     "style" => 1,
                     "brewery" => "BreweryName",
-                    "breweryImage" => $b['breweryImageUrl'],
+                    "breweryImage" =>'breweryImageUrl',
                     "notes" => "Beer Notes",
                     "abv" => 5.0,
                     "og" => 1.065,
@@ -129,6 +132,7 @@ include 'top_menu.php';
                 );
                 $taps[1] = $beeritem;
                 $numberOfTaps = 1;
+                /** @var mixed $numberOfBeers **/
                 $numberOfBeers = 1;
                 printBeerList($taps, $numberOfTaps, ConfigNames::CONTAINER_TYPE_KEG, TRUE);
             ?>

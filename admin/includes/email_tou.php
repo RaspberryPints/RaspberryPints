@@ -11,6 +11,7 @@ if (isset($_POST['email'])) {
     
     // update data in mysql database
     $sql = "SELECT username FROM users WHERE email='$email'";
+    /** @var mixed $mysqli **/
     $result = $mysqli->query($sql);
     $username = $result->fetch_row();
     ?>

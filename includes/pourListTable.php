@@ -2,10 +2,12 @@
 	//Only to be called from /includes/common.php printBeerList
 	require_once __DIR__.'/functions.php';
 	require_once __DIR__.'/../admin/includes/managers/config_manager.php';	
-	require_once __DIR__.'/../admin/includes/html_helper.php';	
+	require_once __DIR__.'/../admin/includes/html_helper.php';
+	/** @var mixed $config **/
+	/** @var mixed $pours **/
 	if(!isset($config)) $config = getAllConfigs();
 	$htmlHelper = new HtmlHelper();
-	$pourManager = new PourManager();
+	//$pourManager = new PourManager();
 	$beerColSpan = 1;
 	$i = 0;
 ?>

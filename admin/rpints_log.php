@@ -70,7 +70,7 @@
 	    <link href="styles/layout.css" rel="stylesheet" type="text/css" />
 	    <link href="styles/wysiwyg.css" rel="stylesheet" type="text/css" />
 	    <!-- Theme Start -->
-	    <link href="<?php echo $stylesheet?>" rel="stylesheet" type="text/css" />
+	    <link href="<?php /** @var mixed $stylesheet **/echo $stylesheet?>" rel="stylesheet" type="text/css" />
 	    <!-- Theme End -->
 	    <link href='http://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
 	    <?php require __DIR__.'/scripts.php'; ?>
@@ -112,7 +112,7 @@ if(isset( $_SESSION['myusername'] ))include 'top_menu.php';
                         <td>
                         </td>
             		</tr>
-					<?php $columnCount= 4; include "includes/paginateTableRow.php"; ?> 
+					<?php /** @var mixed $columnCount **/$columnCount= 4; include "includes/paginateTableRow.php"; ?> 
                     <tr id="manDates" <?php echo $interval!=0?'style="display:none;"':''; ?>>
                         <td>Start Date:</td>
                         <td><input type="date" name="startDate" value="<?php echo $startDate; ?>"></td>

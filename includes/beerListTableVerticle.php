@@ -6,7 +6,12 @@
 	$config = getAllConfigs();
 	$htmlHelper = new HtmlHelper();
 	$row = 0;
-	$MAX_COLUMNS = 7;
+	$MAX_COLUMNS = 7;	
+	/** @var mixed $editingTable **/
+	/** @var mixed $noTableHead **/
+	/** @var mixed $beers **/
+	/** @var mixed $numberOfBeers **/
+	/** @var mixed $tapOrBottle **/
 	$editting = (isset($editingTable) && $editingTable);
 ?>
 

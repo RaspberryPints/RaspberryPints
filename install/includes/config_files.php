@@ -2,7 +2,13 @@
 /***************************************************************************
 * Config files for V2.0.4.0
 ****************************************************************************/
-	
+
+/** @var mixed $servername **/
+/** @var mixed $dbuser **/
+/** @var mixed $dbpass1 **/
+/** @var mixed $databasename **/
+/** @var mixed $mainconfigstring **/
+/** @var mixed $adminconfig1 **/
 	//Main config files - /includes/config.php
 	$mainconfigstring = "<?php \n";
 	$mainconfigstring .= "  function db() {\n";

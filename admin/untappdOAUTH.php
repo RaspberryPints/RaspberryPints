@@ -21,6 +21,7 @@ try{
         if($user)
         {
             $user->set_unTapAccessToken($a);
+            /** @var mixed $redirect **/
             $redirect = $userManager->Save($user);
         }
         $_SESSION['untappdUser'] = null;

@@ -54,8 +54,8 @@ if (isset ( $_POST ['save'] )) {
 $items = $manager->GetAllActive();
 $numItems=count($items);
 
-$srmManager = new SrmManager();
-$srmList = $srmManager->getAll();
+//$srmManager = new SrmManager();
+//$srmList = $srmManager->getAll();
 ?>
 <body>
 	<!-- Start Header  -->

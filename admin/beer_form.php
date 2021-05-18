@@ -394,7 +394,7 @@ include 'top_menu.php';
 							<td>         
 								<input type="hidden" id="beerFermId" name="beerFermId[]" value="<?php echo $beerFermentable->get_id(); ?>"/>                   
 							<?php 
-							    $selectedItem = null;
+							    //$selectedItem = null;
 							    $str = "<select id='fermId".$ii."' name='fermId[]' class='' onChange='toggleDisplay(this, 3)'>\n";
                                 $str .= "<option value=''>Select One</option>\n";
                                 foreach($fementableList as $item){

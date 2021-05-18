@@ -1,5 +1,12 @@
 <?php
-	require_once __DIR__.'/../admin/includes/managers/config_manager.php';
+require_once __DIR__.'/../admin/includes/managers/config_manager.php';
+/** @var mixed $editingTable **/
+/** @var mixed $noTableHead **/
+/** @var mixed $beers **/
+/** @var mixed $numberOfBeers **/
+/** @var mixed $numberOfPours **/
+/** @var mixed $tapOrBottle **/
+/** @var mixed $pours **/
 	$numberOfBeers;
 	$beers;
 	$tapOrBottle;

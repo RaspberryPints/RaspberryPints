@@ -20,7 +20,7 @@ require_once __DIR__.'/includes/managers/config_manager.php';
 <link href="styles/wysiwyg.css" rel="stylesheet" type="text/css" />
 
 <!-- Style Sheet -->
-<link href="<?php echo $stylesheet?>" rel="stylesheet" type="text/css" />
+<link href="<?php echo /** @var mixed $stylesheet **/$stylesheet?>" rel="stylesheet" type="text/css" />
 
 <link href='http://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'/>
 </head>
@@ -72,6 +72,7 @@ if (isset($_POST['color'])) {
 <form method="post" name="color" action="">
 	<h2>Select Admin Theme Color:</h2>
 	<select name="color">
+	<?php /** @var mixed $stylesheet **/?>
 		<option value="styles.css"<?php if ($stylesheet == "styles.css") echo "selected";?>>Blue</option>
 		<option value="styles_green.css"<?php if ($stylesheet == "styles_green.css") echo "selected";?>>Green</option>
 		<option value="styles_red.css"<?php if ($stylesheet == "styles_red.css") echo "selected";?>>Red</option>
