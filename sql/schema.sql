@@ -357,7 +357,7 @@ CREATE TABLE IF NOT EXISTS `beerBatches` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`beerId` int(11) NULL,
 	`batchNumber` int(11) NULL,
-	`name` varchar(40) NOT NULL,
+	`name` varchar(40) NULL,
 	`notes` text NULL,
 	`startAmount` decimal(10,5) NULL,
 	`startAmountUnit` tinytext NULL,

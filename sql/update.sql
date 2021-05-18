@@ -352,7 +352,7 @@ ALTER TABLE pours CHANGE COLUMN `amountPoured` `amountPoured` decimal(9,7) NULL 
 
 
 	
-UPDATE `config` SET `configValue` = '3.0.5.0' WHERE `configName` = 'version';
+UPDATE `config` SET `configValue` = '3.0.9.0' WHERE `configName` = 'version';
 
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
@@ -622,7 +622,7 @@ CREATE TABLE IF NOT EXISTS `beerBatches` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`beerId` int(11) NULL,
 	`batchNumber` int(11) NULL,
-	`name` varchar(40) NOT NULL,
+	`name` varchar(40) NULL,
 	`notes` text NULL,
 	`startAmount` decimal(10,5) NULL,
 	`startAmountUnit` tinytext NULL,
