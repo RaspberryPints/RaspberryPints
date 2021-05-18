@@ -16,14 +16,14 @@ if (isset ( $_POST ['save'] )) {
 	$ii = 0;
 	while(isset($_POST ['name'][$ii]))
 	{
-	    $newItem = false;
+	    //$newItem = false;
 	    if(isset($_POST ['id'][$ii]) && $_POST ['id'][$ii] != "")
 	    {
 	        $id = $_POST ['id'][$ii];
 	        $item = $manager->GetById($id);
 	    }else{
 	        $item = new Accolade();
-	        $newItem = true;
+	       //$newItem = true;
 	    }
 	    if( $_POST['name'][$ii] == '') $_POST['name'][$ii] = 'new';
 	    $item->set_name($_POST['name'][$ii]);
