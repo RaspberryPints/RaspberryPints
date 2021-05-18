@@ -26,7 +26,7 @@
 declare THISSCRIPT VERSION PACKAGE VERBOSE REPLY CMDLINE  
 declare SCRIPTNAME APTPACKAGES VERBOSE HOMEPATH REALUSER
 # Packages to be installed via apt
-APTPACKAGES="mariadb-server php php-mysql php-curl 
+APTPACKAGES="mariadb-server php php-mysql php-curl php-xml
 		 git ttf-mscorefonts-installer x11-xserver-utils unclutter vim kompare"
 INSTALLPACKAGES="dialog" 
 JESSIE_ATPPACKAGES="dialog php5 mysql-client mysql-server  
