@@ -92,7 +92,7 @@ class Logger ():
             self.log(msg, process, True, logDB)
                      
     def log(self, msg, process="PintDispatch", isDebug=False, logDB=True):
-        print datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S') + " RPINTS: " + msg 
+        print (datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S') + " RPINTS: " + msg) 
         sys.stdout.flush() 
         if logDB:
             self.logDB(msg, process, isDebug)
@@ -562,7 +562,7 @@ class PintDispatch(object):
                     self.flowmonitor.fakemonitor()
                 else:
                     self.flowmonitor.monitor(self.useOption("useFlowMeter"))
-            except Exception, e:
+            except Exception as e:
                 log("serial connection stopped...")
                 debug( str(e) )
             finally:

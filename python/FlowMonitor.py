@@ -115,7 +115,7 @@ class FlowMonitor(object):
                     output = subprocess.check_output(cmdline, shell=True, stderr=subprocess.STDOUT,)
                     debug( output )
                 except Exception as ex:
-                    print 'RPINTS: reflashing Arduino failed, moving on anyways, error was: ', ex
+                    print ('RPINTS: reflashing Arduino failed, moving on anyways, error was: ', ex)
                     debug (output)
             else:
                 self.resetAlamode = False
@@ -510,7 +510,7 @@ class RFIDCheckThread (threading.Thread):
         while not self.shutdown_required:
             try:
                 self.checkRFID(self.rfidSPISSPin)
-            except Exception, e:
+            except Exception as e:
                 debug("RFID Reader: " +str(e))
             finally:
                 time.sleep(self.delay)
@@ -539,7 +539,7 @@ class RFIDCheckThread (threading.Thread):
                     proc = subprocess.check_output(["php", self.rfiddir, rfidTag])
                     usrId = int(proc)
                     if usrId > -1:
-                        if usrId <> self.lastUserId or self.rfidTag <> rfidTag:
+                        if usrId != self.lastUserId or self.rfidTag != rfidTag:
                             debug("RFID "+rfidTag+" User Id "+ proc)
                         self.userId = usrId
                         self.lastUserId = usrId
@@ -559,7 +559,7 @@ class RFIDCheckThread (threading.Thread):
                     #    MIFAREReader.MFRC522_Read(8)
                     #    MIFAREReader.MFRC522_StopCrypto1()
                     
-        except Exception, e:
+        except Exception as e:
             debug("RFID Reader: " +str(e))
             debug(traceback.format_exc())
         finally:
@@ -567,7 +567,7 @@ class RFIDCheckThread (threading.Thread):
                 
     def getLastUserId(self):
         ret = self.userId
-        if ret <> -1:
+        if ret != -1:
             self.userId = -1
         return ret 
     
@@ -624,7 +624,7 @@ class MotionDetectionPIRThread (threading.Thread):
         #To see full command replace ;'s with new lines
         os.system('export DISPLAY=":0.0"; for dir in /home/*/; do export XAUTHORITY=$dir.Xauthority; xscreensaver-command -deactivate > /dev/null 2>&1; done;')
         
-        if self.ledPin <> 0:
+        if self.ledPin != 0:
             self.dispatch.updatepin(int(self.ledPin), True)
         if self.soundFile != '':
             os.system(mpg321 + self.soundFile)
@@ -632,7 +632,7 @@ class MotionDetectionPIRThread (threading.Thread):
             time.sleep(1)
         if self.mqttClient != None and self.mqttCommand != '':
             self.mqttc.publish(self.mqttEvent,self.mqttCommand)
-        if self.ledPin <> 0:
+        if self.ledPin != 0:
             self.dispatch.updatepin(int(self.ledPin), False)
         
         time.sleep(1)
@@ -688,10 +688,10 @@ class LoadCellCheckThread (threading.Thread):
             while not self.shutdown_required:
                 if self.checkTare:
                     if self.equipType == LOAD_CELL_EQUIP_TYPE_TAP:
-                    if self.dispatch.getTareRequest(self.tapId):
-                        self.tare()
-                        self.dispatch.setTareRequest(self.tapId, False)
-                        self.setCheckTare(False)
+                        if self.dispatch.getTareRequest(self.tapId):
+                            self.tare()
+                            self.dispatch.setTareRequest(self.tapId, False)
+                            self.setCheckTare(False)
                     else:
                         if self.dispatch.getGasTankTareRequest(self.tapId):
                             self.tare()
@@ -706,7 +706,7 @@ class LoadCellCheckThread (threading.Thread):
                     if self.equipType == LOAD_CELL_EQUIP_TYPE_GT:
                         subprocess.call(["php", self.updateDir + '/admin/updateGasTank.php', str(self.tapId), str(weight), self.unit])
                     else:
-                    subprocess.call(["php", self.updateDir + '/admin/updateKeg.php', str(self.tapId), str(weight), self.unit])
+                        subprocess.call(["php", self.updateDir + '/admin/updateKeg.php', str(self.tapId), str(weight), self.unit])
                     debug(self.threadID+": Updating "+str(self.tapId)+" Weight="+str(weight)+" "+self.unit)
                     lastWeight = weight
                 time.sleep(self.delay)
@@ -809,7 +809,7 @@ class OneWireTemperatureThread (threading.Thread):
                 
                 time.sleep(self.delay)
                 firstTime = False
-        except Exception, e:
+        except Exception as e:
             log("Unable to Run 1Wire Temperature")
             debug("1Wire Temperature: " +str(e))
             debug(traceback.format_exc())
@@ -857,7 +857,7 @@ class MQTTListenerThread (threading.Thread):
             # Continue monitoring the incoming messages for subscribed topic
             while not self.shutdown_required:
                 self.mqttc.loop()
-        except Exception, e:
+        except Exception as e:
             log("Unable to Run MQTT Listener")
             debug("MQTT Listener: " +str(e))
             return
@@ -868,7 +868,7 @@ class MQTTListenerThread (threading.Thread):
         debug("Connect on "+self.host)
         try:
             self.mqttc.subscribe(self.topics)
-        except Exception, e:
+        except Exception as e:
             log("Unable to Run MQTT Listener")
             debug("MQTT Listener: " +str(e))
             debug(traceback.format_exc())
@@ -1306,7 +1306,7 @@ class iSpindelListenerThread (threading.Thread):
                         except Exception as e:
                             debug(repr(addr) + ' Brewfather Error: ' + str(e), debugConfig='iSpindel.debug')
 
-            except Exception, e:
+            except Exception as e:
                 log("Unable to Run iSpindel Listener")
                 debug("iSpindel Listener: " +str(e), debugConfig='iSpindel.debug')
                 debug(traceback.format_exc(), debugConfig='iSpindel.debug')
