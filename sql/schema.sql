@@ -2421,7 +2421,7 @@ AS
 CREATE OR REPLACE VIEW vwIoPins
 AS
 SELECT
-	io.shield,fg
+	io.shield,
   io.pin,
   io.displayPin,
 	io.name,
