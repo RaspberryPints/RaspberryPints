@@ -5,12 +5,18 @@ $htmlHelper = new HtmlHelper();
 $bottleManager = new BottleManager();
 $bottleTypeManager = new BottleTypeManager();
 $beerManager = new BeerManager();
-$srmManager = new SrmManager();
+//$srmManager = new SrmManager();
 
-$beerList = $beerManager->GetAllActive();
+$beerList = $beerManager->GetAllActiveWithBatches();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //Change the beerId value from beerId~beerBatchId~fg to just beerId
+    if(isset($_POST['beerId'])){
+        $beerExloded = explode("~", $_POST['beerId']);
+        $_POST['beerId'] = $beerExloded[0];
+        $_POST['beerBatchId'] = $beerExloded[1];
+    }
   $bottle = new Bottle();
   $bottle->setFromArray($_POST);
   $bottleManager->Save($bottle);
@@ -63,7 +69,22 @@ $colorList = $bottleManager->getCapColors();
 					 <b>Beer Name: <font color="red">*</font></b>
 				</td>
 				<td>
-					<?php echo $htmlHelper->ToSelectList("beerId", "beerId", $beerList, "name", "id", $bottle->get_beerId(), "Select One"); ?>
+					<?php 
+					$str = "<select id='beerId' name='beerId' class=''>\n";
+						$str .= "<option value=''>Select One</option>\n";
+						foreach($beerList as $item){
+						    if( !$item ) continue;
+						    $sel = "";
+						    if( isset($bottle) && $bottle->get_beerId() == ($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId()) && (($bottle->get_beerBatchId() <= 0 && $item->get_beerBatchId()<=0)  || $bottle->get_beerBatchId() == $item->get_beerBatchId()) )  $sel .= "selected ";
+						    $desc = $item->get_displayName();
+						    $str .= "<option value='".($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId())."~".$item->get_beerBatchId()."~".$item->get_fg()."~".$item->get_fgUnit()."' ".$sel.">".$desc."</option>\n";
+						}
+						$str .= "</select>\n";
+						
+						echo $str;
+						
+						//echo $htmlHelper->ToSelectList("beerId", "beerId", $beerList, "name", "id", $bottle->get_beerId(), "Select One"); 
+					?>
 				</td>
 			</tr>
 			<tr>

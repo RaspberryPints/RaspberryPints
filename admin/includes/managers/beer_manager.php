@@ -53,4 +53,37 @@ class BeerManager extends Manager{
 	$manager = new yeastManager();
 	return $manager->GetDistinctForBeer($id);
   }
+  
+  private static function cmpBeer($a, $b) {
+      return strcmp($a->get_displayName(), $b->get_displayName());
+  }
+  function GetAllWithBatches(){
+      $beerList = $this->GetAll();
+      
+      $beerBatchList = (new BeerBatchManager())->GetAll();
+      if( count($beerBatchList) > 0){
+          $beerList = array_merge($beerList, $beerBatchList );
+          uasort($beerList, array('BeerManager','cmpBeer'));
+      }
+      return $beerList;
+  }
+  
+  function GetAllActiveWithBatches(){
+      $beerList = $this->GetAllActive();
+      
+      $beerBatchList = (new BeerBatchManager())->GetAllActiveWithRemaining();
+      if( count($beerBatchList) > 0){
+          $beerList = array_merge($beerList, $beerBatchList );
+          uasort($beerList, array('BeerManager','cmpBeer'));
+      }
+      return $beerList;
+  }
+  function GetAllActiveWithLastBatchId(){
+      if($this->getActiveColumnName()){
+          $sql="SELECT *, (select COALESCE(max(batchNumber),0) from ".(new BeerBatchManager())->getViewName()." where beerid = b.id) AS lastBatchNumber FROM ".$this->getViewName()." b WHERE ".$this->getActiveColumnName()." = 1 ".$this->getOrderByClause();
+          return $this->executeQueryWithResults($sql);
+      }
+      return $this->GetAll();
+  }
+  
 }

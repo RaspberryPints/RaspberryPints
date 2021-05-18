@@ -8,21 +8,31 @@
 	require_once __DIR__.'/../includes/functions.php';
 	$htmlHelper = new HtmlHelper();
 	$config = getAllConfigs();
+	/** @var mixed $beerColSpan */
 	$beerColSpan = 1;
+	/** @var mixed $i */
 	$i = 0;
+	/** @var mixed $totalPoured */
 	$totalPoured = 0;
 	
 	$tapManager  = new TapManager();
 	$beerManager = new BeerManager();
 	$userManager = new UserManager();
 	$tapList  = $tapManager->GetAll();
-	$beerList = $beerManager->GetAll();
+	$beerList = $beerManager->GetAllWithBatches();
 	$userList = $userManager->GetAll();
 	
 	$startTime 	= (isset($_POST['startDate'])?$_POST['startDate']:"");
 	$endTime   	= (isset($_POST['endDate'])?$_POST['endDate']:"");
 	$tapId		= (isset($_POST['tapId'])?$_POST['tapId']:"");
-	$beerId 	= (isset($_POST['beerId'])?$_POST['beerId']:"");
+	if(isset($_POST['beerId'])){
+	    $beerExploded = explode("~", $_POST['beerId']);
+	    $beerId 	= $beerExploded[0];
+	    $beerBatchId = $beerExploded[1];
+	}else{
+	    $beerId 	= "";
+	    $beerBatchId = "";
+	}
 	$userId 	= (isset($_POST['userId'])?$_POST['userId']:"");
 	
 	$changed = (isset($_POST['queryChanged'])?$_POST['queryChanged']:FALSE);
@@ -34,7 +44,9 @@
 	if($changed)$page = 1;
 	$rowsPerPage = $config[ConfigNames::DefaultRowsPerPage] ;
 	$pourManager = new PourManager();
-	$pours = $pourManager->getLastPoursFiltered($page, $rowsPerPage, $totalRows, $startTime, $endTime, $tapId, $beerId, $userId);
+	/** @var mixed $pours */
+	$pours = $pourManager->getLastPoursFiltered($page, $rowsPerPage, $totalRows, $startTime, $endTime, $tapId, $beerId, $userId, $beerBatchId);
+	/** @var mixed $numberOfPours */
 	$numberOfPours = count($pours);
 	$maxPage = ceil(($totalRows)/$rowsPerPage);
 	
@@ -86,7 +98,20 @@ include 'top_menu.php';
                         <td>Beer:</td>
                         <td>
                         	<?php 
-								echo $htmlHelper->ToSelectList("beerId", "beerId", $beerList, "name", "id", $beerId, "All");
+                        	
+                        	$str = "<select id='beerId' name='beerId' class=''>\n";
+                        	$str .= "<option value=''>All</option>\n";
+                        	foreach($beerList as $item){
+                        	    if( !$item ) continue;
+                        	    $sel = "";
+                        	    if( $beerId != "" && $beerId == ($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId()) && (($beerBatchId == "" && $item->get_beerBatchId()<=0) || $beerBatchId == $item->get_beerBatchId()) )  $sel .= "selected ";
+                        	    $desc = $item->get_displayName();
+                        	    $str .= "<option value='".($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId())."~".$item->get_beerBatchId()."~".$item->get_fg()."~".$item->get_fgUnit()."' ".$sel.">".$desc."</option>\n";
+                        	}
+                        	$str .= "</select>\n";
+                        	
+                        	echo $str;
+                        	//echo $htmlHelper->ToSelectList("beerId", "beerId", $beerList, "name", "id", $beerId, "All");
 							?>
                         </td>
                     </tr>

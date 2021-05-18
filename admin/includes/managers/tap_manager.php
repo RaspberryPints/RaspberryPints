@@ -40,7 +40,7 @@ class TapManager extends Manager{
 	
 	function GetByFlowPin($pin){
 		$id = (int) preg_replace('/\D/', '', $pin);	
-		$sql="SELECT * FROM ".$this->getTableName()." t LEFT JOIN tapconfig tc ON (t.id = tc.tapId) WHERE tc.flowPin = $pin";
+		$sql="SELECT * FROM ".$this->getTableName()." t LEFT JOIN tapconfig tc ON (t.id = tc.tapId) WHERE tc.flowPin = $id";
 		return $this->executeQueryWithSingleResult($sql);
 	}
 	
@@ -85,7 +85,7 @@ class TapManager extends Manager{
 		return getConfigValue(ConfigNames::NumberOfTaps);
 	}
 
-	function tapKeg(&$tap, $kegId, $beerId){
+	function tapKeg(&$tap, $kegId, $beerId, $beerBatchId){
 	    $ret = true;
 	    if($tap->get_kegId())$this->closeTap($tap, false);
 		if($tap->get_kegId() != $kegId){
@@ -95,16 +95,27 @@ class TapManager extends Manager{
     		if(!$ret)return false;
 		}
 		$kegManager = new KegManager();
-		$ret = $kegManager->Tap($tap->get_id(), $kegId, $beerId);
+		$ret = $kegManager->Tap($tap->get_id(), $kegId, $beerId, $beerBatchId);
 		
 		$tapEvent = new TapEvent();
 		$tapEvent->set_type(TAP_EVENT_TYPE_TAP);
 		$tapEvent->set_tapId($tap->get_id());
 		$tapEvent->set_kegId($kegId);
 		$tapEvent->set_beerId($beerId);
+		$tapEvent->set_beerBatchId($beerBatchId);
 		$tapEvent->set_userId($_SESSION['myuserid']);
 		$keg = $kegManager->GetByID($kegId);
-		if($keg) $tapEvent->set_amount($keg->get_currentAmount());
+		if($keg) {
+		    $tapEvent->set_amount($keg->get_currentAmount());
+		    $tapEvent->set_amountUnit($keg->get_currentAmountUnit());
+		    if( $keg->get_beerBatchId() > 0 )
+		    {
+		        $beerBatchManager = new BeerBatchManager();
+		        $beerBatch = $beerBatchManager->GetByID($keg->get_beerBatchId());
+		        if( $beerBatch) $tapEvent->set_beerBatchAmount($beerBatch->get_currentAmount());
+		        if( $beerBatch) $tapEvent->set_beerBatchAmountUnit($beerBatch->get_currentAmountUnit());
+		    }
+		}
 		//If ret is false keep it false even if the save is successful
 		$ret = $ret && (new TapEventManager)->Save($tapEvent); 
 		
@@ -127,18 +138,19 @@ class TapManager extends Manager{
 		$tap->set_kegId(null);
 		if($saveTap)$ret = $ret && $this->Save($tap);
 		
-		$tapEvent = new TapEvent();
-		$tapEvent->set_type(TAP_EVENT_TYPE_UNTAP);
-		$tapEvent->set_tapId($tap->get_id());
-		$tapEvent->set_kegId($kegId);
-		$tapEvent->set_beerId($beerId);
-		$tapEvent->set_userId(isset($_SESSION['myuserid'])?$_SESSION['myuserid']:USER_ID_SYSTEM);
-		$keg = $kegManager->GetByID($kegId);
-		if($keg) $tapEvent->set_amount($keg->get_currentAmount());
-		if($keg) $tapEvent->set_amountUnit(is_unit_imperial($keg->get_currentAmountUnit())?UnitsOfMeasure::VolumeGallon:UnitsOfMeasure::VolumeLiter);
-		//If ret is false keep it false even if the save is successful
-		$ret = $ret && (new TapEventManager)->Save($tapEvent); 
-		
+		if($beerId) {
+    		$tapEvent = new TapEvent();
+    		$tapEvent->set_type(TAP_EVENT_TYPE_UNTAP);
+    		$tapEvent->set_tapId($tap->get_id());
+    		$tapEvent->set_kegId($kegId);
+    		$tapEvent->set_beerId($beerId);
+    		$tapEvent->set_userId(isset($_SESSION['myuserid'])?$_SESSION['myuserid']:USER_ID_SYSTEM);
+    		$keg = $kegManager->GetByID($kegId);
+    		if($keg) $tapEvent->set_amount($keg->get_currentAmount());
+    		if($keg) $tapEvent->set_amountUnit(is_unit_imperial($keg->get_currentAmountUnit())?UnitsOfMeasure::VolumeGallon:UnitsOfMeasure::VolumeLiter);
+    		//If ret is false keep it false even if the save is successful
+    		$ret = $ret && (new TapEventManager)->Save($tapEvent); 
+		}
 		return $ret;
 	}
 

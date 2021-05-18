@@ -5,9 +5,16 @@
 	require_once __DIR__.'/includes/managers/tempProbe_manager.php'; 
 	$htmlHelper = new HtmlHelper();
 	$config = getAllConfigs();
-	$beerColSpan = 1;
 	$i = 0;
-	$totalTemps = 0;
+	const INDEX_TEMP = 0;
+	const INDEX_TEMP_COUNT = 1;
+	const INDEX_TEMP_MIN = 2;
+	const INDEX_TEMP_MAX = 3;
+	const INDEX_HAS_PIN_STATE = 4;
+	const INDEX_NAME = 5;
+
+	const INDEX_DISPLAY_TEMP = 0;
+	const INDEX_DISPLAY_PIN_STATE = 1;
 	
 	$tempProbeManager  = new TempProbeManager();
 	$tempLogManager  = new TempLogManager();
@@ -27,6 +34,7 @@
 	    $startTime = date('H:i:s', strtotime('-'.$interval.' hour'));
 	}
 	$probe   	= (isset($_POST['probe'])?$_POST['probe']:"");
+	$showAverage   	= (isset($_POST['showAverage'])?$_POST['showAverage']:(isset($_GET['showAverage'])?$_GET['showAverage']:false));
 	
 	$changed = (isset($_POST['queryChanged'])?$_POST['queryChanged']:FALSE);
 	
@@ -56,6 +64,86 @@ include 'top_menu.php';
 	</div>
 	<!-- Top Breadcrumb End --> 
 	
+            <?php
+                $pinStateFound = False;
+                $displayedProbes = array();
+                $displayedProbeTemps = array();
+                $displayedDateTemps = array();
+                $displayedProbesStats = array();
+                foreach ($tempList as $temp){
+                    if(!in_array($temp->get_probe(), $displayedProbes)){
+                        array_push($displayedProbes, $temp->get_probe());
+                    }
+                    if(!isset($displayedProbeTemps[$temp->get_probe()])){
+                        $displayedProbeTemps[$temp->get_probe()] = array();
+                    }
+                    $displayedProbeTemps[$temp->get_probe()][$temp->get_takenDate()] = array(convert_temperature($temp->get_temp(), $temp->get_tempUnit(), $config[ConfigNames::DisplayUnitTemperature]), $temp->get_statePinState());
+                    $pinStateFound = $pinStateFound || NULL !== $temp->get_statePinState();
+
+                    if(!isset($displayedDateTemps[$temp->get_takenDate()])){
+                        $displayedDateTemps[$temp->get_takenDate()] = array();
+                    }
+                }
+                
+                $dates = array_keys($displayedDateTemps);
+                foreach($displayedProbes as $prob){
+                    for($ii = 0; $ii < count($dates); $ii++){
+                        $probeTemp = $displayedProbeTemps[$prob][$dates[$ii]];
+                        //We dont want the graph to display 0 at 1 interval just because time wasnt logged
+                        //If no temp logged at this time get the last time logged
+                        if(null === $probeTemp){
+                            for($jj = $ii - 1; $jj >= 0; $jj--){
+                                $probeTemp = $displayedProbeTemps[$prob][$dates[$jj]];
+                                if(null !== $probeTemp) break;
+                            }
+                        }
+                        //If no temp logged at this time or before get the next time logged
+                        if(null === $probeTemp){
+                            for($jj = $ii + 1; $jj < count($dates); $jj++){
+                                $probeTemp = $displayedProbeTemps[$prob][$dates[$jj]];
+                                if(null !== $probeTemp) break;
+                            }
+                        }
+                        array_push($displayedDateTemps[$dates[$ii]], $probeTemp);
+                        if(!isset($displayedProbesStats[$prob])) $displayedProbesStats[$prob] = array();
+                        if(!isset($displayedProbesStats[$prob][INDEX_TEMP])){
+                            $displayedProbesStats[$prob][INDEX_TEMP] = $probeTemp[INDEX_DISPLAY_TEMP];
+                            $displayedProbesStats[$prob][INDEX_TEMP_COUNT] = 1;                            
+                        }else{
+                            $displayedProbesStats[$prob][INDEX_TEMP] += $probeTemp[INDEX_DISPLAY_TEMP];
+                            $displayedProbesStats[$prob][INDEX_TEMP_COUNT] += 1;    
+                        }
+                        if(!isset($displayedProbesStats[$prob][INDEX_TEMP_MIN])){
+                            $displayedProbesStats[$prob][INDEX_TEMP_MIN] = $probeTemp[INDEX_DISPLAY_TEMP];
+                        }else{
+                            $displayedProbesStats[$prob][INDEX_TEMP_MIN] =  min($probeTemp[INDEX_DISPLAY_TEMP], $displayedProbesStats[$prob][INDEX_TEMP_MIN]);
+                        }
+                        if(!isset($displayedProbesStats[$prob][INDEX_TEMP_MAX])){
+                            $displayedProbesStats[$prob][INDEX_TEMP_MAX] = $probeTemp[INDEX_DISPLAY_TEMP];
+                        }else{
+                            $displayedProbesStats[$prob][INDEX_TEMP_MAX] =  max($probeTemp[INDEX_DISPLAY_TEMP], $displayedProbesStats[$prob][INDEX_TEMP_MAX]);
+                        }
+                        if(!isset($displayedProbesStats[$prob][INDEX_HAS_PIN_STATE])){
+                            $displayedProbesStats[$prob][INDEX_HAS_PIN_STATE] = (NULL !== $probeTemp[INDEX_DISPLAY_PIN_STATE]);
+                        }else{
+                            $displayedProbesStats[$prob][INDEX_HAS_PIN_STATE] =  ($displayedProbesStats[$prob][INDEX_HAS_PIN_STATE] || (NULL !== $probeTemp[INDEX_DISPLAY_PIN_STATE])) ;
+                        }
+                        if(!isset($displayedProbesStats[$prob][INDEX_NAME])){
+                            $displayedProbesStats[$prob][INDEX_NAME] = $prob;
+                        }
+                    }
+                }
+                
+                if( count($displayedProbes) > 1 && $showAverage){
+                    array_push($displayedProbes, "Avg");
+                    foreach($displayedDateTemps as $date => $tempsOnDate){
+                        $sum = 0;
+                        foreach($tempsOnDate as $temp) $sum += $temp;
+                        array_push($displayedDateTemps[$date], $sum/count($tempsOnDate));
+                        
+                    }
+                }
+			?>
 	<!-- Right Side/Main Content Start -->
 	<div id="rightside">
 		<div class="contentcontainer left">
@@ -99,6 +187,16 @@ include 'top_menu.php';
                         	</select>
                         </td>
                     </tr>
+                    <?php if(count($displayedProbes) > 1){ ?>
+                        <tr>
+                            <td>Show Average</td>
+                            <td style="vertical-align: middle"><input type="checkbox" name="showAverage" <?php echo $showAverage?"checked ":""?>value="1"/></td>
+                            <td>
+                    		</td>
+                            <td>
+                            </td>
+                        </tr>
+                    <?php }?>
               	</table>
                 <input type="submit" name="filter" class="btn" value="Apply" />
                 <input type="submit" name="reset" class="btn" value="Reset" />
@@ -109,55 +207,6 @@ include 'top_menu.php';
 			</div>
 			<!-- Start On Keg Section -->
 			
-            <?php
-                $displayedProbes = array();
-                $displayedProbeTemps = array();
-                $displayedDateTemps = array();
-                foreach ($tempList as $temp){
-                    if(!in_array($temp->get_probe(), $displayedProbes)){
-                        array_push($displayedProbes, $temp->get_probe());
-                    }
-                    if(!isset($displayedProbeTemps[$temp->get_probe()])){
-                        $displayedProbeTemps[$temp->get_probe()] = array();
-                    }
-                    $displayedProbeTemps[$temp->get_probe()][$temp->get_takenDate()] = convert_temperature($temp->get_temp(), $temp->get_tempUnit(), $config[ConfigNames::DisplayUnitTemperature]);
-                    
-                    if(!isset($displayedDateTemps[$temp->get_takenDate()])){
-                        $displayedDateTemps[$temp->get_takenDate()] = array();
-                    }
-                }
-                
-                $dates = array_keys($displayedDateTemps);
-                foreach($displayedProbes as $prob){
-                    for($ii = 0; $ii < count($dates); $ii++){
-                        $probeTemp = $displayedProbeTemps[$prob][$dates[$ii]];
-                        //We dont want the graph to display 0 at 1 interval just because time wasnt logged
-                        //If no temp logged at this time get the last time logged
-                        if(null === $probeTemp){
-                            for($jj = $ii - 1; $jj >= 0; $jj--){
-                                $probeTemp = $displayedProbeTemps[$prob][$dates[$jj]];
-                                if(null !== $probeTemp) break;
-                            }
-                        }
-                        //If no temp logged at this time or before get the next time logged
-                        if(null === $probeTemp){
-                            for($jj = $ii + 1; $jj < count($dates); $jj++){
-                                $probeTemp = $displayedProbeTemps[$prob][$dates[$jj]];
-                                if(null !== $probeTemp) break;
-                            }
-                        }
-                        array_push($displayedDateTemps[$dates[$ii]], $probeTemp);
-                    }
-                }
-                
-                array_push($displayedProbes, "Avg");
-                foreach($displayedDateTemps as $date => $tempsOnDate){
-                    $sum = 0;
-                    foreach($tempsOnDate as $temp) $sum += $temp;
-                    array_push($displayedDateTemps[$date], $sum/count($tempsOnDate));
-                    
-                }
-			?>
            	<?php if(count($tempList) > 0){ ?>
 				<div id="chart_div" style="width: 900px; height: 500px;"></div>
 			<?php } ?>
@@ -168,6 +217,9 @@ include 'top_menu.php';
                 	<th>Temperature</th>
                     <?php if($showHumidity){?> 
                 		<th>Humidity</th>
+                	<?php } ?>
+                    <?php if($pinStateFound){?> 
+                		<th>Pin State</th>
                 	<?php } ?>
                 	<th>Date</th>
                 </tr>
@@ -219,6 +271,11 @@ include 'top_menu.php';
                                 <?php echo $temp->get_humidity(); ?>
                             </td>
                         <?php } ?>
+                        <?php if($pinStateFound){?> 
+                            <td style="vertical-align: middle;">
+                                <?php echo $temp->get_statePinState(); ?>
+                            </td>
+                        <?php } ?>
                         <td style="vertical-align: middle;">
                             <?php echo $temp->get_takenDate(); ?>
                         </td>
@@ -231,7 +288,7 @@ include 'top_menu.php';
                 		<td>
                 			Min: <?php echo number_format(convert_temperature($minTemp, $minTempUnit, $config[ConfigNames::DisplayUnitTemperature]), 2); ?><br/>
                 			Max: <?php echo number_format(convert_temperature($maxTemp, $maxTempUnit, $config[ConfigNames::DisplayUnitTemperature]), 2); ?><br/>
-                			Avg: <?php echo number_format(convert_temperature($sumTemp, $sumTempUnit, $config[ConfigNames::DisplayUnitTemperature])/count($tempList), 2); ?><br/>
+                			Avg: <?php echo number_format(convert_temperature($sumTemp/count($tempList), $sumTempUnit, $config[ConfigNames::DisplayUnitTemperature]), 2); ?><br/>
                 		</td>
                         <?php if($showHumidity){?> 
                     		<td>
@@ -240,6 +297,7 @@ include 'top_menu.php';
                     			Avg: <?php echo number_format($sumHum/$countHum, 2); ?><br/>
                     		</td>
                         <?php } ?>
+                		<td></td>
                 		<td></td>
                 		
                 	</tr>                	
@@ -271,7 +329,7 @@ include 'left_bar.php';
 		</script>
 		
     	<script type="text/javascript">
-        	$("input[type!='hidden']").change(inputChanged);
+        	$("input[type!='hidden'][name!='page']").change(inputChanged);
         	$("select").change(inputChanged);
             function inputChanged(){
             	$("input[name='queryChanged']").val(1)
@@ -289,12 +347,22 @@ include 'left_bar.php';
               google.setOnLoadCallback(drawChart);
               function drawChart() {
                 var data = google.visualization.arrayToDataTable([
-                  ['Time' <?php foreach ($displayedProbes as $probe) echo ",'".$probe."'";?>] 
+                  ['Time' <?php foreach ($displayedProbes as $probe) echo ",'$probe'".($displayedProbesStats[$probe][INDEX_HAS_PIN_STATE]?",'$probe-PinState'":"");?>] 
                   <?php 
                   foreach ($displayedDateTemps as $date => $temps){
                       echo ",[";
                       echo "'".$date."'";
-                      foreach ($temps as $temp) echo ",".$temp;
+                      $ii = 0;
+                      foreach ($temps as $temp) {
+                          echo ",".$temp[INDEX_DISPLAY_TEMP];
+                          if( $displayedProbesStats[$displayedProbes[$ii]][INDEX_HAS_PIN_STATE]){
+                              $statePinValue = ($temp[INDEX_DISPLAY_PIN_STATE]?$temp[INDEX_DISPLAY_PIN_STATE]:0);
+                              if( $statePinValue > 0 ) $statePinValue = $displayedProbesStats[$displayedProbes[$ii]][INDEX_TEMP_MAX];
+                              if( $statePinValue <=0 ) $statePinValue = $displayedProbesStats[$displayedProbes[$ii]][INDEX_TEMP_MIN];
+                              echo ",$statePinValue";
+                          }
+                          $ii++;
+                      }
                       echo "]";
                   }
                   ?>
@@ -302,7 +370,19 @@ include 'left_bar.php';
                   ]);
         
                 var options = {
-                  title: 'Temperature'
+                  title: 'Temperature',
+                  <?php if($pinStateFound && false){?>
+                  // Gives each series an axis that matches the vAxes number below.
+                  series: {
+                    0: {targetAxisIndex: 0},
+                    1: {targetAxisIndex: 1}
+                  },
+                  vAxes: {
+                      // Adds titles to each axis.
+                      0: {title: 'Temperature'},
+                      1: {title: 'Pin State', viewWindow: {min: 0,max: 1}}
+                    }
+                 <?php }?>
                 };
         
                 var chart = new google.visualization.LineChart(document.getElementById('chart_div'));

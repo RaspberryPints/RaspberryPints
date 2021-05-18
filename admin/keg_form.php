@@ -9,9 +9,11 @@ $beerManager = new BeerManager();
 $tapManager = new TapManager();
 
 $config = getAllConfigs();
-//Change the beerId value from beerId~fg to just beerId
+//Change the beerId value from beerId~beerBatchId~fg to just beerId
 if(isset($_POST['beerId'])){
-    $_POST['beerId'] = explode('~', $_POST['beerId'])[0];
+    $beerExloded = explode("~", $_POST['beerId']);
+    $_POST['beerId'] = $beerExloded[0];
+    $_POST['beerBatchId'] = $beerExloded[1];
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
     isset($_POST['save']) ) {
@@ -19,6 +21,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
     $keg->setFromArray($_POST);
     if( isset($_POST['kickKeg'])){
         $tapManager->closeTapById($keg->get_onTapId());
+    }
+    if( isset($_POST['id'])){
+        $dbKeg = $kegManager->GetById($_POST['id']);
+        if( ISSET($_POST ['currentAmount']) &&
+            ISSET($_POST ['currentAmountOriginal']) &&
+            ($_POST ['currentAmount'] != $dbKeg->getCurrentAmount || $_POST ['currentAmountUnit'] != $dbKeg->getCurrentAmountUnit)) {
+                //Check if other on tap kegs have this batch, if so we dont want to update its amount
+                if( $config[ConfigNames::UpdateBatchWithKeg] && $_POST['beerBatchId'] > 0 ){
+                    $batchKegs = $_POST['beerBatchId'] > 0?count($kegManager->GetByBeerBatchIdOnTap($_POST['beerBatchId']))+($keg->get_beerBatchId()!=$_POST['beerBatchId']?1:0):0;
+                    if ($batchKegs <= 1) {
+                        $beerBatchManager = new BeerBatchManager();
+                        $beerBatch = $beerBatchManager->GetByID($_POST['beerBatchId']);
+                        if ($beerBatch) {
+                            $beerBatch->set_currentAmount($_POST['currentAmount']);
+                            $beerBatch->set_currentAmountUnit($_POST['currentAmountUnit']);
+                            $beerBatchManager->save($beerBatch);
+                        }
+                    }
+                }
+            }
     }
     if($kegManager->Save($keg)){
         unset($_POST);
@@ -40,13 +62,14 @@ if($keg == null){
 
 $kegStatusList = $kegStatusManager->GetAll();
 $kegTypeList = $kegTypeManager->GetAll();
-$beerList = $beerManager->GetAllActive();
-
+$beerList = $beerManager->GetAllActiveWithBatches();
+/*
 if( isset($_GET['beerId'])){
     $beer = $beerManager->GetById($_GET['beerId']);
 }else{
     $beer = new Beer();
 }
+*/
 ?>
 	<!-- Start Header  -->
 <?php
@@ -97,9 +120,9 @@ include 'top_menu.php';
 						foreach($beerList as $item){
 						    if( !$item ) continue;
 						    $sel = "";
-						    if( isset($keg) && $keg->get_beerId() == $item->get_id())  $sel .= "selected ";
-						    $desc = $item->get_name();
-						    $str .= "<option value='".$item->get_id()."~".$item->get_fg()."~".$item->get_fgUnit()."' ".$sel.">".$desc."</option>\n";
+						    if( isset($keg) && $keg->get_beerId() == ($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId()) && (($keg->get_beerBatchId() <= 0 && $item->get_beerBatchId()<=0)  || $keg->get_beerBatchId() == $item->get_beerBatchId()) )  $sel .= "selected ";
+						    $desc = $item->get_displayName();
+						    $str .= "<option value='".($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId())."~".$item->get_beerBatchId()."~".$item->get_fg()."~".$item->get_fgUnit()."' ".$sel.">".$desc."</option>\n";
 						}
 						$str .= "</select>\n";
 						
@@ -310,10 +333,10 @@ include 'scripts.php';
 		var beerSelArr = document.getElementById("beerId").value.split("~");
 		var fg = 1.000;
 		var fgUnit = 'sg';
-		if(beerSelArr.length > 1 && beerSelArr[1] != "")
+		if(beerSelArr.length > 3 && beerSelArr[2] != "")
 		{
-			fg = beerSelArr[1];
-			fgUnit = beerSelArr[2];
+			fg = beerSelArr[2];
+			fgUnit = beerSelArr[3];
 		}
 		weight = getWeightByVol(document.getElementById("currentAmount").value,  
 																				document.getElementById("currentAmountUnit").value,
@@ -334,10 +357,10 @@ include 'scripts.php';
 		var beerSelArr = document.getElementById("beerId").value.split("~");
 		var fg = 1.000;
 		var fgUnit = 'sg';
-		if(beerSelArr.length > 1 && beerSelArr[1] != "")
+		if(beerSelArr.length > 3 && beerSelArr[2] != "")
 		{
-			fg = beerSelArr[1];
-			fgUnit = beerSelArr[2];
+			fg = beerSelArr[2];
+			fgUnit = beerSelArr[3];
 		}
 		var volume = getVolumeByWeight(document.getElementById("weight").value, 
 																				document.getElementById("weightUnit").value, 

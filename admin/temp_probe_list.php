@@ -31,6 +31,9 @@ else if (isset ( $_POST ['save'] )) {
 	    }
 	    $probe->set_type($_POST['type'][$ii]);
 	    $probe->set_pin($_POST['pin'][$ii]);
+	    //If the statePin changes trigger tempProbe reconfiguration
+	    $reconfig = ($reconfig || $probe->get_statePin() != $_POST['statePin'][$ii]);
+	    $probe->set_statePin($_POST['statePin'][$ii]);
 	    $probe->set_manualAdj($_POST['Adjustment'][$ii]);
 	    $probe->set_notes($_POST['notes'][$ii]);
 	    $probe->set_active(1);
@@ -50,7 +53,7 @@ if (isset ( $_POST ['saveSettings'] ) || isset ( $_POST ['configuration'] )) {
     $reconfig = true;
 }
 if($reconfig){
-    file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=tempProbe' );
+    triggerPythonAction("tempProbe");
 }
 $probes = $tempProbeManager->GetAllActive();
 $numberOfReaders=count($probes);
@@ -149,6 +152,7 @@ include 'top_menu.php';
                             <th style="width:30%; vertical-align: middle;">Name</th>
                             <!--<th style="width:30%; vertical-align: middle;">Type</th>-->
                             <!--<th style="width:30%; vertical-align: middle;">Pi Pin</th>-->
+                            <th style="vertical-align: middle;"><span class="tooltip">State Pin<span class="tooltiptext">Pin to check state of<br/>when temperature is recorded.<br/>Blank or 0 to disable</span></span></th>
                             <th style="width:20%; vertical-align: middle;">Adjustment</th>
                         </tr>
                     </thead>
@@ -174,6 +178,9 @@ include 'top_menu.php';
                                     <td style="width:25%; vertical-align: middle;">
                                         <input type="text" id="pin" class="smallbox" name="pin[]" value="<?php echo $probe->get_pin() ?>" />
                                     </td>-->
+                                    <td style="vertical-align: middle;">
+                                        <input type="text" id="statePin<?php echo $probe->get_id(); ?>" class="smallbox" name="statePin[]" value="<?php echo $probe->get_statePin() ?>" />
+                                    </td>
                                     <td style="width:20%; vertical-align: middle;">
                                         <input type="text" id="adjustment<?php echo $probe->get_id(); ?>" class="smallbox" name="Adjustment[]" value="<?php echo $probe->get_manualAdj() ?>" />
                                     </td>

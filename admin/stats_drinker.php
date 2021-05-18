@@ -2,29 +2,36 @@
 	require_once __DIR__.'/header.php';
 	require_once __DIR__.'/../admin/includes/managers/config_manager.php';	
 	require_once __DIR__.'/includes/managers/pour_manager.php'; 
-	require_once __DIR__.'/includes/managers/tap_manager.php'; 
+	//require_once __DIR__.'/includes/managers/tap_manager.php'; 
 	require_once __DIR__.'/includes/managers/beer_manager.php'; 
 	require_once __DIR__.'/includes/managers/user_manager.php';
 	require_once __DIR__.'/../includes/functions.php';
 	$htmlHelper = new HtmlHelper();
 	$config = getAllConfigs();
-	$beerColSpan = 1;
-	$i = 0;
-	$totalPoured = 0;
+	//$beerColSpan = 1;
+	//$i = 0;
+	//$totalPoured = 0;
 	
-	$tapManager  = new TapManager();
+	//$tapManager  = new TapManager();
 	$beerManager = new BeerManager();
 	$userManager = new UserManager();
 	$beerStyleManager = new BeerStyleManager();
-	$tapList   = $tapManager->GetAll();
-	$beerList  = $beerManager->GetAll();
+	//$tapList   = $tapManager->GetAll();
+	$beerList  = $beerManager->GetAllWithBatches();
 	$userList  = $userManager->GetAll();
 	$styleList = $beerStyleManager->GetDistinctNamesFromPours();
 	
 	$groupBy 	= (isset($_POST['groupBy'])?$_POST['groupBy']:"userId");
 	$startTime 	= (isset($_POST['startDate'])?$_POST['startDate']:"");
 	$endTime   	= (isset($_POST['endDate'])?$_POST['endDate']:"");
-	$beerId 	= (isset($_POST['beerId'])?$_POST['beerId']:"");
+	if(isset($_POST['beerId'])){
+	    $beerExploded = explode("~", $_POST['beerId']);
+	    $beerId 	= $beerExploded[0];
+	    $beerBatchId = $beerExploded[1];
+	}else{
+	    $beerId 	= "";
+	    $beerBatchId = "";
+	}
 	$userId 	= (isset($_POST['userId'])?$_POST['userId']:"");
 	$style  	= (isset($_POST['beerStyle'])?$_POST['beerStyle']:"");
 	
@@ -37,8 +44,8 @@
 	if($changed) $page = 1;
 	$rowsPerPage = $config[ConfigNames::DefaultRowsPerPage] ;
 	$pourManager = new PourManager();
-	$pours = $pourManager->getPoursByDrinkerFiltered($page, $rowsPerPage, $totalRows, $groupBy, $startTime, $endTime, NULL, $beerId, $userId, $style);
-	$numberOfPours = count($pours);
+	$pours = $pourManager->getPoursByDrinkerFiltered($page, $rowsPerPage, $totalRows, $groupBy, $startTime, $endTime, NULL, $beerId, $beerBatchId, $userId, $style);
+	//$numberOfPours = count($pours);
 	$maxPage = ceil(($totalRows)/$rowsPerPage);
 	
 	
@@ -114,7 +121,19 @@ include 'top_menu.php';
                         <td>Beer:</td>
                         <td>
                         	<?php 
-								echo $htmlHelper->ToSelectList("beerId", "beerId", $beerList, "name", "id", $beerId, "All");
+        						$str = "<select id='beerId' name='beerId' class=''>\n";
+        						$str .= "<option value=''>All</option>\n";
+        						foreach($beerList as $item){
+        						    if( !$item ) continue;
+        						    $sel = "";
+        						    if( $beerId != "" && $beerId == ($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId()) && (($beerBatchId == "" && $item->get_beerBatchId()<=0) || $beerBatchId == $item->get_beerBatchId()) )  $sel .= "selected ";
+        						    $desc = $item->get_displayName();
+        						    $str .= "<option value='".($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId())."~".$item->get_beerBatchId()."~".$item->get_fg()."~".$item->get_fgUnit()."' ".$sel.">".$desc."</option>\n";
+        						}
+        						$str .= "</select>\n";
+        						
+        						echo $str;
+								//echo $htmlHelper->ToSelectList("beerId", "beerId", $beerList, "name", "id", $beerId, "All");
 							?>
                         </td>
                      </tr>

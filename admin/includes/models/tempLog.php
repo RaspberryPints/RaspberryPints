@@ -7,6 +7,7 @@ class TempLog
 	private $_tempUnit;
 	private $_humidity;
 	private $_takenDate; 
+	private $_statePinState; 
 
 	public function __construct(){}
 
@@ -27,6 +28,9 @@ class TempLog
 		
 	public function get_takenDate(){ return $this->_takenDate; }
 	public function set_takenDate($_takenDate){ $this->_takenDate = $_takenDate; }
+	
+	public function get_statePinState(){ return $this->_statePinState; }
+	public function set_statePinState($_statePinState){ $this->_statePinState = $_statePinState; }
 	
 	public function setFromArray($postArr)  
 	{  	
@@ -59,5 +63,10 @@ class TempLog
 			$this->set_takenDate($postArr['takenDate']);
 		else
 			$this->set_takenDate(null);
+		
+		if( isset($postArr['statePinState']) )
+		    $this->set_statePinState($postArr['statePinState']);
+		else
+		    $this->set_statePinState(null);
 	}  
 }

@@ -9,3 +9,12 @@ function encode($string){
 	$string = htmlentities ($string, ENT_QUOTES);
 	return $string;
 }
+
+
+function triggerPythonAction($action="all")
+{
+    /** @var mixed $value **/
+    $value = $action;
+    include('trigger.php');
+}
+?>

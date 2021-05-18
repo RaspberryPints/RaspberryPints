@@ -48,7 +48,7 @@ if (isset ( $_POST ['saveSettings'] ) || isset ( $_POST ['configuration'] )) {
     if (isset ( $_POST ['saveSettings'] ) )$reconfig = true;
 }
 if($reconfig){
-    file_get_contents ( 'http://' . $_SERVER ['SERVER_NAME'] . '/admin/trigger.php?value=all' );
+    include('triggerAll.php');
 }
 $readers = $rfidManager->GetAllActive();
 $numberOfReaders=count($readers);

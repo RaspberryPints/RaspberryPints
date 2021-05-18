@@ -11,7 +11,7 @@ class TapEventManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-		return ["type", "tapId", "kegId", "beerId", "amount", "amountUnit", "userId"];
+		return ["type", "tapId", "kegId", "beerId", "beerBatchId", "amount", "amountUnit", "beerBatchAmount", "beerBatchAmountUnit", "userId"];
 	}
 	protected function getTableName(){
 		return "tapEvents";
@@ -27,7 +27,7 @@ class TapEventManager extends Manager{
 	function getTapEvents($page, $limit, &$totalRows, $groupBy){
 	    return $this->getTapEventsFiltered($page, $limit, $totalRows, $groupBy, null, null, null, null, null, null);
 	}
-	function getTapEventsFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $userId, $kegId){
+	function getTapEventsFiltered($page, $limit, &$totalRows, $groupBy, $startTime, $endTime, $tapId, $beerId, $beerBatchId, $userId, $kegId){
 	    $sql="SELECT * ";
 	    $sql = $sql."FROM ".$this->getViewName()." ";
 	    $where = "";
@@ -35,13 +35,14 @@ class TapEventManager extends Manager{
 	    if($endTime && $endTime != "") $where = $where.($where != ""?"AND ":"")."createdDate < '$endTime' ";
 	    if($tapId)  $where = $where.($where != ""?"AND ":"")."tapId = $tapId ";
 	    if($beerId) $where = $where.($where != ""?"AND ":"")."beerId = $beerId ";
+	    if($beerBatchId && $beerBatchId > 0) $where = $where.($where != ""?"AND ":"")."beerBatchId = $beerBatchId ";
 	    if($userId) $where = $where.($where != ""?"AND ":"")."userId = $userId ";
 	    if($kegId)  $where = $where.($where != ""?"AND ":"")."kegId = '$kegId' ";
 	    if($where != "") $sql = $sql."WHERE $where ";
 	    $totalRows = 0;
-	    if($results = $this->executeNonObjectQueryWithArrayResults("SELECT COUNT(*) as totalRows FROM ".$this->getViewName())){
-	        if(count($results) > 0) $totalRows = $results[0]['totalRows'];
-	    }
+	    $results = $this->executeQueryWithResults($sql);
+	    $totalRows = count($results);
+	    if( $totalRows == 0 || ($limit && $limit > 0 && $totalRows <= $limit) )return $results;
 	    $limitClause = $this->getLimitClause($limit, $page);
 	    if($limitClause == "") return $results;
 	    $sql = $sql.$limitClause;
@@ -56,7 +57,7 @@ class TapEventManager extends Manager{
         	    SUM(CASE WHEN type = 1 THEN 1 else 0 END) as numTapped,
         	    SUM(CASE WHEN type = 2 THEN 1 else 0 END) as numRemoved,
         	    SUM(newAmount - amount) AS poured
-        	    FROM raspberrypints.vwtapevents
+        	    FROM vwtapevents
         	    GROUP BY tapId
                 orderBy tapId";
 	    return $this->executeNonObjectQueryWithArrayResults($sql);

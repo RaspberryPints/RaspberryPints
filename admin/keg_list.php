@@ -25,11 +25,16 @@ if (isset($_POST['editKeg'])) {
 	{
 		$keg = $kegManager->GetById($id);
 		if($keg){
-			$keg->set_label($_POST['label'][$ii]);
-			if($keg->get_beerId() != $_POST['beerId'][$ii]){
-			     $keg->set_beerId($_POST['beerId'][$ii]);
-			     $keg->set_startAmount($keg->get_maxVolume());
-			     $keg->set_currentAmount($keg->get_maxVolume());
+		    $keg->set_label($_POST['label'][$ii]);
+		    $beerExloded = explode("~", $_POST['beerId'][$ii]);
+		    $selectedBeerId = $beerExloded[0];
+		    $selectedBatchId = $beerExloded[1];
+		    if($keg->get_beerId() != $selectedBeerId ||
+		       $keg->get_beerBatchId() != $selectedBatchId){
+		           $keg->set_beerId($selectedBatchId);
+		           $keg->set_beerBatchId($selectedBatchId);
+			       $keg->set_startAmount($keg->get_maxVolume());
+			       $keg->set_currentAmount($keg->get_maxVolume());
 			}
 			$keg->set_kegStatusCode($_POST['kegStatusCode'][$ii]);
 			$kegManager->save($keg);
@@ -46,9 +51,14 @@ if (isset($_POST['saveAll'])) {
 		
 		$keg = $kegManager->GetById($id);
 		if($keg){
-		    $keg->set_label($_POST['label'][$ii]);
-		    if($keg->get_beerId() != $_POST['beerId'][$ii]){
-		        $keg->set_beerId($_POST['beerId'][$ii]);
+		    $keg->set_label($_POST['label'][$ii]);		    
+		    $beerExloded = explode("~", $_POST['beerId'][$ii]);
+		    $selectedBeerId = $beerExloded[0];
+		    $selectedBatchId = $beerExloded[1];
+		    if($keg->get_beerId() != $selectedBeerId ||
+		       $keg->get_beerBatchId() != $selectedBatchId){
+		        $keg->set_beerId($selectedBeerId);
+		        $keg->set_beerBatchId($selectedBatchId);
 		        $keg->set_startAmount($keg->get_maxVolume());
 		        $keg->set_currentAmount($keg->get_maxVolume());
 		    }
@@ -62,7 +72,7 @@ if (isset($_POST['saveAll'])) {
 $kegs = $kegManager->GetAllActive();
 $kegStatusList = $kegStatusManager->GetAll();
 //$kegTypeList = $kegTypeManager->GetAll();
-$beerList = $beerManager->GetAllActive();
+$beerList = $beerManager->GetAllActiveWithBatches();
 ?>
 <body>
 	<!-- Start Header  -->
@@ -123,9 +133,9 @@ include 'top_menu.php';
 							foreach ($kegs as $keg){
 								
 								if( $keg->get_kegStatusCode() != null ){
-									$kegStatus = $kegStatusManager->GetById($keg->get_kegStatusCode());
+									//$kegStatus = $kegStatusManager->GetById($keg->get_kegStatusCode());
 								}else{
-									$kegStatus = new KegStatus();
+									//$kegStatus = new KegStatus();
 								}
 								
 								if( $keg->get_kegTypeId() != null ){
@@ -135,21 +145,33 @@ include 'top_menu.php';
 								}
 					?>
 					<tr>
-						<td rowspan="3" class="intborder" style="vertical-align:middle;align-content:center">
+						<td rowspan="3" class="leftborder intborder" style="vertical-align:middle;align-content:center">
 							<span class="kegsquare"> 
 								<input type="text" id="label" class="smallbox" name="label[]" value="<?php echo $keg->get_label() ?>" />
                             </span>
 						</td>
 						
-						<td rowspan="3" class="leftborder rightborder" style="vertical-align:middle; align-content:center; font-size:1.2em">
+						<td rowspan="3" class="leftborder rightborder intborder" style="vertical-align:middle; align-content:center; font-size:1.2em">
 							<?php 
 								echo $htmlHelper->ToSelectList("kegStatusCode[]", "kegStatusCode", $kegStatusList, "name", "code", $keg->get_kegStatusCode(), "Select One"); 
 							?>
 						</td>
-						<td rowspan="3" class="leftborder rightborder" style="vertical-align:middle; align-content:center; font-size:1.2em">
-							<?php 
-								echo $htmlHelper->ToSelectList("beerId[]", "beerId", $beerList, "name", "id", $keg->get_beerId(), ($keg->get_onTapId()?null:"Select One"));
-							?>
+						<td rowspan="3" class="leftborder rightborder intborder" style="vertical-align:middle; align-content:center; font-size:1.2em">
+        					<?php 
+        						$str = "<select id='beerId' name='beerId[]' class=''>\n";
+        						$str .= "<option value=''>Select One</option>\n";
+        						foreach($beerList as $item){
+        						    if( !$item ) continue;
+        						    $sel = "";
+        						    if( isset($keg) && $keg->get_beerId() == ($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId()) && (($keg->get_beerBatchId() <= 0 && $item->get_beerBatchId()<=0) || $keg->get_beerBatchId() == $item->get_beerBatchId()) )  $sel .= "selected ";
+        						    $desc = $item->get_displayName();
+        						    $str .= "<option value='".($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId())."~".$item->get_beerBatchId()."~".$item->get_fg()."~".$item->get_fgUnit()."' ".$sel.">".$desc."</option>\n";
+        						}
+        						$str .= "</select>\n";
+        						
+        						echo $str;
+        						// echo $htmlHelper->ToSelectList("beerId", "beerId", $beerList, "name", "id", $keg->get_beerId(), ($keg->get_onTapId()?null:"Select One")); 
+        					?>
 						</td>						
 						<td style="vertical-align:middle; align-content:center; font-size:1.2em">
 							<b><?php echo $kegType->get_name() ?></b>

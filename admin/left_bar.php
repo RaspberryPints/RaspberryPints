@@ -25,12 +25,15 @@
 		<a class="expanded heading">Basic Setup</a>
 		<ul class="navigation">
 			<li><a href="beer_list.php">Beers</a></li>
+			<li><a href="beerBatch_list.php">Beers Batches</a></li>
 			<li><a href="keg_list.php">Kegs</a></li>
 			<li><a href="tap_list.php">Taps</a></li>
 			<li><a href="brewery_list.php">Breweries</a></li>
 			<li><a href="bottle_list.php">Bottles</a></li>
 			<li><a href="user_list.php" title="drinker-acct">Drinker Accounts</a></li>
 			<li><a href="beer_style_list.php">Beer Styles</a></li>
+			<li><a href="fermenter_list.php">Fermenters</a></li>
+			<li><a href="gasTank_list.php">Gas Tanks</a></li>
 		</ul>
 	</li>
 	<li>
@@ -63,6 +66,8 @@
 			<li><a href="load_cell_list.php" title="loadCells">Load Cells</a></li>
 <!-- 			<li><a href="valve_list.php" title="valves">Valves</a></li> -->
 			<li><a href="motion_detector_list.php" title="motion-detectors">Motion Detectors</a></li>
+			<li><a href="iSpindel_connector_list.php" title="io_pins">iSpindel Connectors</a></li>
+			<li><a href="iSpindel_device_list.php" title="io_pins">iSpindel Devices</a></li>
 			<li><a href="ioPins_list.php" title="io_pins">Hardware IO Display</a></li>
 		</ul>
 	</li>
@@ -75,6 +80,7 @@
 			<li><a href="stats_drinker.php" title="drinker-stats">Drinker statistics</a></li>
 			<li><a href="stats_tap.php" title="GPT">Tap statistics</a></li>
 			<li><a href="stats_tapHistory.php" title="tap-history">Tap history</a></li>
+			<li><a href="iSpindel_log.php" title="iSPindel Data">iSpindel history</a></li>
 		</ul>
 	</li>
 	<?php if(isset($_SESSION['showadmin']) && $_SESSION['showadmin']){?>

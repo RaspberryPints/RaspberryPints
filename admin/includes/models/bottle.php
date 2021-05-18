@@ -4,6 +4,7 @@ class Bottle
 	private $_id;  
 	private $_bottleTypeId;
 	private $_beerId;
+	private $_beerBatchId;
 	private $_capRgba;
 	private $_capNumber;
 	private $_startAmount; 
@@ -22,6 +23,9 @@ class Bottle
 
 	public function get_beerId(){ return $this->_beerId; }
 	public function set_beerId($_beerId){ $this->_beerId = $_beerId; }
+	
+	public function get_beerBatchId(){ return $this->_beerBatchId; }
+	public function set_beerBatchId($_beerBatchId){ $this->_beerBatchId = $_beerBatchId; }
 
 	public function get_capRgba(){ return $this->_capRgba; }
 	public function set_capRgba($_capRgba){ $this->_capRgba = $_capRgba; }
@@ -60,6 +64,11 @@ class Bottle
 			$this->set_beerId($postArr['beerId']);
 		else
 			$this->set_beerId(null);
+			
+		if( isset($postArr['beerBatchId']) )
+		    $this->set_beerBatchId($postArr['beerBatchId']);
+		else
+		    $this->set_beerBatchId(null);
 			
 		if( isset($postArr['capRgba']) )
 			$this->set_capRgba($postArr['capRgba']);
@@ -102,6 +111,7 @@ class Bottle
 			"id: " . $this->get_id() . ", " .
 			"bottleTypeId: " . $this->get_bottleTypeId() . ", " .
 			"beerId: " . $this->get_beerId() . ", " .
+			"beerBatchId: " . $this->get_beerBatchId() . ", " .
 			"capRgba: " . $this->get_capRgba() . ", " .
 			"capNumber: " . $this->get_capNumber() . ", " .
 			"startAmount: " . $this->get_startAmount() . ", " .

@@ -8,7 +8,7 @@ $htmlHelper = new HtmlHelper();
 
 if (isset ( $_POST ['upgrade'] )) {
     //echo ("restarting flowmon service: ");
-    file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/admin/trigger.php?value=upgrade');
+    triggerPythonAction("upgrade");
 }
 
 include 'top_menu.php';
@@ -47,6 +47,12 @@ include 'top_menu.php';
 			</form>
 			<?php }?>
 			<form action="../install/includes/configprocessor.php" method="post">
+			<?php 
+			/** @var mixed $host */
+			/** @var mixed $db_name */
+			/** @var mixed $username */
+			/** @var mixed $password */
+			?>
 				<input type="hidden" value="<?php echo $host; ?>" name="servername"/>				
                 <input type="hidden" value="<?php echo $db_name; ?>"  name="database"/>
                 <input type="hidden" value="<?php echo $username; ?>" name="rootuser"/>			
@@ -67,6 +73,7 @@ include 'top_menu.php';
                     $username = "";
                     $password = "";
                     $db_name = "raspberrypints";
+                    /** @var mixed $tbl_name */
                     $tbl_name = "";
                     
                     include '../admin/includes/conn.php';
