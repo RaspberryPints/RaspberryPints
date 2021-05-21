@@ -56,6 +56,7 @@
 			<li><a href="themes.php">Theme Options</a></li>
 			<li><a href="units_of_measure.php" title="personalize">Units of Measure</a></li>
 			<li><a href="customize_tap_display.php" title="personalize">Customize Tap Display</a></li>
+			<li><a href="srm_form.php" title="personalize">SRMs</a></li>
 		</ul>
 	</li>
 	<li>
