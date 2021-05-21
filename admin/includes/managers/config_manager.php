@@ -2,7 +2,8 @@
 
     require_once __DIR__.'/../conn.php';
     require_once __DIR__.'/../config_names.php';
-    require_once __DIR__.'/../units_of_measures.php';
+    require_once __DIR__.'/../units_of_measures.php';    
+    /** @var mixed $stylesheet **/
 	$stylesheet = getConfigValue(ConfigNames::AdminThemeColor);
 
 	function getAllConfigs()
@@ -92,6 +93,7 @@
 	
 	function setConfigurationsFromArray($newValues, &$oldValues)
 	{
+	    /** @var mixed $index **/
 		foreach( array_keys( $newValues ) as $index=>$key ) {
 			$constKey = ucwords($key);
 			if(!defined('ConfigNames::'.$constKey))continue;
