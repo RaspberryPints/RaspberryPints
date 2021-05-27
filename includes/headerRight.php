@@ -30,7 +30,7 @@ $mysqli = db();
 $config = getAllConfigs();
 
 $index = 0;
-$maxIndex = 1+$config[ConfigNames::ShowTempOnMainPage]+$config[ConfigNames::ShowLastPour]+$config[ConfigNames::ShowRPLogo];
+$maxIndex = 4;
 if( $config[ConfigNames::ShowFermOnMainPage]){
     $fermenterStart = $maxIndex;
     $fermenters = (new FermenterManager())->GetAllWithBeer();
@@ -185,7 +185,7 @@ if($config[ConfigNames::ShowFermOnMainPage] && ($index >= $fermenterStart && $in
      <?php
      echo $fementer->get_label();
      if( $iSpindel && $iSpindel->get_currentTemperature() && $iSpindel->get_currentGravity()){
-         echo "<br/>".$iSpindel->get_currentGravity().$iSpindel->get_currentGravityUnit()."<br/>".$iSpindel->get_currentTemperature().$iSpindel->get_currentTemperatureUnit();
+         echo "<br/>".$iSpindel->get_currentGravity().$iSpindel->get_currentGravityUnit()."<br/>".number_format($iSpindel->get_currentTemperature(),1).$iSpindel->get_currentTemperatureUnit();
      }
      ?>
     	</div>
