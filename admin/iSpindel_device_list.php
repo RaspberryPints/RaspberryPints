@@ -54,12 +54,14 @@ else if (isset ( $_POST ['save'] )) {
             $iSpindelDevice=new iSpindelDevice();
             $newiSpindelDevice=true;
         }
-        $beerExloded = explode("~", $_POST['beerId'][$ii]);
-        $selectedBeerId = $beerExloded[0];
-        $selectedBatchId = $beerExloded[1];
-        $iSpindelDevice->set_beerId($selectedBeerId);
-        $iSpindelDevice->set_beerBatchId($selectedBatchId);
-        if(!$newiSpindelDevice || ($newiSpindelDevice && $iSpindelDevice->get_name() != '')) if(!$iSpindelDeviceManager->save($iSpindelDevice))$error=true;
+        if($_POST['beerId'][$ii] && $_POST['beerId'][$ii] != ''){
+            $beerExloded = explode("~", $_POST['beerId'][$ii]);
+            $selectedBeerId = $beerExloded[0];
+            $selectedBatchId = $beerExloded[1];
+            $iSpindelDevice->set_beerId($selectedBeerId);
+            $iSpindelDevice->set_beerBatchId($selectedBatchId);
+            if(!$newiSpindelDevice || ($newiSpindelDevice && $iSpindelDevice->get_name() != '')) if(!$iSpindelDeviceManager->save($iSpindelDevice))$error=true;
+        }
         $ii++;
     }
     if(!$error){
