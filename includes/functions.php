@@ -19,7 +19,7 @@ function utBreweryFeed($config, $breweryId) {
 		$ut = new Pintlabs_Service_Untappd($config);
 		$bfeed = $ut->breweryFeed($breweryId, '', '', 3)->response->checkins;
 	
-		$bfeeds .="<table width=95%><tr>";
+		$bfeeds ="<table width=95%><tr>";
 
 		foreach ($bfeed->items as $i) {
 			
