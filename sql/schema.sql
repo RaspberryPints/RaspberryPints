@@ -463,7 +463,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'showLastPouredValue', '1', 'Show Last Poured Value', '1', NOW(), NOW() ),
 ( 'showRemainValue', '1', 'Show Remaining Value', '1', NOW(), NOW() ),
 ( 'showRPLogo', '0', 'Show the RaspberryPints Logo', '1', NOW(), NOW() ),
-( 'showLastPour', '0', 'Show the Last Pour in Upper Right Corner if no temp', '1', NOW(), NOW() ),
+( 'showLastPour', '0', 'Show the Last Pour in Upper Right Corner', '1', NOW(), NOW() ),
 ( 'showCalories', '0', 'Show the calories', '1', NOW(), NOW() ),
 ( 'showGravity', '1', 'Show the Gravity numbers', '1', NOW(), NOW() ),
 ( 'showBalance', '0', 'Show the Balance', '1', NOW(), NOW() ),
@@ -568,7 +568,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, validation, createdDate, modifiedDate ) VALUES
 ( 'RefreshTapList', '0', 'Refresh the tap list every 60 seconds', '1', NULL, NOW(), NOW() ),
-( 'InfoTime', '5', 'Number Of seconds beween changing upper right tap List', '0', NULL, NOW(), NOW() ),
+( 'InfoTime', '60', 'Number Of seconds beween changing upper right tap List', '0', NULL, NOW(), NOW() ),
 ( 'showFermOnMainPage', '1', 'Show Fermenters in upper right tap List', '1', NULL, NOW(), NOW() ),
 ( 'showGTOnMainPage', '1', 'Show Gas Tanks in upper right tap List', '1', NULL, NOW(), NOW() ),
 ( 'showAllGTOnMainPage', '0', 'When showing gas Tanks, Show all Gas Tanks', '1', NULL, NOW(), NOW() );

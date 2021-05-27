@@ -360,7 +360,7 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 												
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 							( 'showLastPour', '0', 'Show the Last Pour in Upper Right Corner instead of temp', '1', NOW(), NOW() );
-							
+UPDATE config SET displayName = 'Show the Last Pour in Upper Right Corner' WHERE configName = 'showLastPour'
 							
 CREATE TABLE IF NOT EXISTS `log` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1360,7 +1360,7 @@ GROUP BY shield, pin;
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, validation, createdDate, modifiedDate ) VALUES
 ( 'RefreshTapList', '0', 'Refresh the tap list every 60 seconds', '1', NULL, NOW(), NOW() ),
-( 'InfoTime', '5', 'Number Of seconds beween changing upper right tap List', '0', NULL, NOW(), NOW() ),
+( 'InfoTime', '60', 'Number Of seconds beween changing upper right tap List', '0', NULL, NOW(), NOW() ),
 ( 'showFermOnMainPage', '1', 'Show Fermenters in upper right tap List', '1', NULL, NOW(), NOW() ),
 ( 'showGTOnMainPage', '1', 'Show Gas Tanks in upper right tap List', '1', NULL, NOW(), NOW() ),
 ( 'showAllGTOnMainPage', '0', 'When showing gas Tanks, Show all Gas Tanks', '1', NULL, NOW(), NOW() );
