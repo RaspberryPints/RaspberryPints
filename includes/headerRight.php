@@ -30,7 +30,10 @@ $mysqli = db();
 $config = getAllConfigs();
 
 $index = 0;
-$maxIndex = 4;
+$maxIndex = $config[ConfigNames::ShowTempOnMainPage]+$config[ConfigNames::ShowLastPour]+$config[ConfigNames::ShowRPLogo];
+$tempIndex = 0;
+$lastPourIndex = $config[ConfigNames::ShowTempOnMainPage];
+$logoIndex = $config[ConfigNames::ShowTempOnMainPage]+$config[ConfigNames::ShowLastPour];
 if( $config[ConfigNames::ShowFermOnMainPage]){
     $fermenterStart = $maxIndex;
     $fermenters = (new FermenterManager())->GetAllWithBeer();
@@ -63,7 +66,7 @@ if( $config[ConfigNames::InfoTime] < 0) $index = -1;
 $temp = null;
 $tempDisplay = "";
 $date = null;
-if ($config[ConfigNames::ShowTempOnMainPage] && ($index == 0 || $index < 0)) {
+if ($config[ConfigNames::ShowTempOnMainPage] && ($index == $tempIndex || $index < 0)) {
     
     $sql =  "SELECT * FROM vwGetActiveTaps";
     $qry = $mysqli->query($sql);
@@ -112,8 +115,6 @@ if ($config[ConfigNames::ShowTempOnMainPage] && ($index == 0 || $index < 0)) {
     if (isset($date) && isset($tempDisplay))
         $tempDisplay .= sprintf('%s', str_replace(' ', "<br/>", $date));
     echo '<td class="HeaderRightSub" style="width:15%;text-align:right;vertical-align:middle">' . $tempDisplay . '</td>';
-} elseif( !$config[ConfigNames::ShowTempOnMainPage] && $index == 0)    {
-    $index++;
 }
 
 ?>
@@ -130,7 +131,7 @@ if (null !== $temp) {
         </td>
 <?php 
 }
-if($config[ConfigNames::ShowLastPour] && ($index == 1 || $index < 0)) {
+if($config[ConfigNames::ShowLastPour] && ($index == $lastPourIndex || $index < 0)) {
 ?>
         		<td class="poursbeername" colspan="2">
         			<h1 style="text-align: center">Last Pour</h1>
@@ -155,11 +156,9 @@ if($config[ConfigNames::ShowLastPour] && ($index == 1 || $index < 0)) {
         		</td>
     	<?php } ?>
 <?php 
-} elseif( !$config[ConfigNames::ShowLastPour] && $index == 1)    {
-    $index++;
 }
 
-if($config[ConfigNames::ShowRPLogo] && ($index == 2 || $index < 0)) { 
+if($config[ConfigNames::ShowRPLogo] && ($index == $logoIndex || $index < 0)) { 
 ?>
 <td>
 	<?php if($config[ConfigNames::UseHighResolution]) { ?>
@@ -171,8 +170,6 @@ if($config[ConfigNames::ShowRPLogo] && ($index == 2 || $index < 0)) {
     <?php } ?>
 </td>
 <?php 
-} elseif( !$config[ConfigNames::ShowRPLogo] && $index == 2)    {
-    $index++;
 }
 
 if($config[ConfigNames::ShowFermOnMainPage] && ($index >= $fermenterStart && $index < $fermenterEnd)) {
@@ -185,7 +182,7 @@ if($config[ConfigNames::ShowFermOnMainPage] && ($index >= $fermenterStart && $in
      <?php
      echo $fementer->get_label();
      if( $iSpindel && $iSpindel->get_currentTemperature() && $iSpindel->get_currentGravity()){
-         echo "<br/>".$iSpindel->get_currentGravity().$iSpindel->get_currentGravityUnit()."<br/>".number_format($iSpindel->get_currentTemperature(),1).$iSpindel->get_currentTemperatureUnit();
+         echo "<br/>".$iSpindel->get_currentGravity().$iSpindel->get_currentGravityUnit()."<br/>".number_format($iSpindel->get_currentTemperature(),1);//.$iSpindel->get_currentTemperatureUnit();
      }
      ?>
     	</div>
@@ -201,8 +198,6 @@ if($config[ConfigNames::ShowFermOnMainPage] && ($index >= $fermenterStart && $in
     Filled:<?php echo (new DateTime($fementer->get_startDate()))->format('Y-m-d'); ?>
     </td>
 <?php
-} elseif( !$config[ConfigNames::ShowFermOnMainPage] && ($index >= $fermenterStart && $index < $fermenterEnd))    {
-    $index++;
 }
 ?>
 
@@ -238,8 +233,6 @@ if($config[ConfigNames::ShowGTOnMainPage] && ($index >= $gasTankStart && $index 
     <?php echo $gasTank->get_label(); ?>
     </td>
 <?php 
-} elseif( !$config[ConfigNames::ShowGTOnMainPage] && ($index >= $gasTankStart && $index < $gasTankEnd))    {
-    $index++;
 }
 ?>
     </tr>
