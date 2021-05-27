@@ -6,7 +6,7 @@ require_once __DIR__.'/Pintlabs/Service/Untappd.php';
 function utBreweryFeed($config, $breweryId) {
 	
     if(!isset($breweryId))return;
-	$cachefile = "cache/bfeed";
+    $cachefile = __DIR__."/cache/bfeed";
 	$filetimemod = 0;
 	if(file_exists($cachefile)) {
 		$filetimemod = filemtime($cachefile)+600;
