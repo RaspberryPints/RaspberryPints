@@ -564,6 +564,14 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 
 ( 'amountPerPint', '0', 'Amount per pint. > 0 then display pints remaining', '0', NOW(), NOW() );
+
+
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, validation, createdDate, modifiedDate ) VALUES
+( 'RefreshTapList', '0', 'Refresh the tap list every 60 seconds', '1', NULL, NOW(), NOW() ),
+( 'InfoTime', '5', 'Number Of seconds beween changing upper right tap List', '0', NULL, NOW(), NOW() ),
+( 'showFermOnMainPage', '1', 'Show Fermenters in upper right tap List', '1', NULL, NOW(), NOW() ),
+( 'showGTOnMainPage', '1', 'Show Gas Tanks in upper right tap List', '1', NULL, NOW(), NOW() ),
+( 'showAllGTOnMainPage', '0', 'When showing gas Tanks, Show all Gas Tanks', '1', NULL, NOW(), NOW() );
 -- --------------------------------------------------------
 
 --
@@ -1951,6 +1959,7 @@ CREATE TABLE IF NOT EXISTS `iSpindel_Device` (
 	`active` int NOT NULL DEFAULT 1,
 	`beerId` int(11) NULL,
 	`beerBatchId` int(11) NULL,
+	`beerBatchId` int(11) NULL,
 	`gravityUnit` tinytext NULL,
     `const1` double NULL,
     `const2` double NULL,
@@ -2110,6 +2119,7 @@ CREATE TABLE IF NOT EXISTS `fermenters` (
 	`beerId` int(11) NULL,
 	`beerBatchId` int(11) NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
+	`startDate` TIMESTAMP NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	
@@ -2342,7 +2352,7 @@ from (iSpindel_Device idev
 		where (isnull(idat.iSpindelId) 
 		or (idat.createdDate = (select max(idat2.createdDate) from iSpindel_Data idat2 where (idat2.iSpindelId = idat.iSpindelId)))) group by idev.iSpindelId;
 
-
+                
 CREATE OR REPLACE VIEW vwFermenters 
 AS 
 select  
@@ -2369,11 +2379,18 @@ select
     f.currentAmountUnit AS currentAmountUnit,
     f.fermentationPSI AS fermentationPSI,
     f.fermentationPSIUnit AS fermentationPSIUnit,
+    b.name as beerName,
+    COALESCE(bb.name, bb.batchNumber) AS beerBatchName,
+    s.rgb as beerRgb,
+    f.startDate AS startDate,
     f.modifiedDate AS modifiedDate,
     f.createdDate AS createdDate 
     from (fermenters f 
             left join fermenterTypes ft 
-            on((f.fermenterTypeId = ft.id)));
+            on((f.fermenterTypeId = ft.id)))
+	LEFT JOIN beers b ON b.id = f.beerId
+	LEFT JOIN beerBatches bb ON bb.id = f.beerBatchId
+	LEFT JOIN srmRgb s ON s.srm = b.srm;
        
         
 CREATE OR REPLACE VIEW `vwPours`

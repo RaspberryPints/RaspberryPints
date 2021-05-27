@@ -35,6 +35,7 @@ if (isset($_POST['editFermenter'])) {
 		            $fermenter->set_beerBatchId($selectedBatchId);
 			        $fermenter->set_startAmount($fermenter->get_maxVolume());
 			        $fermenter->set_currentAmount($fermenter->get_maxVolume());
+			        $fermenter->set_startDate(date('Y-m-d H:i:s'));
 			}
 			$fermenter->set_fermenterStatusCode($_POST['fermenterStatusCode'][$ii]);
 			$fermenterManager->save($fermenter);
@@ -61,6 +62,7 @@ if (isset($_POST['saveAll'])) {
 		            $fermenter->set_beerBatchId($selectedBatchId);
 		            $fermenter->set_startAmount($fermenter->get_maxVolume());
 		            $fermenter->set_currentAmount($fermenter->get_maxVolume());
+		            $fermenter->set_startDate(date('Y-m-d H:i:s'));
 		    }
 			$fermenter->set_fermenterStatusCode($_POST['fermenterStatusCode'][$ii]);
 			$fermenterManager->save($fermenter);

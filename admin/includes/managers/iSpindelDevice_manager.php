@@ -10,7 +10,7 @@ class iSpindelDeviceManager extends Manager{
 	protected function getColumns(){
 	    return ["active", "name", "beerId", "const1", "const2", "const3", "interval", "token", "polynomial", "sent", "remoteConfigEnabled", "sqlEnabled", "csvEnabled", "csvOutpath", "csvDelimiter", "csvNewLine", "csvIncludeDateTime", "unidotsEnabled", "unidotsUseiSpindelToken", "unidotsToken", "forwardEnabled", "forwardAddress", "forwardPort", "fermentTrackEnabled", "fermentTrackAddress", "fermentTrackPort", "fermentTrackUseiSpindelToken", "fermentTrackToken", "brewPiLessEnabled", "brewPiLessAddress", "craftBeerPiEnabled", "craftBeerPiAddress", "craftBeerPiSendAngle", "brewSpyEnabled", "brewSpyAddress", "brewSpyPort", "brewSpyUseiSpindelToken", "brewSpyToken", "brewFatherEnabled", "brewFatherAddress", "brewFatherPort", "brewFatherUseiSpindelToken", "brewFatherToken", "brewFatherSuffix", "currentTemperature", "currentTemperatureUnit", "currentGravity", "currentGravityUnit", "gravityUnit"];
 	}
-	protected function getUpdateColumns(){return ["active", "name", "beerId", "const1", "const2", "const3", "interval", "token", "polynomial", "sent", "remoteConfigEnabled", "sqlEnabled", "csvEnabled", "csvOutpath", "csvDelimiter", "csvNewLine", "csvIncludeDateTime", "unidotsEnabled", "unidotsUseiSpindelToken", "unidotsToken", "forwardEnabled", "forwardAddress", "forwardPort", "fermentTrackEnabled", "fermentTrackAddress", "fermentTrackPort", "fermentTrackUseiSpindelToken", "fermentTrackToken", "brewPiLessEnabled", "brewPiLessAddress", "craftBeerPiEnabled", "craftBeerPiAddress", "craftBeerPiSendAngle", "brewSpyEnabled", "brewSpyAddress", "brewSpyPort", "brewSpyUseiSpindelToken", "brewSpyToken", "brewFatherEnabled", "brewFatherAddress", "brewFatherPort", "brewFatherUseiSpindelToken", "brewFatherToken", "brewFatherSuffix", "gravityUnit"];}
+	protected function getUpdateColumns(){return ["active", "name", "beerId", "beerBatchId", "const1", "const2", "const3", "interval", "token", "polynomial", "sent", "remoteConfigEnabled", "sqlEnabled", "csvEnabled", "csvOutpath", "csvDelimiter", "csvNewLine", "csvIncludeDateTime", "unidotsEnabled", "unidotsUseiSpindelToken", "unidotsToken", "forwardEnabled", "forwardAddress", "forwardPort", "fermentTrackEnabled", "fermentTrackAddress", "fermentTrackPort", "fermentTrackUseiSpindelToken", "fermentTrackToken", "brewPiLessEnabled", "brewPiLessAddress", "craftBeerPiEnabled", "craftBeerPiAddress", "craftBeerPiSendAngle", "brewSpyEnabled", "brewSpyAddress", "brewSpyPort", "brewSpyUseiSpindelToken", "brewSpyToken", "brewFatherEnabled", "brewFatherAddress", "brewFatherPort", "brewFatherUseiSpindelToken", "brewFatherToken", "brewFatherSuffix", "gravityUnit"];}
 	protected function getInsertColumns(){return $this->getUpdateColumns();}
 	protected function getTableName(){
 		return "iSpindel_Device";
@@ -26,5 +26,14 @@ class iSpindelDeviceManager extends Manager{
 	}
 	protected function getViewName(){
 	    return "vwiSpindel_Device";
+	}
+	function GetTopWithBeer($id, $batchId=null){
+	    if( !$batchId ){
+	        $sql="SELECT * FROM ".$this->getViewName()." t WHERE beerBatchId = $batchId";	        
+	    }
+	    else {
+	       $sql="SELECT * FROM ".$this->getViewName()." t WHERE beerId = $id";
+	    }
+	    return $this->executeQueryWithSingleResult($sql);
 	}
 }

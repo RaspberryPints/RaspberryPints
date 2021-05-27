@@ -7,6 +7,9 @@ $iSpindelDeviceManager=new iSpindelDeviceManager();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
     isset($_POST['save']) ) {
+    $beerExloded = explode("~", $_POST['beerId']);
+    $_POST['beerId'] = $beerExloded[0];
+    $_POST['beerBatchId'] = $beerExloded[1];
     $iSpindelDevice = $iSpindelDeviceManager->GetById($_POST['id']);
     if( !$iSpindelDevice )$iSpindelDevice = new iSpindelDevice();
     $iSpindelDevice->set_sent($iSpindelDevice->get_sent() || $iSpindelDevice->get_interval() != $_POST["interval"] || $iSpindelDevice->get_token() != $_POST["token"] || $iSpindelDevice->get_polynomial() != $_POST["polynomal"] );
@@ -26,9 +29,12 @@ if( isset($_GET['id'])){
 
 if($iSpindelDevice == null){
     $iSpindelDevice = new iSpindelDevice();
+    $beerExloded = explode("~", $_POST['beerId']);
+    $_POST['beerId'] = $beerExloded[0];
+    $_POST['beerBatchId'] = $beerExloded[1];
     $iSpindelDevice->setFromArray($_POST);
 }
-$beerList=(new BeerManager())->GetAllActive();
+$beerList=(new BeerManager())->GetAllActiveWithBatches();
 ?>
 <body>
 	<!-- Start Header  -->
@@ -82,10 +88,22 @@ include 'top_menu.php';
                         <tr>
 							<td style="width: 25%; vertical-align: middle; text-align: left;">Beer</td>
 							<td style="width: 30%">	
-                                <?php
-                                echo $htmlHelper->ToSelectList("beerId", "beerId" . $iSpindelDevice->get_id(), $beerList, "name", "id", $iSpindelDevice->get_beerId(), "Select One", "largebox");
-                                ?>
-                            </td>
+ 							<?php 
+							
+    							$str = "<select id='beerId' name='beerId' class=''>\n";
+    							$str .= "<option value=''>Select One</option>\n";
+    							foreach($beerList as $item){
+    							    if( !$item ) continue;
+    							    $sel = "";
+    							    if( isset($iSpindelDevice) && $iSpindelDevice->get_beerId() == ($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId()) && (($iSpindelDevice->get_beerBatchId() <= 0 && $item->get_beerBatchId()<=0) || $iSpindelDevice->get_beerBatchId() == $item->get_beerBatchId()) )  $sel .= "selected ";
+    							    $desc = $item->get_displayName();
+    							    $str .= "<option value='".($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId())."~".$item->get_beerBatchId()."~".$item->get_fg()."~".$item->get_fgUnit()."' ".$sel.">".$desc."</option>\n";
+    							}
+    							$str .= "</select>\n";
+    							
+    							echo $str;
+    							//echo $htmlHelper->ToSelectList("beerId[]", "beerId", $beerList, "name", "id", $fermenter->get_beerId(), "Select One");
+							?>
 						</tr>
 <!-- 						<tr> -->
 <!--                     	                    		<td style="vertical-align: middle; text-align: left;">Constant 1</td> -->

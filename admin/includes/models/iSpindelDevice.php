@@ -7,6 +7,7 @@ class iSpindelDevice
     private $_name;
     private $_active;
     private $_beerId;
+    private $_beerBatchId;
     private $_const1;
     private $_const2;
     private $_const3;
@@ -73,6 +74,9 @@ class iSpindelDevice
 
     public function get_beerId(){ return $this->_beerId; }
     public function set_beerId($_beerId){ $this->_beerId = $_beerId; }
+    
+    public function get_beerBatchId(){ return $this->_beerBatchId; }
+    public function set_beerBatchId($_beerBatchId){ $this->_beerBatchId = $_beerBatchId; }
     
     public function get_const1(){ return $this->_const1; }
     public function set_const1($_const1){ $this->_const1 = $_const1; }
@@ -241,6 +245,11 @@ class iSpindelDevice
             $this->set_beerId($postArr['beerId']);
         else
             $this->set_beerId(null);
+        
+        if (isset($postArr['beerBatchId']))
+            $this->set_beerBatchId($postArr['beerBatchId']);
+        else
+            $this->set_beerBatchId(null);
         
         if (isset($postArr['const1']))
             $this->set_const1($postArr['const1']);

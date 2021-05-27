@@ -121,5 +121,10 @@ abstract class ConfigNames
 	const NumAccoladeDisplay      = 'numAccoladeDisplay';
 	const ABVColorSRM      = 'ABVColorSRM';
 	const UpdateBatchWithKeg      = 'UpdateBatchWithKeg';
+	const RefreshTapList      = 'RefreshTapList';
+	const InfoTime      = 'InfoTime';
+	const ShowFermOnMainPage = 'showFermOnMainPage';
+	const ShowGTOnMainPage = 'showGTOnMainPage';
+	const ShowAllGTOnMainPage = 'showAllGTOnMainPage';
 }
 ?>

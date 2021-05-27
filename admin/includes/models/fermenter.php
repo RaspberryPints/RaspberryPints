@@ -23,8 +23,12 @@ class Fermenter
     private $_fermentationPSIUnit;
     private $_beerId;
     private $_beerBatchId;
+    private $_beerName;
+    private $_beerBatchName;
+    private $_beerRgb;
     private $_active;
     private $_createdDate;
+    private $_startDate;
     private $_modifiedDate;
     
 	public function __construct(){}
@@ -101,8 +105,20 @@ class Fermenter
 	public function get_beerBatchId(){ return $this->_beerBatchId; }
 	public function set_beerBatchId($_beerBatchId){ $this->_beerBatchId = $_beerBatchId; }
 	
+	public function get_beerName(){ return $this->_beerName; }
+	public function set_beerName($_beerName){ $this->_beerName = $_beerName; }
+	
+	public function get_beerBatchName(){ return $this->_beerBatchName; }
+	public function set_beerBatchName($_beerBatchName){ $this->_beerBatchName = $_beerBatchName; }
+	
+	public function get_beerRgb(){ return $this->_beerRgb; }
+	public function set_beerRgb($_beerRgb){ $this->_beerRgb = $_beerRgb; }
+	
 	public function get_active(){ return $this->_active; }
 	public function set_active($_active){ $this->_active = $_active; }
+	
+	public function get_startDate(){ return $this->_startDate; }
+	public function set_startDate($_startDate){ $this->_startDate = $_startDate; }
 	
 	public function get_createdDate(){ return $this->_createdDate; }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
@@ -200,10 +216,26 @@ class Fermenter
             $this->set_beerBatchId($postArr['beerBatchId']);
         else
             $this->set_beerBatchId(null);
+        if (isset($postArr['beerName']))
+            $this->set_beerName($postArr['beerName']);
+        else
+            $this->set_beerName(null);
+        if (isset($postArr['beerBatchName']))
+            $this->set_beerBatchName($postArr['beerBatchName']);
+        else
+            $this->set_beerBatchName(null);
+        if (isset($postArr['beerRgb']))
+            $this->set_beerRgb($postArr['beerRgb']);
+        else
+            $this->set_beerRgb(null);
         if (isset($postArr['active']))
             $this->set_active($postArr['active']);
         else
             $this->set_active(null);
+        if (isset($postArr['startDate']))
+            $this->set_startDate($postArr['startDate']);
+        else
+            $this->set_startDate(null);
         if (isset($postArr['createdDate']))
             $this->set_createdDate($postArr['createdDate']);
         else

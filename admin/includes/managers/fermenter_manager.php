@@ -10,7 +10,7 @@ class FermenterManager extends Manager{
 		return ["id"];
 	}
 	protected function getColumns(){
-	    return ["id", "label", "fermenterTypeId", "make", "model", "serial", "notes", "fermenterStatusCode", "weight", "weightUnit", "emptyWeight", "emptyWeightUnit", "maxVolume", "maxVolumeUnit", "startAmount", "startAmountUnit", "currentAmount", "currentAmountUnit", "fermentationPSI", "fermentationPSIUnit", "beerId", "beerBatchId", "active"];
+	    return ["id", "label", "fermenterTypeId", "make", "model", "serial", "notes", "fermenterStatusCode", "weight", "weightUnit", "emptyWeight", "emptyWeightUnit", "maxVolume", "maxVolumeUnit", "startAmount", "startAmountUnit", "currentAmount", "currentAmountUnit", "fermentationPSI", "fermentationPSIUnit", "beerId", "beerBatchId", "active", "startDate"];
 	}
 	protected function getTableName(){
 		return "fermenters";
@@ -23,5 +23,9 @@ class FermenterManager extends Manager{
 	}
 	protected function getViewName(){
 	    return "vwFermenters";
+	}
+	function GetAllWithBeer(){
+	    $sql="SELECT * FROM ".$this->getViewName()." t WHERE beerId IS NOT NULL";
+	    return $this->executeQueryWithResults($sql);
 	}
 }

@@ -21,9 +21,14 @@ else if (isset($_POST['editiSpindel'])) {
     if(isset($_POST['id'][$ii]))
     {
         $iSpindelDevice = $iSpindelDeviceManager->GetById($id);
+        $beerExloded = explode("~", $_POST['beerId'][$ii]);
+        $selectedBeerId = $beerExloded[0];
+        $selectedBatchId = $beerExloded[1];
         if($iSpindelDevice){
-            if($iSpindelDevice->get_beerId() != $_POST['beerId'][$ii]){
-                $iSpindelDevice->set_beerId($_POST['beerId'][$ii]);
+            if($iSpindelDevice->get_beerId() != $selectedBeerId ||
+                $iSpindelDevice->get_beerBatchId() != $selectedBatchId){
+                $iSpindelDevice->set_beerId($selectedBeerId);
+                $iSpindelDevice->set_beerBatchId($selectedBatchId);
                 $iSpindelDeviceManager->save($iSpindelDevice);
             }
         }
@@ -49,7 +54,11 @@ else if (isset ( $_POST ['save'] )) {
             $iSpindelDevice=new iSpindelDevice();
             $newiSpindelDevice=true;
         }
-        $iSpindelDevice->set_beerId($_POST['beerId'][$ii]);
+        $beerExloded = explode("~", $_POST['beerId'][$ii]);
+        $selectedBeerId = $beerExloded[0];
+        $selectedBatchId = $beerExloded[1];
+        $iSpindelDevice->set_beerId($selectedBeerId);
+        $iSpindelDevice->set_beerBatchId($selectedBatchId);
         if(!$newiSpindelDevice || ($newiSpindelDevice && $iSpindelDevice->get_name() != '')) if(!$iSpindelDeviceManager->save($iSpindelDevice))$error=true;
         $ii++;
     }
@@ -63,7 +72,7 @@ else if (isset ( $_POST ['save'] )) {
 $iSpindelDevices=$iSpindelDeviceManager->GetAllActive();
 $numberOfReaders=count($iSpindelDevices);
 
-$beerList=(new BeerManager())->GetAllActive();
+$beerList=(new BeerManager())->GetAllActiveWithBatches();
 ?>
 <body>
 	<!-- Start Header  -->
@@ -130,9 +139,21 @@ include 'top_menu.php';
 								<input type="text" disabled class="mediumbox" name="name<?php echo $iSpindelDevice->get_id(); ?>" value="<?php echo $iSpindelDevice->get_name(); ?>" />
                             </td>  
                             <td style="">	
-                                <?php 
-                                echo $htmlHelper->ToSelectList("beerId[]", "beerId".$iSpindelDevice->get_id(), $beerList, "name", "id", $iSpindelDevice->get_beerId(), "Select One"); 
-    							?>
+							<?php 
+    							$str = "<select id='beerId' name='beerId[]' class=''>\n";
+    							$str .= "<option value=''>Select One</option>\n";
+    							foreach($beerList as $item){
+    							    if( !$item ) continue;
+    							    $sel = "";
+    							    if( isset($iSpindelDevice) && $iSpindelDevice->get_beerId() == ($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId()) && (($iSpindelDevice->get_beerBatchId() <= 0 && $item->get_beerBatchId()<=0) || $iSpindelDevice->get_beerBatchId() == $item->get_beerBatchId()) )  $sel .= "selected ";
+    							    $desc = $item->get_displayName();
+    							    $str .= "<option value='".($item->get_beerBatchId()<=0?$item->get_id():$item->get_beerId())."~".$item->get_beerBatchId()."~".$item->get_fg()."~".$item->get_fgUnit()."' ".$sel.">".$desc."</option>\n";
+    							}
+    							$str .= "</select>\n";
+    							
+    							echo $str;
+    							//echo $htmlHelper->ToSelectList("beerId[]", "beerId", $beerList, "name", "id", $fermenter->get_beerId(), "Select One");
+							?>
                             </td>   
                             <td style="vertical-align: middle;">
 								<input type="text" disabled class="smallbox" name="name<?php echo $iSpindelDevice->get_id(); ?>" value="<?php echo convert_temperature($iSpindelDevice->get_currentTemperature(), $iSpindelDevice->get_currentTemperatureUnit(), $config[ConfigNames::DisplayUnitTemperature]); ?>" />

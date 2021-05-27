@@ -767,6 +767,8 @@ CREATE TABLE IF NOT EXISTS `iSpindel_Device` (
 	FOREIGN KEY (`beerBatchId`) REFERENCES beerBatches(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii COLLATE=ascii_bin COMMENT='iSpindel Devices Data';
 
+CALL addColumnIfNotExist(DATABASE(), 'iSpindel_Device', 'beerBatchId', 'INT(11)' );
+
 
 CREATE TABLE IF NOT EXISTS `iSpindel_Connector` (
 	`id` int NOT NULL AUTO_INCREMENT,
@@ -1094,7 +1096,8 @@ from (iSpindel_Device idev
 		where (isnull(idat.iSpindelId) 
 		or (idat.createdDate = (select max(idat2.createdDate) from iSpindel_Data idat2 where (idat2.iSpindelId = idat.iSpindelId)))) group by idev.iSpindelId;
 
-
+                
+CALL addColumnIfNotExist(DATABASE(), 'fermenters', 'startDate', 'TIMESTAMP' );
 CREATE OR REPLACE VIEW vwFermenters 
 AS 
 select  
@@ -1121,11 +1124,18 @@ select
     f.currentAmountUnit AS currentAmountUnit,
     f.fermentationPSI AS fermentationPSI,
     f.fermentationPSIUnit AS fermentationPSIUnit,
+    b.name as beerName,
+    COALESCE(bb.name, bb.batchNumber) AS beerBatchName,
+    s.rgb as beerRgb,
+    f.startDate AS startDate,
     f.modifiedDate AS modifiedDate,
     f.createdDate AS createdDate 
     from (fermenters f 
             left join fermenterTypes ft 
-            on((f.fermenterTypeId = ft.id)));
+            on((f.fermenterTypeId = ft.id)))
+	LEFT JOIN beers b ON b.id = f.beerId
+	LEFT JOIN beerBatches bb ON bb.id = f.beerBatchId
+	LEFT JOIN srmRgb s ON s.srm = b.srm;
        
       
 CREATE OR REPLACE VIEW vwGetActiveTaps
@@ -1347,5 +1357,12 @@ ON ((CONVERT(io.shield USING utf8) = hard.shield OR (LOWER(io.shield) != 'pi' AN
 WHERE (io.shield = 'Pi' OR '1' = (SELECT DISTINCT '1' FROM vwIoHardwarePins WHERE shield = ''))
 GROUP BY shield, pin;
 
+
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, validation, createdDate, modifiedDate ) VALUES
+( 'RefreshTapList', '0', 'Refresh the tap list every 60 seconds', '1', NULL, NOW(), NOW() ),
+( 'InfoTime', '5', 'Number Of seconds beween changing upper right tap List', '0', NULL, NOW(), NOW() ),
+( 'showFermOnMainPage', '1', 'Show Fermenters in upper right tap List', '1', NULL, NOW(), NOW() ),
+( 'showGTOnMainPage', '1', 'Show Gas Tanks in upper right tap List', '1', NULL, NOW(), NOW() ),
+( 'showAllGTOnMainPage', '0', 'When showing gas Tanks, Show all Gas Tanks', '1', NULL, NOW(), NOW() );
 
 UPDATE `config` SET `configValue` = '3.1.0.0' WHERE `configName` = 'version';

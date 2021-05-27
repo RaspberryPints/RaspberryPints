@@ -7,7 +7,6 @@ $fermenterManager = new FermenterManager();
 $fermenterStatusManager = new FermenterStatusManager();
 $fermenterTypeManager = new FermenterTypeManager();
 $beerManager = new BeerManager();
-$tapManager = new TapManager();
 
 $config = getAllConfigs();
 //Change the beerId value from beerId~beerBatchId~fg to just beerId
@@ -18,10 +17,13 @@ if(isset($_POST['beerId'])){
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
     isset($_POST['save']) ) {
+    
+    $fermenterOld = $fermenterManager->GetByID($_POST['id']);
     $fermenter = new Fermenter();
     $fermenter->setFromArray($_POST);
-    if( isset($_POST['kickFermenter'])){
-        $tapManager->closeTapById($fermenter->get_onTapId());
+    if($fermenter->get_beerId() != $fermenterOld->get_beerId() ||
+        $fermenter->get_beerBatchId() != $fermenterOld->get_BatchId()){
+            $fermenter->set_startDate(date('Y-m-d H:i:s'));
     }
     if($fermenterManager->Save($fermenter)){
         unset($_POST);

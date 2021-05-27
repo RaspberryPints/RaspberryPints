@@ -59,4 +59,12 @@ class GasTankManager extends Manager{
 	    if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
 	    return $ret;
 	}
+	
+	function GetAllDispensing(){
+	    if($this->getActiveColumnName()){
+	        $sql="SELECT * FROM ".$this->getViewName()." WHERE gasTankStatusCode = 'DISPENSING' ".$this->getOrderByClause();
+	        return $this->executeQueryWithResults($sql);
+	    }
+	    return $this->GetAll();
+	}
 }
