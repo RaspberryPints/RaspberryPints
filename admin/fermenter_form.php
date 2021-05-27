@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
     $fermenterOld = $fermenterManager->GetByID($_POST['id']);
     $fermenter = new Fermenter();
     $fermenter->setFromArray($_POST);
-    if($fermenter->get_beerId() != $fermenterOld->get_beerId() ||
+    if(!$fermenterOld || $fermenter->get_beerId() != $fermenterOld->get_beerId() ||
         $fermenter->get_beerBatchId() != $fermenterOld->get_BatchId()){
             $fermenter->set_startDate(date('Y-m-d H:i:s'));
     }
@@ -199,8 +199,8 @@ include 'top_menu.php';
 					<?php if($config[ConfigNames::UseDefWeightSettings]){?>
             			<input type="hidden" id="fermentationPSI" class="mediumbox" name="fermentationPSI" value="<?php echo convert_pressure($config[ConfigNames::DefaultFermPSI], $config[ConfigNames::DefaultFermPSIUnit], $config[ConfigNames::DisplayUnitPressure]); ?>" />
         				<input type="hidden" id="fermentationPSIUnit" name="fermentationPSIUnit" value="<?php echo $config[ConfigNames::DisplayUnitPressure]; ?>" />
-						<input type="hidden" id="fermentergingTemp" class="mediumbox" name="fermentergingTemp" value="<?php echo convert_temperature($config[ConfigNames::DefaultFermentergingTemp], $config[ConfigNames::DefaultFermentergingTempUnit], $config[ConfigNames::DisplayUnitTemperature]); ?>" />
-						<input type="hidden" id="fermentergingTempUnit" name="fermentergingTempUnit" value="<?php echo $config[ConfigNames::DisplayUnitTemperature]; ?>" />
+						<input type="hidden" id="KeggingTemp" class="mediumbox" name="KeggingTemp" value="<?php echo convert_temperature($config[ConfigNames::DefaultKeggingTemp], $config[ConfigNames::DefaultKeggingTempUnit], $config[ConfigNames::DisplayUnitTemperature]); ?>" />
+						<input type="hidden" id="KeggingTempUnit" name="KeggingTempUnit" value="<?php echo $config[ConfigNames::DisplayUnitTemperature]; ?>" />
     				<?php } ?>
 				</td>
 			</tr>
@@ -273,8 +273,8 @@ include 'scripts.php';
 																				document.getElementById("currentAmountUnit").value,
 																				document.getElementById("emptyWeight").value, 
 																				document.getElementById("emptyWeightUnit").value,
-																		     	document.getElementById("fermentergingTemp").value, 
-																		     	document.getElementById("fermentergingTempUnit").value, 
+																		     	document.getElementById("KeggingTemp").value, 
+																		     	document.getElementById("KeggingTempUnit").value, 
 																		     	<?php echo $config[ConfigNames::BreweryAltitude] ?>,
 																		     	'<?php echo $config[ConfigNames::BreweryAltitudeUnit] ?>',
 																		     	document.getElementById("fermentationPSI").value, 
@@ -297,8 +297,8 @@ include 'scripts.php';
 																				document.getElementById("weightUnit").value, 
 																				document.getElementById("emptyWeight").value,
 																				document.getElementById("emptyWeightUnit").value,
-																		     	document.getElementById("fermentergingTemp").value, 
-																		     	document.getElementById("fermentergingTempUnit").value, 
+																		     	document.getElementById("KeggingTemp").value, 
+																		     	document.getElementById("KeggingTempUnit").value, 
 																		     	<?php echo $config[ConfigNames::BreweryAltitude] ?>, 
 																		     	'<?php echo $config[ConfigNames::BreweryAltitudeUnit] ?>', 
 																		     	document.getElementById("fermentationPSI").value, 
