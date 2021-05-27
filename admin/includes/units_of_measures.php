@@ -184,6 +184,12 @@ function convert_weight($value, $unitsFrom, $unitsTo){
     else if($unitsFrom == UnitsOfMeasure::WeightKiloGrams && $unitsTo == UnitsOfMeasure::WeightPounds){
         $value = $value * 2.20462;
     }
+    else if($unitsFrom == UnitsOfMeasure::WeightKiloGrams && $unitsTo == UnitsOfMeasure::WeightGrams){
+        $value = $value * 1000;
+    }
+    else if($unitsFrom == UnitsOfMeasure::WeightGrams && $unitsTo == UnitsOfMeasure::WeightKiloGrams){
+        $value = $value / 1000;
+    }
     return $value;
 }
 function convert_count($value, $unitsFrom, $unitsTo){
