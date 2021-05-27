@@ -1365,4 +1365,11 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 ( 'showGTOnMainPage', '1', 'Show Gas Tanks in upper right tap List', '1', NULL, NOW(), NOW() ),
 ( 'showAllGTOnMainPage', '0', 'When showing gas Tanks, Show all Gas Tanks', '1', NULL, NOW(), NOW() );
 
+ALTER TABLE beers CHANGE COLUMN `og` `og` DECIMAL(7,3) NULL DEFAULT NULL ;
+ALTER TABLE beerBatches CHANGE COLUMN `og` `og` DECIMAL(7,3) NULL DEFAULT NULL ;
+ALTER TABLE beerStyles CHANGE COLUMN `ogMin` `ogMin` DECIMAL(7,3) NULL DEFAULT NULL ;
+ALTER TABLE beerStyles CHANGE COLUMN `ogMax` `ogMax` DECIMAL(7,3) NULL DEFAULT NULL ;
+ALTER TABLE beerStyles CHANGE COLUMN `fgMin` `fgMin` DECIMAL(7,3) NULL DEFAULT NULL ;
+ALTER TABLE beerStyles CHANGE COLUMN `fgMax` `fgMax` DECIMAL(7,3) NULL DEFAULT NULL ;
+
 UPDATE `config` SET `configValue` = '3.1.0.0' WHERE `configName` = 'version';

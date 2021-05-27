@@ -289,7 +289,7 @@ class FlowMonitor(object):
         dbiSpindels = self.dispatch.getiSpindelConnectors()
         for item in dbiSpindels:
             if (item["address"] != '' and item["port"]):
-                connector = iSpindelListenerThread( "iSpindal-" + str(item["address"]) + ":" + str(item["port"]), self, self.dispatch, item["address"], int(item["port"]), item["allowedConnections"])
+                connector = iSpindelListenerThread( "iSpindal-" + str(item["address"]) + ":" + str(item["port"]), self, self.dispatch, item["address"], int(item["port"]), item["allowedConnections"], updateDir=config['pints.dir'])
                 connector.start()
                 self.iSpindels.append( connector )
             
@@ -896,11 +896,12 @@ ISPINDEL_ACK = chr(6)  # ASCII ACK (Acknowledge)
 ISPINDEL_NAK = chr(21)  # ASCII NAK (Not Acknowledged)
 ISPINDEL_BUFF_SIZE = 256  # Buffer Size
 class iSpindelListenerThread (threading.Thread):
-    def __init__(self, threadID, flowMonitor, dispatch, host, port, allowedConnections=5):
+    def __init__(self, threadID, flowMonitor, dispatch, host, port, allowedConnections=5, updateDir=''):
         threading.Thread.__init__(self)
         self.threadID = threadID
         self.flowMonitor = flowMonitor
         self.dispatch = dispatch
+        self.updateDir = updateDir
         self.host = host
         self.port = port
         self.allowedConnections = allowedConnections
@@ -1094,8 +1095,8 @@ class iSpindelListenerThread (threading.Thread):
                         try:
                             debug(repr(addr) + ' - writing to database', debugConfig='iSpindel.debug')
                             # standard field definitions:
-                            fieldlist = ['createdDate', 'name', 'iSpindelId', 'angle', 'temperature', 'temperatureUnit', 'battery', 'gravity', 'gravityUnit', 'beerId' ]
-                            valuelist = [datetime.datetime.now(), spindle_name, spindle_id, angle, temperature, temperatureUnit, battery, gravity, device["gravityUnit"], device["beerId"]]
+                            fieldlist = ['createdDate', 'name', 'iSpindelId', 'angle', 'temperature', 'temperatureUnit', 'battery', 'gravity', 'gravityUnit', 'beerId', 'beerBatchId' ]
+                            valuelist = [datetime.datetime.now(), spindle_name, spindle_id, angle, temperature, temperatureUnit, battery, gravity, device["gravityUnit"], device["beerId"], device["beerBatchId"]]
             
                             # do we have a user token defined? (Fw > 5.4.x)
                             # this is for later use (public server) but if it exists, let's store it for testing purposes
@@ -1113,6 +1114,10 @@ class iSpindelListenerThread (threading.Thread):
             
                             self.dispatch.insertiSpindelData(fieldlist, valuelist)
                             debug(repr(spindle_name) + ' - DB data written.', debugConfig='iSpindel.debug')
+                        
+                            if self.updateDir != '' and device["beerBatchId"] and device["beerBatchId"] > 0:
+                                subprocess.call(["php", self.updateDir + '/admin/updateBeerBatch.php', str(device["beerBatchId"]), str(temperature), str(temperatureUnit), str(gravity), str(device["gravityUnit"])])
+                        
                         except Exception as e:
                             debug(repr(addr) + ' Database Error: ' + str(e) + '\nDid you update your database?', debugConfig='iSpindel.debug')
                             debug(traceback.format_exc(), debugConfig='iSpindel.debug')

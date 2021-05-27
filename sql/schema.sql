@@ -45,13 +45,13 @@ CREATE TABLE IF NOT EXISTS `beerStyles` (
 	`catNum` tinytext NOT NULL,
 	`category` tinytext NOT NULL,
 	`beerStyleList` tinytext NOT NULL,
-	`ogMin` decimal(4,3) NOT NULL,
+	`ogMin` decimal(7,3) NOT NULL,
 	`ogMinUnit` tinytext NULL,
-	`ogMax` decimal(4,3) NOT NULL,
+	`ogMax` decimal(7,3) NOT NULL,
 	`ogMaxUnit` tinytext NULL,
-	`fgMin` decimal(4,3) NOT NULL,
+	`fgMin` decimal(7,3) NOT NULL,
 	`fgminUnit` tinytext NULL,
-	`fgMax` decimal(4,3) NOT NULL,
+	`fgMax` decimal(7,3) NOT NULL,
 	`fgMaxUnit` tinytext NULL,
 	`abvMin` decimal(3,1) NOT NULL,
 	`abvMax` decimal(3,1) NOT NULL,
@@ -337,7 +337,7 @@ CREATE TABLE IF NOT EXISTS `beers` (
 	`breweryId` int(11),
 	`notes` text NULL,
 	`abv` decimal(3,1) NULL,
-	`og` decimal(4,3) NULL,
+	`og` decimal(7,3) NULL,
 	`ogUnit` tinytext NULL,
 	`fg` decimal(7,3) NULL,
 	`fgUnit` tinytext NULL,
@@ -370,7 +370,7 @@ CREATE TABLE IF NOT EXISTS `beerBatches` (
 	`fermentationTempMax` decimal(14,2) DEFAULT NULL,
 	`fermentationTempMaxUnit` tinytext,
 	`abv` decimal(3,1) NULL,
-	`og` decimal(4,3) NULL,
+	`og` decimal(7,3) NULL,
 	`ogUnit` tinytext NULL,
 	`fg` decimal(7,3) NULL,
 	`fgUnit` tinytext NULL,
@@ -572,6 +572,12 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 ( 'showFermOnMainPage', '1', 'Show Fermenters in upper right tap List', '1', NULL, NOW(), NOW() ),
 ( 'showGTOnMainPage', '1', 'Show Gas Tanks in upper right tap List', '1', NULL, NOW(), NOW() ),
 ( 'showAllGTOnMainPage', '0', 'When showing gas Tanks, Show all Gas Tanks', '1', NULL, NOW(), NOW() );
+
+INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, validation, createdDate, modifiedDate ) VALUES
+( 'iSUpdateMinTemp', '1', 'iSpindel should update beer batch min temp', '0', NULL, NOW(), NOW() ),
+( 'iSUpdateMaxTemp', '1', 'iSpindel should update beer batch max temp', '0', NULL, NOW(), NOW() ),
+( 'iSUpdateOG', '1', 'iSpindel should update beer og', '0', NULL, NOW(), NOW() ),
+( 'iSUpdateFG', '1', 'iSpindel should update beer fg', '0', NULL, NOW(), NOW() );
 -- --------------------------------------------------------
 
 --
@@ -2020,21 +2026,6 @@ CREATE TABLE IF NOT EXISTS `iSpindel_Connector` (
 	`modifiedDate` TIMESTAMP NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii COLLATE=ascii_bin COMMENT='iSpindel Connectors Data';
-
-
-CREATE OR REPLACE VIEW vwiSpindel_Device
-AS
-SELECT
-    idev.*,
-    MAX(idat.temperature) as currentTemperature,
-    MAX(idat.temperatureUnit) as currentTemperatureUnit,
-    MIN(idat.gravity) as currentGravity,
-	MIN(idat.gravityUnit) AS currentGravityUnit
-FROM iSpindel_Device idev 
-LEFT JOIN iSpindel_Data idat ON idev.iSpindelId = idat.iSpindelId 
-WHERE idat.iSpindelId IS NULL OR idat.createdDate = (SELECT max(createdDate) FROM iSpindel_Data idat2 where iSpindelId = idat.iSpindelId)
-GROUP BY idev.iSpindelId;
-
 
 CREATE TABLE IF NOT EXISTS `fermenterTypes` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
