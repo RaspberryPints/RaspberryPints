@@ -140,8 +140,8 @@ if($config[ConfigNames::ShowLastPour] && ($index == $lastPourIndex || $index < 0
         		<tr>
         <?php
         $totalRows = 0;
-        $poursList = (new PourManager())->getLastPours(1, 1, $totalRows);
-        $pour = count($poursList)>0?array_values($poursList)[0]:null;
+        $poursListRight = (new PourManager())->getLastPours(1, 1, $totalRows);
+        $pour = count($poursListRight)>0?array_values($poursListRight)[0]:null;
         if(null !== $pour) {?>
         <?php if($pour->get_userName()){?>
         		<td class="poursuser">
