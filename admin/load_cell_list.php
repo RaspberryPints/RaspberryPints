@@ -5,6 +5,7 @@ $htmlHelper = new HtmlHelper();
 $tapManager = new TapManager();
 $gasTankManager = new GasTankManager();
 $kegManager = new KegManager();
+$htmlHelper = new HtmlHelper();
 
 //$config = getAllConfigs();
 
@@ -21,15 +22,19 @@ if (isset ( $_POST ['save'] )) {
 	$error = false;
 	
 	$ii = 0;
-	while(isset($_POST ['id'][$ii]))
+	while(isset($_POST ['id'][$ii]) || isset($_POST ['oldId'][$ii]))
 	{
-	    if($_POST ['id'][$ii] == "")
+	    if($_POST ['id'][$ii] == "" && $_POST ['oldId'][$ii] == "")
 	    {
 	        $ii++;
 	        continue;
 	    }
 	    if($_POST ['type'][$ii] == 1 && !$tapManager->saveTapLoadCellInfo($_POST ['id'][$ii], $_POST['loadCellCmdPin'][$ii], $_POST['loadCellRspPin'][$ii], $_POST['loadCellScaleRatio'][$ii], $_POST['loadCellTareOffset'][$ii], $_POST['loadCellUnit'][$ii]))$error=true;
-	    if($_POST ['type'][$ii] == 2 && !$gasTankManager->saveGasTankLoadCellInfo($_POST ['id'][$ii], $_POST['loadCellCmdPin'][$ii], $_POST['loadCellRspPin'][$ii], $_POST['loadCellScaleRatio'][$ii], $_POST['loadCellTareOffset'][$ii], $_POST['loadCellUnit'][$ii]))$error=true;
+	    if($_POST ['type'][$ii] == 2 && isset($_POST ['gtId'][$ii]) && $_POST ['gtId'][$ii] <> '' ){
+	        if( $_POST['oldId'][$ii] != $_POST['gtId'][$ii])if(!$gasTankManager->saveGasTankLoadCellInfo($_POST ['oldId'][$ii], 0, 0, 0, 0, 0))$error=true;
+	        
+	        if(!$gasTankManager->saveGasTankLoadCellInfo($_POST ['gtId'][$ii], $_POST['loadCellCmdPin'][$ii], $_POST['loadCellRspPin'][$ii], $_POST['loadCellScaleRatio'][$ii], $_POST['loadCellTareOffset'][$ii], $_POST['loadCellUnit'][$ii]))$error=true;
+	    }
 	    $ii++;
 	    $reconfig = true;
 	}
@@ -115,6 +120,8 @@ include 'top_menu.php';
                                 <tr>
                                     <td style="vertical-align: middle;">
             							<input type="hidden" name="id[]" value="<?php echo $tap->get_id()?>" />
+            							<input type="hidden" name="oldId[]" value="<?php echo $tap->get_id()?>" />
+            							<input type="hidden" name="gtId[]" value="<?php echo $tap->get_id()?>" />
             							<input type="hidden" name="type[]" value="1" />
                                         <span id="tapName" class="mediumbox"><?php echo $tap->get_tapNumber() ?></span>
                                     </td>
@@ -185,13 +192,31 @@ include 'top_menu.php';
                     </thead>
                     <tbody>
                         <?php
+                            $ii=1;
                             foreach ($gasTanks as $gt){
                                 ?>
                                 <tr>
                                     <td style="vertical-align: middle;">
             							<input type="hidden" name="id[]" value="<?php echo $gt->get_id()?>" />
+            							<input type="hidden" name="oldId[]" value="<?php echo $gt->get_id()?>" />
             							<input type="hidden" name="type[]" value="2" />
-                                        <span id="gasTankLabel" class="mediumbox"><?php echo $gt->get_label() ?></span>
+                                        <?php  
+                                        //$selectedItem = null;
+                                        $str = "<select id='gtId".$ii++."' name='gtId[]' class='' onChange='toggleDisplay(this)'>\n";
+                                        $str .= "<option value=''>Select One</option>\n";
+                                        foreach($gasTanks as $item){
+                                            if( !$item ) continue;
+                                            $sel = "";
+                                            if( $gt && $gt->get_id() == $item->get_id() ){
+                                                $sel .= "selected ";
+                                            }
+                                            $desc = $item->get_label();
+                                            $str .= "<option value='".$item->get_id()."' ".$sel.">".$desc."</option>\n";
+                                        }
+                                        $str .= "</select>\n";
+                                        
+                                        echo $str;
+                                        ?>
                                     </td>
                                     <td style="vertical-align: middle;">
                                         <input type="text" id="loadCellCmdPin<?php echo $gt->get_id();?>" class="smallbox" name="loadCellCmdPin[]" value="<?php echo $gt->get_loadCellCmdPin() ?>" />
@@ -356,6 +381,23 @@ include 'scripts.php';
 	                   }
 	             });
 	  	}
+
+
+		function toggleDisplay(selectObject) {
+			var newId = selectObject.value;
+			
+			//Check if the user selected this keg for any other tap
+			var onOtherTap = null;
+			var ii = 1;
+			var secOtherSelect = null;
+			while( (secOtherSelect = document.getElementById("gtId"+ii++)) != null){
+				if("gtId"+(ii-1) == selectObject.id)continue;
+				if(secOtherSelect.value == newId) {
+					secOtherSelect.selectedIndex = 0
+					break;
+				}
+			}
+		}
 </script>
 
 	<!-- End Js -->
