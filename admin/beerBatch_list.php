@@ -1,13 +1,20 @@
 <?php
 require_once __DIR__.'/header.php';
 $htmlHelper = new HtmlHelper();
+$beerManager = new BeerManager();
 $beerBatchManager = new BeerBatchManager();
 $config = getAllConfigs();
 if (isset($_POST['inactivateBeerBatch'])) {
 	$beerBatchManager->Inactivate($_POST['id']);		
 }
 
-$beerBatches = $beerBatchManager->GetAllActive();
+$beer = null;
+if(isset($_GET['id'])) {
+    $beerBatches = $beerBatchManager->GetAllActiveByBeerId($_GET['id']);
+    $beer = $beerManager->GetByID($_GET['id']);
+}else{
+    $beerBatches = $beerBatchManager->GetAllActive();
+}
 ?>
 	<!-- Start Header  -->
 <body>
@@ -61,9 +68,9 @@ include 'top_menu.php';
 	
 	<!-- Right Side/Main Content Start -->
 <div id="rightside">
-	<div class="contentcontainer lg left">
+	<div class="contentcontainer lg left" <?php if($beer)echo "style=\"width:100%\""; ?>>
     	<div class="headings alt">
-			<h2>Beer Batches</h2>
+			<h2><?php echo ((!isset($_GET['id']) || !$beer)?"Beer":$beer->get_name());?> Batches</h2>
 		</div>
 		<div class="contentbox">
 		
@@ -71,9 +78,12 @@ include 'top_menu.php';
 			
 			<?php $htmlHelper->ShowMessage(); ?>
 			
-			<input type="submit" class="btn" value="Add a Beer Batch" onClick="window.location='beerBatch_form.php'" />
+			<input type="submit" class="btn" value="Add a Beer Batch" onClick="window.location='beerBatch_form.php<?php if($beer) echo "?beerId=".$beer->get_id();?>'" />
+			<?php if($beer) {?>
+			<input type="submit" class="btn" value="View All" onClick="window.location='beerBatch_list.php'" />
+        	<?php } ?>
 			<br/><br/>
-			<?php if( count($beerBatches) != 0 ){	?>
+			<?php if( count($beerBatches) != 0 && !$beer){	?>
         		Search:<input type="text" id="search" class="largebox" name="search" value="" onkeyup="filterBeerBatch(this);" />
         	<?php } ?>
 			<table style="width:770px; padding:0px" class="outerborder" id="beerBatchesTable">
@@ -92,11 +102,12 @@ include 'top_menu.php';
 							<tr><td class="no-results" colspan="99">No Beer Batches :( Add some?</td></tr>
 					<?php 
 						}else{
+						    if( !$beer){
 						    foreach ($beerBatches as $beerBatch){
 					?>
 								<tr class="intborder collapsed heading" onClick="toggleBeerBatchInfo(this, '<?php echo $beerBatch->get_id()?>')" >
 									<th style="width:70%; vertical-align:middle;">
-										<p style="font-size:24px; font-weight:bold; width:400px; overflow:hidden"><?php echo $beerBatch->get_displayName() ?></p>
+										<p style="font-size:24px; font-weight:bold; width:400px; overflow:hidden"><?php echo !$beer?$beerBatch->get_displayName():($beerBatch->get_name()?$beerBatch->get_name():$beerBatch->get_batchNumber()) ?></p>
 									</th>
 									<th style="width:10%; text-align: center; vertical-align: middle; margin: 0; padding: 0;">
 										<input name="editBeerBatch" type="button" class="btn" value="Edit" style="text-align: center; margin: 0;" onClick="window.location='beerBatch_form.php?id=<?php echo $beerBatch->get_id()?>'" />
@@ -167,6 +178,7 @@ include 'top_menu.php';
 										</p>
 									</td>
 								</tr>
+					
 								<tr class="intborder" id="beerBatchNotes<?php echo $beerBatch->get_id() ?>" style="display:none">
 									<td colspan="2">
 										<?php
@@ -177,6 +189,7 @@ include 'top_menu.php';
 										}
 										?>
 									</td>
+									
 									<td style="width:5%; text-align: center;">
 										<input name="editBeerBatch" type="button" class="btn" value="Edit" onClick="window.location='beerBatch_form.php?id=<?php echo $beerBatch->get_id()?>'" />
 									</td>
@@ -189,11 +202,119 @@ include 'top_menu.php';
 								</tr>
 					<?php 
 							}
-						}
+					    }else {
+					        ?>
+					        <tr class="intborder">
+					  			<?php foreach ($beerBatches as $beerBatch){ ?>
+									<th style="vertical-align:middle;">
+										<p style="font-size:24px; font-weight:bold; overflow:hidden"><?php echo !$beer?$beerBatch->get_displayName():($beerBatch->get_name()?$beerBatch->get_name():$beerBatch->get_batchNumber()) ?></p>
+									</th>
+								<?php } ?>
+							</tr>
+							<tr class="intborder">
+					  			<?php foreach ($beerBatches as $beerBatch){ ?>
+									<td>
+                                        <b>SRM:</b>
+										<?php
+											if ( $beerBatch->get_srm() != 0 )
+												echo  $beerBatch->get_srm();
+											else
+												echo "N/A";
+										?>
+										</td>
+								<?php } ?>
+							</tr>
+							<tr class="intborder">
+					  			<?php foreach ($beerBatches as $beerBatch){ ?>
+									<td>
+                                        <b>IBU:</b>
+										<?php
+											if ( $beerBatch->get_ibu() != 0 )
+												echo $beerBatch->get_ibu();
+											else
+												echo "N/A";
+										?>
+										</td>
+								<?php } ?>
+							</tr>
+							<tr class="intborder">
+					  			<?php foreach ($beerBatches as $beerBatch){ ?>
+									<td>
+                                        <b>ABV:</b>
+										<?php
+											if ( $beerBatch->get_abv() != 1 && $beerBatch->get_abv() != 0 )
+												echo $beerBatch->get_abv() ;
+											else
+												echo "N/A";
+										?>
+										</td>
+								<?php } ?>
+							</tr>
+							<tr class="intborder">
+					  			<?php foreach ($beerBatches as $beerBatch){ ?>
+									<td>
+                                        <b>OG:</b>
+										<?php
+											if ( $beerBatch->get_og() != 1 && $beerBatch->get_og() != 0 )
+											    echo convert_gravity($beerBatch->get_og(), $beerBatch->get_ogUnit(), $config[ConfigNames::DisplayUnitGravity]) ;
+											else
+												echo "N/A";
+										?>
+										</td>
+								<?php } ?>
+							</tr>
+							<tr class="intborder">
+					  			<?php foreach ($beerBatches as $beerBatch){ ?>
+									<td>
+                                        <b>FG:</b>
+										<?php
+											if ( $beerBatch->get_fg() != 1 && $beerBatch->get_fg() != 0 )
+											    echo  convert_gravity($beerBatch->get_fg(), $beerBatch->get_fgUnit(), $config[ConfigNames::DisplayUnitGravity]);
+											else
+												echo "N/A";
+										?>
+										</td>
+								<?php } ?>
+							</tr>
+							<tr class="intborder">
+					  			<?php foreach ($beerBatches as $beerBatch){ ?>
+									<td>
+										<p style="padding-bottom: 1px"><b style="text-decoration: underline;">Yeast:</b></p><p>
+						                    <?php 
+						                      $yeasts = $beerBatchManager->GetYeasts($beerBatch->get_id());
+						                      foreach($yeasts as $yeast){
+						                          echo $yeast->get_name() . "<br>";
+						                      }
+						                    ?>
+										</p>
+										</td>
+								<?php } ?>
+								</tr>
+								<tr class="intborder">
+					  			<?php foreach ($beerBatches as $beerBatch){ ?>
+									<td>
+										<p style="padding-bottom: 1px"><b style="text-decoration: underline;">Notes:</b></p><p>
+										<?php
+										if(strlen($beerBatch->get_notes()) < 200){
+										  echo $beerBatch->get_notes() ;
+										}else{
+										    echo substr($beerBatch->get_notes(), 0, 200) .' ...';										      
+										}
+										?>
+									</td>
+								<?php } ?>
+								</tr>
+					        
+					        <?php 
+					    }
+					}
 					?>
 				</tbody>
 			</table><br>
-			<input type="submit" class="btn" value="Add a Beer Batch" onClick="window.location='beerBatch_form.php'" />
+			<input type="submit" class="btn" value="Add a Beer Batch" onClick="window.location='beerBatch_form.php<?php if($beer) echo "?beerId=".$beer->get_id();?>'" />
+			<?php if($beer) {?>
+			<input type="submit" class="btn" value="View All" onClick="window.location='beerBatch_list.php'" />
+        	<?php } ?>
 		</div>
 	</div>
 	<!-- Start Footer -->   
@@ -220,6 +341,28 @@ include 'scripts.php';
 			}
 		});
 	});
+	<?php if($beer) { ?>
+	window.onload = function(){
+		tables = document.getElementsByTagName("table")
+		for (var i = 0; i < tables.length; i++) {
+		    var table = tables[i];		
+			maxWidth = -1;
+			//Start at 1 to avoid header row
+			for (var j = 1; j < table.rows[0].cells.length; j++) {
+			    var col = table.rows[0].cells[j];		
+				if( col.offsetWidth > maxWidth ) maxWidth = col.offsetWidth;
+			}
+			if( maxWidth > 0 ){
+				for (var j = 0; j < table.rows[0].cells.length; j++) {
+				    var col = table.rows[0].cells[j];	
+				    col.width = maxWidth + 'px';
+				}
+			}
+		}
+
+	}
+
+	<?php } ?>
 </script>
 
 	<!-- End Js -->

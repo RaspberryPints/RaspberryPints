@@ -9,7 +9,7 @@ if (isset($_POST['inactivateBeer'])) {
 	$beerManager->Inactivate($_POST['id']);		
 }
 
-$beers = $beerManager->GetAllActive();
+$beers = $beerManager->GetAllActiveWithLastBatchId();
 //$breweryList = $breweryManager->GetAll()
 ?>
 	<!-- Start Header  -->
@@ -202,6 +202,12 @@ include 'top_menu.php';
 												echo "N/A";
 										?>
                                         </p>
+                                        <p>
+                                        <b>Batches:</b>
+										<?php
+										echo $beer->get_lastBatchNumber();
+										?>
+                                        </p>
 										
 									</td>
 									<td colspan="3" style="width:55%; margin: 0; padding: 0;">
@@ -243,6 +249,11 @@ include 'top_menu.php';
 										}
 										?>
 									</td>
+									<td style="width:10%; text-align: center; vertical-align: middle; margin: 0; padding: 0;" >
+									<?php if($beer->get_lastBatchNumber()){?>
+										<input name="beerBatches" type="button" class="btn" value="Batches" style="text-align: center; margin: 0;" onClick="window.location='beerBatch_list.php?id=<?php echo $beer->get_id()?>'" />
+									<?php }?>
+									</td>
 									<td style="width:10%; text-align: center; vertical-align: middle; margin: 0; padding: 0;">
 										<input name="editBeer" type="button" class="btn" value="Edit" style="text-align: center; margin: 0;" onClick="window.location='beer_form.php?id=<?php echo $beer->get_id()?>'" />
 									</td>
@@ -251,8 +262,6 @@ include 'top_menu.php';
 											<input type='hidden' name='id' value='<?php echo $beer->get_id()?> '/>
 											<input class="inactivateBeer btn" style="text-align: center; margin: 0;" name="inactivateBeer" type="submit" value="Delete" />
 										</form>
-									</td>
-									<td style="width:10%; text-align: center; vertical-align: middle; margin: 0; padding: 0;" >
 									</td>
 								</tr>
 					<?php 

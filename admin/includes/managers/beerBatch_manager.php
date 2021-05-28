@@ -32,4 +32,11 @@ class BeerBatchManager extends Manager{
 	    }
 	    return $this->GetAll();
 	}
+	function GetAllActiveByBeerId($beerId){
+	    if($beerId){
+	        $sql="SELECT * FROM ".$this->getViewName()." WHERE beerId = ".$beerId." ".$this->getOrderByClause();
+	        return $this->executeQueryWithResults($sql);
+	    }
+	    return $this->GetAll();
+	}
 }

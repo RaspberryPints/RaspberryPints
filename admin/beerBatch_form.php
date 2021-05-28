@@ -153,7 +153,10 @@ include 'top_menu.php';
 						foreach($beerList as $item){
 						    if( !$item ) continue;
 						    $sel = "";
-						    if( isset($beerBatch) && $beerBatch->get_beerId() == $item->get_id())  $sel .= "selected ";
+						    if( ( isset($beerBatch) && $beerBatch->get_beerId() == $item->get_id()) ||
+						        ( isset($_GET['beerId']) && $_GET['beerId'] == $item->get_id()) ){
+						        $sel .= "selected ";
+						    }
 						    $desc = $item->get_name();
 						    $str .= "<option value='".$item->get_id()."~".($item->get_lastBatchNumber()+1)."' ".$sel.">".$desc."</option>\n";
 						}
