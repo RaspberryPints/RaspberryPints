@@ -360,7 +360,7 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 												
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 							( 'showLastPour', '0', 'Show the Last Pour in Upper Right Corner instead of temp', '1', NOW(), NOW() );
-UPDATE config SET displayName = 'Show the Last Pour in Upper Right Corner' WHERE configName = 'showLastPour'
+UPDATE config SET displayName = 'Show the Last Pour in Upper Right Corner' WHERE configName = 'showLastPour';
 							
 CREATE TABLE IF NOT EXISTS `log` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -528,7 +528,7 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ( 'showUntappdBreweryFeed', '0', 'Show brewery Untappd feed above header', '0', NOW(), NOW() );
 
---CALL addColumnIfNotExist(DATABASE(), 'beerStyles', 'boardNumber', 'int(11) DEFAULT 0' );
+#CALL addColumnIfNotExist(DATABASE(), 'beerStyles', 'boardNumber', 'int(11) DEFAULT 0' );
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ( 'UpdateBatchWithKeg', '0', 'Update Batch amount when setting Keg', '1', NOW(), NOW() );
