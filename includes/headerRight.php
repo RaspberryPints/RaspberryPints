@@ -10,8 +10,9 @@ require_once __DIR__.'/../admin/includes/managers/gasTank_manager.php';
 require_once __DIR__.'/../admin/includes/managers/iSpindelDevice_manager.php';
 require_once __DIR__.'/config.php';
 
-
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 $config = getAllConfigs();
 
 $plaatoPins = array(

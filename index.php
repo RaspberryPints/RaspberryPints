@@ -3,6 +3,10 @@
 		header('Location: install/index.php', true, 303);
 		die();
 	}
+	//Start a session for the first headerRight call because session needs to be started before HTML is sent
+	if (session_status() === PHP_SESSION_NONE) {
+	    session_start();
+	}
 ?>
 <?php
 	require_once __DIR__.'/admin/includes/managers/config_manager.php';
