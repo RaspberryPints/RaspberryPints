@@ -114,6 +114,11 @@ class Fermenter
 	public function get_beerRgb(){ return $this->_beerRgb; }
 	public function set_beerRgb($_beerRgb){ $this->_beerRgb = $_beerRgb; }
 	
+	public function get_beerRgbCompliment(){ 
+	    $rgb = explode(',', $this->_beerRgb);
+	    return (255-intval($rgb[0])).','.(255-intval($rgb[1])).','.(255-intval($rgb[2])); 
+	}
+	
 	public function get_active(){ return $this->_active; }
 	public function set_active($_active){ $this->_active = $_active; }
 	
