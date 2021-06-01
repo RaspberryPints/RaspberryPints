@@ -768,6 +768,16 @@ CREATE TABLE IF NOT EXISTS `iSpindel_Device` (
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii COLLATE=ascii_bin COMMENT='iSpindel Devices Data';
 
 CALL addColumnIfNotExist(DATABASE(), 'iSpindel_Device', 'beerBatchId', 'INT(11)' );
+set @var=if((SELECT TRUE FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'iSpindel_Device' AND
+            CONSTRAINT_NAME   = 'iSpindel_Device_ibfk_1' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE iSpindel_Device
+            drop foreign key iSpindel_Device_ibfk_1','select 1');
+
+prepare stmt from @var;
+execute stmt;
+deallocate prepare stmt;
 
 
 CREATE TABLE IF NOT EXISTS `iSpindel_Connector` (
@@ -869,9 +879,18 @@ CREATE TABLE IF NOT EXISTS `fermenters` (
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`fermenterStatusCode`) REFERENCES fermenterStatuses(`Code`) ON DELETE CASCADE,
 	FOREIGN KEY (`fermenterTypeId`) REFERENCES fermenterTypes(`id`) ON DELETE CASCADE,
-	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
-	FOREIGN KEY (`beerBatchId`) REFERENCES beerBatches(`id`) ON DELETE CASCADE
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+set @var=if((SELECT TRUE FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'fermenters' AND
+            CONSTRAINT_NAME   = 'fermenters_ibfk_4' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE fermenters
+            drop foreign key fermenters_ibfk_4','select 1');
+
+prepare stmt from @var;
+execute stmt;
+deallocate prepare stmt;
 
 CREATE TABLE IF NOT EXISTS `gasTankTypes` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,

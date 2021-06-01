@@ -1965,7 +1965,6 @@ CREATE TABLE IF NOT EXISTS `iSpindel_Device` (
 	`active` int NOT NULL DEFAULT 1,
 	`beerId` int(11) NULL,
 	`beerBatchId` int(11) NULL,
-	`beerBatchId` int(11) NULL,
 	`gravityUnit` tinytext NULL,
     `const1` double NULL,
     `const2` double NULL,
@@ -2011,8 +2010,7 @@ CREATE TABLE IF NOT EXISTS `iSpindel_Device` (
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
 	PRIMARY KEY (`iSpindelId`),
-	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
-	FOREIGN KEY (`beerBatchId`) REFERENCES beerBatches(`id`) ON DELETE CASCADE
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii COLLATE=ascii_bin COMMENT='iSpindel Devices Data';
 
 
@@ -2117,8 +2115,7 @@ CREATE TABLE IF NOT EXISTS `fermenters` (
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`fermenterStatusCode`) REFERENCES fermenterStatuses(`Code`) ON DELETE CASCADE,
 	FOREIGN KEY (`fermenterTypeId`) REFERENCES fermenterTypes(`id`) ON DELETE CASCADE,
-	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
-	FOREIGN KEY (`beerBatchId`) REFERENCES beerBatches(`id`) ON DELETE CASCADE
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS `gasTankTypes` (
