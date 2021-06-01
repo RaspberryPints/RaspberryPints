@@ -174,7 +174,7 @@ if($config[ConfigNames::ShowRPLogo] && ($index == $logoIndex || $index < 0)) {
 }
 
 if($config[ConfigNames::ShowFermOnMainPage] && ($index >= $fermenterStart && $index < $fermenterEnd)) {
-    $fementer = $fermenters[$index-$fermenterStart+1];
+    $fementer = $fermenters[array_keys($fermenters)[$index-$fermenterStart]];
     $iSpindel = (new iSpindelDeviceManager())->GetTopWithBeer($fementer->get_beerId(), $fementer->get_beerBatchId());
     ?>
     <td style="position:relative;text-align:center;color:white">
@@ -204,7 +204,7 @@ if($config[ConfigNames::ShowFermOnMainPage] && ($index >= $fermenterStart && $in
 
 <?php
 if($config[ConfigNames::ShowGTOnMainPage] && ($index >= $gasTankStart && $index < $gasTankEnd)) {
-    $gasTank = $gasTanks[$index-$gasTankStart+1];
+    $gasTank = $gasTanks[array_keys($gasTanks)[$index-$gasTankStart]];
     $gtImgColor = "0,255,0";
     $percentRemaining = 0.0;
     $currentWeight = convert_weight($gasTank->get_currentWeight(), $gasTank->get_currentWeightUnit(), UnitsOfMeasure::WeightGrams);
