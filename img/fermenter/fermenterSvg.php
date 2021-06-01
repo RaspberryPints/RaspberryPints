@@ -12,7 +12,7 @@
 //else { $foamRgb = "255,255,255"; }
 
 $fn = preg_replace('/\W+/','',$_GET['container']);
-$view="-110 0 440 260";
+$view="-120 0 460 260";
 ?>
 
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="<?php echo $view; ?>" style="enable-background:new <?php echo $view; ?>;" xml:space="preserve">
