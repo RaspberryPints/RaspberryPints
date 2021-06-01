@@ -2378,7 +2378,7 @@ select
             on((f.fermenterTypeId = ft.id)))
 	LEFT JOIN beers b ON b.id = f.beerId
 	LEFT JOIN beerBatches bb ON bb.id = f.beerBatchId
-	LEFT JOIN srmRgb s ON s.srm = b.srm;
+	LEFT JOIN srmRgb s ON (bb.srm IS NULL AND s.srm = b.srm) OR (bb.srm IS NOT NULL AND s.srm = bb.srm);
        
         
 CREATE OR REPLACE VIEW `vwPours`
