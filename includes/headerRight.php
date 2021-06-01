@@ -179,11 +179,11 @@ if($config[ConfigNames::ShowFermOnMainPage] && ($index >= $fermenterStart && $in
     ?>
     <td style="position:relative;text-align:center;color:white">
      <img height="65px" src="img/fermenter/fermenterSvg.php?container=conical&rgb=<?php echo $fementer->get_beerRgb();?>" />
-     <div style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);-webkit-text-stroke:black .1px">
+     <div style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);-webkit-text-stroke:black .1px;color:rgb(<?php echo $fementer->get_beerRgbCompliment();?>)">
      <?php
      echo $fementer->get_label();
      if( $iSpindel && $iSpindel->get_currentTemperature() && $iSpindel->get_currentGravity()){
-         echo "<br/>".$iSpindel->get_currentGravity().$iSpindel->get_currentGravityUnit()."<br/>".number_format($iSpindel->get_currentTemperature(),1);//.$iSpindel->get_currentTemperatureUnit();
+         echo "<br/>".convert_gravity($iSpindel->get_currentGravity(),$iSpindel->get_currentGravityUnit(), $config[ConfigNames::DisplayUnitGravity])."<br/>".number_format($iSpindel->get_currentTemperature(),1);//.$iSpindel->get_currentTemperatureUnit();
      }
      ?>
     	</div>
