@@ -19,7 +19,7 @@ require_once __DIR__.'/../admin/includes/managers/config_manager.php';
 		$tapOrBottle = $containerType;
 		$editingTable = $editing;
 		$config = getAllConfigs();
-		if( $editing ) $config[ConfigNames::ShowVerticleTapList] = "1";
+		//if( $editing ) $config[ConfigNames::ShowVerticleTapList] = "1";
 		if($config[ConfigNames::ShowVerticleTapList]){
 		  include "beerListTableVerticle.php";
 		} else {
