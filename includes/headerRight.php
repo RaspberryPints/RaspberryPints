@@ -51,7 +51,7 @@ if( $config[ConfigNames::ShowGTOnMainPage]){
     $maxIndex += count($gasTanks);
     $gasTankEnd = $gasTankStart + count($gasTanks);
 }
-if(isset($_SESSION['HomePageIndex']))
+if(isset($_SESSION['HomePageIndex']) && $maxIndex > 0)
 {
     $_SESSION['HomePageIndex'] = (($_SESSION['HomePageIndex']+1)%$maxIndex);
     $index =  $_SESSION['HomePageIndex'];
