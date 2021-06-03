@@ -68,12 +68,13 @@ function beerRATING($config, $untID, $rating=NULL, $displayOnly=TRUE ) {
     	$cachefile = __DIR__."/cache/rating/".$untID."";
     	
     	$filetimemod = 0;
-    	if(file_exists($cachefile)) {
+    	if(file_exists($cachefile) && filesize($cachefile) > 0) {
     	    $filetimemod = filemtime($cachefile)+86400;
     	}
     	//If display then only use the cache file otherwise we are saving the beer and want to update the cache
     	if ($displayOnly && $filetimemod > 0) {
     		include $cachefile;
+    		return;
     	} elseif($filetimemod == 0 || time()<$filetimemod){
     	    $img = "";
     		ob_start();
