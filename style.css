@@ -392,7 +392,7 @@ img {
 	left: 0;
 	height: 100%;
 	width: 100%;
-	background: url(img/bottle/bottleSvg.php?container=bottle&empty) no-repeat bottom left;	
+	background: url(img/bottle/bottleSvg.php?container=bottle&empty&rgb=0,0,0) no-repeat bottom left;	
 }
 .bottle-indicator .bottle-full{
 	position: absolute;
