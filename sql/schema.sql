@@ -749,7 +749,7 @@ CREATE TABLE IF NOT EXISTS `pours` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`tapId` int(11) NOT NULL,
 	`beerId` int(11) NOT NULL,
-	`beerBatchId` int(11) NOT NULL,
+	`beerBatchId` int(11) NULL,
 	`pinId` int(11) NOT NULL,
 	`amountPoured` decimal(9,7) NOT NULL,
 	`amountPouredUnit` tinytext NULL,

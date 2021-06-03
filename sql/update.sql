@@ -348,6 +348,7 @@ ALTER TABLE kegs CHANGE COLUMN `startAmount` `startAmount` decimal(10,5) NULL ;
 ALTER TABLE kegs CHANGE COLUMN `currentAmount` `currentAmount` decimal(10,5) NULL ;
 ALTER TABLE kegs CHANGE COLUMN `fermentationPSI` `fermentationPSI` decimal(14,2) NULL ;
 ALTER TABLE pours CHANGE COLUMN `amountPoured` `amountPoured` decimal(9,7) NULL ;
+ALTER TABLE pours CHANGE COLUMN `beerBatchId` `beerBatchId` int(11) NULL ;
 
 
 
