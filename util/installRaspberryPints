@@ -1090,6 +1090,7 @@ doarchive() {
 	    shopt -s extglob
 	    eval cp -R "$WWWPATH/$archname/*" "$WWWPATH"
 	    rm -fr "${WWWPATH:?}/$archname"
+        apt-get install "php-mbstring" -y -q=2 < /dev/tty ||die
 	fi
 }
 
