@@ -54,7 +54,7 @@ FLOW_METERS_BUSTER_REPO=https://github.com/wyolum/alamode/raw/master/alamode-set
 # RPints Archive from Tobor
 # From: https://www.homebrewtalk.com/forum/threads/version-2-release-raspberrypints-digital-taplist-solution.487694/page-116#post-8609646
 TOBOR_SOURCE="https://www.homebrewtalk.com/forum/attachments/raspberrypints-2-1-0-000-zip.640232/"
-TOBOR_ARCHIVE="RaspberryPints-2.1.0.000.zip"
+TOBOR_ARCHIVE="RaspberryPints-2.1.0.002.zip"
 REPO_CHOICE=1
 WEBSERVER_APACHE=apache2
 WEBSERVER_NGINX=nginx
