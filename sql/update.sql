@@ -1394,4 +1394,10 @@ ALTER TABLE beerStyles CHANGE COLUMN `ogMax` `ogMax` DECIMAL(7,3) NULL DEFAULT N
 ALTER TABLE beerStyles CHANGE COLUMN `fgMin` `fgMin` DECIMAL(7,3) NULL DEFAULT NULL ;
 ALTER TABLE beerStyles CHANGE COLUMN `fgMax` `fgMax` DECIMAL(7,3) NULL DEFAULT NULL ;
 
+#remove the show column parameters as those are no longer used
+UPDATE config c1 left join config c2 on trim(c2.configName) = concat('show',substring(c1.configName,1,length(c1.configName)-3)) OR (c1.configName = 'BeerInfoColNum' AND c2.configName = 'showBeerName')
+ SET c1.configValue=c1.configValue*(CASE WHEN c2.configValue = '0' THEN -1 ELSE 1 END)
+WHERE c1.configName like '%ColNum' and c2.configName IS NOT NULL and c2.showOnPanel = '1';
+UPDATE config SET showOnPanel='0', configValue='0' where configName like 'show%Col' or configName = 'showBeerName';
+
 UPDATE `config` SET `configValue` = '3.1.0.0' WHERE `configName` = 'version';

@@ -3,16 +3,16 @@
 $noHeadEnd = True;
 require_once __DIR__.'/header.php';
 require_once __DIR__.'/../includes/common.php';
+require_once __DIR__.'/includes/models/pour.php';
 
 
 $config = getAllConfigs();
-//Force to verticle until horizontal is working
-$config[ConfigNames::ShowVerticleTapList] = "0";
 ?>
 <link rel="stylesheet" type="text/css" href="../style.css">
 <style>
+
 html, body {
-	background-image: url(img/background.jpg);
+	background-image: url(../img/background.jpg);
 	background-color: #000000;
 	background-size: cover;
 	background-repeat:no-repeat;
@@ -20,12 +20,12 @@ html, body {
 	color: #FFFFFF;
 	font: 1em Georgia, arial, verdana, sans-serif;
 	margin:0px;
-	height:100%;
+	height:unset;
 }
 ul, li {list-style: none; padding: 0; margin: 0;}
 tr { border:thick; border-color: #FF0000; }
 
-<!--th {background: transparent; text-shadow: 1px 1px 1px #fff; font-size: 14px;}-->
+th {background: transparent; text-shadow: 1px 1px 1px #000; font-size: 14px;}
 <?php if($config[ConfigNames::ShowVerticleTapList] == "0"){?>
 .draggable {
         cursor: move;
@@ -43,6 +43,13 @@ tr { border:thick; border-color: #FF0000; }
         border: 1px solid #ccc;
         z-index: 999;
     }
+    .disabled {
+        opacity: 50%;
+        text-decoration: line-through;
+    }
+    .disabled div{
+        opacity: 50%;
+    }
 <?php } ?>
 </style>
 </head>
@@ -54,10 +61,19 @@ if (isset ( $_POST ['save'] )) {
     /** @var mixed $value **/
     foreach( $_POST as $key => $value )
     {
+        //if( substr($key, 0,4) == 'show' || substr($key, $key->length-3,3) != 'Col')continue;
         //if the showColumn is set then multiple the current value by the show value
         //this will result in a positive or negative value which will determine if the column is shown on the screen
         if( isset($_POST["show".$key]) ){
             $_POST[$key] = $_POST["show".$key] * $_POST[$key];
+        }
+    }
+    foreach( $_POST['configs'] as $value )
+    {
+        //if the showColumn is set then multiple the current value by the show value
+        //this will result in a positive or negative value which will determine if the column is shown on the screen
+        if( !isset($_POST[$value]) ){
+            $_POST[$value] = 0;
         }
     }
     setConfigurationsFromArray($_POST, $config);
@@ -68,7 +84,7 @@ if (isset ( $_POST ['save'] )) {
     }
 } 
 ?>
-<body>
+<body id="customBody">
 	<!-- Start Header  -->
 <?php
 include 'top_menu.php';
@@ -91,16 +107,121 @@ include 'top_menu.php';
 		<div class="headings alt">
 			<h2>Customize Tap Displays</h2>
 		</div>
-		<div class="contentbox" style="background: none">
+		<div class="contentbox" style="background: none;overflow: hidden">
 			<?php $htmlHelper->ShowMessage(); ?>
 			<?php if(isset($_POST['edit'])) {?>
 			<!-- <a style="color:#FFF" onClick="toggleSettings(this, 'settingsDiv')" class="collapsed heading">New Shield</a> -->
     		<?php }?>    		
-			<br>
+<div>
+Use this page to customize the main tap display. 
+<?php if($config[ConfigNames::ShowVerticleTapList] == "0"){?>
+Drag and drop the column headers to change the positioning of the columns.
+<?php }else{?>   		
+Drag and drop the rows to change the positioning of them. 
+<?php }?>
+Visible checkboxes can be used to show/hide the detail above them. Other checkboxes exists to toggle between options. Images are automatically applied but settings must be saved
+<h2><font color="red">When done hit Save!</font></h2>
+</div>
+<br/>
         
+			<form method="POST" id="background">
+			<input type="hidden" name="target" value="../../img/background.jpg"/>
+			BackGround<input name="uploaded" id="uploadBack"  type="file" accept="image/gif, image/jpg, image/png"/>
+			</form>
 			<form method="POST" id="customizeTapDisplay">
 			<div>
             	<input name="save" type="submit" class="btn" value="Save" />
+            </div>
+			<div class="bodywrapper" id="mainTable">
+				<div class="header clearfix">
+    				<div class="HeaderLeft">
+
+    				<input type="hidden" name="target" value="../../img/logo.png"/>				
+    				<img id="tapListLogo" src="../img/logo.png<?php echo "?" . time(); ?>" height="100" alt="Brewery Logo" style="border-style: solid; border-width: 2px; border-color: #d6264f;" />
+    				<br/><input name="uploaded" id="uploadLogo" type="file" accept="image/gif, image/jpg, image/png" /> 
+					<br/><progress style="display: none"></progress>
+				</div>
+                <div  class="HeaderCenter" style="font: 1em Georgia, arial, verdana, sans-serif;width:25%">
+    				<input type="text" id="headerCenter" class="largebox" value="<?php echo $config[ConfigNames::HeaderText]; ?>" style="font: 3em Georgia, arial, verdana, sans-serif;background-repeat: unset;width:95%;text-align:center;<?php echo ($config[ConfigNames::ShowUntappdBreweryFeed]?"display:none;":""); ?>" name="<?php echo ConfigNames::HeaderText; ?>"> 
+    				<?php echo '<input type="hidden" name="configs[]" value="'.ConfigNames::HeaderText.'"/>'; ?>
+    				<?php if( $config[ConfigNames::ClientID] && $config[ConfigNames::ClientSecret] ){?>
+						<table id="untappdTable" style="align-content:center;width:100%;<?php echo (!$config[ConfigNames::ShowUntappdBreweryFeed]?"display:none;":""); ?>">
+                			<tr><td style="font: 1em Georgia, arial, verdana, sans-serif;width:100%">
+                    			<div class='beerfeed' style="font: 1em Georgia, arial, verdana, sans-serif;width:100%">
+                    			<div class=circular style="align-content:center; width: 49px;height: 49px;background-image: url(https://untappd.akamaized.net/site/assets/images/default_avatar_v2.jpg) ; background-size: cover;border: 2px #FFCC00 solid; border-radius: 100px; margin: 1px;float: left"></div>
+                    			<div class=circular style="width: 49px;height: 49px;background-image: url(https://untappd.akamaized.net/site/assets/images/temp/badge-beer-default.png) ;background-size: cover; display: block; border: 2px #FFCC00 solid; border-radius: 100px; margin: 1px; float: right"></div>
+                    			First Last is drinking a<br />
+                    			Beer Name<br />
+                    			Brewery
+                    			</div>
+                			</td></tr>
+                		</table>
+        				<div>
+        					<input type="checkbox" name="<?php echo ConfigNames::ShowUntappdBreweryFeed; ?>" value="1" <?php echo ($config[ConfigNames::ShowUntappdBreweryFeed]?" checked ":"");?> onchange="if($(this)[0].checked){$('#untappdTable').show();$('#headerCenter').hide();}else{$('#untappdTable').hide();$('#headerCenter').show();};">Show Untappd
+        				</div>
+        				<?php echo '<input type="hidden" name="configs[]" value="'.ConfigNames::ShowUntappdBreweryFeed.'"/>'; ?>
+    				<?php }?>
+                </div>
+                
+          		<div class="HeaderRight" id="HeaderRight" style="vertical-align:top">
+          		
+        <table style="border: thin;">
+        	<tr>
+				<td style="width:8%;border-left:none">
+                    <div id="temp" <?php if(!$config[ConfigNames::ShowTempOnMainPage])echo 'class="disabled"'; ?>>
+                    <div class="temp-container">
+                    	<div class="temp-indicator">
+                    		<div class="temp-full" style="height:75%"></div>
+                    	</div>
+                    </div>
+                    <?php DisplayEditCheckbox(true, $config, ConfigNames::ShowTempOnMainPage, 'temp'); ?>
+                    </div>
+                </td>
+                <td style="width:25%">
+                    <div id="lastPour" <?php if(!$config[ConfigNames::ShowLastPouredValue])echo 'class="disabled"'; ?>>
+                        <table><tr>
+                    		<td class="poursbeername" colspan="2">
+                    			<h1 style="text-align: center">Last Pour</h1>
+                    		</td>
+                    		</tr>
+                    		<tr>
+                    		<td class="poursuser">
+                    			<h1 style="font-size: 1em; text-align: right">User</h1>
+                    		</td>
+                    		<td class="poursbeername"style="width: 25%">
+                    			<h1 style="font-size: 1em; text-align: right">Beer</h1>
+                    		</td>
+                    		<td class="poursamount">
+                    			<h1>12<?php echo $config[ConfigNames::DisplayUnitVolume]?></h1>
+                    		</td>
+                        </tr></table>
+                        <?php DisplayEditCheckbox(true, $config, ConfigNames::ShowLastPouredValue, 'lastPour'); ?>
+                    </div>
+                </td>
+                <td>
+                    <div id="rpintsLogo" <?php if(!$config[ConfigNames::ShowRPLogo])echo 'class="disabled"'; ?>>
+                    <img src="../img/RaspberryPints.png" alt="" style="width:75px">
+                   	<?php DisplayEditCheckbox(true, $config, ConfigNames::ShowRPLogo, 'rpintsLogo'); ?>
+                   	</div>
+                </td>
+                <td>
+                    <div id="fermenters" <?php if(!$config[ConfigNames::ShowFermOnMainPage])echo 'class="disabled"'; ?>>
+                    <img height="65px" src="../img/fermenter/fermenterSvg.php?container=conical&rgb=220,197,34" />
+     				<?php DisplayEditCheckbox(true, $config, ConfigNames::ShowFermOnMainPage, 'fermenters'); ?>
+                   	</div>
+                </td>
+                <td>
+                    <div id="gasTanks" <?php if(!$config[ConfigNames::ShowGTOnMainPage])echo 'class="disabled"'; ?>>
+                         <img height="75px" src="../img/gasTank/gasTankSvg.php?container=gasTank&fill=75&rgb=0,255,0" />
+                   	<?php DisplayEditCheckbox(true, $config, ConfigNames::ShowGTOnMainPage, 'gasTanks'); ?>
+                   	</div>
+                </td>
+            </tr>
+            <tr><td colspan="5">Rotation Time(secs):<input type="number" class="smallbox" style="background-repeat: unset;" value="<?php echo $config[ConfigNames::InfoTime]; ?>" name="<?php echo ConfigNames::InfoTime;?>"></td></tr>
+        </table> 
+          		</div>
+        		</div>
+                    
             </div>
             <div>
     			<?php
@@ -119,11 +240,15 @@ include 'top_menu.php';
 					echo '<h3>' . $row['displayName'] . ":"  ./* '<span id="' . $row['configName'] . 'Success" style="display:none; color: #8EA534;"> (Updated)</span>'.  */'</h3>'.
     					$options[0].'<input type="radio" ' . ($row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="1">' .
     					$options[1].'<input type="radio" ' . (!$row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="0">'.
-    					'<br><br>';
+    					'<br>';
     				}
     			?>        
             </div>
-	        
+            <div>
+            <input type="hidden" name="configs[]" value="<?php echo ConfigNames::RefreshTapList ?>"/>
+            <input type="checkbox" name="<?php echo ConfigNames::RefreshTapList ; ?>" value="1" <?php echo ($config[ConfigNames::RefreshTapList]?" checked ":"");?>>Refresh List Every 60 Seconds
+            </div>
+	        <br/>
             <div>
             <?php 
                 $taps = array();
@@ -159,8 +284,21 @@ include 'top_menu.php';
                 $numberOfTaps = 1;
                 /** @var mixed $numberOfBeers **/
                 $numberOfBeers = 1;
+                
+                $pour = new Pour();
+                $pour->set_tapNumber("1");
+                $pour->set_beerName("Beer Name");
+                $pour->set_amountPoured(4);
+                $pour->set_amountPouredUnit(UnitsOfMeasure::VolumeOunce);
+                $pour->set_userName("User Name");
+                $poursList = array($pour);
+                /** @var mixed $numberOfPours **/
+                $numberOfPours = 1;
+                
                 echo '<table><tr><td>';
                 printBeerList($taps, $numberOfTaps, ConfigNames::CONTAINER_TYPE_KEG, TRUE);
+                if($numberOfPours > 0) echo "<h1 style=\"text-align: center;\">Pours</h1>";
+                if($numberOfPours > 0) printPoursList($poursList, TRUE);
                 echo '</td></tr></table>';
             ?>
             </div>
@@ -210,7 +348,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const rectA = nodeA.getBoundingClientRect();
         const rectB = nodeB.getBoundingClientRect();
 
-        return (rectA.left + rectA.width / 2 < rectB.left + rectB.width / 2);
+        return ((rectA.left + rectA.width / 2) < (rectB.left + rectB.width / 2));
     };
 
     const cloneTable = function() {
@@ -427,8 +565,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.removeEventListener('mousemove', mouseMoveHandler);
         document.removeEventListener('mouseup', mouseUpHandler);
         
-        allInputs = $('form').find('input[type=hidden]');
-            for( i = 0; i < allInputs.length; i++ ){
+        allInputs = $('form').find('input[type=hidden][id*=Num]');
+        for( i = 0; i < allInputs.length; i++ ){
             allInputs[i].value = (i+1);
         }
     };
@@ -470,7 +608,7 @@ document.addEventListener('DOMContentLoaded', function() {
 $('tbody').sortable({
 	axis:"y",
 	stop: function( event, ui ) {
-		 allInputs = $('form').find('input[type=hidden]');
+        allInputs = $('form').find('input[type=hidden][id*=Num]');
 		 for( i = 0; i < allInputs.length; i++ ){
 		 	allInputs[i].value = (i+1);
 		 }
@@ -494,6 +632,88 @@ function toggleSettings(callingAnchor, settingsDiv) {
 		}
 		if(document.getElementById("settingsExpanded")!= null)document.getElementById("settingsExpanded").value = div.style.display;
 	}
+}
+
+$('#uploadLogo').on('change', function () {
+	  $.ajax({
+	    // Your server script to process the upload
+	    url: 'includes/upload_image.php',
+	    type: 'POST',
+
+	    // Form data
+	    data: new FormData($('form')[0]),
+
+	    // Tell jQuery not to process data or worry about content-type
+	    // You *must* include these options!
+	    cache: false,
+	    contentType: false,
+	    processData: false,
+
+	    // Custom XMLHttpRequest
+	    xhr: function () {
+	   	  $('progress').show();
+	      var myXhr = $.ajaxSettings.xhr();
+	      if (myXhr.upload) {
+	        // For handling the progress of the upload
+	        myXhr.upload.addEventListener('progress', function (e) {
+	          if (e.lengthComputable) {
+	            $('progress').attr({
+	              value: e.loaded,
+	              max: e.total,
+	            });
+	          }
+	        }, false);
+	        myXhr.upload.addEventListener('load', function (e) {
+		        	$('#tapListLogo').attr('src',"../img/logo.png?"+new Date().getTime());
+		        }, false);
+
+	      }
+	      return myXhr;
+	    }
+	  });
+	});
+
+$('#uploadBack').on('change', function () {
+	  $.ajax({
+	    // Your server script to process the upload
+	    url: 'includes/upload_image.php',
+	    type: 'POST',
+
+	    // Form data
+	    data: new FormData($('form')[0]),
+
+	    // Tell jQuery not to process data or worry about content-type
+	    // You *must* include these options!
+	    cache: false,
+	    contentType: false,
+	    processData: false,
+
+	    // Custom XMLHttpRequest
+	    xhr: function () {
+	   	  
+	      var myXhr = $.ajaxSettings.xhr();
+	      if (myXhr.upload) {
+	        myXhr.upload.addEventListener('load', function (e) {
+		        	$('#customBody').css('background-image',"url('../img/background.jpg?"+new Date().getTime()+"')");
+		        }, false);
+
+	      }
+	      return myXhr;
+	    }
+	  });
+	});
+function updateKegLeftText(textBox){
+	var value = parseInt($(textBox)[0].value);
+	if( value > 0 )
+	{
+		$("#volLeft").hide();
+		$("#pintsLeft").show();
+		$("#pintsLeft")[0].innerHTML = (<?php echo convert_volume($beeritem['remainAmount'], $beeritem['remainAmountUnit'], $config[ConfigNames::DisplayUnitVolume], FALSE, TRUE)?>/value).toFixed(2)+(" Pints Left"); 
+	}else{
+		$("#volLeft").show();
+		$("#pintsLeft").hide();
+	}
+	
 }
 </script>
 	<!-- End On Tap Section -->

@@ -14,24 +14,22 @@ $maxTapCol = isset($config[ConfigNames::HozTapListCol])?$config[ConfigNames::Hoz
 if($editting) $maxTapCol = 1;
 ?>
 
-<table>
+<table id="beerList">
 	<?php if($editting || $config[ConfigNames::ShowBeerTableHead]){?>
 	<?php echo !$editting?'<thead>':'<tbody>' ?>
 		<tr>
 		<?php /** @var mixed $numberOfBeers */ for($tapCol = 0; $tapCol< $maxTapCol && $numberOfBeers > $tapCol; $tapCol++){ ?>
 			<?php $beerColSpan = 1; ?>
 			<?php for($col = 1; $col <= $MAX_COLUMNS; $col++){ ?>
-    			<?php if(($editting || $config[ConfigNames::ShowTapNumCol]) &&
-				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::TapNumColNum])){ ?>
+    			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::TapNumColNum])){ ?>
     				<th class="tap-num">
-    					<!--TAP<br>#-->
+    					<?php if($editting)echo 'TAP<br>'; ?>
 						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::TapNumColNum)?>
     					<input type="hidden" name="<?php echo ConfigNames::TapNumColNum;?>" id="<?php echo ConfigNames::TapNumColNum;?>" value="<?php echo abs($config[ConfigNames::TapNumColNum]);?>"/>
 					</th>
     			<?php } ?>
     			
-    			<?php if(($editting || $config[ConfigNames::ShowSrmCol]) &&
-				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::SrmColNum])){ ?>
+    			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::SrmColNum])){ ?>
     				<th class="srm">
     					COLOR
 						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::SrmColNum)?>
@@ -39,8 +37,7 @@ if($editting) $maxTapCol = 1;
 					</th>
     			<?php } ?>
     			
-    			<?php if(($editting || $config[ConfigNames::ShowIbuCol]) &&
-				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::IbuColNum])){ ?>
+    			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::IbuColNum])){ ?>
     				<th class="ibu">
     					<?php if($config[ConfigNames::ShowBuGuValue]){ ?>
     						BALANCE<hr>
@@ -52,25 +49,20 @@ if($editting) $maxTapCol = 1;
     			<?php } ?>
     		
     			<?php if( beerListShouldDisplayRow($editting, $col, $config[ConfigNames::BeerInfoColNum])){?>
-        			<?php if($config[ConfigNames::ShowBeerName]){ ?>
-        				<?php 
-                            if($config[ConfigNames::ShowBreweryImages]){ $beerColSpan++; }
-                            if($config[ConfigNames::ShowBeerImages]){ $beerColSpan++; }
-                        ?> 
-        				<th <?php if($beerColSpan > 1){ echo 'colspan="'.$beerColSpan.'"';}?> class="beername"  <?php if($maxTapCol!=1) echo 'style="width:'.(100/$maxTapCol).'%";'?>>
-        					<?php if($config[ConfigNames::ShowBeerName]){ ?>
-        						BEER NAME 
-        						<?php if($config[ConfigNames::ShowBeerStyle]){ ?>&nbsp; &nbsp; STYLE<hr><?php } ?>
-        						<?php if($config[ConfigNames::ShowBeerNotes]){ ?>&nbsp; &nbsp; TASTING NOTES<?php } ?>
-        						<?php if($config[ConfigNames::ShowBeerRating]){?>&nbsp; &nbsp; RATING<hr><?php } ?>
-        					<?php } ?>
-							<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::BeerInfoColNum)?>
-    					<input type="hidden" name="<?php echo ConfigNames::BeerInfoColNum;?>" id="<?php echo ConfigNames::BeerInfoColNum;?>" value="<?php echo abs($config[ConfigNames::BeerInfoColNum]);?>"/>
-        				</th>
-        			<?php } ?>
+    				<?php 
+                        if($editting || $config[ConfigNames::ShowBreweryImages]){ $beerColSpan++; }
+                        if($editting || $config[ConfigNames::ShowBeerImages]){ $beerColSpan++; }
+                    ?> 
+    				<th <?php if($beerColSpan > 1){ echo 'colspan="'.$beerColSpan.'"';}?> class="beername"  <?php if($maxTapCol!=1) echo 'style="width:'.(100/$maxTapCol).'%";'?>>
+    					<?php if($editting || $config[ConfigNames::ShowBeerName]){ ?>BEER NAME <?php } ?>
+						<?php if($editting || $config[ConfigNames::ShowBeerStyle]){ ?>&nbsp; &nbsp; STYLE<hr><?php } ?>
+						<?php if($editting || $config[ConfigNames::ShowBeerNotes]){ ?>&nbsp; &nbsp; TASTING NOTES<?php } ?>
+						<?php if($editting || $config[ConfigNames::ShowBeerRating]){?>&nbsp; &nbsp; RATING<hr><?php } ?>
+						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::BeerInfoColNum)?>
+					<input type="hidden" name="<?php echo ConfigNames::BeerInfoColNum;?>" id="<?php echo ConfigNames::BeerInfoColNum;?>" value="<?php echo abs($config[ConfigNames::BeerInfoColNum]);?>"/>
+    				</th>
     			<?php }?>
-    			<?php if(($editting || $config[ConfigNames::ShowAbvCol]) &&
-				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AbvColNum])){ ?>
+    			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AbvColNum])){ ?>
     				<th class="abv">
     					ABV
     					<?php if($config[ConfigNames::ShowCalories]){ ?>
@@ -84,8 +76,7 @@ if($editting) $maxTapCol = 1;
     				</th>
     			<?php } ?>
     			
-    			<?php if(($editting || $config[ConfigNames::ShowKegCol]) &&
-				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::KegColNum])){ ?>
+    			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::KegColNum])){ ?>
     				<th class="keg">
     					DRINKS<hr>REMAINING
 						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::KegColNum)?>
@@ -93,8 +84,7 @@ if($editting) $maxTapCol = 1;
     				</th>
     			<?php } ?>
     			
-    			<?php if(($editting || $config[ConfigNames::ShowAccoladeCol]) &&
-				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AccoladeColNum])){ ?>
+    			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AccoladeColNum])){ ?>
     				<th class="accolades">
     					Accolades
 						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::AccoladeColNum)?>
@@ -123,24 +113,26 @@ if($editting) $maxTapCol = 1;
         			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG  && !isset($beer) ) continue;
         		?>
 				<?php for($col = 1; $col <= $MAX_COLUMNS; $col++){ ?>
-				<?php if(($editting || $config[ConfigNames::ShowTapNumCol]) &&
-				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::TapNumColNum])){ ?>
+				<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::TapNumColNum])){ ?>
 					<td class="tap-num">
-					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ 
-					    if($config[ConfigNames::AllowSamplePour]){
-					?>
-						<a <?php if(!$editting){?>href ="./includes/pours.php/?tapId=<?php echo $beer['id']; ?>"<?php }?> style="height:100%">
-					<?php 
-				        }
+					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
+    					<?php if(!$editting && $config[ConfigNames::AllowSamplePour]){ ?>
+    						<a href ="./includes/pours.php/?tapId=<?php echo $beer['id']; ?>" style="height:100%">
+    					<?php }?>
+						<?php 
 							$style = "";							
 							if(isset($beer) && isset($beer['tapRgba']) && $beer['tapRgba']) $style = "background-color: ".$htmlHelper->CreateRGB($beer['tapRgba']);
 							$imgs = glob ( 'img/tap/tap'.$beer['id'].'.*' );
 							if(count($imgs) > 0) $style .= ($style != ""?";":"").'background:url('.$imgs[0].') no-repeat center; background-size:cover; -webkit-border-radius:0px; -mox-border-radius:0px; height:100px; width:50px';
 							?>
-							<span class="tapcircle" style="<?php echo $style; ?>">
+							<span id="tapId" class="tapcircle" style="<?php echo $style; ?>">
 		                    	<?php if(isset($beer['tapNumber']) && $beer['tapNumber'] != 0){echo $beer['tapNumber'];}elseif(count($imgs) == 0){echo $i;}else{echo '&nbsp;';} ?>
                             </span>
-						<?php if($config[ConfigNames::AllowSamplePour]){ ?>
+	                    	<?php if($editting){
+	                    	    echo "<input type=\"hidden\" name=\"configs[]\" value=\"".ConfigNames::AllowSamplePour."\" />";
+	                    	    echo "<span class=\"tooltip\"><input type=\"checkbox\" name=\"".ConfigNames::AllowSamplePour."\" value=\"1\"".($config[ConfigNames::AllowSamplePour]?" checked ":"").'>Sample Allowed<span class="tooltiptext" >Allow pressing the tap id to pour a sample</span></span>';
+        					}?>
+						<?php if(!$editting && $config[ConfigNames::AllowSamplePour]){ ?>
 						</a>
 						<?php }?>
 					<?php } else { ?>
@@ -153,31 +145,36 @@ if($editting) $maxTapCol = 1;
 					</td>
 				<?php } ?>
 			
-				<?php if(($editting || $config[ConfigNames::ShowSrmCol]) &&
-				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::SrmColNum])){ ?>
+				<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::SrmColNum])){ ?>
 					<td class="srm">
-					<?php if(isset($beer) && $beer['beername'] && $beer['srm'] >= 0){ ?>						
+					<?php if(isset($beer) && $beer['beername'] && $beer['srm'] >= 0){ ?>	
+						<div>					
 						<div class="srm-container">
-							<?php if($config[ConfigNames::ShowSrmImg]){?>
-								<?php echo '<img src="'.($editting?'../':'').'img/srm/'.($beer['srm']>40?40:floor($beer['srm'])).'-srm.png" />'?>
-							<?php }else{?>
-						   		<img width="100%" src="img/srm/containerSvg.php?container=<?php echo $beer['containerType']; ?>&rgb=<?php echo $beer['srmRgb']; ?>" />
+							<?php if($editting || $config[ConfigNames::ShowSrmImg]){?>
+								<?php echo '<img id="srmImg"'.($editting &&! $config[ConfigNames::ShowSrmImg]?'style="display:none"':'').' src="'.($editting?'../':'').'img/srm/'.($beer['srm']>40?40:floor($beer['srm'])).'-srm.png" />'?>
+							<?php }if($editting || !$config[ConfigNames::ShowSrmImg]){?>
+						   		<img width="100%" id="srmSvg" <?php echo $editting && $config[ConfigNames::ShowSrmImg]?'style="display:none"':'' ?> src="<?php echo ($editting?'../':'') ?>img/srm/containerSvg.php?container=<?php echo $beer['containerType']; ?>&rgb=<?php echo $beer['srmRgb']; ?>" />
 							<?php }?>
 						</div>
-						
-    					<?php if($config[ConfigNames::ShowSrmValue]){?>
-    						<h2><?php echo $beer['srm']; ?> SRM</h2>
+						<?php if($editting){
+    						echo "<input type=\"hidden\" name=\"configs[]\" value=\"".ConfigNames::ShowSrmImg."\" />";
+    						echo "<input type=\"checkbox\" name=\"".ConfigNames::ShowSrmImg."\" value=\"1\"".($config[ConfigNames::ShowSrmImg]?" checked ":"").' onchange="if(!$(this)[0].checked){$(\'#srmSvg\').show();$(\'#srmImg\').hide();}else{$(\'#srmSvg\').hide();$(\'#srmImg\').show();};">Image';
+						}
+						?>
+						</div>
+    					<?php if($editting || $config[ConfigNames::ShowSrmValue]){?>
+    						<h2 id="srm" <?php if($editting && !$config[ConfigNames::ShowSrmValue])echo 'class="disabled"';?>><?php echo $beer['srm']; ?> SRM
+						<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowSrmValue, 'srm'); ?></h2>
 						<?php }?>
 					<?php }elseif(isset($beer) && $beer['beername']){ echo "<h2>N/A</h2>"; } ?>
 					</td>
 				<?php } ?>
 			
-				<?php if(($editting || $config[ConfigNames::ShowIbuCol]) &&
-				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::IbuColNum])){ ?>
+				<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::IbuColNum])){ ?>
 					<td class="ibu">
 					<?php if(isset($beer) && $beer['beername']){ ?>
 						<?php if(($editting || $config[ConfigNames::ShowBuGuValue]) && $beer['ibu'] != '' && $beer['og']){ ?>
-						<h3>
+						<h3 id="bugu" <?php if($editting && !$config[ConfigNames::ShowBuGuValue])echo 'class="disabled"';?>>
 							<?php 
     							$sgOg = convert_gravity($beer['og'], $beer['ogUnit'], UnitsOfMeasure::GravitySG);
     							if( $sgOg > 1 ){
@@ -187,42 +184,49 @@ if($editting) $maxTapCol = 1;
 								}
 							?> 
 							BU:GU
+						<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowBuGuValue, "bugu"); ?>
 						</h3>
 						<?php } ?>
 						
 						<?php if($beer['ibu'] != ''){ ?>
 						
-							<?php if($config[ConfigNames::ShowIbuImg]){ ?>
+							<?php if($editting || $config[ConfigNames::ShowIbuImg]){ ?>
+    						<div id="ibuImg" <?php if($editting && !$config[ConfigNames::ShowIbuImg])echo 'class="disabled"';?>>
     						<div class="ibu-container">
     							<div class="ibu-indicator"><div class="ibu-full" style="height:<?php echo $beer['ibu'] > 100 ? 100 : $beer['ibu']; ?>%"></div></div>
     						</div>
+						    <?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowIbuImg, 'ibuImg'); ?>
+						    </div>
     						<?php } ?>
-							<?php if($config[ConfigNames::ShowIbuValue]){ ?>
-    						<h2><?php echo $beer['ibu']; ?> IBU</h2>
+							<?php if($editting || $config[ConfigNames::ShowIbuValue]){ ?>
+    						<h2 id="ibu" <?php if($editting && !$config[ConfigNames::ShowIbuValue])echo 'class="disabled"';?>><?php echo $beer['ibu']; ?> IBU
+							<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowIbuValue, 'ibu'); ?></h2>
     						<?php }?>
 						<?php }else{ echo "<h2>N/A</h2>"; } ?>
 					<?php } ?>
 					</td>
 				<?php } ?>
 				<?php if( beerListShouldDisplayRow($editting, $col, $config[ConfigNames::BeerInfoColNum]) ){?>
-				<?php if($config[ConfigNames::ShowBreweryImages]){ ?>
-					<td class="breweryimg" >
+				<?php if($editting || $config[ConfigNames::ShowBreweryImages]){ ?>
+					<td id="breweryImg" class="breweryimg<?php if($editting && !$config[ConfigNames::ShowBreweryImages])echo ' disabled';?>" >
 					<?php if(isset($beer) && $beer['beername']){ ?>
 						<img style="border:0;width:100px" src="<?php echo $beer['breweryImage']; ?>" />
+						<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowBreweryImages, 'breweryImg'); ?>
 					<?php } ?>
 					</td>
 				<?php } ?>
 				
-				<?php if($config[ConfigNames::ShowBeerImages]){ ?>
+				<?php if($editting || $config[ConfigNames::ShowBeerImages]){ ?>
 				<?php /* If not the first column in the beer section 
 				       ($beerColSpan = 1 if just beer 
 				        $beerColSpan = 2 if breweryimg or beerimg and beer, 
 				        $beerColSpan = 3 if all 3
 				 */ ?>
-					<td style="<?php if($beerColSpan > 2){ echo 'border-left: none;'; } ?>" class="beerimg">
+					<td id="beerImg" style="<?php if($beerColSpan > 2){ echo 'border-left: none;'; } ?>" class="beerimg<?php if($editting && !$config[ConfigNames::ShowBeerImages])echo ' disabled';?>">
 					<?php if(isset($beer) && $beer['beername']){ ?>
 						<?php 
 						beerImg($config, $beer['untID'], $beer['beerId']);
+						DisplayEditCheckbox($editting, $config, ConfigNames::ShowBeerImages, 'beerImg');
 						?>
 					<?php } ?>
 					</td>
@@ -233,21 +237,27 @@ if($editting) $maxTapCol = 1;
 							     <?php if($beerColSpan == 1){ echo 'style="width : '.(100/$maxTapCol).'%"'; } ?>>	
 					<?php if(isset($beer) && $beer['beername']){ ?>		
                     					
-						<?php if($config[ConfigNames::ShowBeerName]){ ?>
-                            <h1><?php echo $beer['beername']; ?></h1>
+						<?php if($editting || $config[ConfigNames::ShowBeerName]){ ?>
+                            <h1 id="beerName" <?php if($editting && !$config[ConfigNames::ShowBeerName])echo 'class="disabled"';?>><?php echo $beer['beername']; ?>
+							<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowBeerName, 'beerName'); ?></h1>
                         <?php } ?>
                         
                         <?php if(($editting || $config[ConfigNames::ShowBeerStyle]) && $beer['style']){ ?>
-                            <h2 class="subhead"><?php echo str_replace("_","",$beer['style']); ?></h2>
+                            <h2 id="beerStyle" class="subhead<?php if($editting && !$config[ConfigNames::ShowBeerStyle])echo ' disabled';?>"><?php echo str_replace("_","",$beer['style']); ?>
+							<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowBeerStyle, 'beerStyle'); ?></h2>
                         <?php } ?>
                         
-                        <?php if($config[ConfigNames::ShowBeerNotes]){ ?>
-                            <p><?php echo $beer['notes']; ?></p>
+                        <?php if($editting || $config[ConfigNames::ShowBeerNotes]){ ?>
+                            <p id="beerNotes" <?php if($editting && !$config[ConfigNames::ShowBeerNotes])echo 'class="disabled"';?>><?php echo $beer['notes']; ?>
+							<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowBeerNotes, 'beerNotes'); ?></p>
                         <?php } ?>
                         
                         <?php 
-                            if($config[ConfigNames::ShowBeerRating]){ 
+                            if($editting || $config[ConfigNames::ShowBeerRating]){ 
+                                echo  '<div id="beerRating" '.(($editting && !$config[ConfigNames::ShowBeerRating])?'class="disabled"':'').'>';
                                 beerRATING($config, $beer['untID'], $beer['rating']);
+                                DisplayEditCheckbox($editting, $config, ConfigNames::ShowBeerRating, 'beerRating');
+                                echo '</div>';
                             } 
                         ?>
 					
@@ -258,20 +268,19 @@ if($editting) $maxTapCol = 1;
         			$sgOg = $beer['og']?convert_gravity($beer['og'], $beer['ogUnit'], UnitsOfMeasure::GravitySG):NULL;
         			$sgFg = $beer['fg']?convert_gravity($beer['fg'], $beer['fgUnit'], UnitsOfMeasure::GravitySG):NULL;
     			?>
-				<?php if(($config[ConfigNames::ShowAbvCol] &&
-				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AbvColNum]))){ ?>
+				<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AbvColNum])){ ?>
 					<td class="abv">
         			<?php if(isset($beer) && $beer['beername']){?>
     					<?php 
     					$abv = $beer['abv'];
     					if(!isset($abv) && $sgOg && $sgFg) $abv = ($sgOg - $sgFg) * 131; 
     					?>	
-    					<?php if(($config[ConfigNames::ShowAbvImg])) { ?>
-    						<div class="abv-container">
+    					<?php if(($editting || $config[ConfigNames::ShowAbvImg])) { ?>
+    						<div id="abvImg" class="abv-container<?php if($editting && !$config[ConfigNames::ShowAbvImg])echo ' disabled';?>">
 							<?php
 							if(NULL !== $abv && $abv>=0){
 							?>
-								<div class="abv-indicator" style="  background: url(img/abv/abvSvg.php?container=<?php echo $beer['containerType']; ?>&empty) no-repeat bottom left;"><div class="abv-full" style="height:100%;  background: url(img/abv/abvSvg.php?container=<?php echo $beer['containerType']; ?>&fill=<?php echo $abv * 20; ?>&rgb=<?php echo $config[ConfigNames::ABVColorSRM]?$beer['srmRgb']:"255,165,0"?>) no-repeat bottom left;"></div></div>
+								<div class="abv-indicator" style="  background: url(<?php echo ($editting?'../':'') ?>img/abv/abvSvg.php?container=<?php echo $beer['containerType']; ?>&empty) no-repeat bottom left;"><div class="abv-full" style="height:100%;  background: url(<?php echo ($editting?'../':'') ?>img/abv/abvSvg.php?container=<?php echo $beer['containerType']; ?>&fill=<?php echo $abv * 20; ?>&rgb=<?php echo $config[ConfigNames::ABVColorSRM]?$beer['srmRgb']:"255,165,0"?>) no-repeat bottom left;"></div></div>
 							<?php
 							}else{
 							?>
@@ -280,14 +289,17 @@ if($editting) $maxTapCol = 1;
 							}
 							?>
     						</div>
+    						<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowAbvImg, 'abvImg', false); ?>
     					<?php } 
-    					if((!$config[ConfigNames::ShowAbvImg] ||
+    					if($editting || (!$config[ConfigNames::ShowAbvImg] ||
     					     $config[ConfigNames::ShowAbvTxtWImg] )){ ?>
-    						<?php if(NULL !== $abv && $abv>=0){?><h2><?php echo number_format($abv, 1, '.', ',')."%"; ?> ABV</h2><?php }?>
-    					<?php } ?>
+    						<?php if(NULL !== $abv && $abv>=0){?>
+								<h2 id="abvTxt" <?php if($editting && !$config[ConfigNames::ShowAbvTxtWImg])echo 'class="disabled"';?>><?php echo number_format($abv, 1, '.', ',')."%"; ?> ABV<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowAbvTxtWImg, 'abvTxt'); ?>
+								</h2><?php }?>
+    						<?php } ?>
     					<?php if(isset($beer)){ ?>
-    						<?php if($config[ConfigNames::ShowCalories]){ ?>
-    						<h3><?php
+    						<?php if($editting || $config[ConfigNames::ShowCalories]){ ?>
+    						<h3 id="calories" <?php if($editting && !$config[ConfigNames::ShowCalories])echo 'class="disabled"';?>><?php
     						if( $sgOg > 0 && $sgFg > 0){
     							$calfromalc = (1881.22 * ($sgFg * $sgOg - $sgFg))/(1.775 - $sgOg);
     							$calfromcarbs = 3550.0 * $sgFg * ((0.1808 * $sgOg) + (0.8192 * $sgFg) - 1.0004);
@@ -300,18 +312,19 @@ if($editting) $maxTapCol = 1;
     						    echo "N/A";
     						}
     							?>
+							<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowCalories, 'calories'); ?>
     						</h3>
     						<?php } ?>
     					<?php if(($editting || $config[ConfigNames::ShowGravity]) && $beer['og'] > 0){ ?>
-    						<h3>OG:<?php echo convert_gravity($beer['og'], $beer['ogUnit'], $config[ConfigNames::DisplayUnitGravity]); echo $config[ConfigNames::DisplayUnitGravity] != UnitsOfMeasure::GravitySG?$config[ConfigNames::DisplayUnitGravity]:''; ?></h3>
+    						<h3 id="gravity" <?php if($editting && !$config[ConfigNames::ShowGravity])echo 'class="disabled"';?>>OG:<?php echo convert_gravity($beer['og'], $beer['ogUnit'], $config[ConfigNames::DisplayUnitGravity]); echo $config[ConfigNames::DisplayUnitGravity] != UnitsOfMeasure::GravitySG?$config[ConfigNames::DisplayUnitGravity]:''; ?>
+							<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowGravity, 'gravity'); ?></h3>
     					<?php } ?>
     				<?php } ?>
 				<?php } ?>
 				</td>								
 			<?php } ?>
 				
-			<?php if(($editting || $config[ConfigNames::ShowKegCol]) &&
-				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::KegColNum])){ ?>
+			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::KegColNum])){ ?>
 				<td class="keg" >
 				<?php if(isset($beer) && $beer['beername']){ ?>
 				<?php 
@@ -326,18 +339,20 @@ if($editting) $maxTapCol = 1;
 				         $beer['startAmount'] > 0){ ?>
 					<?php if(($editting || $config[ConfigNames::ShowLastPouredValue]) &&
 					         $tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG &&
-					         isset($beer['lastPour']) && $beer['lastPour'] != ''){ ?>
-    					<h3><?php echo $beer['lastPour']?></h3>
+				             isset($beer['lastPour']) && strval($beer['lastPour']) != ''){ ?>
+    					<h3 id="lastPour" <?php if($editting && !$config[ConfigNames::ShowLastPouredValue])echo 'class="disabled"';?>><?php echo convert_volume($beer['lastPour'], $beer['lastPourUnit'], $config[ConfigNames::DisplayUnitVolume]);?> Last
+							<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowLastPouredValue, 'lastPour'); ?></h3>
     				<?php }?>
-					<?php if($config[ConfigNames::ShowPouredValue]){?>
-					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
-						<h3><?php echo number_format($beer['startAmount'] - $beer['remainAmount'], 1); echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?" Gal":" L"); ?> poured</h3>
-					<?php } else { ?>
-						<h3><?php echo $beer['remainAmount'].' x '.number_format(convert_volume($beer['volume'], $beer['volumeUnit'], $config[ConfigNames::DisplayUnitVolume]), 1); echo $config[ConfigNames::DisplayUnitVolume];?></h3> 
-					<?php } ?>
+					<?php if($editting || $config[ConfigNames::ShowPouredValue]){?>
+    					<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
+    						<h3 id="poured" <?php if($editting && !$config[ConfigNames::ShowPouredValue])echo 'class="disabled"';?>><?php echo number_format($beer['startAmount'] - $beer['remainAmount'], 1); echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?" Gal":" L"); ?> poured
+							<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowPouredValue, 'poured'); ?></h3>
+    					<?php } else { ?>
+    						<h3><?php echo $beer['remainAmount'].' x '.number_format(convert_volume($beer['volume'], $beer['volumeUnit'], $config[ConfigNames::DisplayUnitVolume]), 1); echo $config[ConfigNames::DisplayUnitVolume];?></h3> 
+    					<?php } ?>
 					<?php } ?>
 					<?php 
-    					if($config[ConfigNames::ShowKegImg]){
+    					if($editting || $config[ConfigNames::ShowKegImg]){
     					    $kegImgColor = "0,255,0";
     						$percentRemaining = 0.0;
     						if($beer['startAmount'] && $beer['startAmount'] > 0)$percentRemaining = ($beer['remainAmount'] / $beer['startAmount']) * 100;
@@ -363,10 +378,11 @@ if($editting) $maxTapCol = 1;
     								$kegOn = "keg-disabled";
     						}
 					?>
+    					<div id="kegImg" <?php if($editting && !$config[ConfigNames::ShowKegImg])echo 'class="disabled"';?>>
     					<div class="keg-container">
     						<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
-    							<div class="keg-indicator" style="background: url(img/keg/kegSvg.php?container=<?php echo $beer['kegType']?>&empty) no-repeat bottom left;"> 
-								<div class="keg-full" style="height:100%; width: 100%; background: url(img/keg/kegSvg.php?container=<?php echo $beer['kegType']?>&fill=<?php echo $percentRemaining; ?>&rgb=<?php echo $kegImgColor ?>) no-repeat bottom left;" >
+    							<div class="keg-indicator" style="background: url(<?php echo ($editting?'../':'') ?>img/keg/kegSvg.php?container=<?php echo $beer['kegType']?>&empty) no-repeat bottom left;"> 
+								<div class="keg-full" style="height:100%; width: 100%; background: url(<?php echo ($editting?'../':'') ?>img/keg/kegSvg.php?container=<?php echo $beer['kegType']?>&fill=<?php echo $percentRemaining; ?>&rgb=<?php echo $kegImgColor ?>) no-repeat bottom left;" >
     								       <div class="<?php echo $kegOn ?>"></div>
     								       <?php if($percentRemaining>=100){?><div style="height:100%;"><h1 style="height:100%;text-align: center;padding-top: 50%; color:white;  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">FULL</h1></div><?php }?>
     									   <?php if($percentRemaining<=0){?><div style="height:100%;"><h1 style="height:100%;text-align: center;padding-top: 50%; color:White;  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">MT</h1></div><?php }?>
@@ -374,35 +390,39 @@ if($editting) $maxTapCol = 1;
     							</div>
     						<?php } else { ?>
     							<div class="bottle-indicator">
-    								<div class="bottle-full" style="height:100%; background: url(img/bottle/bottleSvg.php?container=bottle&fill=<?php echo $percentRemaining; ?>&rgb=<?php echo $kegImgColor ?>) no-repeat bottom left;">
+    								<div class="bottle-full" style="height:100%; background: url(<?php echo ($editting?'../':'') ?>img/bottle/bottleSvg.php?container=bottle&fill=<?php echo $percentRemaining; ?>&rgb=<?php echo $kegImgColor ?>) no-repeat bottom left;">
     								</div>
     							</div>
     						<?php } ?>
     					</div>
+						<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowKegImg, 'kegImg',false); ?>
+    					</div>
     					<?php }?>
-						<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>							
-							<h3>
+						<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG && ($editting || $config[ConfigNames::ShowRemainValue])){ ?>							
+							<h3 id="remaining" <?php if($editting && !$config[ConfigNames::ShowRemainValue])echo 'class="disabled"';?>>
 							<?php 
-							 if( !isset($config[ConfigNames::AmountPerPint]) || $config[ConfigNames::AmountPerPint] == 0) {
-							     echo number_format($beer['remainAmount'], 1); echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?" Gal":" L");
-							 }else{
-							     $beer['remainAmount'] = convert_volume($beer['remainAmount'], $beer['remainAmountUnit'], $config[ConfigNames::DisplayUnitVolume], FALSE, TRUE);
-							     echo number_format($beer['remainAmount']/$config[ConfigNames::AmountPerPint], 1); echo " Pints";
-							 }
-							?> 
-							left</h3>
+							if( $editting || (!isset($config[ConfigNames::AmountPerPint]) || $config[ConfigNames::AmountPerPint] == 0)) {
+							    echo '<div id="volLeft" '.(!(!isset($config[ConfigNames::AmountPerPint]) || $config[ConfigNames::AmountPerPint] == 0)?'style="display:none"':'').'>'.number_format($beer['remainAmount'], 1); echo (is_unit_imperial($config[ConfigNames::DisplayUnitVolume])?" Gal":" L").' Left</div>';
+							}
+							if($editting || !( !isset($config[ConfigNames::AmountPerPint]) || $config[ConfigNames::AmountPerPint] == 0)){
+							    $beer['remainAmount'] = convert_volume($beer['remainAmount'], $beer['remainAmountUnit'], $config[ConfigNames::DisplayUnitVolume], FALSE, TRUE);
+							    echo '<div id="pintsLeft"'.((!isset($config[ConfigNames::AmountPerPint]) || $config[ConfigNames::AmountPerPint] == 0)?'style="display:none"':'').'>'.number_format($beer['remainAmount']/$config[ConfigNames::AmountPerPint], 1); echo " Pints Left</div>";
+							}
+							?>
+							<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowRemainValue, 'remaining'); ?></h3>
+							<?php if($editting){?><span class="tooltip">Amount (<?php echo $config[ConfigNames::DisplayUnitVolume]?>) Per Pint:<input type="number" min="0" class="smallbox" style="background-repeat: unset;" value="<?php echo $config[ConfigNames::AmountPerPint]; ?>" name="<?php echo ConfigNames::AmountPerPint; ?>" onchange="updateKegLeftText(this)"><span class="tooltiptext">If greater than 0 then pints remaining will be displayed</span></span><?php }?> 
 						<?php } ?>
 				<?php }elseif( isset($beer) && $beer['beername'] && 
-				               isset($beer['lastPour']) && $beer['lastPour'] != ''){ ?>
-					<?php if($config[ConfigNames::ShowPouredValue]){?>
-						<h3>Last pour:<br/><?php echo $beer['lastPour']?></h3>
+				               isset($beer['lastPour']) && strval($beer['lastPour']) != ''){ ?>
+					<?php if($editting || $config[ConfigNames::ShowLastPouredValue]){?>
+						<h3 id="lastPour" <?php if($editting && !$config[ConfigNames::ShowLastPouredValue])echo 'class="disabled"';?>>Last pour:<br/><?php echo convert_volume($beer['lastPour'], $beer['lastPourUnit'], $config[ConfigNames::DisplayUnitVolume]);?>
+							<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowLastPouredValue, 'lastPour'); ?></h3>
 					<?php } ?>
 				<?php }?>
 				</td>
 			<?php } ?>
 			
-				<?php if(($editting || $config[ConfigNames::ShowAccoladeCol]) &&
-				         beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AccoladeColNum])){ ?>
+				<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AccoladeColNum])){ ?>
 					<td class="accolades">
     				<table>
 					<?php 
@@ -418,7 +438,7 @@ if($editting) $maxTapCol = 1;
     					    $accParts = explode("~", $accolade);
     					    if(count($accParts) < 3) continue;
     					    $style = "";
-    					    $imgs = glob ( 'img/accolade/accolade'.$accParts[0].'.*' );
+    					    $imgs = glob ( ($editting?'../':'').'img/accolade/accolade'.$accParts[0].'.*' );
     					    if(count($imgs) > 0) $img = $imgs[0];
     					    ?>
     					    <td style="vertical-align: middle; border-right: none"><?php echo $accParts[2] ?></td>
@@ -432,6 +452,7 @@ if($editting) $maxTapCol = 1;
     					}
 					 ?>
     				</table>
+    				<?php if($editting){?>Max Accolades to Show:<input type="text" class="smallbox" style="background-repeat: unset;" value="<?php echo $config[ConfigNames::NumAccoladeDisplay]; ?>" name="<?php echo ConfigNames::NumAccoladeDisplay;?>"><?php }?>
 					</td>
 				<?php } ?>
 			<?php } //End for column loop ?>

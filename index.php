@@ -232,11 +232,11 @@
 					        //do nothing
 					        }
 						}
-					    if (strlen($config[ConfigNames::HeaderText]) > ($config[ConfigNames::HeaderTextTruncLen])) {
-							echo htmlentities(substr($config[ConfigNames::HeaderText],0,$config[ConfigNames::HeaderTextTruncLen]) . "...");
-						} else {
+// 					    if (strlen($config[ConfigNames::HeaderText]) > ($config[ConfigNames::HeaderTextTruncLen])) {
+// 							echo htmlentities(substr($config[ConfigNames::HeaderText],0,$config[ConfigNames::HeaderTextTruncLen]) . "...");
+// 						} else {
 							echo htmlentities($config[ConfigNames::HeaderText]);
-						}
+//						}
 						
 					?>
 				</div>
