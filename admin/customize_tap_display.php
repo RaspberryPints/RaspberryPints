@@ -298,7 +298,11 @@ Visible checkboxes can be used to show/hide the detail above them. Other checkbo
                 echo '<table><tr><td>';
                 printBeerList($taps, $numberOfTaps, ConfigNames::CONTAINER_TYPE_KEG, TRUE);
                 if($numberOfPours > 0) echo "<h1 style=\"text-align: center;\">Pours</h1>";
-                if($numberOfPours > 0) printPoursList($poursList, TRUE);
+                ?>
+                <input type="hidden" name="configs[]" value="<?php echo ConfigNames::ShowPourListOnHome ?>"/>
+                <input type="checkbox" name="<?php echo ConfigNames::ShowPourListOnHome ; ?>" value="1" <?php echo ($config[ConfigNames::ShowPourListOnHome]?" checked ":"");?>>Show Pour List
+            	<?php 
+            	if($numberOfPours > 0) printPoursList($poursList, TRUE);
                 echo '</td></tr></table>';
             ?>
             </div>
