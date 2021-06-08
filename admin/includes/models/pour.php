@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__.'/../functions.php';
+require_once __DIR__.'/../managers/pour_manager.php';
 
 class Pour  
 {  
