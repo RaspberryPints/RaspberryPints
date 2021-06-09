@@ -77,11 +77,11 @@ include 'top_menu.php';
                     if(!isset($displayedProbeTemps[$temp->get_probe()])){
                         $displayedProbeTemps[$temp->get_probe()] = array();
                     }
-                    $displayedProbeTemps[$temp->get_probe()][$temp->get_takenDate()] = array(convert_temperature($temp->get_temp(), $temp->get_tempUnit(), $config[ConfigNames::DisplayUnitTemperature]), $temp->get_statePinState());
+                    $displayedProbeTemps[$temp->get_probe()][$temp->get_takenDateFormatted()] = array(convert_temperature($temp->get_temp(), $temp->get_tempUnit(), $config[ConfigNames::DisplayUnitTemperature]), $temp->get_statePinState());
                     $pinStateFound = $pinStateFound || NULL !== $temp->get_statePinState();
 
-                    if(!isset($displayedDateTemps[$temp->get_takenDate()])){
-                        $displayedDateTemps[$temp->get_takenDate()] = array();
+                    if(!isset($displayedDateTemps[$temp->get_takenDateFormatted()])){
+                        $displayedDateTemps[$temp->get_takenDateFormatted()] = array();
                     }
                 }
                 
@@ -277,7 +277,7 @@ include 'top_menu.php';
                             </td>
                         <?php } ?>
                         <td style="vertical-align: middle;">
-                            <?php echo $temp->get_takenDate(); ?>
+                            <?php echo $temp->get_takenDateFormatted(); ?>
                         </td>
                                   
                     </tr>
