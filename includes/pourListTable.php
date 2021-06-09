@@ -3,6 +3,7 @@
 	require_once __DIR__.'/functions.php';
 	require_once __DIR__.'/../admin/includes/managers/config_manager.php';	
 	require_once __DIR__.'/../admin/includes/html_helper.php';
+	require_once __DIR__.'/common.php';
 	/** @var mixed $config **/
 	/** @var mixed $pours **/
 	if(!isset($config)) $config = getAllConfigs();
