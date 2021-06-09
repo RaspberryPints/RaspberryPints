@@ -86,6 +86,7 @@ MYSQL_USER=""
 MYSQL_PASS=""
 MYSQL_RP_USER="RaspberryPints"
 MYSQL_RP_PASS="RaspberryPints"
+MYSQL_TIME_FORMAT="Y-m-d H:i:s A"
 
 USE_FLOW_METERS=N
 USE_RFID=N
@@ -879,6 +880,48 @@ dbauser() {
 	fi
 	mysql ${MYSQL_CMD} -e "GRANT ALL PRIVILEGES ON *.* TO ${MYSQL_RP_USER}@'%';"
 
+	TIME_FORMAT_OPTION=(1 "YYYY-mm-dd hh:mm:ss AM/PM"
+			 2 "YYYY-mm-dd hh:mm:ss"
+	         3 "YYYY-dd-mm hh:mm:ss AM/PM"
+	         4 "YYYY-dd-mm hh:mm:ss"
+	         5 "mm-dd-YYYY hh:mm:ss AM/PM"
+	         6 "mm-dd-YYYY hh:mm:ss"
+	         7 "dd-mm-YYYY hh:mm:ss AM/PM"
+	         8 "dd-mm-YYYY hh:mm:ss")
+	user_choice=$(dialog --clear \
+	                --backtitle "Time Format" \
+	                --title "Time Format" \
+	                --menu "Choose how Rpints displays Time" \
+	                20 40 6 \
+	                "${TIME_FORMAT_OPTION[@]}" \
+	                2>&1 >/dev/tty);
+	clear
+	case $user_choice in
+			1)
+				;;
+			2)
+				MYSQL_TIME_FORMAT="Y-m-d H:i:s"
+				;;
+			3)
+				MYSQL_TIME_FORMAT="Y-d-m H:i:s A"
+				;;
+			4)
+				MYSQL_TIME_FORMAT="Y-d-m H:i:s"
+				;;
+			5)
+				MYSQL_TIME_FORMAT="m-d-Y H:i:s A"
+				;;
+			6)
+				MYSQL_TIME_FORMAT="m-d-Y H:i:s"
+				;;
+			7)
+				MYSQL_TIME_FORMAT="d-m-Y H:i:s A"
+				;;
+			8)
+				MYSQL_TIME_FORMAT="d-m-Y H:i:s"
+				;;
+	esac
+			
 	outputRPintsConfigs
 	setupDatabase
 }
@@ -936,6 +979,7 @@ outputRPintsConfigs(){
 	if [ ${REPO_CHOICE} -eq 1 ] ;
 	then  
 		echo "	\$mysqli = new mysqli(\"\$host\", \"\$username\", \"\$password\", \"\$db_name\") or die(\"cannot connect to server\");" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
+		echo "	\$timeFormat = '${MYSQL_TIME_FORMAT}';" >> ${ADMIN_INCLUDES_DIRECTORY}/conn.php
 	fi
 	if [ ${REPO_CHOICE} -eq 2 ] ;
 	then
