@@ -150,7 +150,7 @@ include 'top_menu.php';
                         			</select>
                         			</td>
                                     <td style="vertical-align: middle;">
-                                        <span><?php echo $tap->get_loadCellTareDate() ?></span>
+                                        <span><?php echo $tap->get_loadCellTareDateFormatted() ?></span>
                                     </td>
                                     <td style="vertical-align: middle;">
                                     	<span>
@@ -243,7 +243,7 @@ include 'top_menu.php';
                         			</select>
                         			</td>
                                     <td style="vertical-align: middle;">
-                                        <span><?php echo $gt->get_loadCellTareDate() ?></span>
+                                        <span><?php echo $gt->get_loadCellTareDateFormatted() ?></span>
                                     </td>
                                     <td style="vertical-align: middle;">
                                     	<span>

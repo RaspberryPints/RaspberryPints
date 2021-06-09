@@ -73,11 +73,11 @@ include 'top_menu.php';
                     if(!isset($displayedDeviceTemps[$data->get_name()])){
                         $displayedDeviceTemps[$data->get_name()] = array();
                     }
-                    $displayedDeviceTemps[$data->get_name()][$data->get_createdDate()] = convert_temperature($data->get_temperature(), $data->get_temperatureUnit(), $config[ConfigNames::DisplayUnitTemperature]);
-                    $displayedDeviceGravity[$data->get_name()][$data->get_createdDate()] = convert_gravity($data->get_gravity(), $data->get_gravityUnit(), $config[ConfigNames::DisplayUnitGravity]);
+                    $displayedDeviceTemps[$data->get_name()][$data->get_createdDateFormatted()] = convert_temperature($data->get_temperature(), $data->get_temperatureUnit(), $config[ConfigNames::DisplayUnitTemperature]);
+                    $displayedDeviceGravity[$data->get_name()][$data->get_createdDateFormatted()] = convert_gravity($data->get_gravity(), $data->get_gravityUnit(), $config[ConfigNames::DisplayUnitGravity]);
                     
-                    if(!isset($displayedDateData[$data->get_createdDate()])){
-                        $displayedDateData[$data->get_createdDate()] = array();
+                    if(!isset($displayedDateData[$data->get_createdDateFormatted()])){
+                        $displayedDateData[$data->get_createdDateFormatted()] = array();
                     }
                 }
                 
@@ -240,7 +240,7 @@ include 'top_menu.php';
                             <?php echo number_format(convert_gravity($data->get_gravity(), $data->get_gravityUnit(), $config[ConfigNames::DisplayUnitGravity]), 3); ?>
                         </td>
                         <td style="vertical-align: middle;">
-                            <?php echo $data->get_createdDate(); ?>
+                            <?php echo $data->get_createdDateFormatted(); ?>
                         </td>
                                   
                     </tr>

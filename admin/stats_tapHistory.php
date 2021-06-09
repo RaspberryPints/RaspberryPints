@@ -165,7 +165,7 @@ include 'top_menu.php';
 		    ?>
 				<tr class="<?php if($i%2 > 0){ echo 'altrow'; }?>">
     				<td class="poursdate">
-    					<h2><?php echo $event->get_createdDate(); ?></h2>
+    					<h2><?php echo $event->get_createdDateFormatted(); ?></h2>
     				</td>         
 					<td class="poursuser">
 						<h2><?php echo $event->get_typeDesc(); ?></h2>

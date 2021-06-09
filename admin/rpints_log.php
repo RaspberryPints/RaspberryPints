@@ -202,13 +202,13 @@ if(isset( $_SESSION['myusername'] ))include 'top_menu.php';
                             foreach($logList as $log) {
                                 if($log->get_id() > $maxId){
                                     $maxId = $log->get_id();
-                                    $maxDate = $log->get_modifiedDate();
+                                    $maxDate = $log->get_modifiedDateFormatted();
                                 }
                         ?>
                         	<tr>
                                 <td style="vertical-align: middle;">
                                 	<input type="hidden" name="id"  value="<?php echo $log->get_id()?>" />
-                                    <?php echo $log->get_modifiedDate(); ?>
+                                    <?php echo $log->get_modifiedDateFormatted(); ?>
                                 </td>      
                                 <td style="vertical-align: middle;">
                                     <?php echo $log->get_process(); ?>
