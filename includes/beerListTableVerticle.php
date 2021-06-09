@@ -30,7 +30,7 @@
 		<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::TapNumColNum])){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			<?php if($editting || $config[ConfigNames::ShowBeerTableHead]){?>
-			<td>
+			<td class="<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>">
 				<?php if( (isset($noTableHead) && $noTableHead) || $editting){?>TAP<br><?php }?>
 				<input type="hidden" name="<?php echo ConfigNames::TapNumColNum;?>" id="<?php echo ConfigNames::TapNumColNum;?>" value="<?php echo abs($config[ConfigNames::TapNumColNum]);?>"/>
 			</td>
@@ -40,7 +40,7 @@
     			if( isset($beers[$i]) ) $beer = $beers[$i];
     			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG  && !isset($beer) ) continue;
     		?>
-				<td class="tap-num" colSpan="2">
+				<td class="tap-num<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" colSpan="2">
 				<?php if($tapOrBottle == ConfigNames::CONTAINER_TYPE_KEG){ ?>
 					<?php if(!$editting && $config[ConfigNames::AllowSamplePour]){ ?>
 						<a href ="./includes/pours.php/?tapId=<?php echo $beer['id']; ?>" style="height:100%">
@@ -78,7 +78,7 @@
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			
 			<?php if($editting || $config[ConfigNames::ShowBeerTableHead]){?>
-			<td class="srm">
+			<td class="srm<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>">
 				COLOR
 				<input type="hidden" name="<?php echo ConfigNames::SrmColNum;?>" id="<?php echo ConfigNames::SrmColNum;?>" value="<?php echo abs($config[ConfigNames::SrmColNum]);?>"/>
 			</td>
@@ -118,7 +118,7 @@
 		<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::IbuColNum])){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			<?php if($editting || $config[ConfigNames::ShowBeerTableHead]){?>
-			<td class="ibu">
+			<td class="ibu<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>">
 				<?php if($config[ConfigNames::ShowBuGuValue]){ ?>
 					BALANCE<hr>
 				<?php } ?>
@@ -131,7 +131,7 @@
     			if( isset($beers[$i]) ) $beer = $beers[$i];
     			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG  && !isset($beer) ) continue;
     		?>
-    			<td class="ibu" colSpan="2">
+    			<td class="ibu<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" colSpan="2">
 				<?php if(isset($beer) && $beer['beername']){ ?>
 					<?php if(($editting || $config[ConfigNames::ShowBuGuValue]) && $beer['ibu'] != '' && $beer['og']){ ?>
 					<h3 id="bugu" <?php if($editting && !$config[ConfigNames::ShowBuGuValue])echo 'class="disabled"';?>>
@@ -171,7 +171,7 @@
 		<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::BeerInfoColNum])){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			<?php if($editting || $config[ConfigNames::ShowBeerTableHead]){?>
-			<td class="beername" rowSpan="2" style="vertical-align: middle">
+			<td class="beername<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" rowSpan="2" style="vertical-align: middle">
 				<?php if($editting || $config[ConfigNames::ShowBeerName]){ ?>BEER NAME <?php } ?>
 				<?php if($editting || $config[ConfigNames::ShowBeerStyle]){ ?>&nbsp; &nbsp; STYLE<hr><?php } ?>
 				<?php if($editting || $config[ConfigNames::ShowBeerNotes]){ ?>&nbsp; &nbsp; TASTING NOTES<?php } ?>
@@ -214,7 +214,8 @@
     			if( isset($beers[$i]) ) $beer = $beers[$i];
     			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG && !isset($beer) ) continue;
     		?>
-    				<td class="name" colspan="<?php echo $beerColSpan; ?>">	
+    				<td style="display: none;" class="<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>"></td>
+    				<td class="name<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if($i == 1){echo 'style="border-left: none;"';}?> colspan="<?php echo $beerColSpan; ?>">	
     					<?php if(isset($beer) && $beer['beername']) { ?>		
                         					
     						<?php if($editting || $config[ConfigNames::ShowBeerName]){ ?>
@@ -250,7 +251,7 @@
 		<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AbvColNum])){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			<?php if($editting || $config[ConfigNames::ShowBeerTableHead]){?>
-			<td class="abv">
+			<td class="abv<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>">
 				ABV
 				<?php if($editting || $config[ConfigNames::ShowCalories]){ ?>
 				  	<hr>CALORIES
@@ -269,7 +270,7 @@
     			$sgOg = $beer['og']?convert_gravity($beer['og'], $beer['ogUnit'], UnitsOfMeasure::GravitySG):NULL;
     			$sgFg = $beer['fg']?convert_gravity($beer['fg'], $beer['fgUnit'], UnitsOfMeasure::GravitySG):NULL;
     		?>
-				<td class="abv" colSpan="2">
+				<td class="abv<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" colSpan="2">
 				<?php if(isset($beer) && $beer['beername']){ ?>
 					<?php 
 						$abv = $beer['abv'];
@@ -300,7 +301,7 @@
     						<?php }?>
 					<?php } ?>
 					<?php if($editting || $config[ConfigNames::ShowCalories]){ ?>
-					<h3 id="calories" <?php if($editting && !$config[ConfigNames::ShowCalories])echo 'class="disabled"';?>><?php
+					<h3 id="calories<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if($editting && !$config[ConfigNames::ShowCalories])echo 'class="disabled"';?>><?php
 					   if($sgOg > 0 && $sgFg > 0){
     						$calfromalc = (1881.22 * ($sgFg * ($sgOg - $sgFg)))/(1.775 - $sgOg);
     						$calfromcarbs = 3550.0 * $sgFg * ((0.1808 * $sgOg) + (0.8192 * $sgFg) - 1.0004);
@@ -330,7 +331,7 @@
 		<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::KegColNum])){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			<?php if($editting || $config[ConfigNames::ShowBeerTableHead]){?>
-			<td class="keg">
+			<td class="keg<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>">
 				DRINKS<hr>REMAINING
 				<input type="hidden" name="<?php echo ConfigNames::KegColNum;?>" id="<?php echo ConfigNames::KegColNum;?>" value="<?php echo abs($config[ConfigNames::KegColNum]);?>"/>
 			</td>
@@ -443,7 +444,7 @@
 		<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AccoladeColNum])){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			<?php if($editting || $config[ConfigNames::ShowAccoladeCol]){?>
-			<td>
+			<td class="accolades<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>">
 				Accolades<br>
 				<input type="hidden" name="<?php echo ConfigNames::AccoladeColNum;?>" id="<?php echo ConfigNames::AccoladeColNum;?>" value="<?php echo abs($config[ConfigNames::AccoladeColNum]);?>"/>
 			</td>

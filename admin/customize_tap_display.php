@@ -43,6 +43,7 @@ th {background: transparent; text-shadow: 1px 1px 1px #000; font-size: 14px;}
         border: 1px solid #ccc;
         z-index: 999;
     }
+<?php } ?>
     .disabled {
         opacity: 50%;
         text-decoration: line-through;
@@ -50,7 +51,6 @@ th {background: transparent; text-shadow: 1px 1px 1px #000; font-size: 14px;}
     .disabled div{
         opacity: 50%;
     }
-<?php } ?>
 </style>
 </head>
 <?php
@@ -142,7 +142,7 @@ Visible checkboxes can be used to show/hide the detail above them. Other checkbo
 					<br/><progress style="display: none"></progress>
 				</div>
                 <div  class="HeaderCenter" style="font: 1em Georgia, arial, verdana, sans-serif;width:25%">
-    				<input type="text" id="headerCenter" class="largebox" value="<?php echo $config[ConfigNames::HeaderText]; ?>" style="font: 3em Georgia, arial, verdana, sans-serif;background-repeat: unset;width:95%;text-align:center;<?php echo ($config[ConfigNames::ShowUntappdBreweryFeed]?"display:none;":""); ?>" name="<?php echo ConfigNames::HeaderText; ?>"> 
+    				<input type="text" id="headerCenter" class="largebox" value="<?php echo $config[ConfigNames::HeaderText]; ?>" style="font: 3em Georgia, arial, verdana, sans-serif;background-repeat: unset;width:95%;text-align:center;<?php echo ($config[ConfigNames::ClientID] && $config[ConfigNames::ClientSecret] && $config[ConfigNames::ShowUntappdBreweryFeed]?"display:none;":""); ?>" name="<?php echo ConfigNames::HeaderText; ?>"> 
     				<?php echo '<input type="hidden" name="configs[]" value="'.ConfigNames::HeaderText.'"/>'; ?>
     				<?php if( $config[ConfigNames::ClientID] && $config[ConfigNames::ClientSecret] ){?>
 						<table id="untappdTable" style="align-content:center;width:100%;<?php echo (!$config[ConfigNames::ShowUntappdBreweryFeed]?"display:none;":""); ?>">
@@ -247,6 +247,10 @@ Visible checkboxes can be used to show/hide the detail above them. Other checkbo
             <div>
             <input type="hidden" name="configs[]" value="<?php echo ConfigNames::RefreshTapList ?>"/>
             <input type="checkbox" name="<?php echo ConfigNames::RefreshTapList ; ?>" value="1" <?php echo ($config[ConfigNames::RefreshTapList]?" checked ":"");?>>Refresh List Every 60 Seconds
+            </div>
+            <div>
+            <input type="hidden" name="configs[]" value="<?php echo ConfigNames::ShowBeerTableHead ?>"/>
+            <input type="checkbox" name="<?php echo ConfigNames::ShowBeerTableHead ; ?>" value="1" <?php echo ($config[ConfigNames::ShowBeerTableHead]?" checked ":"");?> onchange="$('#beerList <?php echo $config[ConfigNames::ShowVerticleTapList] == "0"?'th':'tr td:first-child'?>').toggleClass('disabled');">Show <?php echo $config[ConfigNames::ShowVerticleTapList] == "0"?'Column':'Row'?> Headers
             </div>
 	        <br/>
             <div>

@@ -22,7 +22,7 @@ if($editting) $maxTapCol = 1;
 			<?php $beerColSpan = 1; ?>
 			<?php for($col = 1; $col <= $MAX_COLUMNS; $col++){ ?>
     			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::TapNumColNum])){ ?>
-    				<th class="tap-num">
+    				<th class="tap-num<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>">
     					<?php if($editting)echo 'TAP<br>'; ?>
 						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::TapNumColNum)?>
     					<input type="hidden" name="<?php echo ConfigNames::TapNumColNum;?>" id="<?php echo ConfigNames::TapNumColNum;?>" value="<?php echo abs($config[ConfigNames::TapNumColNum]);?>"/>
@@ -30,7 +30,7 @@ if($editting) $maxTapCol = 1;
     			<?php } ?>
     			
     			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::SrmColNum])){ ?>
-    				<th class="srm">
+    				<th class="srm<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>">
     					COLOR
 						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::SrmColNum)?>
     					<input type="hidden" name="<?php echo ConfigNames::SrmColNum;?>" id="<?php echo ConfigNames::SrmColNum;?>" value="<?php echo abs($config[ConfigNames::SrmColNum]);?>"/>
@@ -38,7 +38,7 @@ if($editting) $maxTapCol = 1;
     			<?php } ?>
     			
     			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::IbuColNum])){ ?>
-    				<th class="ibu">
+    				<th class="ibu<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>">
     					<?php if($config[ConfigNames::ShowBuGuValue]){ ?>
     						BALANCE<hr>
     					<?php } ?>
@@ -53,7 +53,7 @@ if($editting) $maxTapCol = 1;
                         if($editting || $config[ConfigNames::ShowBreweryImages]){ $beerColSpan++; }
                         if($editting || $config[ConfigNames::ShowBeerImages]){ $beerColSpan++; }
                     ?> 
-    				<th <?php if($beerColSpan > 1){ echo 'colspan="'.$beerColSpan.'"';}?> class="beername"  <?php if($maxTapCol!=1) echo 'style="width:'.(100/$maxTapCol).'%";'?>>
+    				<th <?php if($beerColSpan > 1){ echo 'colspan="'.$beerColSpan.'"';}?> class="beername<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>"  <?php if($maxTapCol!=1) echo 'style="width:'.(100/$maxTapCol).'%";'?>>
     					<?php if($editting || $config[ConfigNames::ShowBeerName]){ ?>BEER NAME <?php } ?>
 						<?php if($editting || $config[ConfigNames::ShowBeerStyle]){ ?>&nbsp; &nbsp; STYLE<hr><?php } ?>
 						<?php if($editting || $config[ConfigNames::ShowBeerNotes]){ ?>&nbsp; &nbsp; TASTING NOTES<?php } ?>
@@ -63,7 +63,7 @@ if($editting) $maxTapCol = 1;
     				</th>
     			<?php }?>
     			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AbvColNum])){ ?>
-    				<th class="abv">
+    				<th class="abv<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>">
     					ABV
     					<?php if($config[ConfigNames::ShowCalories]){ ?>
     					  	<hr>CALORIES
@@ -77,7 +77,7 @@ if($editting) $maxTapCol = 1;
     			<?php } ?>
     			
     			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::KegColNum])){ ?>
-    				<th class="keg">
+    				<th class="keg<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>">
     					DRINKS<hr>REMAINING
 						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::KegColNum)?>
     					<input type="hidden" name="<?php echo ConfigNames::KegColNum;?>" id="<?php echo ConfigNames::KegColNum;?>" value="<?php echo abs($config[ConfigNames::KegColNum]);?>"/>
@@ -85,7 +85,7 @@ if($editting) $maxTapCol = 1;
     			<?php } ?>
     			
     			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AccoladeColNum])){ ?>
-    				<th class="accolades">
+    				<th class="accolades<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>">
     					Accolades
 						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::AccoladeColNum)?>
     					<input type="hidden" name="<?php echo ConfigNames::AccoladeColNum;?>" id="<?php echo ConfigNames::AccoladeColNum;?>" value="<?php echo abs($config[ConfigNames::AccoladeColNum]);?>"/>
