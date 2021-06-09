@@ -1938,7 +1938,7 @@ AS
         
 CREATE TABLE IF NOT EXISTS `iSpindel_Data` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`createdDate` datetime NOT NULL,
+	`createdDate` TIMESTAMP NOT NULL,
 	`name` varchar(64) COLLATE ascii_bin NOT NULL,
 	`iSpindelId` INT UNSIGNED NOT NULL,
 	`angle` double NOT NULL,
