@@ -142,7 +142,7 @@ Visible checkboxes can be used to show/hide the detail above them. Other checkbo
 					<br/><progress style="display: none"></progress>
 				</div>
                 <div  class="HeaderCenter" style="font: 1em Georgia, arial, verdana, sans-serif;width:25%">
-    				<input type="text" id="headerCenter" class="largebox" value="<?php echo $config[ConfigNames::HeaderText]; ?>" style="font: 3em Georgia, arial, verdana, sans-serif;background-repeat: unset;width:95%;text-align:center;<?php echo ($config[ConfigNames::ShowUntappdBreweryFeed]?"display:none;":""); ?>" name="<?php echo ConfigNames::HeaderText; ?>"> 
+    				<input type="text" id="headerCenter" class="largebox" value="<?php echo $config[ConfigNames::HeaderText]; ?>" style="font: 3em Georgia, arial, verdana, sans-serif;background-repeat: unset;width:95%;text-align:center;<?php echo ($config[ConfigNames::ClientID] && $config[ConfigNames::ClientSecret] && $config[ConfigNames::ShowUntappdBreweryFeed]?"display:none;":""); ?>" name="<?php echo ConfigNames::HeaderText; ?>"> 
     				<?php echo '<input type="hidden" name="configs[]" value="'.ConfigNames::HeaderText.'"/>'; ?>
     				<?php if( $config[ConfigNames::ClientID] && $config[ConfigNames::ClientSecret] ){?>
 						<table id="untappdTable" style="align-content:center;width:100%;<?php echo (!$config[ConfigNames::ShowUntappdBreweryFeed]?"display:none;":""); ?>">
