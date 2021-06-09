@@ -12,7 +12,7 @@ elseif ($r<190) { $foamRgb = "255,250,205"; }
 else { $foamRgb = "255,255,255"; }
 
 $fn = preg_replace('/\W+/','',$_GET['container']);
-$view="30 0 156 512";
+$view="30 0 156 285";
 if($fn == "chalice")$view="0 -50 200 312";
 if($fn == "snifter")$view="5 0 196 512";
 if($fn == "stein")$view="0 0 200 512";
