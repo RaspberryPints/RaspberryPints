@@ -243,9 +243,9 @@ include 'top_menu.php';
 									<td colspan="2"style="width:70%; text-align: center;">
 										<?php
 										if(strlen($beer->get_notes()) < 200){
-										  echo $beer->get_notes() ;
+										    echo htmlentities($beer->get_notes(),ENT_QUOTES| ENT_IGNORE) ;
 										}else{
-										    echo substr($beer->get_notes(), 0, 200) .' ...';										      
+										    echo htmlentities(substr($beer->get_notes(), 0, 200) .' ...',ENT_QUOTES| ENT_IGNORE);										      
 										}
 										?>
 									</td>

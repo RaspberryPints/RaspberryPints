@@ -363,7 +363,7 @@ include 'top_menu.php';
 					<b>Tasting<br>Notes:</b>
 				</td>
 				<td>
-					<textarea id="notes" class="text-input textarea" style="width:320px;height:80px" name="notes"><?php echo $beer->get_notes() ?></textarea>
+					<textarea id="notes" class="text-input textarea" style="width:320px;height:80px" name="notes"><?php echo htmlentities($beer->get_notes(),ENT_QUOTES| ENT_IGNORE) ?></textarea>
 				</td>
 			</tr>
 			<tr>

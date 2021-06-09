@@ -248,7 +248,7 @@ if($editting) $maxTapCol = 1;
                         <?php } ?>
                         
                         <?php if($editting || $config[ConfigNames::ShowBeerNotes]){ ?>
-                            <p id="beerNotes" <?php if($editting && !$config[ConfigNames::ShowBeerNotes])echo 'class="disabled"';?>><?php echo $beer['notes']; ?>
+                            <p id="beerNotes" <?php if($editting && !$config[ConfigNames::ShowBeerNotes])echo 'class="disabled"';?>><?php echo htmlentities($beer['notes'],ENT_QUOTES| ENT_IGNORE); ?>
 							<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowBeerNotes, 'beerNotes'); ?></p>
                         <?php } ?>
                         
