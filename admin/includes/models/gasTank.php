@@ -123,12 +123,15 @@ class GasTank
 	public function set_loadCellUnit($_loadCellUnit){ $this->_loadCellUnit = $_loadCellUnit; }
 	
 	public function get_loadCellTareDate(){ return $this->_loadCellTareDate; }
+	public function get_loadCellTareDateFormatted(){ return Manager::format_time($this->_loadCellTareDate); }
 	public function set_loadCellTareDate($_loadCellTareDate){ $this->_loadCellTareDate = $_loadCellTareDate; }
 	
-	public function get_createdDate(){ return $this->_createdDate; }
+    public function get_createdDate(){ return $this->_createdDate; }
+	public function get_createdDateFormatted(){ return Manager::format_time($this->_createdDate); }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
 	
 	public function get_modifiedDate(){ return $this->_modifiedDate; }
+	public function get_modifiedDateFormatted(){ return Manager::format_time($this->_modifiedDate); }
 	public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
 	
 	public function setFromArray($postArr)  

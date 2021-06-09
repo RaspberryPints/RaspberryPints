@@ -27,6 +27,7 @@ class TempLog
 	public function set_humidity($_humidity){ $this->_humidity = $_humidity; }
 		
 	public function get_takenDate(){ return $this->_takenDate; }
+	public function get_takenDateFormatted(){ return Manager::format_time($this->_takenDate); }
 	public function set_takenDate($_takenDate){ $this->_takenDate = $_takenDate; }
 	
 	public function get_statePinState(){ return $this->_statePinState; }

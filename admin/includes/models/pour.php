@@ -74,7 +74,8 @@ class Pour
 	public function get_userId(){ return $this->_userId; } 
 	public function set_userId($_userId){ $this->_userId = $_userId; }
 	
-	public function get_createdDate(){ return $this->_createdDate; } 
+    public function get_createdDate(){ return $this->_createdDate; }
+	public function get_createdDateFormatted(){ return Manager::format_time($this->_createdDate); } 
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
 	
 	public function setFromArray($postArr)  

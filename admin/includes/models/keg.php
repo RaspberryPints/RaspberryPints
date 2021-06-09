@@ -132,10 +132,12 @@ class Keg
 	public function get_hasContinuousLid(){ return $this->_hasContinuousLid; }
 	public function set_hasContinuousLid($_hasContinuousLid){ $this->_hasContinuousLid = $_hasContinuousLid; }
 	
-	public function get_createdDate(){ return $this->_createdDate; }
+    public function get_createdDate(){ return $this->_createdDate; }
+	public function get_createdDateFormatted(){ return Manager::format_time($this->_createdDate); }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
 	
 	public function get_modifiedDate(){ return $this->_modifiedDate; }
+	public function get_modifiedDateFormatted(){ return Manager::format_time($this->_modifiedDate); }
 	public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
 	
 	public function setFromArray($postArr)  

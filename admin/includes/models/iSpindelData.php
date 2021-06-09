@@ -25,6 +25,7 @@ class iSpindelData
     public function set_id($_id){ $this->_id = $_id; }
     
     public function get_createdDate(){ return $this->_createdDate; }
+	public function get_createdDateFormatted(){ return Manager::format_time($this->_createdDate); }
     public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
     
     public function get_name(){ return $this->_name; }

@@ -16,10 +16,12 @@ class BeerBatchDateType
 	public function get_displayName(){ return $this->_displayName; }
 	public function set_displayName($_displayName){ $this->_displayName = $_displayName; }
 	
-	public function get_createdDate(){ return $this->_createdDate; }
+    public function get_createdDate(){ return $this->_createdDate; }
+	public function get_createdDateFormatted(){ return Manager::format_time($this->_createdDate); }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
 	
 	public function get_modifiedDate(){ return $this->_modifiedDate; }
+	public function get_modifiedDateFormatted(){ return Manager::format_time($this->_modifiedDate); }
 	public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
 	
     public function setFromArray($postArr)  

@@ -224,4 +224,9 @@ abstract class Manager {
 		return $this->executeQueryNoResult($sql);
 	}
 	
+	static function format_time($str){
+	    global $timeFormat;
+	    if(!isset($timeFormat)||empty($timeFormat)) $timeFormat = 'Y-m-d H:i:s A';
+	    return date($timeFormat, strtotime($str));
+	}
 }

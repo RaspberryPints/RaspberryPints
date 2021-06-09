@@ -87,10 +87,12 @@ class BeerStyle
     public function get_active(){ return $this->_active; }
     public function set_active($_active){ $this->_active = $_active; }
     
-	public function get_createdDate(){ return $this->_createdDate; }
+    public function get_createdDate(){ return $this->_createdDate; }
+	public function get_createdDateFormatted(){ return Manager::format_time($this->_createdDate); }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
 
 	public function get_modifiedDate(){ return $this->_modifiedDate; }
+	public function get_modifiedDateFormatted(){ return Manager::format_time($this->_modifiedDate); }
 	public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
 
 	public function setFromArray($postArr)  

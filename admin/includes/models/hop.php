@@ -28,10 +28,12 @@ class Hop
 	public function get_notes(){ return $this->_notes; }
 	public function set_notes($_notes){ $this->_notes = $_notes; }
 
-	public function get_createdDate(){ return $this->_createdDate; }
+    public function get_createdDate(){ return $this->_createdDate; }
+	public function get_createdDateFormatted(){ return Manager::format_time($this->_createdDate); }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
 	
 	public function get_modifiedDate(){ return $this->_modifiedDate; }
+	public function get_modifiedDateFormatted(){ return Manager::format_time($this->_modifiedDate); }
 	public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
 	
     public function setFromArray($postArr)  

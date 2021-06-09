@@ -65,9 +65,11 @@ class TapEvent
     public function set_userId($_userId){ $this->_userId = $_userId; } 
     
     public function get_createdDate(){ return $this->_createdDate; }
+	public function get_createdDateFormatted(){ return Manager::format_time($this->_createdDate); }
     public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
     
     public function get_modifiedDate(){ return $this->_modifiedDate; }
+    public function get_modifiedDateFormatted(){ return Manager::format_time($this->_modifiedDate); }
     public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
     
     //view only fields
