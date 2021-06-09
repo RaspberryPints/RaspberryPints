@@ -105,10 +105,15 @@ for ($i = 0; $i < $linecount; $i++)
 		$line = "";
 		if (isset($lines[$i][0]) && $lines[$i][0] != "#")
 		{
-			$startPos = strpos($lines[$i], "--");
+		    $startPos = strpos($lines[$i], "--");
+		    //check and see if the -- is in a string, if so skip it
+		    if( $startPos !== false )
+		    {
+		        while( (substr_count ($lines[$i], "'", 0, $startPos )%2 != 0) && ($startPos = strpos($lines[$i], "--", $startPos+1)) !== false);
+		    }
 			if( $startPos !== false )
 			{
-				$line = substr($lines[$i], 0, strpos($lines[$i], "--"));
+			    $line = substr($lines[$i], 0, $startPos);
 			}
 			else
 			{				

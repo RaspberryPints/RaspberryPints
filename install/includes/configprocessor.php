@@ -124,6 +124,7 @@ if ($action == 'backup' || $action == 'remove' || $action == 'restore')
     {
         $completed = array();
         $return = '';
+        $return.= "SET FOREIGN_KEY_CHECKS=0;\n";
         for($j = count($tables)-1; $j >= 0; $j--)
         {
             $table = $tables[$j][0];
@@ -167,8 +168,8 @@ if ($action == 'backup' || $action == 'remove' || $action == 'restore')
                         for($j = 0; $j < count($row); $j++){
                             $value = $row[$j];
                             if($values != '') $values.=',';
-                            $value = $mysqli->escape_string(addslashes($value));
-                            $isInt = strpos(strtolower($types[$j]), "int(") || strpos(strtolower($types[$j]), "decimal(");
+                            $value = $mysqli->escape_string($value);
+                            $isInt = strpos(strtolower($types[$j]), "int(") || strpos(strtolower($types[$j]), "decimal(") || strpos(strtolower($types[$j]), "float") || strpos(strtolower($types[$j]), "double");
                             $isDate = strpos(strtolower($types[$j]), "date") || strpos(strtolower($types[$j]), "timestamp");
                             $value = ($value == '' && ($isInt || $isDate)?"NULL":"'$value'");
                             $values.=$value;
@@ -183,6 +184,7 @@ if ($action == 'backup' || $action == 'remove' || $action == 'restore')
             $tables = $skipped;
         }while(false && count($tables) > 0);
         
+        $return.= "SET FOREIGN_KEY_CHECKS=1;\n";
         //save file
         $dirName = (isset($_POST["dirBackup"])?$_POST["dirBackup"]:null);
         if(empty($dirName)){
@@ -484,8 +486,8 @@ if ($action == 'restore')
     foreach($sql_query as $sql){
         if(rtrim($sql) == "") continue;
         //echo "	";
-        //echo $sql;
-        //echo "<br>";
+        echo $sql;
+        echo "<br>";
         $mysqli->query($sql) or die('error in query '.$i.'['.substr($sql,0,80).'] ['.$mysqli->error.']');
         //echo "<br>";
         $i++;
