@@ -178,7 +178,7 @@ Visible checkboxes can be used to show/hide the detail above them. Other checkbo
                     </div>
                 </td>
                 <td style="width:25%">
-                    <div id="lastPour" <?php if(!$config[ConfigNames::ShowLastPouredValue])echo 'class="disabled"'; ?>>
+                    <div id="lastPour" <?php if(!$config[ConfigNames::ShowLastPour])echo 'class="disabled"'; ?>>
                         <table><tr>
                     		<td class="poursbeername" colspan="2">
                     			<h1 style="text-align: center">Last Pour</h1>
@@ -195,7 +195,7 @@ Visible checkboxes can be used to show/hide the detail above them. Other checkbo
                     			<h1>12<?php echo $config[ConfigNames::DisplayUnitVolume]?></h1>
                     		</td>
                         </tr></table>
-                        <?php DisplayEditCheckbox(true, $config, ConfigNames::ShowLastPouredValue, 'lastPour'); ?>
+                        <?php DisplayEditCheckbox(true, $config, ConfigNames::ShowLastPour, 'lastPour'); ?>
                     </div>
                 </td>
                 <td>
