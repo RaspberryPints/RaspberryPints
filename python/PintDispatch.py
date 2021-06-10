@@ -455,7 +455,7 @@ class PintDispatch(object):
         cursor = con.cursor(mdb.cursors.DictCursor)
         for temp in temps:
             insertLogSql = "INSERT INTO tempLog (probe, temp, tempUnit, takenDate, statePinState) "
-            insertLogSql += "VALUES('"+temp[0]+"',"+str(temp[1])+"+ COALESCE((SELECT manualAdj FROM tempProbes WHERE name = '"+temp[0]+"'), 0), '"+str(temp[2])+"', '"+temp[3]+"'"
+            insertLogSql += "VALUES('"+temp[0]+"',"+str(temp[1])+"+ COALESCE((SELECT manualAdj FROM tempProbes WHERE name = '"+temp[0]+"'), 0), '"+str(temp[2])+"', '"+temp[3]+"',"
             insertLogSql += str(temp[4]) if temp[4] != None else "null"
             insertLogSql += ");"
             result = cursor.execute(insertLogSql)
