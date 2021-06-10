@@ -250,7 +250,7 @@ include 'left_bar.php';
 	<!-- End Left Bar Menu -->  
 	<!-- Start Js  -->
 <?php
-include 'scripts.php';
+require_once 'scripts.php';
 ?>
 
 <script>

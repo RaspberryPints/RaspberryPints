@@ -290,7 +290,7 @@ include 'left_bar.php';
 	<!-- End Left Bar Menu -->
 	<!-- Start Js  -->
 <?php
-include 'scripts.php';
+require_once 'scripts.php';
 ?>
 	<!--[if IE 6]>
 	<script type='text/javascript' src='scripts/png_fix.js'></script>
