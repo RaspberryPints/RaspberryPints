@@ -797,7 +797,7 @@ class OneWireTemperatureThread (threading.Thread):
                     if temp != None and temp >= self.bound_lo and temp <= self.bound_hi:
                         pinState = None
                         if statePins[probeName] > 0:
-                            pinState = self.dispatch.readpin(MCP_PIN) 
+                            pinState = self.dispatch.readpin(statePins[probeName]) 
                         temps.append([probeName, temp, 'C', takenDate, pinState])
                         if probeName not in tempStatus:
                             debug("Adding " + probeName +" Temp[" + str(temp) + "] low:" + str(self.bound_lo) + " high:"+str(self.bound_hi) ) 
