@@ -5,7 +5,119 @@
 <div id="welcome"> &nbsp; Logged in as: <br />
 	&nbsp;
 	<?php
+	class menuItem{
+	    public $text;
+	    public $link;
+	    public $target;
+	    public function __construct($_text, $_link, $_target=""){
+	        $this->text = $_text;
+	        $this->link = $_link;
+	        $this->target = $_target;
+	    }
+	}
+	class menuHeader{
+	    public $text;
+	    public $initCollapsed;
+	    public $items = array();
+	    
+	    public function __construct($_text, $_initCollapsed){
+	        $this->text = $_text;
+	        $this->initCollapsed = $_initCollapsed;
+	    }
+	}
 	if(isset($_SESSION['myusername']) )echo $_SESSION['myusername'];
+	echo '<br/>';
+	$menu = array();
+	$menuHead = new menuHeader("Basic Setup", FALSE);
+	array_push($menuHead->items, new menuItem("Beers", "beer_list.php"));
+	array_push($menuHead->items, new menuItem("Beers Batches", "beerBatch_list.php"));
+	array_push($menuHead->items, new menuItem("Kegs", "keg_list.php"));
+	array_push($menuHead->items, new menuItem("Taps", "tap_list.php"));
+	array_push($menuHead->items, new menuItem("Breweries", "brewery_list.php"));
+	array_push($menuHead->items, new menuItem("Bottles", "bottle_list.php"));
+	array_push($menuHead->items, new menuItem("Drinker Accounts", "user_list.php"));
+	array_push($menuHead->items, new menuItem("Beer Styles", "beer_style_list.php"));
+	array_push($menuHead->items, new menuItem("Fermenters", "fermenter_list.php"));
+	array_push($menuHead->items, new menuItem("Gas Tanks", "gasTank_list.php"));
+	array_push($menu, $menuHead);
+	
+	$menuHead = new menuHeader("Ingredients", FALSE);
+	array_push($menuHead->items, new menuItem("Hops", "hops_list.php"));
+	array_push($menuHead->items, new menuItem("Fermentables", "fermentables_list.php"));
+	array_push($menuHead->items, new menuItem("Yeasts", "yeasts_list.php"));
+	array_push($menuHead->items, new menuItem("Accolades", "accolades_list.php"));
+	array_push($menu, $menuHead);
+	
+	$menuHead = new menuHeader("Personalization", FALSE);
+	array_push($menuHead->items, new menuItem("Configuration", "personalize.php#columns"));
+	array_push($menuHead->items, new menuItem("Headers", "personalize.php#tapHeader"));
+	array_push($menuHead->items, new menuItem("Brewery Logo", "personalize.php#tapListLogo"));
+	array_push($menuHead->items, new menuItem("Background Image", "personalize.php#tapListBackground"));
+	array_push($menuHead->items, new menuItem("Brewery Defaults", "personalize.php#weightCalculation"));
+	array_push($menuHead->items, new menuItem("Theme Options", "themes.php"));
+	array_push($menuHead->items, new menuItem("Units of Measure", "units_of_measure.php"));
+	array_push($menuHead->items, new menuItem("Customize Tap Display", "customize_tap_display.php"));
+	array_push($menuHead->items, new menuItem("SRMs", "srm_form.php"));
+	array_push($menu, $menuHead);
+	
+	$menuHead = new menuHeader("Advanced Hardware", TRUE);
+	array_push($menuHead->items, new menuItem("RFID Readers", "rfid_reader_list.php"));
+	array_push($menuHead->items, new menuItem("Temperature Probes", "temp_probe_list.php"));
+	array_push($menuHead->items, new menuItem("Load Cells", "load_cell_list.php"));
+	//array_push($menuHead->items, new menuItem("Valves", "valve_list.php"));
+	array_push($menuHead->items, new menuItem("Motion Detectors", "motion_detector_list.php"));
+	array_push($menuHead->items, new menuItem("iSpindel Connectors", "iSpindel_connector_list.php"));
+	array_push($menuHead->items, new menuItem("iSpindel Devices", "iSpindel_device_list.php"));
+	array_push($menuHead->items, new menuItem("Hardware IO Display", "ioPins_list.php"));
+	array_push($menu, $menuHead);
+		
+	$menuHead = new menuHeader("Analytics", TRUE);
+	array_push($menuHead->items, new menuItem("Temperature history", "temp_log.php"));
+	array_push($menuHead->items, new menuItem("Pour history", "pour_list.php"));
+	array_push($menuHead->items, new menuItem("Beer statistics", "stats_beer.php"));
+	array_push($menuHead->items, new menuItem("Drinker statistics", "stats_drinker.php"));
+	array_push($menuHead->items, new menuItem("Tap statistics", "stats_tap.php"));
+	array_push($menuHead->items, new menuItem("Tap history", "stats_tapHistory.php"));
+	array_push($menuHead->items, new menuItem("iSpindel history", "iSpindel_log.php"));
+	array_push($menu, $menuHead);
+	
+	if(isset($_SESSION['showadmin']) && $_SESSION['showadmin']){
+    	$menuHead = new menuHeader("Install", TRUE);
+    	array_push($menuHead->items, new menuItem("Install Page", "manage_install.php"));
+    	array_push($menuHead->items, new menuItem("Log", "rpints_log.php"));
+    	array_push($menu, $menuHead);
+	}
+	
+	$menuHead = new menuHeader("Help!", FALSE);
+	array_push($menuHead->items, new menuItem("Report a Bug", "http://raspberrypints.com/report-bug/", '_blank'));
+	array_push($menuHead->items, new menuItem("Suggest a Feature", "http://raspberrypints.com/request-feature/", '_blank'));
+	array_push($menu, $menuHead);
+	
+	$menuHead = new menuHeader("External Links", TRUE);
+	array_push($menuHead->items, new menuItem("Official Website", "http://www.raspberrypints.com/", '_blank'));
+	array_push($menuHead->items, new menuItem("F.A.Q.", "http://www.raspberrypints.com/faq", '_blank'));
+	array_push($menuHead->items, new menuItem("Visit Us on HBT", "http://www.homebrewtalk.com/f51/initial-release-raspberrypints-digital-taplist-solution-456809", '_blank'));
+	array_push($menuHead->items, new menuItem("Contributors", "http://www.raspberrypints.com/contributors", '_blank'));
+	array_push($menuHead->items, new menuItem("Licensing", "http://www.raspberrypints.com/licensing", '_blank'));
+	array_push($menu, $menuHead);
+	
+	$foundI = -1;
+	for($i = 0; $i < count($menu) && $foundI < 0; $i++){
+	    $menuHeader = $menu[$i];    
+	    for($j = 0; $j < count($menuHeader->items); $j++){
+	        $link = $menuHeader->items[$j]->link;
+	        if(strpos($link, '#') !== FALSE) $link = substr($link,0, strpos($link, '#'));
+	        if($link == basename($_SERVER['PHP_SELF']))
+	        {
+	            $foundI = $i;
+	            break;
+	        }
+	    }
+    }
+	for($i = 1; $i < $foundI; $i++){
+	    $menu[$i]->initCollapsed = TRUE;
+	}
+	$menu[$foundI]->initCollapsed = FALSE;
 	?>
 </div>
 
@@ -21,95 +133,18 @@
 			<li class="heading selected">Welcome</li>
 		</ul>
 	</li>
-	<li>
-		<a class="expanded heading">Basic Setup</a>
-		<ul class="navigation">
-			<li><a href="beer_list.php">Beers</a></li>
-			<li><a href="beerBatch_list.php">Beers Batches</a></li>
-			<li><a href="keg_list.php">Kegs</a></li>
-			<li><a href="tap_list.php">Taps</a></li>
-			<li><a href="brewery_list.php">Breweries</a></li>
-			<li><a href="bottle_list.php">Bottles</a></li>
-			<li><a href="user_list.php" title="drinker-acct">Drinker Accounts</a></li>
-			<li><a href="beer_style_list.php">Beer Styles</a></li>
-			<li><a href="fermenter_list.php">Fermenters</a></li>
-			<li><a href="gasTank_list.php">Gas Tanks</a></li>
-		</ul>
-	</li>
-	<li>
-		<a class="expanded heading">Ingredients</a>
-		<ul class="navigation">
-			<li><a href="hops_list.php">Hops</a></li>
-			<li><a href="fermentables_list.php">Fermentables</a></li>
-			<li><a href="yeasts_list.php">Yeasts</a></li>
-			<li><a href="accolades_list.php">Accolades</a></li>
-		</ul>
-	</li>
-    <li>
-		<a class="expanded heading">Personalization</a>
-		<ul class="navigation">
-			<li><a href="personalize.php#columns">Configuration</a></li>
-			<li><a href="personalize.php#header">Headers</a></li>
-			<li><a href="personalize.php#tapListLogo">Brewery Logo</a></li>
-			<li><a href="personalize.php#tapListBackground">Background Image</a></li>
-			<li><a href="personalize.php#weightCalculation">Brewery Defaults</a></li>
-			<li><a href="themes.php">Theme Options</a></li>
-			<li><a href="units_of_measure.php" title="personalize">Units of Measure</a></li>
-			<li><a href="customize_tap_display.php" title="personalize">Customize Tap Display</a></li>
-			<li><a href="srm_form.php" title="personalize">SRMs</a></li>
-		</ul>
-	</li>
-	<li>
-		<a class="collapsed heading">Advanced Hardware</a>
-		<ul class="navigation">
-			<li><a href="rfid_reader_list.php" title="rfid-reader">RFID Readers</a></li>
-			<li><a href="temp_probe_list.php" title="temp-probe">Temperature Probes</a></li>
-			<li><a href="load_cell_list.php" title="loadCells">Load Cells</a></li>
-<!-- 			<li><a href="valve_list.php" title="valves">Valves</a></li> -->
-			<li><a href="motion_detector_list.php" title="motion-detectors">Motion Detectors</a></li>
-			<li><a href="iSpindel_connector_list.php" title="io_pins">iSpindel Connectors</a></li>
-			<li><a href="iSpindel_device_list.php" title="io_pins">iSpindel Devices</a></li>
-			<li><a href="ioPins_list.php" title="io_pins">Hardware IO Display</a></li>
-		</ul>
-	</li>
-	<li>
-		<a class="collapsed heading">Analytics</a>
-		<ul class="navigation">
-			<li><a href="temp_log.php" title="temperature-vs-time">Temperature history</a></li>
-			<li><a href="pour_list.php" title="pour-history">Pour history</a></li>
-			<li><a href="stats_beer.php" title="rank">Beer statistics</a></li>
-			<li><a href="stats_drinker.php" title="drinker-stats">Drinker statistics</a></li>
-			<li><a href="stats_tap.php" title="GPT">Tap statistics</a></li>
-			<li><a href="stats_tapHistory.php" title="tap-history">Tap history</a></li>
-			<li><a href="iSpindel_log.php" title="iSPindel Data">iSpindel history</a></li>
-		</ul>
-	</li>
-	<?php if(isset($_SESSION['showadmin']) && $_SESSION['showadmin']){?>
-    	<li>
-    		<a class="expanded heading">Install</a>
-    		<ul class="navigation">
-    			<li><a href="manage_install.php" title="install">Install Page</a></li>
-    			<li><a href="rpints_log.php" title="install">Log</a></li>
-    		</ul>	
-    	</li>
-	<?php }?>
-	<li>
-		<a class="expanded heading">Help!</a>
-		<ul class="navigation">
-			<li><a href="http://raspberrypints.com/report-bug/" target="_blank">Report a Bug</a></li>
-			<li><a href="http://raspberrypints.com/request-feature/" target="_blank">Suggest a Feature</a></li>
-		</ul>	
-	</li>
-	<li>
-		<a class="expanded heading">External Links</a>
-		<ul class="navigation">
-			<li><a href="http://www.raspberrypints.com/" target="_blank">Official Website</a></li>
-			<li><a href="http://www.raspberrypints.com/faq" target="_blank">F.A.Q.</a></li>
-			<li><a href="http://www.homebrewtalk.com/f51/initial-release-raspberrypints-digital-taplist-solution-456809" target="_blank">Visit Us on HBT</a></li>
-			<li><a href="http://www.raspberrypints.com/contributors" target="_blank">Contributors</a></li>
-			<li><a href="http://www.raspberrypints.com/licensing" target="_blank">Licensing</a></li>
-		</ul>
-	</li>
+	<?php 
+	
+    	for($i = 0; $i < count($menu); $i++){
+    	    $menuHeader = $menu[$i];
+    	    echo '<li><a class="'.(!$menuHeader->initCollapsed?"expanded":"collapsed").' heading">'.$menuHeader->text.'</a>';
+    	    echo '<ul class="navigation">';
+    	    for($j = 0; $j < count($menuHeader->items); $j++){
+    	        echo'<li><a href="'.$menuHeader->items[$j]->link.'" '.(!empty($menuHeader->items[$j]->target)?' target="'.$menuHeader->items[$j]->target.'"':'').'>'.$menuHeader->items[$j]->text.'</a></li>';
+    	    }
+    	    echo '</ul></li>';
+    	}
+	?>
 </ul>
 
 <div>

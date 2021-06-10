@@ -83,7 +83,7 @@ Configuration Updated
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form><br><br>
 			<hr />
-	<a id="header"></a> 
+	<a id="tapHeader"></a> 
 		<h2>Taplist Header</h2><br><br>
 		<p><b>Text to Display:</b></p>
 			<form method="post" action="includes/config_update.php">
@@ -251,7 +251,7 @@ include 'left_bar.php';
 	<!-- End Left Bar Menu -->  
 	<!-- Start Js  -->
 <?php
-include 'scripts.php';
+require_once 'scripts.php';
 ?>
 	<!-- End Js -->
 	<!--[if IE 6]>
