@@ -16,6 +16,9 @@ window.onpageshow = function(evt) {
 </head>
 <body>
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
 
@@ -121,7 +124,15 @@ if ($action == 'backup' || $action == 'remove' || $action == 'restore')
         $tables[] = $i;
     }
     if(count($tables) > 0)
-    {
+    { 
+        //save file
+        $dirName = (isset($_POST["dirBackup"])?$_POST["dirBackup"]:null);
+        if(empty($dirName)){
+            $dirName = '../../sql/backups';
+        }
+        if(!file_exists($dirName))mkdir($dirName);
+        $handle = fopen($dirName.'/db-'.$databasename.'-backup'.($action != 'backup'?'-before-'.$action:'').'-'.date('Y-m-d His').'.sql','w+');
+        
         $completed = array();
         $return = '';
         $return.= "SET FOREIGN_KEY_CHECKS=0;\n";
@@ -180,18 +191,14 @@ if ($action == 'backup' || $action == 'remove' || $action == 'restore')
                 $return.="\n\n\n";
                 
                 $completed[] = $table;
+                
+                fwrite($handle,$return);
+                $return = "";
             }
             $tables = $skipped;
         }while(false && count($tables) > 0);
         
         $return.= "SET FOREIGN_KEY_CHECKS=1;\n";
-        //save file
-        $dirName = (isset($_POST["dirBackup"])?$_POST["dirBackup"]:null);
-        if(empty($dirName)){
-            $dirName = '../../sql/backups';
-        }
-        if(!file_exists($dirName))mkdir($dirName);
-        $handle = fopen($dirName.'/db-'.$databasename.'-backup'.($action != 'backup'?'-before-'.$action:'').'-'.date('Y-m-d His').'.sql','w+');
         fwrite($handle,$return);
         fclose($handle);
     }
