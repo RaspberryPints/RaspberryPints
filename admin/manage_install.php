@@ -9,6 +9,7 @@ $htmlHelper = new HtmlHelper();
 if (isset ( $_POST ['upgrade'] )) {
     //echo ("restarting flowmon service: ");
     triggerPythonAction("upgrade");
+    $_SESSION['successMessage'] = 'Update Started, Check <a href="rpints_log.php">Log</a> for status';
 }
 
 include 'top_menu.php';
