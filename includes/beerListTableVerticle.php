@@ -169,6 +169,7 @@
 		<?php } ?>
 			
 		<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::BeerInfoColNum])){ ?>
+		<?php if($editting || $config[ConfigNames::ShowBreweryImages] || $config[ConfigNames::ShowBeerImages]){?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
 			<?php if($editting || $config[ConfigNames::ShowBeerTableHead]){?>
 			<td class="beername<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" rowSpan="2" style="vertical-align: middle">
@@ -186,7 +187,7 @@
     			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG && !isset($beer) ) continue;
     		?>
     				<?php if($editting || $config[ConfigNames::ShowBreweryImages]){ ?>
-    					<td id="breweryImg" style="width:auto" class="breweryimg<?php if($editting && !$config[ConfigNames::ShowBreweryImages])echo ' disabled';?>">
+    					<td id="breweryImg" style="width:auto" class="breweryimg<?php if($editting && !$config[ConfigNames::ShowBreweryImages])echo ' disabled';?>" <?php if(!$editting && !$config[ConfigNames::ShowBeerImages])echo 'colSpan="2"';?>>
     					<?php if(isset($beer) && $beer['beername']){ ?>
     						<img style="border:0;width:100px" src="<?php echo $beer['breweryImage']; ?>" />
 						<?php if($editting)echo '<br/>';DisplayEditCheckbox($editting, $config, ConfigNames::ShowBreweryImages, 'breweryImg'); ?>
@@ -196,7 +197,7 @@
     				<?php } ?>
     				
     				<?php if($editting || $config[ConfigNames::ShowBeerImages]){ ?>
-    					<td id="beerImg" style="border-left: none;width:auto" class="beerimg<?php if($editting && !$config[ConfigNames::ShowBeerImages])echo ' disabled';?>">
+    					<td id="beerImg" style="border-left: none;width:auto" class="beerimg<?php if($editting && !$config[ConfigNames::ShowBeerImages])echo ' disabled';?>" <?php if(!$editting && !$config[ConfigNames::ShowBreweryImages])echo 'colSpan="2"';?>>
     					<?php if(isset($beer) && $beer['beername']){
     					 		$beerColSpan++; 
     					 		beerImg($config, $beer['untID'], $beer['beerId']);
@@ -207,15 +208,26 @@
     		<?php }?>
 			<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::BeerInfoColNum, 2)?>
 		</tr>
-		<tr class="<?php if($row-1%2 > 0){ echo 'altrow'; } ?>">
+		<?php }else{ $row++; } ?>
+		<tr class="<?php if(($row-1)%2 > 0){ echo 'altrow'; } ?>">
+			<?php if(!$editting && !$config[ConfigNames::ShowBreweryImages] && !$config[ConfigNames::ShowBeerImages]){?>
+					<td class="beername<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" style="vertical-align: middle">
+        				<?php if($editting || $config[ConfigNames::ShowBeerName]){ ?>BEER NAME <?php } ?>
+        				<?php if($editting || $config[ConfigNames::ShowBeerStyle]){ ?>&nbsp; &nbsp; STYLE<hr><?php } ?>
+        				<?php if($editting || $config[ConfigNames::ShowBeerNotes]){ ?>&nbsp; &nbsp; TASTING NOTES<?php } ?>
+        				<?php if($editting || $config[ConfigNames::ShowBeerRating]){?>&nbsp; &nbsp; RATING<hr><?php } ?>
+        			</td>
+        		<?php }?>
     		<?php for($i = 1; $i <= $numberOfBeers; $i++) {
     		    $beer = null;
     		    $beerColSpan = 2;
     			if( isset($beers[$i]) ) $beer = $beers[$i];
     			if($tapOrBottle != ConfigNames::CONTAINER_TYPE_KEG && !isset($beer) ) continue;
     		?>
+				<?php if($editting || $config[ConfigNames::ShowBreweryImages] || $config[ConfigNames::ShowBeerImages]){?>
     				<td style="display: none;" class="<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>"></td>
-    				<td class="name<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if($i == 1){echo 'style="border-left: none;"';}?> colspan="<?php echo $beerColSpan; ?>">	
+        		<?php } ?>
+    				<td class="name<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" style="width:<?php echo 100/($numberOfBeers); ?>%" <?php if($i == 1 && ($editting || $config[ConfigNames::ShowBreweryImages] || $config[ConfigNames::ShowBeerImages])){echo 'style="border-left: none;"';}?> colspan="<?php echo $beerColSpan; ?>">	
     					<?php if(isset($beer) && $beer['beername']) { ?>		
                         					
     						<?php if($editting || $config[ConfigNames::ShowBeerName]){ ?>
@@ -224,7 +236,7 @@
                             <?php } ?>
                             
                             <?php if(($editting || $config[ConfigNames::ShowBeerStyle]) && $beer['style']){ ?>
-                                <h2 id="beerStyle" class="subhead"><?php echo str_replace("_","",$beer['style']); ?>
+                                <h2 id="beerStyle" class="subhead<?php if($editting && !$config[ConfigNames::ShowBeerStyle])echo ' disabled';?>"><?php echo str_replace("_","",$beer['style']); ?>
 								<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowBeerStyle, 'beerStyle'); ?></h2>
                             <?php } ?>
                             
