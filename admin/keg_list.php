@@ -31,7 +31,7 @@ if (isset($_POST['editKeg'])) {
 		    $selectedBatchId = $beerExloded[1];
 		    if($keg->get_beerId() != $selectedBeerId ||
 		       $keg->get_beerBatchId() != $selectedBatchId){
-		           $keg->set_beerId($selectedBatchId);
+		           $keg->set_beerId($selectedBeerId);
 		           $keg->set_beerBatchId($selectedBatchId);
 			       $keg->set_startAmount($keg->get_maxVolume());
 			       $keg->set_currentAmount($keg->get_maxVolume());
