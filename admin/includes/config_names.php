@@ -66,6 +66,9 @@ abstract class ConfigNames
 	const ShowRemainValue = 'showRemainValue';
 	const ShowVerticleTapList = 'showVerticleTapList';
 	const ShowRPLogo = 'showRPLogo';
+	const ShowDigitalClock = 'showDigitalClock';
+	const ShowDigitalClock24 = 'showDigitalClock24';
+	const ShowAnalogClock = 'showAnalogClock';
 	const ShowLastPour = 'showLastPour';
 	const ShowPourListOnHome = 'showPourListOnHome';
 	const ShowSrmCol = 'showSrmCol';

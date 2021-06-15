@@ -31,10 +31,12 @@ $mysqli = db();
 $config = getAllConfigs();
 
 $index = 0;
-$maxIndex = $config[ConfigNames::ShowTempOnMainPage]+$config[ConfigNames::ShowLastPour]+$config[ConfigNames::ShowRPLogo];
-$tempIndex = 0;
-$lastPourIndex = $config[ConfigNames::ShowTempOnMainPage];
-$logoIndex = $config[ConfigNames::ShowTempOnMainPage]+$config[ConfigNames::ShowLastPour];
+$maxIndex = $config[ConfigNames::ShowTempOnMainPage]+$config[ConfigNames::ShowLastPour]+$config[ConfigNames::ShowRPLogo]+$config[ConfigNames::ShowAnalogClock]+(($config[ConfigNames::ShowDigitalClock]||$config[ConfigNames::ShowDigitalClock24])?1:0);
+$clockAnalogIndex = 0;
+$clockDigitalIndex = $config[ConfigNames::ShowAnalogClock];
+$tempIndex = $config[ConfigNames::ShowAnalogClock]+(($config[ConfigNames::ShowDigitalClock]||$config[ConfigNames::ShowDigitalClock24])?1:0);
+$lastPourIndex = $config[ConfigNames::ShowAnalogClock]+(($config[ConfigNames::ShowDigitalClock]||$config[ConfigNames::ShowDigitalClock24])?1:0)+$config[ConfigNames::ShowTempOnMainPage];
+$logoIndex = $config[ConfigNames::ShowAnalogClock]+(($config[ConfigNames::ShowDigitalClock]||$config[ConfigNames::ShowDigitalClock24])?1:0)+$config[ConfigNames::ShowTempOnMainPage]+$config[ConfigNames::ShowLastPour];
 if( $config[ConfigNames::ShowFermOnMainPage]){
     $fermenterStart = $maxIndex;
     $fermenters = (new FermenterManager())->GetAllWithBeer();
@@ -169,6 +171,21 @@ if($config[ConfigNames::ShowRPLogo] && ($index == $logoIndex || $index < 0)) {
         <a href="http://www.raspberrypints.com"><img
         	src="img/RaspberryPints.png" height="100" alt=""></a>
     <?php } ?>
+</td>
+<?php 
+}
+
+if($config[ConfigNames::ShowAnalogClock] && ($index == $clockAnalogIndex || $index < 0)) {
+    ?>
+<td>
+<canvas id="canvas" width="95" height="95" style="background-color:#0000000"></canvas>
+</td>
+<?php 
+}
+
+if(($config[ConfigNames::ShowDigitalClock]||$config[ConfigNames::ShowDigitalClock24]) && ($index == $clockDigitalIndex || $index < 0)) {    ?>
+<td>
+<div id="digitalClock<?php if($config[ConfigNames::ShowDigitalClock24])echo'24';?>" style="font-size: 24px;text-align: left"></div>
 </td>
 <?php 
 }
