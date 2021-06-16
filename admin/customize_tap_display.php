@@ -397,6 +397,27 @@ Visible checkboxes can be used to show/hide the detail above them. Other checkbo
     				}
     			?>        
             </div>
+    	    <?php if($config[ConfigNames::ShowVerticleTapList]==0){ ?>
+            <div>
+    			<?php
+    			$result = array(getConfig(ConfigNames::HozTapListCol));
+				foreach($result as $row) {
+					$options = array('On','Off');
+					$validation = $row['validation'];
+					if( $validation !== NULL && $validation != ''){
+					    $valids = explode('|', $validation);
+					    for( $i = 0; $i < count($valids); $i++ ){
+					        $options[$i] = $valids[$i];
+					    }
+					}
+					echo '<h3>' . $row['displayName'] . ":"  ./* '<span id="' . $row['configName'] . 'Success" style="display:none; color: #8EA534;"> (Updated)</span>'.  */'</h3>'.
+    					$options[0].'<span class="tooltip"><input type="radio" ' . ($row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="1"><span class="tooltiptext" ><img src="img/2ColTapDislay.jpg" height="100px"></span></span>' .
+    					$options[1].'<span class="tooltip"><input type="radio" ' . (!$row['configValue']?'checked':'') . ' name="' . $row['configName'] . '" value="0"><span class="tooltiptext" ><img src="img/1ColTapDislay.jpg" height="100px"></span></span>'.
+    					'<br>';
+    				}
+    			?>        
+            </div>
+            <?php }?>
             <div>
             <input type="hidden" name="configs[]" value="<?php echo ConfigNames::RefreshTapList ?>"/>
             <input type="checkbox" name="<?php echo ConfigNames::RefreshTapList ; ?>" value="1" <?php echo ($config[ConfigNames::RefreshTapList]?" checked ":"");?>>Refresh List Every 60 Seconds
