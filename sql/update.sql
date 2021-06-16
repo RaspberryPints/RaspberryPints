@@ -835,18 +835,18 @@ CREATE TABLE IF NOT EXISTS `fermenterStatuses` (
 -- Dumping data for table `kegStatuses`
 --
 
-INSERT IGNORE INTO `fermenterStatuses` (id, code, name, createdDate, modifiedDate ) VALUES
-(1, 'PRIMARY', 'Primary', NOW(), NOW() ),
-(2, 'SECONDARY', 'Secondary', NOW(), NOW() ),
-(3, 'DRY_HOPPING', 'Dry Hopping', NOW(), NOW() ),
-(4, 'CONDITIONING', 'Conditioning', NOW(), NOW() ),
-(5, 'BULK_AGING', 'Bulk Aging', NOW(), NOW() ),
-(6, 'FLOODED', 'Flooded', NOW(), NOW() ),
-(7, 'SANITIZED', 'Sanitized', NOW(), NOW() ),
-(8, 'CLEAN', 'Clean', NOW(), NOW() ),
-(9, 'NEEDS_CLEANING', 'Needs Cleaning', NOW(), NOW() ),
-(10, 'NEEDS_PARTS', 'Needs Parts', NOW(), NOW() ),
-(22, 'NEEDS_REPAIRS', 'Needs Repairs', NOW(), NOW() );
+INSERT IGNORE INTO `fermenterStatuses` (code, name, createdDate, modifiedDate ) VALUES
+( 'PRIMARY', 'Primary', NOW(), NOW() ),
+( 'SECONDARY', 'Secondary', NOW(), NOW() ),
+( 'DRY_HOPPING', 'Dry Hopping', NOW(), NOW() ),
+( 'CONDITIONING', 'Conditioning', NOW(), NOW() ),
+( 'BULK_AGING', 'Bulk Aging', NOW(), NOW() ),
+( 'FLOODED', 'Flooded', NOW(), NOW() ),
+( 'SANITIZED', 'Sanitized', NOW(), NOW() ),
+( 'CLEAN', 'Clean', NOW(), NOW() ),
+( 'NEEDS_CLEANING', 'Needs Cleaning', NOW(), NOW() ),
+( 'NEEDS_PARTS', 'Needs Parts', NOW(), NOW() ),
+( 'NEEDS_REPAIRS', 'Needs Repairs', NOW(), NOW() );
 
 
 CREATE TABLE IF NOT EXISTS `fermenters` (
@@ -936,14 +936,14 @@ CREATE TABLE IF NOT EXISTS `gasTankStatuses` (
 -- Dumping data for table `kegStatuses`
 --
 
-INSERT IGNORE INTO `gasTankStatuses` (id, code, name, createdDate, modifiedDate ) VALUES
-(1, 'DISPENSING', 'Dispensing', NOW(), NOW() ),
-(2, 'FULL', 'Full', NOW(), NOW() ),
-(3, 'PARTIAL', 'Partial', NOW(), NOW() ),
-(4, 'EMPTY', 'Empty', NOW(), NOW() ),
-(5, 'NEEDS_CERTIFICATION', 'Needs Certification', NOW(), NOW() ),
-(6, 'NEEDS_PARTS', 'Needs Parts', NOW(), NOW() ),
-(7, 'NEEDS_REPAIRS', 'Needs Repairs', NOW(), NOW() );
+INSERT IGNORE INTO `gasTankStatuses` ( code, name, createdDate, modifiedDate ) VALUES
+( 'DISPENSING', 'Dispensing', NOW(), NOW() ),
+( 'FULL', 'Full', NOW(), NOW() ),
+( 'PARTIAL', 'Partial', NOW(), NOW() ),
+( 'EMPTY', 'Empty', NOW(), NOW() ),
+( 'NEEDS_CERTIFICATION', 'Needs Certification', NOW(), NOW() ),
+( 'NEEDS_PARTS', 'Needs Parts', NOW(), NOW() ),
+( 'NEEDS_REPAIRS', 'Needs Repairs', NOW(), NOW() );
 
 
 
