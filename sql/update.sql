@@ -807,14 +807,14 @@ CREATE TABLE IF NOT EXISTS `fermenterTypes` (
 -- Dumping data for table `fermenterTypes`
 --
 
-INSERT IGNORE INTO `fermenterTypes` ( displayName, maxAmount, maxAmountUnit, emptyWeight, emptyWeightUnit, createdDate, modifiedDate ) VALUES
-( 'Conical (5 gal)', '5', 'gal', '8.1571', 'lb', NOW(), NOW() ),
-( 'Conical (10 gal)', '10', 'gal', '16.3142', 'lb', NOW(), NOW() ),
-( 'Conical (15 gal)', '15', 'gal', '16.3142', 'lb', NOW(), NOW() ),
-( 'Conical (30 gal)', '30', 'gal', '16.3142', 'lb', NOW(), NOW() ),
-( 'Carboy (5 gal)', '5', 'gal', '8.1571', 'lb', NOW(), NOW() ),
-( 'Carboy (6 gal)', '6', 'gal', '8.1571', 'lb', NOW(), NOW() ),
-( 'Barrel (30 gal)', '30', 'gal', '8.1571', 'lb', NOW(), NOW() );
+INSERT IGNORE INTO `fermenterTypes` (id, displayName, maxAmount, maxAmountUnit, emptyWeight, emptyWeightUnit, createdDate, modifiedDate ) VALUES
+(1, 'Conical (5 gal)', '5', 'gal', '8.1571', 'lb', NOW(), NOW() ),
+(2, 'Conical (10 gal)', '10', 'gal', '16.3142', 'lb', NOW(), NOW() ),
+(3, 'Conical (15 gal)', '15', 'gal', '16.3142', 'lb', NOW(), NOW() ),
+(4, 'Conical (30 gal)', '30', 'gal', '16.3142', 'lb', NOW(), NOW() ),
+(5, 'Carboy (5 gal)', '5', 'gal', '8.1571', 'lb', NOW(), NOW() ),
+(6, 'Carboy (6 gal)', '6', 'gal', '8.1571', 'lb', NOW(), NOW() ),
+(7, 'Barrel (30 gal)', '30', 'gal', '8.1571', 'lb', NOW(), NOW() );
 
 -- --------------------------------------------------------
 
@@ -835,18 +835,18 @@ CREATE TABLE IF NOT EXISTS `fermenterStatuses` (
 -- Dumping data for table `kegStatuses`
 --
 
-INSERT IGNORE INTO `fermenterStatuses` ( code, name, createdDate, modifiedDate ) VALUES
-( 'PRIMARY', 'Primary', NOW(), NOW() ),
-( 'SECONDARY', 'Secondary', NOW(), NOW() ),
-( 'DRY_HOPPING', 'Dry Hopping', NOW(), NOW() ),
-( 'CONDITIONING', 'Conditioning', NOW(), NOW() ),
-( 'BULK_AGING', 'Bulk Aging', NOW(), NOW() ),
-( 'FLOODED', 'Flooded', NOW(), NOW() ),
-( 'SANITIZED', 'Sanitized', NOW(), NOW() ),
-( 'CLEAN', 'Clean', NOW(), NOW() ),
-( 'NEEDS_CLEANING', 'Needs Cleaning', NOW(), NOW() ),
-( 'NEEDS_PARTS', 'Needs Parts', NOW(), NOW() ),
-( 'NEEDS_REPAIRS', 'Needs Repairs', NOW(), NOW() );
+INSERT IGNORE INTO `fermenterStatuses` (id, code, name, createdDate, modifiedDate ) VALUES
+(1, 'PRIMARY', 'Primary', NOW(), NOW() ),
+(2, 'SECONDARY', 'Secondary', NOW(), NOW() ),
+(3, 'DRY_HOPPING', 'Dry Hopping', NOW(), NOW() ),
+(4, 'CONDITIONING', 'Conditioning', NOW(), NOW() ),
+(5, 'BULK_AGING', 'Bulk Aging', NOW(), NOW() ),
+(6, 'FLOODED', 'Flooded', NOW(), NOW() ),
+(7, 'SANITIZED', 'Sanitized', NOW(), NOW() ),
+(8, 'CLEAN', 'Clean', NOW(), NOW() ),
+(9, 'NEEDS_CLEANING', 'Needs Cleaning', NOW(), NOW() ),
+(10, 'NEEDS_PARTS', 'Needs Parts', NOW(), NOW() ),
+(22, 'NEEDS_REPAIRS', 'Needs Repairs', NOW(), NOW() );
 
 
 CREATE TABLE IF NOT EXISTS `fermenters` (
@@ -909,13 +909,13 @@ CREATE TABLE IF NOT EXISTS `gasTankTypes` (
 -- Dumping data for table `kegTypes`
 --
 
-INSERT IGNORE INTO `gasTankTypes` ( displayName, maxAmount, maxAmountUnit, emptyWeight, emptyWeightUnit, createdDate, modifiedDate ) VALUES
-( 'CO2 (5 lb)', '5', 'lb', '8.1571', 'lb', NOW(), NOW() ),
-( 'CO2 (10 lb)', '10', 'lb', '16.3142', 'lb', NOW(), NOW() ),
-( 'CO2 (20 lb)', '20', 'lb', '16.3142', 'lb', NOW(), NOW() ),
-( 'Nitro (5 lb)', '5', 'lb', '8.1571', 'lb', NOW(), NOW() ),
-( 'Nitro (10 lb)', '10', 'lb', '16.3142', 'lb', NOW(), NOW() ),
-( 'Nitro (20 lb)', '20', 'lb', '16.3142', 'lb', NOW(), NOW() );
+INSERT IGNORE INTO `gasTankTypes` (id, displayName, maxAmount, maxAmountUnit, emptyWeight, emptyWeightUnit, createdDate, modifiedDate ) VALUES
+(1, 'CO2 (5 lb)', '5', 'lb', '8.1571', 'lb', NOW(), NOW() ),
+(2, 'CO2 (10 lb)', '10', 'lb', '16.3142', 'lb', NOW(), NOW() ),
+(3, 'CO2 (20 lb)', '20', 'lb', '16.3142', 'lb', NOW(), NOW() ),
+(4, 'Nitro (5 lb)', '5', 'lb', '8.1571', 'lb', NOW(), NOW() ),
+(5, 'Nitro (10 lb)', '10', 'lb', '16.3142', 'lb', NOW(), NOW() ),
+(6, 'Nitro (20 lb)', '20', 'lb', '16.3142', 'lb', NOW(), NOW() );
 
 -- --------------------------------------------------------
 
@@ -936,14 +936,14 @@ CREATE TABLE IF NOT EXISTS `gasTankStatuses` (
 -- Dumping data for table `kegStatuses`
 --
 
-INSERT IGNORE INTO `gasTankStatuses` ( code, name, createdDate, modifiedDate ) VALUES
-( 'DISPENSING', 'Dispensing', NOW(), NOW() ),
-( 'FULL', 'Full', NOW(), NOW() ),
-( 'PARTIAL', 'Partial', NOW(), NOW() ),
-( 'EMPTY', 'Empty', NOW(), NOW() ),
-( 'NEEDS_CERTIFICATION', 'Needs Certification', NOW(), NOW() ),
-( 'NEEDS_PARTS', 'Needs Parts', NOW(), NOW() ),
-( 'NEEDS_REPAIRS', 'Needs Repairs', NOW(), NOW() );
+INSERT IGNORE INTO `gasTankStatuses` (id, code, name, createdDate, modifiedDate ) VALUES
+(1, 'DISPENSING', 'Dispensing', NOW(), NOW() ),
+(2, 'FULL', 'Full', NOW(), NOW() ),
+(3, 'PARTIAL', 'Partial', NOW(), NOW() ),
+(4, 'EMPTY', 'Empty', NOW(), NOW() ),
+(5, 'NEEDS_CERTIFICATION', 'Needs Certification', NOW(), NOW() ),
+(6, 'NEEDS_PARTS', 'Needs Parts', NOW(), NOW() ),
+(7, 'NEEDS_REPAIRS', 'Needs Repairs', NOW(), NOW() );
 
 
 
