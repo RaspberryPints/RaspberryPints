@@ -138,8 +138,8 @@ include 'top_menu.php';
                     array_push($displayedProbes, "Avg");
                     foreach($displayedDateTemps as $date => $tempsOnDate){
                         $sum = 0;
-                        foreach($tempsOnDate as $temp) $sum += $temp;
-                        array_push($displayedDateTemps[$date], $sum/count($tempsOnDate));
+                        foreach($tempsOnDate as $temp) $sum += $temp[0];
+                        array_push($displayedDateTemps[$date], array(count($tempsOnDate)>0?$sum/count($tempsOnDate):0,null));
                         
                     }
                 }
