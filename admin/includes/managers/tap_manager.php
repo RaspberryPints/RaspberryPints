@@ -147,7 +147,7 @@ class TapManager extends Manager{
     		$tapEvent->set_userId(isset($_SESSION['myuserid'])?$_SESSION['myuserid']:USER_ID_SYSTEM);
     		$keg = $kegManager->GetByID($kegId);
     		if($keg) $tapEvent->set_amount($keg->get_currentAmount());
-    		if($keg) $tapEvent->set_amountUnit(is_unit_imperial($keg->get_currentAmountUnit())?UnitsOfMeasure::VolumeGallon:UnitsOfMeasure::VolumeLiter);
+    		$tapEvent->set_amountUnit($keg->get_currentAmountUnit());
     		//If ret is false keep it false even if the save is successful
     		$ret = $ret && (new TapEventManager)->Save($tapEvent); 
 		}
