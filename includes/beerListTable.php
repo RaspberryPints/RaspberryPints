@@ -6,7 +6,9 @@ require_once __DIR__.'/../admin/includes/html_helper.php';
 $config = getAllConfigs();
 $htmlHelper = new HtmlHelper();
 $beerColSpan = 1;
-$MAX_COLUMNS = 7;
+$MAX_COLUMNS = 0;
+$showColumns = getAllConfigsLike('%ColNum');
+$MAX_COLUMNS = max($showColumns);
 /** @var mixed $editingTable */
 $editting = (isset($editingTable) && $editingTable);
 
@@ -63,7 +65,7 @@ if($editting) $maxTapCol = 1;
     				</th>
     			<?php }?>
     			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AbvColNum])){ ?>
-    				<th class="abv<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>">
+    				<th class="abv <?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if( !$editting && $maxTapCol > 0 && $tapCol == $maxTapCol-1 && $col == $MAX_COLUMNS){echo 'style="padding-right:20px"';}?>>
     					ABV
     					<?php if($config[ConfigNames::ShowCalories]){ ?>
     					  	<hr>CALORIES
@@ -269,7 +271,7 @@ if($editting) $maxTapCol = 1;
         			$sgFg = $beer['fg']?convert_gravity($beer['fg'], $beer['fgUnit'], UnitsOfMeasure::GravitySG):NULL;
     			?>
 				<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AbvColNum])){ ?>
-					<td class="abv">
+					<td class="abv" <?php if( !$editting && $maxTapCol > 0 && $tapCol == $maxTapCol-1 && $col == $MAX_COLUMNS){echo 'style="padding-right:20px"';}?>>
         			<?php if(isset($beer) && $beer['beername']){?>
     					<?php 
     					$abv = $beer['abv'];
