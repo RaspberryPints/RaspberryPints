@@ -107,7 +107,7 @@ for ($i = 0; $i < $linecount; $i++)
 		{
 		    $startPos = strpos($lines[$i], "--");
 		    //check and see if the -- is in a string, if so skip it
-		    if( $startPos !== false )
+		    if( $startPos !== false && $startPos > 0 )
 		    {
 		        while( (substr_count ($lines[$i], "'", 0, $startPos )%2 != 0) && ($startPos = strpos($lines[$i], "--", $startPos+1)) !== false);
 		    }
