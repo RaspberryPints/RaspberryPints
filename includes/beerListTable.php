@@ -6,12 +6,13 @@ require_once __DIR__.'/../admin/includes/html_helper.php';
 $config = getAllConfigs();
 $htmlHelper = new HtmlHelper();
 $beerColSpan = 1;
-$MAX_COLUMNS = 0;
-$showColumns = getAllConfigsLike('%ColNum');
-$MAX_COLUMNS = max($showColumns);
 /** @var mixed $editingTable */
 $editting = (isset($editingTable) && $editingTable);
-
+$MAX_COLUMNS = 7;
+if(!$editting){
+    $showColumns = getAllConfigsLike('%ColNum');
+    $MAX_COLUMNS = max($showColumns);
+}
 $maxTapCol = isset($config[ConfigNames::HozTapListCol])?$config[ConfigNames::HozTapListCol]+1:1;
 if($editting) $maxTapCol = 1;
 ?>
