@@ -1406,4 +1406,12 @@ ALTER TABLE pours CHANGE COLUMN `beerBatchId` `beerBatchId` int(11) NULL ;
 ALTER TABLE tapEvents CHANGE COLUMN `beerBatchId` `beerBatchId` int(11) NULL ;
 ALTER TABLE bottles CHANGE COLUMN `beerBatchId` `beerBatchId` int(11) NULL ;
 
+CREATE OR REPLACE VIEW `vwAccolades` 
+AS
+ SELECT 
+    a.*,
+    srm.rgb
+ FROM accolades a LEFT JOIN srmRgb srm
+        ON a.srm = srm.srm;
+        
 UPDATE `config` SET `configValue` = '3.1.0.0' WHERE `configName` = 'version';
