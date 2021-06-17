@@ -108,7 +108,7 @@ if (isset ( $_POST ['saveTapConfig'] )) {
     		}
 			$kegManager->Save($keg);
 		    if( ( !isset($kegSelArr[1]) || !$kegSelArr[1] || $tap->get_beerId() != $selectedBeerId ) ||
-		        ( !isset($kegSelArr[2]) || !$kegSelArr[2] || $tap->get_beerBatchId() != $selectedBatchId ) ||
+		        ( !isset($kegSelArr[2]) || $tap->get_beerBatchId() != $selectedBatchId ) ||
 		        ( !isset($kegSelArr[3]) || !$kegSelArr[3] || $tap->get_kegId() != $kegId ) ){
 		            $tapManager->tapKeg($tap, $kegId, $selectedBeerId, $selectedBatchId);		
 			}
@@ -516,7 +516,7 @@ include 'top_menu.php';
                                         }
                                     }
                                     //do not change this line (php line)
-                                    $val = $item->get_id()."~".$item->get_beerId()."~".$item->get_beerBatchId()."~".$item->get_ontapId()."~";
+                                    $val = $item->get_id()."~".$item->get_label()."~".$item->get_beerId()."~".$item->get_beerBatchId()."~".$item->get_ontapId()."~".$item->get_tapNumber()."~";
                                     //Change these lines for Javascript)
                                     $val .= $item->get_emptyWeight().'~'.$item->get_emptyWeightUnit()."~";
                                     $val .= convert_volume($item->get_maxVolume(), $item->get_maxVolumeUnit(), $config[ConfigNames::DisplayUnitVolume], TRUE)."~".$config[ConfigNames::DisplayUnitVolume]."~";
@@ -678,6 +678,30 @@ include 'left_bar.php';
 require_once 'scripts.php';
 ?>
 <script>
+const KEG_ARRAY_INDEX_KEG_ID = 0;
+const KEG_ARRAY_INDEX_KEG_LABEL = KEG_ARRAY_INDEX_KEG_ID+1;
+const KEG_ARRAY_INDEX_BEER_ID = KEG_ARRAY_INDEX_KEG_LABEL+1;
+const KEG_ARRAY_INDEX_BEER_BATCH_ID = KEG_ARRAY_INDEX_BEER_ID+1;
+const KEG_ARRAY_INDEX_TAP_ID = KEG_ARRAY_INDEX_BEER_BATCH_ID+1;
+const KEG_ARRAY_INDEX_TAP_NUMBER = KEG_ARRAY_INDEX_TAP_ID+1;
+const KEG_ARRAY_INDEX_EMPTY_WEIGHT = KEG_ARRAY_INDEX_TAP_NUMBER+1;
+const KEG_ARRAY_INDEX_EMPTY_WEIGHT_UNIT = KEG_ARRAY_INDEX_EMPTY_WEIGHT+1;
+const KEG_ARRAY_INDEX_MAX_VOL = KEG_ARRAY_INDEX_EMPTY_WEIGHT_UNIT+1;
+const KEG_ARRAY_INDEX_MAX_VOL_UNIT = KEG_ARRAY_INDEX_MAX_VOL+1;
+const KEG_ARRAY_INDEX_START_VOL = KEG_ARRAY_INDEX_MAX_VOL_UNIT+1;
+const KEG_ARRAY_INDEX_START_VOL_UNIT = KEG_ARRAY_INDEX_START_VOL+1;
+const KEG_ARRAY_INDEX_CUR_VOL = KEG_ARRAY_INDEX_START_VOL_UNIT+1;
+const KEG_ARRAY_INDEX_CUR_VOL_UNIT = KEG_ARRAY_INDEX_CUR_VOL+1;
+const KEG_ARRAY_INDEX_PSI_VOL = KEG_ARRAY_INDEX_CUR_VOL_UNIT+1;
+const KEG_ARRAY_INDEX_PSI_VOL_UNIT = KEG_ARRAY_INDEX_PSI_VOL+1;
+const KEG_ARRAY_INDEX_TEMP_VOL = KEG_ARRAY_INDEX_PSI_VOL_UNIT+1;
+const KEG_ARRAY_INDEX_TEMP_VOL_UNIT = KEG_ARRAY_INDEX_TEMP_VOL+1;
+
+const BEER_ARRAY_INDEX_BEER_ID = 0;
+const BEER_ARRAY_INDEX_BEER_BATCH_ID = BEER_ARRAY_INDEX_BEER_ID+1;
+const BEER_ARRAY_INDEX_FG = BEER_ARRAY_INDEX_BEER_BATCH_ID+1;
+const BEER_ARRAY_INDEX_FG_UNIT=BEER_ARRAY_INDEX_FG+1;
+
 <?php if($config[ConfigNames::UseKegWeightCalc]) { ?> 
 <?php 
     foreach($activeTaps as $tap){
@@ -689,18 +713,18 @@ require_once 'scripts.php';
 		var kegSelArr = document.getElementById("kegId"+tapId).value.split("~");
 		var emptyKegWeight = 0;
 		var emptyKegWeightUnit = '';
-		if(kegSelArr.length > 4 && kegSelArr[3] != "")
+		if(kegSelArr.length > KEG_ARRAY_INDEX_EMPTY_WEIGHT && kegSelArr[KEG_ARRAY_INDEX_EMPTY_WEIGHT] != "")
 		{
-			emptyKegWeight = kegSelArr[3];
-			if(kegSelArr.length > 5) emptyKegWeightUnit = kegSelArr[4];
+			emptyKegWeight = kegSelArr[KEG_ARRAY_INDEX_EMPTY_WEIGHT];
+			if(kegSelArr.length > KEG_ARRAY_INDEX_EMPTY_WEIGHT_UNIT) emptyKegWeightUnit = kegSelArr[KEG_ARRAY_INDEX_EMPTY_WEIGHT_UNIT];
 		}
 		var beerSelArr = document.getElementById("beerId"+tapId).value.split("~");
 		var fg = 1.000;
 		var fgUnit = 'sg';
-		if(beerSelArr.length > 1 && beerSelArr[1] != "")
+		if(beerSelArr.length > BEER_ARRAY_INDEX_FG && beerSelArr[BEER_ARRAY_INDEX_FG] != "")
 		{
-			fg = beerSelArr[1];
-			if(beerSelArr.length > 2)fgUnit = beerSelArr[2];
+			fg = beerSelArr[BEER_ARRAY_INDEX_FG];
+			if(beerSelArr.length > BEER_ARRAY_INDEX_FG_UNIT)fgUnit = beerSelArr[BEER_ARRAY_INDEX_FG_UNIT];
 		}
 		weight = getWeightByVol(document.getElementById("currentAmount"+tapId).value,  
 																				document.getElementById("currentAmountUnit"+tapId).value,
@@ -721,18 +745,18 @@ require_once 'scripts.php';
 		var kegSelArr = document.getElementById("kegId"+tapId).value.split("~");
 		var emptyKegWeight = 0;
 		var emptyKegWeightUnit = '';
-		if(kegSelArr.length > 4 && kegSelArr[3] != "")
+		if(kegSelArr.length > KEG_ARRAY_INDEX_EMPTY_WEIGHT && kegSelArr[KEG_ARRAY_INDEX_EMPTY_WEIGHT] != "")
 		{
-			emptyKegWeight = kegSelArr[3];
-			if(kegSelArr.length > 5) emptyKegWeightUnit = kegSelArr[4];
+			emptyKegWeight = kegSelArr[KEG_ARRAY_INDEX_EMPTY_WEIGHT];
+			if(kegSelArr.length > KEG_ARRAY_INDEX_EMPTY_WEIGHT_UNIT) emptyKegWeightUnit = kegSelArr[KEG_ARRAY_INDEX_EMPTY_WEIGHT];
 		}
 		var beerSelArr = document.getElementById("beerId"+tapId).value.split("~");
 		var fg = 1.000;
 		var fgUnit = 'sg';
-		if(beerSelArr.length > 1 && beerSelArr[1] != "")
+		if(beerSelArr.length > BEER_ARRAY_INDEX_FG && beerSelArr[BEER_ARRAY_INDEX_FG] != "")
 		{
-			fg = beerSelArr[1];
-			if(beerSelArr.length > 2)fgUnit = beerSelArr[2];
+			fg = beerSelArr[BEER_ARRAY_INDEX_FG];
+			if(beerSelArr.length > BEER_ARRAY_INDEX_FG_UNIT)fgUnit = beerSelArr[BEER_ARRAY_INDEX_FG_UNIT];
 		}
 		var volume = getVolumeByWeight(document.getElementById("currentWeight"+tapId).value, 
 																			    document.getElementById("currentWeightUnit"+tapId).value,
@@ -750,6 +774,7 @@ require_once 'scripts.php';
 		if(!isNaN(volume))document.getElementById("currentAmount"+tapId).value = parseFloat(volume).toFixed(5);
 	}
 <?php } ?>
+
 	function validateBeerSelected(kegSelectStart, beerSelectStart) {
 		var ii = 1;
 		var kegSelect = null;
@@ -760,7 +785,9 @@ require_once 'scripts.php';
 					if(msgDiv != null)msgDiv.style.display = "";
 					var msgSpan = document.getElementById("messageSpan");
 					var kegSelArr = kegSelect.value.split("~");
-					if(msgSpan != null) msgSpan.innerHTML = "Tap "+ii+" Keg "+kegSelArr[0]+" needs to have a beer associated to it or not associated to a tap"
+					var tapNumber = document.getElementById("tapNumber"+ii).value
+					tapNumber = tapNumber == ''?ii:tapNumber;
+					if(msgSpan != null) msgSpan.innerHTML = "Tap "+tapNumber+" Keg "+(kegSelArr[KEG_ARRAY_INDEX_KEG_LABEL]==''?kegSelArr[KEG_ARRAY_INDEX_KEG_ID]:kegSelArr[KEG_ARRAY_INDEX_KEG_LABEL])+" needs to have a beer associated to it or not associated to a tap"
 					return false;
 				}
 			}	 
@@ -827,7 +854,7 @@ require_once 'scripts.php';
 		//Select array is kegid~beerid(in keg)~beerBatchId(in keg)~tapId(keg is on)~...
 		var kegSelArr = selectObject.value.split("~");
 
-		if( kegSelArr[0] == '' ){
+		if( kegSelArr[KEG_ARRAY_INDEX_KEG_ID] == '' ){
 			var beerSelect = document.getElementById(secSelectBeerStart+tapId);
 			beerSelect.selectedIndex = 0;
 			return;
@@ -837,42 +864,43 @@ require_once 'scripts.php';
 		var onOtherTap = null;
 		var ii = 1;
 		var secOtherTapKegSelect = null;
-		while( (secOtherTapKegSelect = document.getElementById(kegSelectStart+ii++)) != null){
-			if(ii-1 == tapId)continue;
+		while( (secOtherTapKegSelect = document.getElementById(kegSelectStart+ii)) != null){
+			if(ii == tapId){ii++;continue;}
 			otherKegSelArr = secOtherTapKegSelect.value.split("~");
-			if(otherKegSelArr[0] == kegSelArr[0]) onOtherTap = ii;
+			if(otherKegSelArr[KEG_ARRAY_INDEX_KEG_ID] == kegSelArr[KEG_ARRAY_INDEX_KEG_ID]) onOtherTap = ii;
 			if(onOtherTap)
 			{
-				while(4 > kegSelArr.length)kegSelArr.push(null);
-				kegSelArr[3] = otherKegSelArr[3];
+				while(KEG_ARRAY_INDEX_TAP_ID > kegSelArr.length)kegSelArr.push(null);
+				kegSelArr[KEG_ARRAY_INDEX_TAP_ID] = otherKegSelArr[KEG_ARRAY_INDEX_TAP_ID];
 			 	break;
 			}
+			ii++;
 		}
 		if(onOtherTap){
 			var secOtherTapBeerSelect = document.getElementById(secSelectBeerStart+onOtherTap);
 			if(msgDiv != null)msgDiv.style.display = "";
 			var msgSpan = document.getElementById("messageSpan");
-			if(msgSpan != null) msgSpan.innerHTML = "Keg "+kegSelArr[0]+" currently on Tap "+kegSelArr[3]+" and will be moved to tap "+tapNumber+" and updated to current selected beer"
+			if(msgSpan != null) msgSpan.innerHTML = "Keg "+(kegSelArr[KEG_ARRAY_INDEX_KEG_LABEL]==''?kegSelArr[KEG_ARRAY_INDEX_KEG_ID]:kegSelArr[KEG_ARRAY_INDEX_KEG_LABEL])+" currently on Tap "+(kegSelArr[KEG_ARRAY_INDEX_TAP_NUMBER]==''?kegSelArr[KEG_ARRAY_INDEX_TAP_ID]:kegSelArr[KEG_ARRAY_INDEX_TAP_NUMBER])+" and will be moved to tap "+(tapNumber==''?tapId:tapNumber)+" and updated to current selected beer"
 			if(secOtherTapBeerSelect != null)secOtherTapBeerSelect.selectedIndex = 0;
 			if(secOtherTapKegSelect != null)secOtherTapKegSelect.selectedIndex = 0;		
 
-			moveKegAttribute("startAmount", kegSelArr[3], tapId, "text");
-			moveKegAttribute("startAmountOriginal", kegSelArr[3], tapId, "hidden");
-			moveKegAttribute("startAmountUnit", kegSelArr[3], tapId, "hidden");
-			moveKegAttribute("currentAmount", kegSelArr[3], tapId, "text");
-			moveKegAttribute("currentAmountOriginal", kegSelArr[3], tapId, "hidden");
-			moveKegAttribute("currentAmountUnit", kegSelArr[3], tapId, "hidden");
-			moveKegAttribute("currentWeight", kegSelArr[3], tapId, "text");
-			moveKegAttribute("currentWeightOriginal", kegSelArr[3], tapId, "hidden");
-			moveKegAttribute("currentWeightUnit", kegSelArr[3], tapId, "hidden");
-			moveKegAttribute("fermentationPSI", kegSelArr[3], tapId, "text");
-			moveKegAttribute("fermentationPSIOriginal", kegSelArr[3], tapId, "hidden");
-			moveKegAttribute("fermentationPSIUnit", kegSelArr[3], tapId, "hidden");
-			moveKegAttribute("keggingTemp", kegSelArr[3], tapId, "text");
-			moveKegAttribute("keggingTempOriginal", kegSelArr[3], tapId, "hidden");
-			moveKegAttribute("keggingTempUnit", kegSelArr[3], tapId, "hidden");
+			moveKegAttribute("startAmount", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "text");
+			moveKegAttribute("startAmountOriginal", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "hidden");
+			moveKegAttribute("startAmountUnit", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "hidden");
+			moveKegAttribute("currentAmount", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "text");
+			moveKegAttribute("currentAmountOriginal", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "hidden");
+			moveKegAttribute("currentAmountUnit", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "hidden");
+			moveKegAttribute("currentWeight", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "text");
+			moveKegAttribute("currentWeightOriginal", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "hidden");
+			moveKegAttribute("currentWeightUnit", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "hidden");
+			moveKegAttribute("fermentationPSI", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "text");
+			moveKegAttribute("fermentationPSIOriginal", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "hidden");
+			moveKegAttribute("fermentationPSIUnit", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "hidden");
+			moveKegAttribute("keggingTemp", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "text");
+			moveKegAttribute("keggingTempOriginal", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "hidden");
+			moveKegAttribute("keggingTempUnit", kegSelArr[KEG_ARRAY_INDEX_TAP_ID], tapId, "hidden");
 		}else{
-			var ii = 8; // Use this incase the start value changes. Note the original is the same so dont increment until after original
+			var ii = KEG_ARRAY_INDEX_START_VOL;
 			$("#startAmount"+tapId).val(kegSelArr[ii]); 
 			$("#startAmountOriginal"+tapId).val(kegSelArr[ii]);
 			$("#startAmountUnit"+tapId).val(kegSelArr[++ii]); 
@@ -890,8 +918,8 @@ require_once 'scripts.php';
 
 		var beerSelect = document.getElementById(secSelectBeerStart+tapId);
 		var beerSelectOptions = beerSelect.options;
-		var beerId = (kegSelArr.length > 1 && kegSelArr[1] != "")?kegSelArr[1]:null;
-		var beerBatchId = (kegSelArr.length > 2 && kegSelArr[2] != "")?kegSelArr[2]:null;
+		var beerId = (kegSelArr.length > 1 && kegSelArr[KEG_ARRAY_INDEX_BEER_ID] != "")?kegSelArr[KEG_ARRAY_INDEX_BEER_ID]:null;
+		var beerBatchId = (kegSelArr.length > 2 && kegSelArr[KEG_ARRAY_INDEX_BEER_BATCH_ID] != "")?kegSelArr[KEG_ARRAY_INDEX_BEER_BATCH_ID]:null;
 		var i = 0;
 		if(beerId != null){
 			var beerSelectOptions = beerSelect.options;
