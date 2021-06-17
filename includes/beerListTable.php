@@ -25,7 +25,7 @@ if($editting) $maxTapCol = 1;
 			<?php $beerColSpan = 1; ?>
 			<?php for($col = 1; $col <= $MAX_COLUMNS; $col++){ ?>
     			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::TapNumColNum])){ ?>
-    				<th class="tap-num<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if( !$editting && $maxTapCol > 0 && $tapCol == $maxTapCol-1 && $col == $MAX_COLUMNS){echo 'style="padding-right:20px"';}?>>
+    				<th class="tap-num<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if( !$editting && $maxTapCol > 0 && $tapCol == $maxTapCol-1 && $col == $MAX_COLUMNS){echo 'style="padding-right:20px"';}?>>
     					<?php if($editting)echo 'TAP<br>'; ?>
 						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::TapNumColNum)?>
     					<input type="hidden" name="<?php echo ConfigNames::TapNumColNum;?>" id="<?php echo ConfigNames::TapNumColNum;?>" value="<?php echo abs($config[ConfigNames::TapNumColNum]);?>"/>
@@ -33,7 +33,7 @@ if($editting) $maxTapCol = 1;
     			<?php } ?>
     			
     			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::SrmColNum])){ ?>
-    				<th class="srm<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if( !$editting && $maxTapCol > 0 && $tapCol == $maxTapCol-1 && $col == $MAX_COLUMNS){echo 'style="padding-right:20px"';}?>>
+    				<th class="srm<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if( !$editting && $maxTapCol > 0 && $tapCol == $maxTapCol-1 && $col == $MAX_COLUMNS){echo 'style="padding-right:20px"';}?>>
     					COLOR
 						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::SrmColNum)?>
     					<input type="hidden" name="<?php echo ConfigNames::SrmColNum;?>" id="<?php echo ConfigNames::SrmColNum;?>" value="<?php echo abs($config[ConfigNames::SrmColNum]);?>"/>
@@ -41,7 +41,7 @@ if($editting) $maxTapCol = 1;
     			<?php } ?>
     			
     			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::IbuColNum])){ ?>
-    				<th class="ibu<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if( !$editting && $maxTapCol > 0 && $tapCol == $maxTapCol-1 && $col == $MAX_COLUMNS){echo 'style="padding-right:20px"';}?>>
+    				<th class="ibu<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if( !$editting && $maxTapCol > 0 && $tapCol == $maxTapCol-1 && $col == $MAX_COLUMNS){echo 'style="padding-right:20px"';}?>>
     					<?php if($config[ConfigNames::ShowBuGuValue]){ ?>
     						BALANCE<hr>
     					<?php } ?>
@@ -80,7 +80,7 @@ if($editting) $maxTapCol = 1;
     			<?php } ?>
     			
     			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::KegColNum])){ ?>
-    				<th class="keg<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if( !$editting && $maxTapCol > 0 && $tapCol == $maxTapCol-1 && $col == $MAX_COLUMNS){echo 'style="padding-right:20px"';}?>>
+    				<th class="keg<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if( !$editting && $maxTapCol > 0 && $tapCol == $maxTapCol-1 && $col == $MAX_COLUMNS){echo 'style="padding-right:20px"';}?>>
     					DRINKS<hr>REMAINING
 						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::KegColNum)?>
     					<input type="hidden" name="<?php echo ConfigNames::KegColNum;?>" id="<?php echo ConfigNames::KegColNum;?>" value="<?php echo abs($config[ConfigNames::KegColNum]);?>"/>
@@ -88,7 +88,7 @@ if($editting) $maxTapCol = 1;
     			<?php } ?>
     			
     			<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AccoladeColNum])){ ?>
-    				<th class="accolades<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if( !$editting && $maxTapCol > 0 && $tapCol == $maxTapCol-1 && $col == $MAX_COLUMNS){echo 'style="padding-right:20px"';}?>>
+    				<th class="accolades<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" <?php if( !$editting && $maxTapCol > 0 && $tapCol == $maxTapCol-1 && $col == $MAX_COLUMNS){echo 'style="padding-right:20px"';}?>>
     					Accolades
 						<?php DisplayEditShowColumn($editting, $config, $col, ConfigNames::AccoladeColNum)?>
     					<input type="hidden" name="<?php echo ConfigNames::AccoladeColNum;?>" id="<?php echo ConfigNames::AccoladeColNum;?>" value="<?php echo abs($config[ConfigNames::AccoladeColNum]);?>"/>
