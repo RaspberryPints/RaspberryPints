@@ -12,6 +12,12 @@ $config = getAllConfigs();
 const TAP_TEXT_ENABLE =  "Let it flow";
 const TAP_TEXT_DISABLE = "Stop flow";
 
+const KEG_ARRAY_INDEX_KEG_ID = 0;
+const KEG_ARRAY_INDEX_KEG_LABEL = KEG_ARRAY_INDEX_KEG_ID+1;
+const KEG_ARRAY_INDEX_BEER_ID = KEG_ARRAY_INDEX_KEG_LABEL+1;
+const KEG_ARRAY_INDEX_BEER_BATCH_ID = KEG_ARRAY_INDEX_BEER_ID+1;
+const KEG_ARRAY_INDEX_TAP_ID = KEG_ARRAY_INDEX_BEER_BATCH_ID+1;
+
 $reconfig = false;
 if( isset($_POST['enableTap']) && $_POST['enableTap'] != ""){
 	//The element holds the tap Id
@@ -43,7 +49,7 @@ if (isset ( $_POST ['saveTapConfig'] )) {
 			$tap->set_tapNumber($_POST ['tapNumber'][$ii]);
 		}
 		$kegSelArr = explode("~", $_POST['kegId'][$ii]);
-		//Select array is kegid~beerid(in keg)~tapId(keg is on)~etc
+		//Select array is kegid~label~beerid(in keg)~batchId~tapId(keg is on)~etc
 		$kegId = null;
 		if(count($kegSelArr) > 0 && isset($kegSelArr[0]))$kegId = $kegSelArr[0];
 		if($kegId){			
@@ -107,9 +113,9 @@ if (isset ( $_POST ['saveTapConfig'] )) {
     		    $keg->set_keggingTempUnit($_POST ['keggingTempUnit'][$ii]);
     		}
 			$kegManager->Save($keg);
-		    if( ( !isset($kegSelArr[1]) || !$kegSelArr[1] || $tap->get_beerId() != $selectedBeerId ) ||
-		        ( !isset($kegSelArr[2]) || $tap->get_beerBatchId() != $selectedBatchId ) ||
-		        ( !isset($kegSelArr[3]) || !$kegSelArr[3] || $tap->get_kegId() != $kegId ) ){
+			if( ( !isset($kegSelArr[KEG_ARRAY_INDEX_BEER_ID]) || !$kegSelArr[KEG_ARRAY_INDEX_BEER_ID] || $tap->get_beerId() != $selectedBeerId ) ||
+			    ( !isset($kegSelArr[KEG_ARRAY_INDEX_BEER_BATCH_ID]) || $tap->get_beerBatchId() != $selectedBatchId ) ||
+			    ( !isset($kegSelArr[KEG_ARRAY_INDEX_TAP_ID]) || !$kegSelArr[KEG_ARRAY_INDEX_TAP_ID] || $tap->get_kegId() != $kegId ) ){
 		            $tapManager->tapKeg($tap, $kegId, $selectedBeerId, $selectedBatchId);		
 			}
 		}else if($tap->get_kegId()){
