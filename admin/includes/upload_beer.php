@@ -74,7 +74,7 @@ else
 		    $beerStyle->set_srmMax($recipe->STYLE->COLOR_MAX);
 		    $beerStyle->set_beerStyleList($recipe->STYLE->STYLE_GUIDE);
 		    
-		    $beerStyleManager->Save($beerStyle);
+		    $beerStyleManager->Save($beerStyle, TRUE);
 		}
 		$brewery = null;
 		if($recipe->BREWERY && $recipe->BREWERY != ''){
@@ -125,7 +125,7 @@ else
                   $dbFerm->set_notes($fermentable->NOTES);
                   $dbFerm->set_type($fermentable->TYPE);
                  
-                  $fermManager->Save($dbFerm);
+                  $fermManager->Save($dbFerm, TRUE);
               }
               
               $beerFerm = new BeerFermentable();
@@ -146,7 +146,7 @@ else
                   $dbHop->set_beta($hop->BETA);
                   $dbHop->set_notes($hop->NOTES);
                   
-                  $hopManager->Save($dbHop);
+                  $hopManager->Save($dbHop, TRUE);
               }
               
               $beerHop = new BeerHop();
@@ -175,7 +175,7 @@ else
                   $dbYeast->set_maxTemp(preg_replace("/[^0-9|.]/", "", $yeast->MAX_TEMPERATURE));
                   $dbYeast->set_maxTempUnit(isset($yeast->MAX_TEMPERATURE_UNIT) && $yeast->MAX_TEMPERATURE_UNIT != ""?$yeast->MAX_TEMPERATURE_UNIT:UnitsOfMeasure::TemperatureCelsius);
                   
-                  $yeastManager->Save($dbYeast);
+                  $yeastManager->Save($dbYeast, TRUE);
               }
               $beerYeast = new BeerYeast();
               $beerYeast->set_beerID($beerId);
