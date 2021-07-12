@@ -24,7 +24,7 @@ OPTION_DEBUG = False
 
 def debug(msg):
     if(OPTION_DEBUG):
-        print datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S') + " RPINTS: " + msg.rstrip()
+        print (datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S') + " RPINTS: " + msg.rstrip())
         sys.stdout.flush()
                  
 def web_socket_do_extra_handshake(request):
@@ -68,7 +68,7 @@ def web_socket_transfer_data(request):
                     
                 if not line is None:
                     request.ws_stream.send_message(line, binary=False)
-            except Exception, e:
+            except Exception as e:
                 #debug(str(e))
                 break
             finally:
@@ -83,7 +83,7 @@ def web_socket_transfer_data(request):
         debug ("closing WS connection to " + client)
         try:
             sock.close()
-        except Exception, e:
+        except Exception as e:
             #debug(str(e))
             return
 
