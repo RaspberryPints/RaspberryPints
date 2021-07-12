@@ -31,7 +31,8 @@
 	    $value == "restart"||
 	    $value == "restartservice"||
 	    $value == "upgrade"||
-	    $value == "upgradeForce")
+	    $value == "upgradeForce"||
+	    $value == "refresh")
 	{
 		$data = "RPC:".$value."\n";
 	} 

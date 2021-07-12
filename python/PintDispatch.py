@@ -159,6 +159,7 @@ class CommandTCPHandler(SocketServer.StreamRequestHandler):
             if ( reading[1] == "alamode" or reading[1] == "all" ):
                 debug("resetting alamode config from db")
                 self.server.pintdispatch.triggerAlaModeReset()
+                self.server.pintdispatch.refreshWebpages()
             if ( reading[1] == "tare" ):
                 debug("Requesting Load Cells to check tare")
                 self.server.pintdispatch.flowmonitor.tareRequest()
@@ -180,6 +181,9 @@ class CommandTCPHandler(SocketServer.StreamRequestHandler):
             if ( reading[1] == "upgradeForce" ):
                 debug("Upgrading Rpints")
                 self.server.pintdispatch.upgrade("force")
+            if ( reading[1] == "refresh" ):
+                debug("Refreshing Connected webpages")
+                self.server.pintdispatch.refreshWebpages()
         
         self.wfile.write("RPACK\n")
 
@@ -783,6 +787,11 @@ class PintDispatch(object):
         elif varient == "force":
             subprocess.call(""+PINTS_DIR+"/util/installRaspberryPints --u --f --i "+PINTS_DIR, shell=True)
 
+    # send a mcast refresh update
+    def refreshWebpages(self):
+        debug("config update: REFRESH")
+        self.mcast.sendto("RPU:REFRESH\n", (MCAST_GRP, MCAST_PORT))
+        
 class FanControlThread (threading.Thread):
     restart = False
     def __init__(self, threadID, dispatch):
