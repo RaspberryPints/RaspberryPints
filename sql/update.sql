@@ -332,9 +332,14 @@ CALL addColumnIfNotExist(DATABASE(), 'tapEvents', 'amountUnit', 'tinytext' );
 UPDATE tapconfig set countUnit = 'oz' WHERE countUnit IS NULL;
 UPDATE tapconfig set loadCellUnit = 'lb' WHERE loadCellUnit IS NULL;
 UPDATE beers set ogUnit = 'sg', fgUnit = 'sg' WHERE ogUnit IS NULL;
-UPDATE kegs SET weightUnit ='lb', emptyWeightUnit ='lb', maxVolumeUnit ='oz', 
-				startAmountUnit ='oz', currentAmountUnit ='oz', fermentationPSIUnit ='psi', keggingTempUnit = 'F' 
-				WHERE weightUnit IS NULL;
+UPDATE kegs SET weightUnit ='lb' WHERE weightUnit IS NULL;
+UPDATE kegs SET emptyWeightUnit ='lb' WHERE emptyWeightUnit IS NULL;
+UPDATE kegs SET maxVolumeUnit ='oz' WHERE maxVolumeUnit IS NULL;
+UPDATE kegs SET startAmountUnit ='oz' WHERE startAmountUnit IS NULL;
+UPDATE kegs SET currentAmountUnit ='oz' WHERE currentAmountUnit IS NULL;
+UPDATE kegs SET fermentationPSIUnit ='psi' WHERE fermentationPSIUnit IS NULL;
+UPDATE kegs SET keggingTempUnit = 'F' WHERE keggingTempUnit IS NULL;
+				
 UPDATE kegTypes SET maxAmountUnit = 'oz', emptyWeightUnit = 'lb' WHERE emptyWeightUnit IS NULL;
 UPDATE pours set amountPouredUnit = 'gal' WHERE amountPouredUnit IS NULL;
 UPDATE yeasts set minTempUnit = 'F', maxTempUnit = 'F' WHERE maxTempUnit IS NULL;
@@ -1414,4 +1419,7 @@ AS
  FROM accolades a LEFT JOIN srmRgb srm
         ON a.srm = srm.srm;
         
+INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `validation`, `createdDate`, `modifiedDate`) VALUES
+( 'maxPourAmount', '100', 'Maximum Amount allowed to be poured', '0', 'number:1-999', NOW(), NOW() );
+
 UPDATE `config` SET `configValue` = '3.1.0.0' WHERE `configName` = 'version';

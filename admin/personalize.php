@@ -60,6 +60,14 @@ Configuration Updated
         				<?php echo '<input type="hidden" name="jumpto" value="#numDisplayPours"/>'; ?>
         			<input type="submit" class="btn" name="Submit" value="Submit">
         		</form>
+    			<a id="maxPourAmount"></a>
+        		<p><b>Maximum Value a pour can be otherwise the pour is ignored:</b> </p>
+        		<form method="post" action="includes/config_update.php">
+        			<input type="text" class="largebox" value="<?php echo $configs[ConfigNames::MaxPourAmount]; ?>" name="configValue"> &nbsp; 
+        				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::MaxPourAmount.'"/>'; ?>
+        				<?php echo '<input type="hidden" name="jumpto" value="#maxPourAmount"/>'; ?>
+        			<input type="submit" class="btn" name="Submit" value="Submit">
+        		</form>
     		</div>
 		<hr />
 

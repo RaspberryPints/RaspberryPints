@@ -129,6 +129,7 @@ abstract class ConfigNames
 	const ShowFermOnMainPage = 'showFermOnMainPage';
 	const ShowGTOnMainPage = 'showGTOnMainPage';
 	const ShowAllGTOnMainPage = 'showAllGTOnMainPage';
+	const MaxPourAmount = 'maxPourAmount';
 	
 	const iSUpdateMinTemp = 'iSUpdateMinTemp';
 	const iSUpdateMaxTemp = 'iSUpdateMaxTemp';

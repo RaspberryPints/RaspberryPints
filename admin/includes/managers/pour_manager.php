@@ -212,7 +212,7 @@ class PourManager extends Manager{
 	}
 	
 	function pour($USERID, $PIN, $PULSE_COUNT){
-	    //$config = getAllConfigs();	
+	    $config = getAllConfigs();	
 		$tapManager = new TapManager();
 		$kegManager = new KegManager();
 		$userManager = new UserManager();
@@ -238,6 +238,17 @@ class PourManager extends Manager{
 		    $amount = $PULSE_COUNT / $pourCountConversion;
 		}else{
 		    echo "pours.php: No Count Per ".is_unit_imperial($tap->get_countUnit())?"Gallon":"Liter"." Configured for pin " .$PIN. " Please update from Admin->Taps\n";
+		}
+		
+		if(isset($config[ConfigNames::MaxPourAmount]) && $config[ConfigNames::MaxPourAmount] != '')
+		{
+		    if( $amount > floatval($config[ConfigNames::MaxPourAmount]))
+		    {
+		        echo "pour on pin ignored (too high > ".$config[ConfigNames::MaxPourAmount]."): " . $PIN . ", count: " . $PULSE_COUNT .
+		        ", conversion: " . $pourCountConversion . ", amount: " . $amount . ", amountUnit: " . $tap->get_countUnit() .
+		        ", user: " . ($user?$user->get_id():'N/A') . "\n" ;
+		        return;
+		    }
 		}
 		
 		echo "pour on pin: " . $PIN . ", count: " . $PULSE_COUNT . 

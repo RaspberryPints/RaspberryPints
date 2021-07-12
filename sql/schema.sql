@@ -581,6 +581,9 @@ INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel,
 ( 'iSUpdateMaxTemp', '1', 'iSpindel should update beer batch max temp', '0', NULL, NOW(), NOW() ),
 ( 'iSUpdateOG', '1', 'iSpindel should update beer og', '0', NULL, NOW(), NOW() ),
 ( 'iSUpdateFG', '1', 'iSpindel should update beer fg', '0', NULL, NOW(), NOW() );
+
+INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `validation`, `createdDate`, `modifiedDate`) VALUES
+( 'maxPourAmount', '100', 'Maximum Amount allowed to be poured', '0', 'number:1-999', NOW(), NOW() );
 -- --------------------------------------------------------
 
 --
