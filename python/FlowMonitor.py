@@ -797,9 +797,14 @@ class OneWireTemperatureThread (threading.Thread):
                     if temp != None and temp >= self.bound_lo and temp <= self.bound_hi:
                         pinState = None
                         if statePins[probeName] > 0:
-                            pinState = self.dispatch.readpin(statePins[probeName]) 
+                            try:
+                                pinState = self.dispatch.readpin(statePins[probeName]) 
+                            except Exception as e:
+                                statePins[probeName] = 0
+                                log("Unable to Read State for probe: " + probeName + " disabling")
+                                debug("1Wire Temperature Read state: " +probeName + ":" + str(e))
                         temps.append([probeName, temp, 'C', takenDate, pinState])
-                        if probeName not in tempStatus:
+                        if probeName not in tempStatus or tempStatus[probeName] == False:
                             debug("Adding " + probeName +" Temp[" + str(temp) + "] low:" + str(self.bound_lo) + " high:"+str(self.bound_hi) ) 
                         tempStatus[probeName] = True
                     elif tempStatus.get(probeName, False):
