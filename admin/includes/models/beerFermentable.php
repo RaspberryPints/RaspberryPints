@@ -21,8 +21,8 @@ class BeerFermentable
     public function get_beerID(){ return $this->_beerID; }
     public function set_beerID($_beerID){ $this->_beerID = $_beerID; }
     
-    public function get_fermentablesID(){ return $this->_fermentablesID; }
-    public function set_fermentablesID($_fermentablesID){ $this->_fermentablesID = $_fermentablesID; }
+    public function get_fermentablesId(){ return $this->_fermentablesID; }
+    public function set_fermentablesId($_fermentablesID){ $this->_fermentablesID = $_fermentablesID; }
     
     public function get_amount(){ return $this->_amount; }
     public function set_amount($_amount){ $this->_amount = $_amount; }
@@ -67,7 +67,7 @@ class BeerFermentable
         return "{" .
             "id: " . $this->get_id() . ", " .
             "beerID: '" . encode($this->get_beerID()) . "', " .
-            "fermentablesID: " . $this->get_fermentablesID() . " " .
+            "fermentablesID: " . $this->get_fermentablesId() . " " .
             "}";
     }
 }
