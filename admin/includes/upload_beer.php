@@ -1,6 +1,7 @@
 <?php 
 require_once __DIR__.'/../header.php';
 require_once __DIR__.'/managers/brewery_manager.php';
+require_once __DIR__.'/managers/srm_manager.php';
 require_once __DIR__.'/managers/fermentable_manager.php';
 require_once __DIR__.'/managers/hop_manager.php';
 require_once __DIR__.'/managers/yeast_manager.php';
@@ -10,6 +11,7 @@ require_once __DIR__.'/managers/beerYeast_manager.php';
 require_once __DIR__.'/managers/beerStyle_manager.php';
 $beerManger = new BeerManager();
 $breweryManager = new BreweryManager();
+$srmManager = new SrmManager();
 $error=false; 
 const MAX_SRM = 40.0;
 global $mysqli;
@@ -121,7 +123,9 @@ else
               if(!$dbFerm){
                   $dbFerm = new Fermentable();
                   $dbFerm->set_name(encode($fermentable->NAME));
-                  $dbFerm->set_srm($fermentable->COLOR);
+                  if($srmManager->getBySRM($fermentable->COLOR)){
+                    $dbFerm->set_srm($fermentable->COLOR);
+                  }
                   $dbFerm->set_notes($fermentable->NOTES);
                   $dbFerm->set_type($fermentable->TYPE);
                  
