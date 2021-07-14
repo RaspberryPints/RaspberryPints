@@ -400,7 +400,7 @@ include 'top_menu.php';
                                 foreach($fementableList as $item){
                                     if( !$item ) continue;
                                     $sel = "";
-                                    if( $beerFermentable && $beerFermentable->get_fermentablesID() == $item->get_id() ){
+                                    if( $beerFermentable && $beerFermentable->get_fermentablesId() == $item->get_id() ){
                                         $sel .= "selected ";
                                         $beerFermentable->set_fermentable($item);
                                     }

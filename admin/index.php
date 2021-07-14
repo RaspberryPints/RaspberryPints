@@ -27,7 +27,8 @@
 					?>
 					<?php 
 					$refer = null;
-					if( null !== $_GET['ret'] && !empty($_GET['ret']) && strpos($_GET['ret'], 'http') === false && strpos($_GET['ret'], 'www.') === false)
+					if( null !== $_GET['ret'] && !empty($_GET['ret']) && strpos($_GET['ret'], 'http') === false && 
+					    strpos($_GET['ret'], 'www.') === false && strpos($_GET['ret'], 'admin.php') === false )
 					{
 					    $refer = $_GET['ret'];
 					}
