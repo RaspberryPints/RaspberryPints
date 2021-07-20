@@ -117,7 +117,7 @@
 	for($i = 1; $i < $foundI; $i++){
 	    $menu[$i]->initCollapsed = TRUE;
 	}
-	$menu[$foundI]->initCollapsed = FALSE;
+	if( $foundI >= 0 && $foundI < count($menu) ) $menu[$foundI]->initCollapsed = FALSE;
 	?>
 </div>
 
