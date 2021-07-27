@@ -24,8 +24,8 @@ class FermenterManager extends Manager{
 	protected function getViewName(){
 	    return "vwFermenters";
 	}
-	function GetAllWithBeer(){
-	    $sql="SELECT * FROM ".$this->getViewName()." t WHERE beerId IS NOT NULL";
+	function GetAllActiveWithBeer(){
+	    $sql="SELECT * FROM ".$this->getViewName()." t WHERE beerId IS NOT NULL AND ".$this->getActiveColumnName()." = 1 ";
 	    return $this->executeQueryWithResults($sql);
 	}
 }

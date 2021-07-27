@@ -39,7 +39,7 @@ $lastPourIndex = $config[ConfigNames::ShowAnalogClock]+(($config[ConfigNames::Sh
 $logoIndex = $config[ConfigNames::ShowAnalogClock]+(($config[ConfigNames::ShowDigitalClock]||$config[ConfigNames::ShowDigitalClock24])?1:0)+$config[ConfigNames::ShowTempOnMainPage]+$config[ConfigNames::ShowLastPour];
 if( $config[ConfigNames::ShowFermOnMainPage]){
     $fermenterStart = $maxIndex;
-    $fermenters = (new FermenterManager())->GetAllWithBeer();
+    $fermenters = (new FermenterManager())->GetAllActiveWithBeer();
     $maxIndex += count($fermenters);
     $fermenterEnd = $fermenterStart + count($fermenters);
 }
@@ -177,8 +177,8 @@ if($config[ConfigNames::ShowRPLogo] && ($index == $logoIndex || $index < 0)) {
 
 if($config[ConfigNames::ShowAnalogClock] && ($index == $clockAnalogIndex || $index < 0)) {
     ?>
-<td>
-<canvas id="canvas" width="95" height="95" style="background-color:#0000000"></canvas>
+<td style="text-align: right">
+<canvas id="canvas" width="95" height="95" style="background-color:#0000000;"></canvas>
 </td>
 <?php 
 }
