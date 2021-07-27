@@ -210,7 +210,7 @@
 		</tr>
 		<?php }else{ $row++; } ?>
 		<tr class="<?php if(($row-1)%2 > 0){ echo 'altrow'; } ?>">
-			<?php if(!$editting && !$config[ConfigNames::ShowBreweryImages] && !$config[ConfigNames::ShowBeerImages]){?>
+			<?php if(!$editting && !$config[ConfigNames::ShowBreweryImages] && !$config[ConfigNames::ShowBeerImages] && $config[ConfigNames::ShowBeerTableHead]){?>
 					<td class="beername<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>" style="vertical-align: middle">
         				<?php if($editting || $config[ConfigNames::ShowBeerName]){ ?>BEER NAME <?php } ?>
         				<?php if($editting || $config[ConfigNames::ShowBeerStyle]){ ?>&nbsp; &nbsp; STYLE<hr><?php } ?>
