@@ -446,6 +446,20 @@ class FlowMonitor(object):
         #debug message
         elif ( reading[0] == "Debug" ):
            debug(reading[1], "Arduino")
+           
+        elif ( reading[0] == "T" and len(reading) >= 4 ):
+            #debug( "got a Write Pins Request: "+ msg )
+            part = 1
+            probe = reading[part]
+            part += 1
+            temp = float(reading[part])
+            part += 1
+            tempUnit = reading[part]
+            part += 1
+            takenDate = reading[part]
+            part += 1
+            self.dispatch.addTempProbeAsNeeded(probe)
+            self.dispatch.saveTemp(probe, temp, tempUnit, takenDate)
         else:
             debug( "unknown message: "+ msg )
         
