@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 
 --
 -- Table structure for table `breweries`
---
+-- 
 
 CREATE TABLE IF NOT EXISTS `breweries` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -45,20 +45,20 @@ CREATE TABLE IF NOT EXISTS `beerStyles` (
 	`catNum` tinytext NOT NULL,
 	`category` tinytext NOT NULL,
 	`beerStyleList` tinytext NOT NULL,
-	`ogMin` decimal(7,3) NOT NULL,
+	`ogMin` decimal(7,3) NULL,
 	`ogMinUnit` tinytext NULL,
-	`ogMax` decimal(7,3) NOT NULL,
+	`ogMax` decimal(7,3) NULL,
 	`ogMaxUnit` tinytext NULL,
-	`fgMin` decimal(7,3) NOT NULL,
+	`fgMin` decimal(7,3) NULL,
 	`fgminUnit` tinytext NULL,
-	`fgMax` decimal(7,3) NOT NULL,
+	`fgMax` decimal(7,3) NULL,
 	`fgMaxUnit` tinytext NULL,
-	`abvMin` decimal(3,1) NOT NULL,
-	`abvMax` decimal(3,1) NOT NULL,
-	`ibuMin` decimal(3) NOT NULL,
-	`ibuMax` decimal(3) NOT NULL,
-	`srmMin` decimal(7,1) NOT NULL,
-	`srmMax` decimal(7,1) NOT NULL,
+	`abvMin` decimal(3,1) NULL,
+	`abvMax` decimal(3,1) NULL,
+	`ibuMin` decimal(3) NULL,
+	`ibuMax` decimal(3) NULL,
+	`srmMin` decimal(7,1) NULL,
+	`srmMax` decimal(7,1) NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
@@ -779,7 +779,7 @@ CREATE TABLE IF NOT EXISTS `fermentables` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`name` tinytext NOT NULL,
 	`type` tinytext NULL,
-	`srm` decimal(3,1) NULL,
+	`srm` decimal(7,1) NULL,
 	`notes` text NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
@@ -886,7 +886,7 @@ CREATE TABLE IF NOT EXISTS `accolades` (
 	`name` tinytext NOT NULL,
 	`rank` int(11) NULL,
 	`type` tinytext NULL,
-	`srm` decimal(3,1) NULL,
+	`srm` decimal(7,1) NULL,
 	`notes` text NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
@@ -1082,7 +1082,7 @@ CREATE TABLE IF NOT EXISTS `userRfids` (
 
 CREATE TABLE IF NOT EXISTS `srmRgb` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`srm` decimal(3,1) NOT NULL,
+	`srm` decimal(7,1) NOT NULL,
 	`rgb` varchar(12) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,

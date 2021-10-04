@@ -1,7 +1,7 @@
 INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`)  
 SELECT 'showVerticleTapList', '0', 'Show the Tap List Vertically (ON = YES)', '1', NOW(), NOW() FROM DUAL 
     WHERE NOT EXISTS (SELECT configName from `config` WHERE configName = 'showVerticleTapList');
-
+ 
 CREATE TABLE IF NOT EXISTS `rfidReaders` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
   `name` text NULL,
@@ -512,6 +512,9 @@ UPDATE beerStyles SET fgMaxUnit='sg' WHERE fgMaxUnit IS NULL;
 
 ALTER TABLE beerStyles MODIFY srmMin decimal(7,1) NOT NULL ;
 ALTER TABLE beerStyles MODIFY srmMax decimal(7,1) NOT NULL ;
+ALTER TABLE fermentables MODIFY srm DECIMAL(7,1) NOT NULL ;
+ALTER TABLE srmRgb MODIFY srm DECIMAL(7,1) NOT NULL ;
+ALTER TABLE accolades MODIFY srm DECIMAL(7,1) NOT NULL ;
 
 
 
@@ -1395,6 +1398,14 @@ ALTER TABLE beerStyles CHANGE COLUMN `ogMin` `ogMin` DECIMAL(7,3) NULL DEFAULT N
 ALTER TABLE beerStyles CHANGE COLUMN `ogMax` `ogMax` DECIMAL(7,3) NULL DEFAULT NULL ;
 ALTER TABLE beerStyles CHANGE COLUMN `fgMin` `fgMin` DECIMAL(7,3) NULL DEFAULT NULL ;
 ALTER TABLE beerStyles CHANGE COLUMN `fgMax` `fgMax` DECIMAL(7,3) NULL DEFAULT NULL ;
+
+ALTER TABLE beerStyles CHANGE COLUMN `abvMin` `abvMin` DECIMAL(3,1) NULL ;
+ALTER TABLE beerStyles CHANGE COLUMN `abvMax` `abvMax` DECIMAL(3,1) NULL ;
+ALTER TABLE beerStyles CHANGE COLUMN `ibuMin` `ibuMin` DECIMAL(3,0) NULL ;
+ALTER TABLE beerStyles CHANGE COLUMN `ibuMax` `ibuMax` DECIMAL(3,0) NULL ;
+ALTER TABLE beerStyles CHANGE COLUMN `srmMin` `srmMin` DECIMAL(7,1) NULL ;
+ALTER TABLE beerStyles CHANGE COLUMN `srmMax` `srmMax` DECIMAL(7,1) NULL ;
+
 
 #remove the show column parameters as those are no longer used
 UPDATE config c1 left join config c2 on trim(c2.configName) = concat('show',substring(c1.configName,1,length(c1.configName)-3)) OR (c1.configName = 'BeerInfoColNum' AND c2.configName = 'showBeerName')
