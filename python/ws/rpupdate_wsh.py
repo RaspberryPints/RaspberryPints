@@ -61,7 +61,10 @@ def web_socket_transfer_data(request):
                 ready = select.select([sock], [], [], 20.0)
                 if ready[0]:
                     line = sock.recv(1024)
-                    debug("received server update, sending '" + line.rstrip() + "' to " + client)
+                    try:
+                        debug("received server update, sending '" + line.decode().rstrip() + "' to " + client)
+                    except:
+                        pass
                 else:
 #                    line = "RPH \n"
                     line = None
