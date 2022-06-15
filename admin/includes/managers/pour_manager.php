@@ -3,6 +3,7 @@ require_once __DIR__.'/config_manager.php';
 require_once __DIR__.'/tap_manager.php';
 require_once __DIR__.'/keg_manager.php';
 require_once __DIR__.'/beer_manager.php';
+require_once __DIR__.'/beerBatch_manager.php';
 require_once __DIR__.'/user_manager.php';
 require_once __DIR__.'/manager.php';
 require_once __DIR__.'/../models/pour.php';
