@@ -434,7 +434,7 @@
 							 }
 							 if($editting || !( !isset($config[ConfigNames::AmountPerPint]) || $config[ConfigNames::AmountPerPint] == 0)){
 							     $beer['remainAmount'] = convert_volume($beer['remainAmount'], $beer['remainAmountUnit'], $config[ConfigNames::DisplayUnitVolume], FALSE, TRUE);
-							     echo '<div id="pintsLeft"'.((!isset($config[ConfigNames::AmountPerPint]) || $config[ConfigNames::AmountPerPint] == 0)?'style="display:none"':'').'>'.number_format($beer['remainAmount']/$config[ConfigNames::AmountPerPint], 1); echo " Pints Left</div>";
+							     echo '<div id="pintsLeft"'.((!isset($config[ConfigNames::AmountPerPint]) || $config[ConfigNames::AmountPerPint] == 0)?'style="display:none"':'').'>'.number_format($beer['remainAmount']/($config[ConfigNames::AmountPerPint]==0?1:$config[ConfigNames::AmountPerPint]), 1); echo " Pints Left</div>";
 							 }
 							?> 
 							<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowRemainValue, 'remaining'); ?></h3>

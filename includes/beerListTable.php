@@ -129,7 +129,7 @@ if($editting) $maxTapCol = 1;
 							if(count($imgs) > 0) $style .= ($style != ""?";":"").'background:url('.$imgs[0].') no-repeat center; background-size:cover; -webkit-border-radius:0px; -mox-border-radius:0px; height:100px; width:50px';
 							?>
 							<span id="tapId" class="tapcircle" style="<?php echo $style; ?>">
-		                    	<?php if(isset($beer['tapNumber']) && $beer['tapNumber'] != 0){echo $beer['tapNumber'];}elseif(count($imgs) == 0){echo $i;}else{echo '&nbsp;';} ?>
+		                    	<?php if(isset($beer['tapNumber']) && $beer['tapNumber'] != 0){echo $beer['tapNumber'];}elseif(count($imgs) == 0){echo $i+($tapCol * (ceil($numberOfBeers/$maxTapCol)));}else{echo '&nbsp;';} ?>
                             </span>
 	                    	<?php if($editting){
 	                    	    echo "<input type=\"hidden\" name=\"configs[]\" value=\"".ConfigNames::AllowSamplePour."\" />";
@@ -409,7 +409,7 @@ if($editting) $maxTapCol = 1;
 							}
 							if($editting || !( !isset($config[ConfigNames::AmountPerPint]) || $config[ConfigNames::AmountPerPint] == 0)){
 							    $beer['remainAmount'] = convert_volume($beer['remainAmount'], $beer['remainAmountUnit'], $config[ConfigNames::DisplayUnitVolume], FALSE, TRUE);
-							    echo '<div id="pintsLeft"'.((!isset($config[ConfigNames::AmountPerPint]) || $config[ConfigNames::AmountPerPint] == 0)?'style="display:none"':'').'>'.number_format($beer['remainAmount']/$config[ConfigNames::AmountPerPint], 1); echo " Pints Left</div>";
+							    echo '<div id="pintsLeft"'.((!isset($config[ConfigNames::AmountPerPint]) || $config[ConfigNames::AmountPerPint] == 0)?'style="display:none"':'').'>'.number_format($beer['remainAmount']/($config[ConfigNames::AmountPerPint]==0?1:$config[ConfigNames::AmountPerPint]), 1); echo " Pints Left</div>";
 							}
 							?>
 							<?php DisplayEditCheckbox($editting, $config, ConfigNames::ShowRemainValue, 'remaining'); ?></h3>
