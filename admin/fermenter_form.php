@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
     $fermenter = new Fermenter();
     $fermenter->setFromArray($_POST);
     if(!$fermenterOld || $fermenter->get_beerId() != $fermenterOld->get_beerId() ||
-        $fermenter->get_beerBatchId() != $fermenterOld->get_BatchId()){
+        $fermenter->get_beerBatchId() != $fermenterOld->get_beerBatchId()){
             $fermenter->set_startDate(date('Y-m-d H:i:s'));
     }
     if($fermenterManager->Save($fermenter)){

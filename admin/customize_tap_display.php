@@ -432,6 +432,7 @@ Visible checkboxes can be used to show/hide the detail above them. Other checkbo
                 $taps = array();
                 $beeritem = array(
                     "id" => 1,
+                    "beerId" => 1,
                     "beername" => "BeerName",
                     "untID" => 4064135,
                     "style" => 'Style',
