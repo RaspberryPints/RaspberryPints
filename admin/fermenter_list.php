@@ -54,8 +54,8 @@ if (isset($_POST['saveAll'])) {
 		if($fermenter){
 		    $fermenter->set_label($_POST['label'][$ii]);
 		    $beerExloded = explode("~", $_POST['beerId'][$ii]);
-		    $selectedBeerId = $beerExloded[0];
-		    $selectedBatchId = $beerExloded[1];
+		    $selectedBeerId = count($beerExloded)>=1?$beerExloded[0]:'';
+		    $selectedBatchId = count($beerExloded)>=2?$beerExloded[1]:'';
 		    if($fermenter->get_beerId() != $selectedBeerId ||
 		        $fermenter->get_beerBatchId() != $selectedBatchId){
 		            $fermenter->set_beerId($selectedBeerId);
