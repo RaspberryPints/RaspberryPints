@@ -33,6 +33,9 @@ if( isset($_GET['tapId'])){
 		
 		$config = getAllConfigs();	
 		
+		//This is an option to prevent pours from recording, like if you are cleaning the taps
+		if(isset($config[ConfigNames::IgnorePours]) && $config[ConfigNames::IgnorePours]) return;
+		
 		// Creates arguments from info passed by python script from Flow Meters
 		/** @var mixed $argv **/
 		$ii = 1;

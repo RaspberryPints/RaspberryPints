@@ -135,5 +135,7 @@ abstract class ConfigNames
 	const iSUpdateMaxTemp = 'iSUpdateMaxTemp';
 	const iSUpdateOG = 'iSUpdateOG';
 	const iSUpdateFG = 'iSUpdateFG';
+	
+	const IgnorePours = 'ignorePours';
 }
 ?>

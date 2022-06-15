@@ -1433,8 +1433,10 @@ AS
 INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `validation`, `createdDate`, `modifiedDate`) VALUES
 ( 'maxPourAmount', '100', 'Maximum Amount allowed to be poured', '0', 'number:1-999', NOW(), NOW() );
 
+INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `validation`, `createdDate`, `modifiedDate`) VALUES
+( 'ignorePours', '0', 'Do not save pours to the database', '1', NULL, NOW(), NOW() );
 
-INSERT INTO `beerStyles`( name, catNum, category, beerStyleList, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES
+INSERT IGNORE INTO `beerStyles`( name, catNum, category, beerStyleList, ogMin, ogMax, fgMin, fgMax, abvMin, abvMax, ibuMin, ibuMax, srmMin, srmMax, createdDate, modifiedDate ) VALUES
 -- BJCP 2021 styles
 ( 'American Light Lager', '1A', 'Standard American Beer', 'BJCP 2021', '1.028', '1.04', '0.998', '1.008', '2.8', '4.2', '8', '12', '2', '3', NOW(), NOW() ),
 ( 'American Lager', '1B', 'Standard American Beer', 'BJCP 2021', '1.04', '1.05', '1.004', '1.01', '4.2', '5.3', '8', '18', '2', '3.5', NOW(), NOW() ),
