@@ -45,7 +45,7 @@ function utBreweryFeed($config, $breweryId) {
 
 		$bfeeds .="</tr></table>";
 		$fp = false;
-		try{ $fp = fopen($cachefile, 'w'); } catch(Exception $e){}
+		try{ $fp = @fopen($cachefile, 'w'); } catch(Exception $e){}
 		if($fp)
 		{
 			fwrite($fp, $bfeeds);
@@ -94,7 +94,7 @@ function beerRATING($config, $untID, $rating=NULL, $displayOnly=TRUE ) {
     		if($img != "")
     		{
     			$img = '<p class="rating">'.$img.'</p>';
-    			try{ $fp = fopen($cachefile, 'w'); } catch(Exception $e){}
+    			try{ $fp = @fopen($cachefile, 'w'); } catch(Exception $e){}
     			if($fp)
     			{
     				fwrite($fp, $img);
@@ -148,7 +148,7 @@ function beerRATING($config, $untID, $rating=NULL, $displayOnly=TRUE ) {
 		} 
         $imgs = "<img src=".$img." style=\"border:0;width:100px\">";
 		$fp = false;
-		try{ $fp = fopen($cachefile, 'w'); } catch(Exception $e){}
+		try{ $fp = @fopen($cachefile, 'w'); } catch(Exception $e){}
 		if($fp)
 		{
 			fwrite($fp, $imgs);
