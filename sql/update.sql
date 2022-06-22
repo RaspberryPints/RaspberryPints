@@ -458,11 +458,10 @@ INSERT IGNORE INTO accolades (id, name, type, srm, notes, createdDate, modifiedD
 UPDATE accolades SET rank = id WHERE rank IS NULL;
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
-( 'showAccoladeCol', '0', 'Show Accolades Col', '1', NOW(), NOW() ),
 ('AccoladeColNum', '7', 'Column number for Accolades', 0, NOW(), NOW() );
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ('numAccoladeDisplay', '3', 'Number of Accolades to display in a row/column', 0, NOW(), NOW() );
-
+DELETE FROM `config` WHERE configName = 'showAccoladeCol';
 
 CREATE TABLE IF NOT EXISTS `containerTypes` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,

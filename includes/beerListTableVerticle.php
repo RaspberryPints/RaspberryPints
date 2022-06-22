@@ -455,12 +455,10 @@
 		
 		<?php if(beerListShouldDisplayRow($editting, $col, $config[ConfigNames::AccoladeColNum])){ ?>
 		<tr class="<?php if($row++%2 > 0){ echo 'altrow'; } ?>">
-			<?php if($editting || $config[ConfigNames::ShowAccoladeCol]){?>
 			<td class="accolades<?php if(!$config[ConfigNames::ShowBeerTableHead]){echo ' disabled';}?>">
 				Accolades<br>
 				<input type="hidden" name="<?php echo ConfigNames::AccoladeColNum;?>" id="<?php echo ConfigNames::AccoladeColNum;?>" value="<?php echo abs($config[ConfigNames::AccoladeColNum]);?>"/>
 			</td>
-			<?php }?>
     		<?php for($i = 1; $i <= $numberOfBeers; $i++) {
     			$beer = null;
     			if( isset($beers[$i]) ) $beer = $beers[$i];

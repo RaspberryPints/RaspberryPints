@@ -603,7 +603,6 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'showSrmValue', '1', 'Show SRM Value', '1', NOW(), NOW() ),
 ( 'showBuGuValue', '1', 'Show BU:GU Value', '1', NOW(), NOW() ),
 ( 'showIbuValue', '1', 'Show IBU Value', '1', NOW(), NOW() ),
-( 'showAccoladeCol', '0', 'Show Accolades Col', '1', NOW(), NOW() ),
 ( 'showBeerName', '1', 'Show Beer Name', '1', NOW(), NOW() ),
 ( 'showBeerRating', '1', 'Show Beer Rating', '1', NOW(), NOW() ),
 ( 'showBeerStyle', '1', 'Show Beer Style', '1', NOW(), NOW() ),
