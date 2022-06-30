@@ -388,6 +388,12 @@ include 'left_bar.php';
 ?>
 	<!-- End Left Bar Menu -->
 	<!-- Start Js  -->
+	<script type="text/javascript">
+function toggleVisibility(btn, row)
+{
+	$("[id*="+row+"]").toggle();
+}
+	</script>
 <?php
 require_once 'scripts.php';
 ?>
