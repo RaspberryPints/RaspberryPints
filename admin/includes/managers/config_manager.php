@@ -19,7 +19,7 @@
 		$config[ConfigNames::UseRFID] = False;
 		$sql = "SELECT * FROM rfidReaders";
 		$qry = $mysqli->query($sql);
-		while($c = $qry->fetch_array()){
+		while($qry && $c = $qry->fetch_array()){
 		    $config[ConfigNames::UseRFID] = True;
 		    break;
 		}
