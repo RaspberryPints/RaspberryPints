@@ -14,11 +14,16 @@ import sys
 import os
 import struct
 import socket
-import MySQLdb as mdb
+import traceback
+try:
+    import MySQLdb as mdb
+except:
+    import pymysql as mdb
 from FlowMonitor import FlowMonitor
 from threading import Timer
 from threading import Lock
-import SocketServer
+from six.moves import socketserver as SocketServer
+import six
 import pprint
 import serial
 import datetime
@@ -26,9 +31,13 @@ from sys import stdin
 from mod_pywebsocket.standalone import WebSocketServer
 from mod_pywebsocket.standalone import _parse_args_and_config
 from mod_pywebsocket.standalone import _configure_logging
+#import http.server
+#import six
+#import hashlib, base64
 import subprocess
 
 from Config import config
+#from lib2to3.pgen2.pgen import DFAState
 
 GPIO_IMPORT_SUCCESSFUL = True
 try:
@@ -77,7 +86,7 @@ dbArgs=parseConnFile()
 def connectDB():
     while True:
         try:
-            con = mdb.connect(dbArgs['host'],dbArgs['username'],dbArgs['password'],dbArgs['db_name'])
+            con = mdb.connect(host=dbArgs['host'],user=dbArgs['username'],password=dbArgs['password'],database=dbArgs['db_name'])
             break
         except:
             debug(msg="Database Connection Lost, retrying", process="PintDispatch", logDB=False)
@@ -100,7 +109,7 @@ class Logger ():
     def logDB(self, msg, process="PintDispatch", isDebug=False):
         max_row_check = 2
         category = ("I" if not isDebug else "D")
-        selectLastSql = "SELECT id, category, text, occurances FROM log WHERE process = '"+process+"' ORDER BY id DESC LIMIT "+str(max_row_check)
+        selectLastSql = "SELECT id, category, text, occurances FROM log WHERE process = '"+str(process)+"' ORDER BY id DESC LIMIT "+str(max_row_check)
         updateLastSql = "UPDATE log SET occurances = occurances + 1, modifiedDate = NOW() WHERE id = "
         insertLogSql = " "
         insertLogSql += ""
@@ -129,18 +138,19 @@ class Logger ():
             loggerLastClean = datetime.date.today()
     
 class CommandTCPHandler(SocketServer.StreamRequestHandler):
-
+    RP_NAK_BYTES = "RPNAK\n".encode()
+    RP_ACK_BYTES = "RPACK\n".encode()
     def handle(self):
-        self.data = self.rfile.readline().strip()
+        self.data = six.ensure_str(self.rfile.readline()).strip()
         
         if not self.data:
-            self.wfile.write("RPNAK\n")
+            self.wfile.write(self.RP_NAK_BYTES)
             return
         
         reading = self.data.split(":")
         if ( len(reading) < 2 ):
             log( "Unknown message: "+ self.data)
-            self.wfile.write("RPNAK\n")
+            self.wfile.write(self.RP_NAK_BYTES)
             return
         if(reading[0] == "RPC"): # reconfigure
             debug("reconfigure trigger: " + reading[1])
@@ -185,7 +195,7 @@ class CommandTCPHandler(SocketServer.StreamRequestHandler):
                 debug("Refreshing Connected webpages")
                 self.server.pintdispatch.refreshWebpages()
         
-        self.wfile.write("RPACK\n")
+        self.wfile.write(self.RP_ACK_BYTES)
 
 # override server_bind method to ensure that the tcp port can be reconnected to when server is killed 
 class CommandTCPServer(SocketServer.TCPServer):
@@ -526,12 +536,15 @@ class PintDispatch(object):
     # check if we're exceeding the pour threshold
     def sendflowupdate(self, pin, count):
         return
-        
+    
+    def sendMCastMessage(self, msg):
+        self.mcast.sendto((msg + "\n").encode(), (MCAST_GRP, MCAST_PORT))
+
     # check if we're exceeding the pour threshold
     def sendkickupdate(self, pin):
         msg = "RPU:KICK:" + str(pin)
         debug("Kicking Keg: "  + msg.rstrip())
-        self.mcast.sendto(msg + "\n", (MCAST_GRP, MCAST_PORT))
+        self.sendMCastMessage(msg)
             
     # send a mcast flow update
     def sendflowcount(self, rfid, pin, count):
@@ -539,24 +552,24 @@ class PintDispatch(object):
             self.fanControl.restartNeeded(True)
         msg = "RPU:FLOW:" + str(pin) + "=" + str(count) +":" + rfid
         debug("count update: "  + msg.rstrip())
-        self.mcast.sendto(msg + "\n", (MCAST_GRP, MCAST_PORT))
+        self.sendMCastMessage(msg)
         
     # send a mcast valve/pin update
     def sendvalveupdate(self, pin, value):
         msg = "RPU:VALVE:" + str(pin) + "=" + str(value)
         debug("valve update: "  + msg.rstrip())
-        self.mcast.sendto(msg + "\n", (MCAST_GRP, MCAST_PORT))
+        self.sendMCastMessage(msg)
         
     # send a mcast fan update
     def sendfanupdate(self, pin, value):
         msg = "RPU:FAN:" + str(pin) + "=" + str(value)
         debug("fan update: "  + msg.rstrip())
-        self.mcast.sendto(msg + "\n", (MCAST_GRP, MCAST_PORT))
+        self.sendMCastMessage(msg)
       
     # send a mcast fan update
     def sendconfigupdate(self,):
         debug("config update: "  +  "RPU:CONFIG")
-        self.mcast.sendto("RPU:CONFIG\n", (MCAST_GRP, MCAST_PORT))
+        self.sendMCastMessage("RPU:CONFIG")
         
     # start running the flow monitor in it's own thread
     def spawn_flowmonitor(self):
@@ -569,7 +582,9 @@ class PintDispatch(object):
             except Exception as e:
                 log("serial connection stopped...")
                 debug( str(e) )
+                debug(traceback.format_exc())
             finally:
+                self.flowmonitor.exitFlowMonitor()
                 time.sleep(1)
                 log("flowmonitor aborted, restarting...")
                 
@@ -790,7 +805,7 @@ class PintDispatch(object):
     # send a mcast refresh update
     def refreshWebpages(self):
         debug("config update: REFRESH")
-        self.mcast.sendto("RPU:REFRESH\n", (MCAST_GRP, MCAST_PORT))
+        self.sendMCastMessage("RPU:REFRESH")
         
 class FanControlThread (threading.Thread):
     restart = False

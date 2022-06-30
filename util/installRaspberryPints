@@ -29,7 +29,7 @@ declare SCRIPTNAME APTPACKAGES VERBOSE HOMEPATH REALUSER
 APTPACKAGES="mariadb-server php php-mysql php-curl php-xml
 		 git ttf-mscorefonts-installer x11-xserver-utils unclutter vim kompare"
 INSTALLPACKAGES="dialog" 
-JESSIE_ATPPACKAGES="dialog php5 mysql-client mysql-server  
+ATPPACKAGES_JESSIE="dialog php5 mysql-client mysql-server  
          php5-mysql git 
          ttf-mscorefonts-installer x11-xserver-utils unclutter vim"    
 RASPBIANPACKAGES=" phpmyadmin chromium-browser "    
@@ -39,10 +39,12 @@ NGINXPACKAGES=" nginx php-fpm "
 MQTTPACKAGES=" mosquitto mosquitto-clients "
 MQTTPYTHONPACKAGES=" requests paho-mqtt "
      
-FLOW_MEATERS_PACKAGES="arduino python-serial python-mysqldb php-cli 
-					   xdotool dos2unix python-mod-pywebsocket i2c-tools"
-JESSIE_FLOW_MEATERS_PACKAGES="arduino python-serial python-mysqldb php5-cli 
-					   xdotool dos2unix python-mod-pywebsocket i2c-tools"
+FLOW_METERS_PACKAGES="arduino python-serial python-mysqldb php-cli 
+					   xdotool dos2unix i2c-tools"
+FLOW_METERS_PACKAGES_JESSIE="arduino python-serial python-mysqldb php5-cli 
+					   xdotool dos2unix i2c-tools"
+FLOW_METERS_PACKAGES_BULLSEYE="arduino php-cli 
+					   xdotool dos2unix i2c-tools"
 
 # the base github repo name
 DEFAULT_REPO=https://github.com/RaspberryPints/RaspberryPints.git  
@@ -50,6 +52,7 @@ CUSTOM_REPO=https://github.com/rtlindne/RaspberryPints.git
 FLOW_METERS_REPO=https://github.com/wyolum/alamode/raw/master/bundles/alamode-setup.tar.gz
 FLOW_METERS_STRETCH_REPO=https://github.com/wyolum/alamode/raw/master/alamode-setup/stretch-setup
 FLOW_METERS_BUSTER_REPO=https://github.com/wyolum/alamode/raw/master/alamode-setup/stretch-setup
+FLOW_METERS_BULLSEYE_REPO=https://github.com/wyolum/alamode/raw/master/alamode-setup/stretch-setup
 
 # RPints Archive from Tobor
 # From: https://www.homebrewtalk.com/forum/threads/version-2-release-raspberrypints-digital-taplist-solution.487694/page-116#post-8609646
@@ -377,7 +380,7 @@ checkpass() {
     if [ "$user_exists" -eq 0 ]; then
         salt=$(getent shadow "pi" | cut -d$ -f3)
         extpass=$(getent shadow "pi" | cut -d: -f2)
-        match=$(python -c 'import crypt; print crypt.crypt("'"raspberry"'", "$6$'${salt}'")')
+        match=$(python -c 'import crypt; print (crypt.crypt("'"raspberry"'", "$6$'${salt}'"))')
         [ "${match}" == "${extpass}" ] && badpwd=true || badpwd=false
         if [ "$badpwd" = true ]; then
             echo -e "\nDefault password found for the 'pi' account. This should be changed."
@@ -500,8 +503,7 @@ packages() {
     fi
     
 	if echo "$VER_NAME" | grep -iq "^jessie" ; then
-		APTPACKAGES=$JESSIE_ATPPACKAGES
-		FLOW_MEATERS_PACKAGES=$JESSIE_FLOW_MEATERS_PACKAGES
+		APTPACKAGES=$ATPPACKAGES_JESSIE
 	fi
 	    
 	WEBSERVER_OPTIONS=(1 "apache (RPints/BrewPi)"
@@ -1165,21 +1167,33 @@ doperms() {
 installFlowmeters(){
 
 	FLOWMETER_ENABLED=$(mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -sse "SELECT configValue FROM config WHERE configName='useFlowMeter'")
-	if [ $FLOWMETER_ENABLED -eq 1 ]; then return ; fi
 	
 	# ask the user if they want to install flowmeters
-	if promptYN "Do you want to use Flow Meters?" "N";
+	if [ $FLOWMETER_ENABLED -ne 1 ] && promptYN "Do you want to use Flow Meters?" "N";
 	then
 		echo "Will Install Flow Meters"
 		
 		touch ${WWWPATH}/arduino/raspberrypints/raspberrypints.cpp.hex
 		
+		if echo "$VER_NAME" | grep -iq "^jessie" ; then
+			FLOW_METERS_PACKAGES=$FLOW_METERS_PACKAGES_JESSIE
+		fi
+		# Bullseye uses python3 which MySQLdb import is not supported
+		if echo "$VER_NAME" | grep -iq "^bullseye" ; then
+			pip install pymysql
+			FLOW_METERS_PACKAGES=$FLOW_METERS_PACKAGES_BULLSEYE
+		fi
+		
 		# install necessary packages
-		apt-get install --assume-yes ${FLOW_MEATERS_PACKAGES}
-	
-		#upgrade all base
-		apt-get upgrade -y  < /dev/tty
-	
+	    for pkg in $FLOW_METERS_PACKAGES; do
+	        pkgOk=$(dpkg-query -W --showformat='${Status}\n' "$pkg" | \
+	        grep "install ok installed")
+	        if [ -z "$pkgOk" ]; then
+	            echo -e "\nInstalling '$pkg'."
+	            apt-get install "$pkg" -y -q=2 < /dev/tty ||die
+	        fi
+	    done
+		
 		# enable I2C on Raspberry Pi
 		echo '>>> Enable I2C'
 		if ! grep -q '^\s*i2c-bcm2708' $MODULE_CONFIG_FILE; then
@@ -1227,6 +1241,9 @@ installFlowmeters(){
 			fi
 			if [ ! -f "${FLOW_METERS_DIRECTORY}/alamode-setup/buster-setup" ]; then 
 				wget -O buster-setup ${FLOW_METERS_BUSTER_REPO}
+			fi
+			if [ ! -f "${FLOW_METERS_DIRECTORY}/alamode-setup/bullseye-setup" ]; then 
+				wget -O bullseye-setup https://github.com/wyolum/alamode/raw/master/alamode-setup/stretch-setup
 			fi
 			if [ -f "${FLOW_METERS_DIRECTORY}/alamode-setup/80-alamode.rules" ]; then 
 				FIND_STR=",MODE:=0666"
@@ -1280,89 +1297,27 @@ installFlowmeters(){
 		  	
 			if [ $user_choice = 4 ];
 			then
-			    for pkg in $MQTTPYTHONPACKAGES; do
-			        pkgOk=$(pip show "$pkg" | \
-			        grep "Name: ")
-			        if [ -z "$pkgOk" ]; then
-			            echo -e "\nInstalling '$pkg'."
-			            pip install "$pkg" < /dev/tty ||die
-			        fi
-			    done
-			
-				mqtt_local="N"
-				if ! promptYN "Will this pi host the MQTT Server" "Y";
-				then
-					read -e -p "MQTT Server?: " -i ${MQTT_SERVER} MQTT_SERVER < /dev/tty
-				else
-					mqtt_local="Y"
-					# Now install any necessary packages if they are not installed
-				    echo -e "\nChecking and installing required dependencies via apt."
-				    for pkg in $MQTTPACKAGES; do
-				        pkgOk=$(dpkg-query -W --showformat='${Status}\n' "$pkg" | \
-				        grep "install ok installed")
-				        if [ -z "$pkgOk" ]; then
-				            echo -e "\nInstalling '$pkg'."
-				            apt-get install "$pkg" -y -q=2 < /dev/tty ||die
-				        fi
-				    done
-					read -e -p "MQTT Port?: " -i ${MQTT_PORT} MQTT_PORT < /dev/tty
-					#configure mosquitto for MQTT 
-					echo '' > $MQTT_CONFIG_PATH
-					echo 'allow_anonymous false' >> $MQTT_CONFIG_PATH
-					echo 'password_file /etc/mosquitto/pwfile' >> $MQTT_CONFIG_PATH
-					echo "listener $MQTT_PORT" >> $MQTT_CONFIG_PATH
-					
-				fi
-				read -e -p "MQTT Username?: " -i ${MQTT_USERNAME} MQTT_USERNAME < /dev/tty
-		        read -s -e -p "MQTT Password for server ${MQTT_SERVER}?: " MQTT_PASSWORD < /dev/tty
-		        if [ "$MQTT_PASSWORD" == "" ]; then
-		         	MQTT_PASSWORD="default" 
-		        fi
-		        echo
-		        if [ "${mqtt_local}" = "Y" ];
-		        then
-		        	if [ ! -f "/etc/mosquitto/pwfile" ]; then 
-		        		echo "" > /etc/mosquitto/pwfile
-		        	fi
-					mosquitto_passwd -b /etc/mosquitto/pwfile $MQTT_USERNAME $MQTT_PASSWORD
-					/etc/init.d/mosquitto restart
-				fi
-				sed -E -i 's/(.*mqtt.host.*)/#\1/' "${WWWPATH}/python/Config.py"	
-	  			echo "config['mqtt.host'] = '$MQTT_SERVER'" >> "${WWWPATH}/python/Config.py"
-				sed -E -i 's/(.*mqtt.port.*)/#\1/' "${WWWPATH}/python/Config.py"	
-	  			echo "config['mqtt.port'] = '$MQTT_PORT'" >> "${WWWPATH}/python/Config.py"
-				sed -E -i 's/(.*mqtt.user.*)/#\1/' "${WWWPATH}/python/Config.py"	
-	  			echo "config['mqtt.user'] = '$MQTT_USERNAME'" >> "${WWWPATH}/python/Config.py"
-				sed -E -i 's/(.*mqtt.password.*)/#\1/' "${WWWPATH}/python/Config.py"	
-	  			echo "config['mqtt.password'] = '$MQTT_PASSWORD'" >> "${WWWPATH}/python/Config.py"
+			    setupMQTT
 			fi
 	
 		fi
-		if [ -f "${WWWPATH}/python/flowmon" ];
-		then
-			FIND_STR="DIR=.*"
-			REPL_STR="DIR=${WWWPATH}/python"
-			sed -i "s_${FIND_STR}_${REPL_STR}_" "${WWWPATH}/python/flowmon"
-			  
-			cp "${WWWPATH}/python/flowmon" "${INIT_DIRECTORY}/flowmon"
-			chmod a+x "${INIT_DIRECTORY}/flowmon"
-			if echo "$VER_NAME" | grep -iq "^jessie" ; then
-				/bin/systemctl daemon-reload
-				/bin/systemctl enable flowmon.service
-			fi
-			"${INIT_DIRECTORY}/flowmon" start 
-			if ps aux | grep -iq "flow_monitor.py" ; then
-				echo "Flowmon install successfully"
-			else
-				echo "Unable to install flowmon"
-			fi
-			update-rc.d flowmon defaults
-		fi
+		
+		setupFlowMon
+			
 		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "UPDATE config SET configValue='1' WHERE configName='useFlowMeter' OR configName='showKegCol';";
 		if [ $user_choice != 4 ];
 		then
 			read -e -p "For alamode set the 5V_link jumper to on (see page 11 of the Alamode Manual). Enter to continue" ANSWER < /dev/tty
 		fi
+	elif promptYN "Do you want to use MQTT?" "N";
+	then
+		setupFlowMon
+		setupMQTT
+		echo "Will use MQTT"
+	elif promptYN "Do you want to use Load Cells?" "N";
+	then
+		setupFlowMon
+		echo "To setup Load Cells visit your RaspberryPints Admin - Advanced Hardware - Load Cells page"
 	else
 		echo "Will Not Install Flow Meters"
 		echo
@@ -1379,6 +1334,8 @@ installRFID(){
 	then
 		echo "Will Install RFID"
 		
+		setupFlowMon
+			
 		pushd .
 	
 		cd ${RFID_SPI_DIRECTORY}
@@ -1408,6 +1365,8 @@ installMotionSensor(){
 	if promptYN "Do you want to use Motion Detection?" "N";
 	then
 		echo "Will Install Motion Detection"
+		setupFlowMon
+		
 		apt-get install --assume-yes xscreensaver
 
 		if promptYN "Do you want to use day_trippr's configuration?" "Y"; then
@@ -1447,12 +1406,110 @@ installTempProbes(){
 		  echo 'dtoverlay=w1-gpio' >> $BOOT_CONFIG_FILE
 		fi
 		mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -e "UPDATE config SET configValue='1' WHERE configName='useTempProbes';";
+		
+		FLOWMETER_ENABLED=$(mysql ${MYSQL_CMD} -D ${MYSQL_DB_NAME} -sse "SELECT configValue FROM config WHERE configName='useFlowMeter'")
+		if [ $FLOWMETER_ENABLED -ne 1 ]; then
+			setupFlowMon
+		fi
 	else
 		echo "Will Not Setup Temp Probes"
 		echo
 	fi
 }
+setupFlowMon(){
+    if [ ! -f "${INIT_DIRECTORY}/flowmon" ]; then
+		# install necessary packages
+		apt-get install --assume-yes ${FLOW_METERS_PACKAGES}
+		
+		if [ -f "${WWWPATH}/python/Config.py" ] ; then
+			FIND_STR="config\['pints.dir'.*"
+			REPL_STR="config\['pints.dir'\] = '${WWWPATH}/'"
+			sed -i "s_${FIND_STR}_${REPL_STR}_" "${WWWPATH}/python/Config.py"	
+						
+		fi
+		if [ -f "${WWWPATH}/python/flowmon" ];
+		then
+			FIND_STR="DIR=.*"
+			REPL_STR="DIR=${WWWPATH}/python"
+			sed -i "s_${FIND_STR}_${REPL_STR}_" "${WWWPATH}/python/flowmon"
+			  
+			cp "${WWWPATH}/python/flowmon" "${INIT_DIRECTORY}/flowmon"
+			chmod a+x "${INIT_DIRECTORY}/flowmon"
+			if echo "$VER_NAME" | grep -iq "^jessie" ; then
+				/bin/systemctl daemon-reload
+				/bin/systemctl enable flowmon.service
+			fi
+			"${INIT_DIRECTORY}/flowmon" start 
+			if ps aux | grep -iq "flow_monitor.py" ; then
+				echo "Flowmon install successfully"
+			else
+				echo "Unable to install flowmon"
+			fi
+			update-rc.d flowmon defaults
+		fi
+	fi
+}
+setupMQTT(){
 
+	sed -E -i 's/(.*flowmon.port.*)/#\1/' "${WWWPATH}/python/Config.py"	
+  	echo "config['flowmon.port'] = 'MQTT'" >> "${WWWPATH}/python/Config.py"
+  	
+	for pkg in $MQTTPYTHONPACKAGES; do
+        pkgOk=$(pip show "$pkg" | \
+        grep "Name: ")
+        if [ -z "$pkgOk" ]; then
+            echo -e "\nInstalling '$pkg'."
+            pip install "$pkg" < /dev/tty ||die
+        fi
+    done
+
+	mqtt_local="N"
+	if ! promptYN "Will this pi host the MQTT Server" "Y";
+	then
+		read -e -p "MQTT Server?: " -i ${MQTT_SERVER} MQTT_SERVER < /dev/tty
+	else
+		mqtt_local="Y"
+		# Now install any necessary packages if they are not installed
+	    echo -e "\nChecking and installing required dependencies via apt."
+	    for pkg in $MQTTPACKAGES; do
+	        pkgOk=$(dpkg-query -W --showformat='${Status}\n' "$pkg" | \
+	        grep "install ok installed")
+	        if [ -z "$pkgOk" ]; then
+	            echo -e "\nInstalling '$pkg'."
+	            apt-get install "$pkg" -y -q=2 < /dev/tty ||die
+	        fi
+	    done
+		read -e -p "MQTT Port?: " -i ${MQTT_PORT} MQTT_PORT < /dev/tty
+		#configure mosquitto for MQTT 
+		echo '' > $MQTT_CONFIG_PATH
+		echo 'allow_anonymous false' >> $MQTT_CONFIG_PATH
+		echo 'password_file /etc/mosquitto/pwfile' >> $MQTT_CONFIG_PATH
+		echo "listener $MQTT_PORT" >> $MQTT_CONFIG_PATH
+		
+	fi
+	read -e -p "MQTT Username?: " -i ${MQTT_USERNAME} MQTT_USERNAME < /dev/tty
+    read -s -e -p "MQTT Password for server ${MQTT_SERVER}?: " MQTT_PASSWORD < /dev/tty
+    if [ "$MQTT_PASSWORD" == "" ]; then
+     	MQTT_PASSWORD="default" 
+    fi
+    echo
+    if [ "${mqtt_local}" = "Y" ];
+    then
+    	if [ ! -f "/etc/mosquitto/pwfile" ]; then 
+    		echo "" > /etc/mosquitto/pwfile
+    	fi
+		mosquitto_passwd -b /etc/mosquitto/pwfile $MQTT_USERNAME $MQTT_PASSWORD
+		/etc/init.d/mosquitto restart
+	fi
+	sed -E -i 's/(.*mqtt.host.*)/#\1/' "${WWWPATH}/python/Config.py"	
+	echo "config['mqtt.host'] = '$MQTT_SERVER'" >> "${WWWPATH}/python/Config.py"
+	sed -E -i 's/(.*mqtt.port.*)/#\1/' "${WWWPATH}/python/Config.py"	
+	echo "config['mqtt.port'] = '$MQTT_PORT'" >> "${WWWPATH}/python/Config.py"
+	sed -E -i 's/(.*mqtt.user.*)/#\1/' "${WWWPATH}/python/Config.py"	
+	echo "config['mqtt.user'] = '$MQTT_USERNAME'" >> "${WWWPATH}/python/Config.py"
+	sed -E -i 's/(.*mqtt.password.*)/#\1/' "${WWWPATH}/python/Config.py"	
+	echo "config['mqtt.password'] = '$MQTT_PASSWORD'" >> "${WWWPATH}/python/Config.py"
+}
 configureMonitor(){
 	MONITOR=true
 	MONITOR_OPTIONS=(1 "No Monitor"

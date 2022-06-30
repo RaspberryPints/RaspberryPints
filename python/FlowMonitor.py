@@ -12,7 +12,6 @@ import sys
 import serial
 import syslog
 import time
-import MySQLdb as mdb
 import subprocess
 import os
 import os.path
@@ -42,6 +41,12 @@ except:
     RFID_IMPORT_SUCCESSFUL = False
     
 from Config import config
+
+try:
+    unicode
+except (NameError, AttributeError):
+    unicode = str       # for Python 3, pylint: disable=redefined-builtin,invalid-name
+
 
 def debug(msg, process="FlowMonitor", logDB=True, debugConfig='flowmon.debug'):
     if(config[debugConfig]):
@@ -77,6 +82,11 @@ class FlowMonitor(object):
         self.iSpindels = []
         self.tempProbeThread = None
         
+    def write_notimeout(self, msg, serialTrace=False):
+        if isinstance(msg, unicode):
+            msg = msg.encode()
+        self.arduino.write(msg)
+        
     def readline_notimeout(self, serialTrace=False):
         eol = b'\r\n'
         leneol = len(eol)
@@ -89,18 +99,24 @@ class FlowMonitor(object):
                 line += c
                 if line[-leneol:] == eol:
                     break
-        return bytes(line[:-leneol])
+        return bytes(line[:-leneol]).decode()
     
     def setup(self):
         if config['flowmon.port'] == "MQTT":
                 return
         hexfile = config['pints.dir'] + "/arduino/raspberrypints/raspberrypints.cpp.hex"
         inofile = config['pints.dir'] + "/arduino/raspberrypints/raspberrypints.ino"
-        if os.path.isfile(inofile) and os.access(inofile, os.R_OK) and os.path.getmtime(inofile) > os.path.getmtime(hexfile) :
+        
+        if not os.path.isfile(hexfile):
+            hexfile = config['pints.dir'] + "/arduino/raspberrypints/raspberrypints.ino.standard.hex"
+            
+        if not os.path.isfile(hexfile):
+            log("Hex not found. manual upload assumed")
+        elif os.path.isfile(inofile) and os.access(inofile, os.R_OK) and os.path.getmtime(inofile) > os.path.getmtime(hexfile) :
             log("Ino newer than Hex. manual upload assumed")
         else:
             cmdline = "/usr/share/arduino/hardware/tools/avrdude -C/usr/share/arduino/hardware/tools/avrdude.conf -patmega328p -calamode -P"+self.port+" -b115200 -D -Uflash:w:"
-            
+
             cmdline = cmdline + hexfile
             cmdline = cmdline + ":i"
             output = ""
@@ -112,7 +128,7 @@ class FlowMonitor(object):
     
                 try: 
                     debug("reflashing Arduino via:\n" + cmdline)
-                    output = subprocess.check_output(cmdline, shell=True, stderr=subprocess.STDOUT,)
+                    output = subprocess.check_output(cmdline, shell=True, stderr=subprocess.STDOUT,universal_newlines=True)
                     debug( output )
                 except Exception as ex:
                     print ('RPINTS: reflashing Arduino failed, moving on anyways, error was: ', ex)
@@ -198,14 +214,14 @@ class FlowMonitor(object):
         debug( "waiting for Arduino to come alive" )
         
         # wait for arduiono to come alive, it sens out a stream of 'a' once it's ready
-        msg = self.readline_notimeout()
-        while (b"alive" != msg):
+        msg = self.readline_notimeout(False)
+        while ("alive" != msg):
             #debug("["+str(msg)+"]")
-            if(b"StatusCheck" == msg):
+            if("StatusCheck" == msg):
                 msg = "Status;%s;%d;%s;|" % ("N", -1, 1)
                 debug( "Sending "+ msg )
-                self.arduino.write(msg)
-            msg = self.readline_notimeout()
+                self.write_notimeout(msg)
+            msg = self.readline_notimeout(False)
         self.serialResetInputBuffer()
         
         debug( "Arduino alive..." )
@@ -215,35 +231,38 @@ class FlowMonitor(object):
         debug( "Arduino config, about to send: " + cfgmsg )
         ii = 0
         while(ii < len(cfgmsg)):
-            self.arduino.write(cfgmsg[ii:ii+1]) # send config message, this will make it send pulses
+            self.write_notimeout(cfgmsg[ii:ii+1]) # send config message, this will make it send pulses
             if cfgmsg[ii:ii+1] == "~":
                 reply = ""
                 while reply.strip() != "continue":
                     while self.serialInWaiting() == 0:
                         time.sleep(.005)
-                    reply = self.arduino.readline()
+                    reply = self.readline_notimeout(False)
             ii += 1
         debug("Waiting for Config Response")
         while self.serialInWaiting() == 0:
             time.sleep(.005)
-        reply = self.arduino.readline()
+        reply = self.readline_notimeout(False)
         debug( "Arduino says: " + reply )
         
     # 'C:<numSensors>:<sensor pin>:<...>:<pourTriggerValue>:<kickTriggerValue>:<updateTriggerValue>'    
     def monitor(self, flowMetersEnabld=True):
         running = True
         
-        if flowMetersEnabld and GPIO_IMPORT_SUCCESSFUL:
+        if flowMetersEnabld and (GPIO_IMPORT_SUCCESSFUL or config['flowmon.port'] == "MQTT"):
             if self.alaIsAlive is False:
-                debug( "resetting Arduino" )
                 if config['flowmon.port'] == "MQTT":
-                    debug( "Creating MQTT Listener" )
+                    if not MQTT_IMPORT_SUCCESSFUL:
+                        log("MQTT Listener will fail as MQTT not imported")
+                    else:
+                        debug( "Creating MQTT Listener" )
                     self.arduino = MQTTListenerThread( "MQTT-1", flowMonitor=self, host=config['mqtt.host'], port=config['mqtt.port'],
                                                        user=config['mqtt.user'], password=config['mqtt.password'] )
                     self.arduino.start()
                 else:
-                    debug( "Creating Serial Listener" )
+                    debug( "resetting Arduino" )
                     self.dispatch.resetAlaMode()
+                    debug( "Creating Serial Listener" )
                     self.arduino = serial.Serial(self.port,9600,timeout=.5)
             else:
                 self.alaIsAlive = False
@@ -295,16 +314,18 @@ class FlowMonitor(object):
             
         self.reconfigTempProbes()
         
-        if flowMetersEnabld and GPIO_IMPORT_SUCCESSFUL:
-            self.reconfigAlaMode()
-            debug( "listening to Arduino" )
+        if flowMetersEnabld and (GPIO_IMPORT_SUCCESSFUL or config['flowmon.port'] == "MQTT"):
+            if config['flowmon.port'] != "MQTT":
+                self.reconfigAlaMode()
+                debug( "listening to Arduino" )
+            else:
+                debug( "listening to MQTT" )
         else:
             log("Not listening for flowmeters")
         
         try:
             while running:   
                 if config['flowmon.port'] != "MQTT" and flowMetersEnabld and GPIO_IMPORT_SUCCESSFUL:
-                    #msg = self.arduino.readline()
                     msg = self.readline_notimeout(False)
                     if not msg:
                         continue
@@ -316,29 +337,32 @@ class FlowMonitor(object):
         except:
             print("Unexpected error:", sys.exc_info()[0])
             traceback.print_exc(file=sys.stdout)
-        finally:            
-            if self.alaIsAlive is False :
-                debug( "closing serial connection to Arduino..." )
-                if config['flowmon.port'] == "MQTT":
-                    self.arduino.exit()
-                else:
-                    self.arduino.close()
-                    
-            for item in self.readers:
-                if item.isAlive():
-                    item.exit()
-            for item in self.motionDetectors:
-                if item.isAlive():
-                    item.exit()
-            for item in self.loadCellThreads:
-                if item.isAlive():
-                    item.exit()
-            for item in self.iSpindels:
-                if item.isAlive():
-                    item.exit()
-            if self.tempProbeThread is not None and self.tempProbeThread.isAlive():
-                self.tempProbeThread.exit()
-            self.alaIsAlive = False
+        finally:
+            self.exitFlowMonitor()
+            
+    def exitFlowMonitor(self):            
+        if self.alaIsAlive is False :
+            debug( "closing serial connection to Arduino..." )
+            if config['flowmon.port'] == "MQTT":
+                self.arduino.exit()
+            else:
+                self.arduino.close()
+                
+        for item in self.readers:
+            if item.is_alive():
+                item.exit()
+        for item in self.motionDetectors:
+            if item.is_alive():
+                item.exit()
+        for item in self.loadCellThreads:
+            if item.is_alive():
+                item.exit()
+        for item in self.iSpindels:
+            if item.is_alive():
+                item.exit()
+        if self.tempProbeThread is not None and self.tempProbeThread.is_alive():
+            self.tempProbeThread.exit()
+        self.alaIsAlive = False
             
     def processMsg(self, msg):
         reading = msg.split(";")
@@ -364,7 +388,7 @@ class FlowMonitor(object):
             debug( "got a pour: "+ msg )
             MCP_RFID = str(reading[1])
             MCP_PIN = str(reading[2])  
-            POUR_COUNT = str(reading[3])                    
+            POUR_COUNT = str(reading[3])         
             #The following 2 lines passes the PIN and PULSE COUNT to the php script
             subprocess.call(["php", self.poursdir, "Pour", MCP_RFID, MCP_PIN, POUR_COUNT])
             self.dispatch.sendflowcount(MCP_RFID, MCP_PIN, POUR_COUNT)
@@ -395,7 +419,7 @@ class FlowMonitor(object):
                 part += 1
             msg = "DONE;%d;%d|" % (COUNT, MODE)
             #debug( "Sending "+ msg )
-            self.arduino.write(msg)
+            self.write_notimeout(msg)
             
         elif ( reading[0] == "RP" and len(reading) >= 2 ):
             #debug( "got a Read Pin Request: "+ msg )
@@ -403,7 +427,7 @@ class FlowMonitor(object):
             pinState = self.dispatch.readpin(MCP_PIN) 
             msg = "PINREAD;%s;%s|" % (MCP_PIN, pinState)
             #debug( "Sending "+ msg )
-            self.arduino.write(msg)
+            self.write_notimeout(msg)
             
         elif ( reading[0] == "WP" and len(reading) >= 3 ):
             #debug( "got a Write Pins Request: "+ msg )
@@ -415,7 +439,7 @@ class FlowMonitor(object):
             WritePinsThread("WP", reading, self.dispatch).start()
             msg = "DONE;%d;%d|" % (COUNT, MODE)
             #debug( "Sending "+ msg )
-            self.arduino.write(msg)
+            self.write_notimeout(msg)
             
         #request basic status infomration like rfid/user and reconfig required
         elif ( reading[0] == "StatusCheck" ):
@@ -424,7 +448,7 @@ class FlowMonitor(object):
             userId = -1
             if self.alamodeUseRFID == True:
                 for item in self.readers:
-                    if not item.isAlive():
+                    if not item.is_alive():
                         item.start() 
 
                     userId = item.getLastUserId() 
@@ -439,7 +463,7 @@ class FlowMonitor(object):
                         
             msg = "Status;%s;%d;%s;%s;|" % (RFIDState, userId, self.dispatch.needAlaModeReconfig(), valves)
             debug( "Sending "+ msg )
-            self.arduino.write(msg)
+            self.write_notimeout(msg)
         #log message
         elif ( reading[0] == "Log" ):
            log(reading[1], "Arduino")
@@ -487,7 +511,7 @@ class FlowMonitor(object):
 
     def tareRequest(self):
         for item in self.loadCellThreads:
-            if item.isAlive():
+            if item.is_alive():
                 item.setCheckTare(True)
         
     def reconfigTempProbes(self):
@@ -554,7 +578,7 @@ class RFIDCheckThread (threading.Thread):
                     usrId = int(proc)
                     if usrId > -1:
                         if usrId != self.lastUserId or self.rfidTag != rfidTag:
-                            debug("RFID "+rfidTag+" User Id "+ proc)
+                            debug("RFID "+rfidTag+" User Id "+ str(proc))
                         self.userId = usrId
                         self.lastUserId = usrId
                     self.rfidTag = rfidTag
@@ -658,8 +682,8 @@ class MotionDetectionPIRThread (threading.Thread):
             GPIO.add_event_detect(self.pirPin, GPIO.RISING, callback=self.MOTION)
             while not self.shutdown_required:
                 time.sleep(100)
-        except:
-            log("Unable to run Motion Detection")
+        except Exception as ex:
+            log("Unable to run Motion Detection:" + str(ex))
             debug(traceback.format_exc())
             return
         
@@ -841,7 +865,7 @@ class MQTTListenerThread (threading.Thread):
         self.threadID = threadID
         self.flowMonitor = flowMonitor
         self.host = host
-        self.port = port
+        self.port = int(port)
         self.user = user
         self.password = password
         self.live_interval = live_interval
@@ -879,6 +903,7 @@ class MQTTListenerThread (threading.Thread):
         except Exception as e:
             log("Unable to Run MQTT Listener")
             debug("MQTT Listener: " +str(e))
+            debug(traceback.format_exc())
             return
             
     # Define on connect event function
@@ -900,7 +925,7 @@ class MQTTListenerThread (threading.Thread):
     # a new message arrives for the subscribed topic
     def on_message(self, client, userdata, message):
         debug("Recevied: " + str(message) + "FROM MQTT")
-        self.flowMonitor.processMsg(message.payload)
+        self.flowMonitor.processMsg(message.payload.decode())
 
     def write(self, msg):
         self.mqttc.publish("rpints",msg)
@@ -911,8 +936,8 @@ class MQTTListenerThread (threading.Thread):
     
     
 #Based on https://github.com/DottoreTozzi/iSpindel-TCP-Server
-ISPINDEL_ACK = chr(6)  # ASCII ACK (Acknowledge)
-ISPINDEL_NAK = chr(21)  # ASCII NAK (Not Acknowledged)
+ISPINDEL_ACK = chr(6).encode()  # ASCII ACK (Acknowledge)
+ISPINDEL_NAK = chr(21).encode()  # ASCII NAK (Not Acknowledged)
 ISPINDEL_BUFF_SIZE = 256  # Buffer Size
 class iSpindelListenerThread (threading.Thread):
     def __init__(self, threadID, flowMonitor, dispatch, host, port, allowedConnections=5, updateDir=''):
@@ -931,7 +956,11 @@ class iSpindelListenerThread (threading.Thread):
     def exit(self):
         self.shutdown_required = True
         if self.serversock != None:
-            self.serversock.shutdown(SHUT_RDWR)
+            try:
+                self.serversock.shutdown(SHUT_RDWR)
+            except:
+                debug('Server Socket Exception on Exit', debugConfig='iSpindel.debug')
+                
         
         
     def run(self):
@@ -960,12 +989,12 @@ class iSpindelListenerThread (threading.Thread):
             user_token = ''
             interval = 0
             rssi = 0
-            timestart = time.clock()
+            timestart = time.time()
             config_sent = 0
             try:
                 device = None
                 while not self.shutdown_required:
-                    data = clientsock.recv(ISPINDEL_BUFF_SIZE)
+                    data = clientsock.recv(ISPINDEL_BUFF_SIZE).decode()
                     if not data: break  # client closed connection
                     #debug(repr(addr) + ' received:' + repr(data), debugConfig='iSpindel.debug')
                     if "close" == data.rstrip():
@@ -976,7 +1005,7 @@ class iSpindelListenerThread (threading.Thread):
                         inpstr += str(data.rstrip())
                         if inpstr[0] != "{":
                             clientsock.send(ISPINDEL_NAK)
-                            debug(repr(addr) + ' Not JSON.', debugConfig='iSpindel.debug')
+                            debug(repr(addr) + ' Not JSON:' + str(inpstr), debugConfig='iSpindel.debug')
                             break  # close connection
                         if inpstr.find("}") != -1:
                             debug(repr(addr) + 'Received:' + inpstr, debugConfig='iSpindel.debug')
@@ -996,7 +1025,7 @@ class iSpindelListenerThread (threading.Thread):
                                 # older firmwares might not be transmitting all of these
                                 debug("Consider updating your iSpindel's Firmware.", debugConfig='iSpindel.debug')
                             try:
-                                # get user token for connection to ispindle.de public server
+                                # get user token for connection to iSpindel.de public server
                                 user_token = jinput['token']
                             except:
                                 # older firmwares < 5.4 or field not filled in
@@ -1016,21 +1045,21 @@ class iSpindelListenerThread (threading.Thread):
                                         jresp["interval"] = config["interval"]
                                         jresp["token"] = config["token"]
                                         jresp["polynomial"] = config["polynomial"]
-                                        resp = json.dumps(jresp)
-                                        debug(repr(addr) + ' JSON Response: ' + resp, debugConfig='iSpindel.debug')
+                                        resp = json.dumps(jresp).encode()
+                                        debug(repr(addr) + ' JSON Response: ' + resp.decode(), debugConfig='iSpindel.debug')
                                         config_sent = 1
                                     else:
                                         debug(repr(addr) + ' No unsent data for iSpindel "' + spindle_name + '". Sending ACK.', debugConfig='iSpindel.debug')
                                 except Exception as e:
-                                    debug(repr(addr) + " Can't send config response. Something went wrong:", debugConfig='iSpindel.debug')
+                                    log(repr(addr) + " Can't send config response. Something went wrong: Sending Ack")
                                     debug(repr(addr) + " Error: " + str(e), debugConfig='iSpindel.debug')
-                                    debug(repr(addr) + " Sending ACK.", debugConfig='iSpindel.debug')
+                                    debug(traceback.format_exc(), debugConfig='iSpindel.debug')
                                 clientsock.send(resp)
                             else:
                                 clientsock.send(ISPINDEL_ACK)
                                 debug(repr(addr) + ' Sent ACK.', debugConfig='iSpindel.debug')
                             #
-                            debug(repr(addr) + ' ' + spindle_name + ' (ID:' + str(spindle_id) + ') : Data Transfer OK. Time: '+str(time.clock() - timestart), debugConfig='iSpindel.debug')
+                            debug(repr(addr) + ' ' + spindle_name + ' (ID:' + str(spindle_id) + ') : Data Transfer OK. Time: '+str(time.time() - timestart), debugConfig='iSpindel.debug')
                             success = 1
                             break  # close connection
                     except Exception as e:
@@ -1107,7 +1136,7 @@ class iSpindelListenerThread (threading.Thread):
                                 csv_file.writelines(outstr)
                                 debug(repr(addr) + ' - CSV data written.', debugConfig='iSpindel.debug')
                         except Exception as e:
-                            debug(repr(addr) + ' CSV Error: ' + str(e), debugConfig='iSpindel.debug')
+                            log(repr(addr) + ' CSV Error: ' + str(e))
                             debug(traceback.format_exc(), debugConfig='iSpindel.debug')
                 
                     if device["sqlEnabled"]:                
@@ -1138,13 +1167,14 @@ class iSpindelListenerThread (threading.Thread):
                                 subprocess.call(["php", self.updateDir + '/admin/updateBeerBatch.php', str(device["beerBatchId"]), str(temperature), str(temperatureUnit), str(gravity), str(device["gravityUnit"])])
                         
                         except Exception as e:
-                            debug(repr(addr) + ' Database Error: ' + str(e) + '\nDid you update your database?', debugConfig='iSpindel.debug')
+                            log(repr(addr) + ' Database Error: ' + str(e) + '\nDid you update your database?')
                             debug(traceback.format_exc(), debugConfig='iSpindel.debug')
             
                     if device["brewPiLessEnabled"]:
                         try:
+                            url = 'http://' + device["brewPiLessAddress"] + '/gravity'
                             debug(repr(addr) + ' - forwarding to BREWPILESS at http://' + device["brewPiLessAddress"], debugConfig='iSpindel.debug')
-                            import urllib2
+                            from six.moves.urllib import request as urllib2
                             outdata = {
                                 'name': spindle_name,
                                 'angle': angle,
@@ -1154,20 +1184,20 @@ class iSpindelListenerThread (threading.Thread):
                             }
                             out = json.dumps(outdata)
                             debug(repr(addr) + ' - sending: ' + out, debugConfig='iSpindel.debug')
-                            url = 'http://' + device["brewPiLessAddress"] + '/gravity'
                             req = urllib2.Request(url)
                             req.add_header('Content-Type', 'application/json')
                             req.add_header('User-Agent', spindle_name)
-                            response = urllib2.urlopen(req, out)
+                            response = urllib2.urlopen(req, out.encode())
                             debug(repr(addr) + ' - received: ' + response.read(), debugConfig='iSpindel.debug')
             
                         except Exception as e:
-                            debug(repr(addr) + ' Error while forwarding to URL ' + url + ' : ' + str(e), debugConfig='iSpindel.debug')
+                            log(repr(addr) + ' Error while forwarding to URL ' + url + ' : ' + str(e))
+                            debug(traceback.format_exc(), debugConfig='iSpindel.debug')
             
                     if device["craftBeerPiEnabled"]:
                         try:
                             debug(repr(addr) + ' - forwarding to CraftBeerPi3 at http://' + device["craftBeerPiAddress"], debugConfig='iSpindel.debug')
-                            import urllib2
+                            from six.moves.urllib import request as urllib2
                             outdata = {
                                 'name' : spindle_name,
                                 'angle' : angle if device["craftBeerPiSendAngle"] else gravity,
@@ -1180,20 +1210,21 @@ class iSpindelListenerThread (threading.Thread):
                             req = urllib2.Request(url)
                             req.add_header('Content-Type', 'application/json')
                             req.add_header('User-Agent', spindle_name)
-                            response = urllib2.urlopen(req, out)
+                            response = urllib2.urlopen(req, out.encode())
                             debug(repr(addr) + ' - received: ' + response.read(), debugConfig='iSpindel.debug')
             
                         except Exception as e:
-                            debug(repr(addr) + ' Error while forwarding to URL ' + url + ' : ' + str(e), debugConfig='iSpindel.debug')
+                            log(repr(addr) + ' Error while forwarding to URL ' + url + ' : ' + str(e))
+                            debug(traceback.format_exc(), debugConfig='iSpindel.debug')
             
             
                     if device["unidotsEnabled"]:
                         try:
-                            token = user_token if device["unidotsUseiSpindleToken"] else device["unidotsToken"]
+                            token = user_token if device["unidotsUseiSpindelToken"] else device["unidotsToken"]
                             if token != '':
                                 if token[:1] != '*':
                                     debug(repr(addr) + ' - sending to ubidots', debugConfig='iSpindel.debug')
-                                    import urllib2
+                                    from six.moves.urllib import request as urllib2
                                     outdata = {
                                         'tilt': angle,
                                         'temperature': temperature,
@@ -1208,14 +1239,15 @@ class iSpindelListenerThread (threading.Thread):
                                     req = urllib2.Request(url)
                                     req.add_header('Content-Type', 'application/json')
                                     req.add_header('User-Agent', spindle_name)
-                                    response = urllib2.urlopen(req, out)
+                                    response = urllib2.urlopen(req, out.encode())
                                     debug(repr(addr) + ' - received: ' + response.read(), debugConfig='iSpindel.debug')
                         except Exception as e:
-                            debug(repr(addr) + ' Ubidots Error: ' + str(e), debugConfig='iSpindel.debug')
+                            log(repr(addr) + ' Ubidots Error: ' + str(e))
+                            debug(traceback.format_exc(), debugConfig='iSpindel.debug')
             
                     if device["forwardEnabled"]:
                         try:
-                            debug(repr(addr) + ' - forwarding to ' + device["forwardAddress"] + ":" + device["forwardPort"], debugConfig='iSpindel.debug')
+                            debug(repr(addr) + ' - forwarding to ' + str(device["forwardAddress"]) + ":" + str(device["forwardPort"]), debugConfig='iSpindel.debug')
                             outdata = {
                                 'name': spindle_name,
                                 'ID': spindle_id,
@@ -1225,15 +1257,15 @@ class iSpindelListenerThread (threading.Thread):
                                 'gravity': gravity,
                                 'token': user_token,
                                 'interval': interval,
-                                'recipe': recipe,
+                                #'recipe': recipe,
                                 'RSSI': rssi
                             }
                             out = json.dumps(outdata)
                             debug(repr(addr) + ' - sending: ' + out, debugConfig='iSpindel.debug')
                             s = socket(AF_INET, SOCK_STREAM)
-                            s.connect((device["forwardAddress"], device["forwardPort"]))
+                            s.connect((device["forwardAddress"], int(device["forwardPort"])))
                             s.send(out)
-                            rcv = s.recv(ISPINDEL_BUFF_SIZE)
+                            rcv = s.recv(ISPINDEL_BUFF_SIZE).decode()
                             s.close()
                             if rcv[0] == ISPINDEL_ACK:
                                 debug(repr(addr) + ' - received ACK - OK!', debugConfig='iSpindel.debug')
@@ -1242,16 +1274,17 @@ class iSpindelListenerThread (threading.Thread):
                             else:
                                 debug(repr(addr) + ' - received: ' + rcv, debugConfig='iSpindel.debug')
                         except Exception as e:
-                            debug(repr(addr) + ' Error while forwarding to ' + device["forwardAddress"] + ': ' + str(e), debugConfig='iSpindel.debug')
+                            log(repr(addr) + ' Error while forwarding to ' + device["forwardAddress"] + ': ' + str(e))
+                            debug(traceback.format_exc(), debugConfig='iSpindel.debug')
             
                     if device["fermentTrackEnabled"]:
                         try:
                             
-                            token = user_token if device["fermentTrackUseiSpindleToken"] else device["fermentTrackToken"]
+                            token = user_token if device["fermentTrackUseiSpindelToken"] else device["fermentTrackToken"]
                             if token != '':
                                 if token[:1] != '*':
                                     debug(repr(addr) + ' - sending to fermentrack', debugConfig='iSpindel.debug')
-                                    import urllib2
+                                    from six.moves.urllib import request as urllib2
                                     outdata = {
                                         "ID": spindle_id,
                                         "angle": angle,
@@ -1268,18 +1301,19 @@ class iSpindelListenerThread (threading.Thread):
                                     req = urllib2.Request(url)
                                     req.add_header('Content-Type', 'application/json')
                                     req.add_header('User-Agent', spindle_name)
-                                    response = urllib2.urlopen(req, out)
+                                    response = urllib2.urlopen(req, out.encode())
                                     debug(repr(addr) + ' - received: ' + response.read(), debugConfig='iSpindel.debug')
                         except Exception as e:
-                            debug(repr(addr) + ' Fermentrack Error: ' + str(e), debugConfig='iSpindel.debug')
+                            log(repr(addr) + ' Fermentrack Error: ' + str(e))
+                            debug(traceback.format_exc(), debugConfig='iSpindel.debug')
             
                     if device["brewSpyEnabled"]:
                         try:
-                            token = user_token if device["brewSpyUseiSpindleToken"] else device["brewSpyToken"]
+                            token = user_token if device["brewSpyUseiSpindelToken"] else device["brewSpyToken"]
                             if token != '':
                                 if token[:1] != '*':
                                     debug(repr(addr) + ' - sending to brewspy', debugConfig='iSpindel.debug')
-                                    import urllib2
+                                    from six.moves.urllib import request as urllib2
                                     outdata = {
                                         "ID": spindle_id,
                                         "angle": angle,
@@ -1297,24 +1331,25 @@ class iSpindelListenerThread (threading.Thread):
                                     req = urllib2.Request(url)
                                     req.add_header('Content-Type', 'application/json')
                                     req.add_header('User-Agent', spindle_name)
-                                    response = urllib2.urlopen(req, out)
+                                    response = urllib2.urlopen(req, out.encode())
                                     debug(repr(addr) + ' - received: ' + response.read(), debugConfig='iSpindel.debug')
                         except Exception as e:
-                            debug(repr(addr) + ' Brewspy Error: ' + str(e), debugConfig='iSpindel.debug')
+                            log(repr(addr) + ' Brewspy Error: ' + str(e))
+                            debug(traceback.format_exc(), debugConfig='iSpindel.debug')
             
                     if device["brewFatherEnabled"]:
                         try:
-                            token = user_token if device["brewFatherUseiSpindleToken"] else device["brewFatherToken"]
+                            token = user_token if device["brewFatherUseiSpindelToken"] else device["brewFatherToken"]
                             if token != '':
                                 if token[:1] != '*':
                                     debug(repr(addr) + ' - sending to brewfather', debugConfig='iSpindel.debug')
-                                    import urllib2
+                                    from six.moves.urllib import request as urllib2
                                     outdata = {
                                         "ID": spindle_id,
                                         "angle": angle,
                                         "battery": battery,
                                         "gravity": gravity,
-                                        "name": spindle_name + device["brewFatherSuffix"],
+                                        "name": spindle_name + str(device["brewFatherSuffix"]),
                                         "temperature": temperature,
                                         "token": token
                                     }
@@ -1325,10 +1360,11 @@ class iSpindelListenerThread (threading.Thread):
                                     req = urllib2.Request(url)
                                     req.add_header('Content-Type', 'application/json')
                                     req.add_header('User-Agent', spindle_name)
-                                    response = urllib2.urlopen(req, out)
+                                    response = urllib2.urlopen(req, out.encode())
                                     debug(repr(addr) + ' - received: ' + response.read(), debugConfig='iSpindel.debug')
                         except Exception as e:
-                            debug(repr(addr) + ' Brewfather Error: ' + str(e), debugConfig='iSpindel.debug')
+                            log(repr(addr) + ' Brewfather Error: ' + str(e))
+                            debug(traceback.format_exc(), debugConfig='iSpindel.debug')
 
             except Exception as e:
                 log("Unable to Run iSpindel Listener")
