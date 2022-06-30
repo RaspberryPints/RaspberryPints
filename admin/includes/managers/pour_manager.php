@@ -236,7 +236,7 @@ class PourManager extends Manager{
 		// Sets the amount to be a fraction of a gallon/Liter
 		$amount = 0;
 		if( $pourCountConversion > 0 ) {
-		    $amount = $PULSE_COUNT / $pourCountConversion;
+		    $amount = intval($PULSE_COUNT) / $pourCountConversion;
 		}else{
 		    echo "pours.php: No Count Per ".is_unit_imperial($tap->get_countUnit())?"Gallon":"Liter"." Configured for pin " .$PIN. " Please update from Admin->Taps\n";
 		}
