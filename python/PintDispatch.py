@@ -15,10 +15,13 @@ import os
 import struct
 import socket
 import traceback
+PYTHON_2 = True
 try:
     import MySQLdb as mdb
 except:
     import pymysql as mdb
+    PYTHON_2 = False
+    
 from FlowMonitor import FlowMonitor
 from threading import Timer
 from threading import Lock
@@ -86,7 +89,10 @@ dbArgs=parseConnFile()
 def connectDB():
     while True:
         try:
-            con = mdb.connect(host=dbArgs['host'],user=dbArgs['username'],password=dbArgs['password'],database=dbArgs['db_name'])
+            if PYTHON_2:
+                con = mdb.connect(dbArgs['host'],dbArgs['username'],dbArgs['password'],dbArgs['db_name'])                
+            else: 
+                con = mdb.connect(host=dbArgs['host'],user=dbArgs['username'],password=dbArgs['password'],database=dbArgs['db_name'])
             break
         except:
             debug(msg="Database Connection Lost, retrying", process="PintDispatch", logDB=False)
