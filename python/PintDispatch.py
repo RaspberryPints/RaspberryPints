@@ -90,7 +90,7 @@ def connectDB():
     while True:
         try:
             if PYTHON_2:
-                con = mdb.connect(dbArgs['host'],dbArgs['username'],dbArgs['password'],dbArgs['db_name'])                
+                con = mdb.connect(host=dbArgs['host'],user=dbArgs['username'],passwd=dbArgs['password'],db=dbArgs['db_name'])        
             else: 
                 con = mdb.connect(host=dbArgs['host'],user=dbArgs['username'],password=dbArgs['password'],database=dbArgs['db_name'])
             break
