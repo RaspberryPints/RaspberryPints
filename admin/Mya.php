@@ -39,7 +39,7 @@ if($result) $user = $result->fetch_array();
 					</tr>
 					<tr>
 						<td>Name:</td>
-						<td><?php if($user) echo $user['name'];?></td>
+						<td><?php if($user && isset($user['name'])) echo $user['name'];?></td>
 					</tr>
 					<tr>
 						<td>Email:</td>
