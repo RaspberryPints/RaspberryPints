@@ -1586,5 +1586,7 @@ INSERT IGNORE INTO `beerStyles`( name, catNum, category, beerStyleList, ogMin, o
 ( 'Specialty Cider/Perry', 'C2F', 'Specialty Cider and Perry', 'BJCP 2015', '1.045', '1.100', '0.995', '1.020', '5', '12', '0', '0', '0', '0', NOW(), NOW() );
 
 
+INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
+( 'samplePourSize', '0', 'Size of sample Pour', '0', NOW(), NOW() );
 
 UPDATE `config` SET `configValue` = '3.1.0.0' WHERE `configName` = 'version';

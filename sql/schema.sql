@@ -648,6 +648,7 @@ INSERT INTO `config` ( configName, configValue, displayName, showOnPanel, create
 ( 'defaultKeggingTemp', '56', 'Default Temperature of beer when kegging', '0', NOW(), NOW() ),
 ( 'defaultKeggingTempUnit', 'F', 'Default Temperature Unit of beer when kegging', '0', NOW(), NOW() ),
 ( 'allowSamplePour', '1', 'Allow Sample Pour from List', '1', NOW(), NOW() ),
+( 'samplePourSize', '0', 'Size of sample Pour', '0', NOW(), NOW() ),
 ( 'saveNonUserRfids', '1', 'If unknown RFID tags should be saved into the database', '1', NOW(), NOW() ),
 ( 'showPourListOnHome', '1', 'Show list of pours on home screen', '1', NOW(), NOW() ),
 ( 'ABVColorSRM', '1', 'Use beers SRM color to fill in the ABV indicator', '1', NOW(), NOW() ),

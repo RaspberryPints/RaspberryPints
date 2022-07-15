@@ -91,6 +91,15 @@ Configuration Updated
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form><br><br>
 			<hr />
+		<h2>Sample Amount</h2><br><br>
+		<p><b>Amount (<?php echo $configs[ConfigNames::DisplayUnitVolume]?>) Per Sample Pour:</b>(If greater than 0 then this value is used for sample pours)</p>
+			<form method="post" action="includes/config_update.php" id="amountPerPintForm">
+				<input type="text" class="largebox" value="<?php echo $configs[ConfigNames::SamplePourSize]; ?>" name="configValue"> &nbsp; 
+				<?php echo '<input type="hidden" name="configName" value="'.ConfigNames::SamplePourSize.'"/>'; ?>
+				<?php echo '<input type="hidden" name="jumpto" value="#SamplePourSize"/>'; ?>
+				<input type="submit" class="btn" name="Submit" value="Submit">
+			</form><br><br>
+			<hr />
 	<a id="tapHeader"></a> 
 		<h2>Taplist Header</h2><br><br>
 		<p><b>Text to Display:</b></p>

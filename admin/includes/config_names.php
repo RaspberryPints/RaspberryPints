@@ -109,6 +109,7 @@ abstract class ConfigNames
 	const TempProbeBoundHigh = 'tempProbeBoundHigh';
 	const ShowTempOnMainPage = 'showTempOnMainPage';
 	const AllowSamplePour = 'allowSamplePour';
+	const SamplePourSize = 'samplePourSize';
 	const RestartFanAfterPour = 'restartFanAfterPour';
 	const DefaultRowsPerPage = 'DefaultRowsPerPage';
 	const DisplayUnitVolume      = 'displayUnitVolume';
