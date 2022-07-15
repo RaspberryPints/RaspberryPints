@@ -46,7 +46,7 @@ class UserManager extends Manager{
 		if($password)$password = md5($password);
 		$sql = 		"UPDATE users " .
 					"SET " .
-						"password =  NULLIF('$password', ''), " .
+						"password =  NULLIF(MD5('$password'), ''), " .
 						"modifiedDate = NOW() ".
 					"WHERE id = $id";	
 		return $this->executeQueryNoResult($sql);
