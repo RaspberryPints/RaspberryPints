@@ -32,7 +32,7 @@
 					{
 					    $refer = $_GET['ret'];
 					}
-					else if($_SERVER['HTTP_REFERER'] && !strpos($_SERVER['HTTP_REFERER'], "checklogin"))
+					else if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] && !strpos($_SERVER['HTTP_REFERER'], "checklogin"))
 					{
 					    $refer = $_SERVER['HTTP_REFERER'];
 					}
