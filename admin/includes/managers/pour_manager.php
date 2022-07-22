@@ -342,7 +342,7 @@ class PourManager extends Manager{
 		else 
 		{
 		    $amount = $config[ConfigNames::SamplePourSize]/(is_unit_imperial($tap->get_countUnit())?128:1000);
-		    $amountUnit = $tap->get_countUnit();
+		    $amountUnit = (is_unit_imperial($tap->get_countUnit())?UnitsOfMeasure::VolumeGallon:UnitsOfMeasure::VolumeLiter);
 		}
 		echo "pour on tap: " . $tap->get_tapNumber() . ", count: " . 'Sample' . 
 		     ", conversion: " . $pourCountConversion . 
