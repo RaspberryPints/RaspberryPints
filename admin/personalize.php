@@ -91,6 +91,7 @@ Configuration Updated
 				<input type="submit" class="btn" name="Submit" value="Submit">
 			</form><br><br>
 			<hr />
+	<a id="SamplePourSize"></a> 
 		<h2>Sample Amount</h2><br><br>
 		<p><b>Amount (<?php echo $configs[ConfigNames::DisplayUnitVolume]?>) Per Sample Pour:</b>(If greater than 0 then this value is used for sample pours)</p>
 			<form method="post" action="includes/config_update.php" id="amountPerPintForm">
