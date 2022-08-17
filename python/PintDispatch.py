@@ -87,6 +87,7 @@ def parseConnFile():
     return connDict
 dbArgs=parseConnFile()
 def connectDB():
+    reConnected = False
     while True:
         try:
             if PYTHON_2:
@@ -97,6 +98,10 @@ def connectDB():
         except:
             debug(msg="Database Connection Lost, retrying", process="PintDispatch", logDB=False)
             time.sleep(1)
+            reConnected = True
+    
+    if reConnected:
+        debug(msg="Database Reconnected", process="PintDispatch", logDB=False)
         
     return con
 
