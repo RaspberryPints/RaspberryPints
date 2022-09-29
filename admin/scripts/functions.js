@@ -70,6 +70,12 @@ $(document).ready(function(){
 		input.parentElement.innerHTML = input.parentElement.innerHTML + '<label class="error" for="'+input.id+'">Please enter a valid number.</label>';
 	}
 	
+	function clearInputError (input){
+		var errorStart = input.parentElement.innerHTML.match("<label class=\"error\".*")
+		if(!errorStart) return;
+		input.parentElement.innerHTML = input.parentElement.innerHTML.substring(0, errorStart.index);
+	}
+	
 	function isNumeric(n) {
 	    return !isNaN(parseFloat(n)) && isFinite(n);
 	}

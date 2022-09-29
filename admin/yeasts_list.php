@@ -203,14 +203,18 @@ require_once 'scripts.php';
         	var valid = true;
         	$("form#"+form.id+" :input").each(function(){
     		 	var input = $(this)[0];
-    		 	if( /minTemp[0-9]+/.test(input.name) ||
-		 			/maxTemp[0-9]+/.test(input.name) ||
-    	 			/minAttenuation[0-9]+/.test(input.name) ||
-    	 			/maxAttenuation[0-9]+/.test(input.name) ||
-    	 			/flocculation[0-9]+/.test(input.name) ){
+    		 	if( /minTemp[0-9]+/.test(input.id) ||
+		 			/maxTemp[0-9]+/.test(input.id) ||
+    	 			/minAttenuation[0-9]+/.test(input.id) ||
+    	 			/maxAttenuation[0-9]+/.test(input.id) ||
+    	 			/flocculation[0-9]+/.test(input.id) ){
             		if(!isNumeric(input.value)){
             			addInputError(input);
             			valid = false;
+            		}
+            		else
+            		{
+            			clearInputError(input);
             		}
     		 	}
     		});
