@@ -1636,7 +1636,7 @@ configureMonitor(){
 		sed -i -E 's/^\s*(@chromium.*)/#\1/g' $START_CONFIG_FILE
 		if promptYN "Do you want to start with Chromium in Kiosk Mode?" "Y"; 
 		then
-			echo '@chromium-browser --kiosk localhost' >> $START_CONFIG_FILE
+			echo '@chromium --kiosk localhost' >> $START_CONFIG_FILE
 		fi
 	fi
 	 
@@ -1684,10 +1684,10 @@ EOF
 		reboot
 	fi
 	if promptYN "Open RaspberryPints" "Y"; then
-		su pi chromium-browser http://localhost
+		su pi chromium http://localhost
 	fi
 	if promptYN "Open RaspberryPints Admin?" "Y"; then
-		su pi chromium-browser http://localhost/admin/index.php
+		su pi chromium http://localhost/admin/index.php
 	fi
 }
 
