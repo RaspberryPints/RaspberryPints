@@ -194,8 +194,10 @@ class _StandaloneConnection(object):
 
     def write(self, data):
         """Mimic mp_conn.write()."""
-
-        return self._request_handler.wfile.write(data)
+        try:
+            return self._request_handler.wfile.write(data)
+        except:
+            return ""
 
     def read(self, length):
         """Mimic mp_conn.read()."""
