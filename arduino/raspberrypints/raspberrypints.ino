@@ -37,6 +37,7 @@ ISR(PCINT3_vect, ISR_ALIASOF(PCINT0_vect));//Handle PCINT3 as if its PCINT0
 
 #define CMD_READ_PINS     "RP"
 #define CMD_WRITE_PINS    F("WP")
+#define CMD_UPDATE_PINS   F("UP")
 #define CMD_SET_PINS_MODE F("SM")
 #define MSG_DELIMETER   ";"
 
@@ -246,7 +247,7 @@ void loop() {
         	shutNonPouring = true;
         }
       }
-      nowTime = millis();
+      nowTime = micros();
       //If no new pulses have come in awhile
       if ( (nowTime - lastTapPulseTime) > pourMsgDelay )
       {
@@ -278,7 +279,7 @@ void loop() {
       //If we detect a kck
       if ( kickedCount[i] > 0 && 
         kickedCount[i] > kickTriggerValue &&
-        (nowTime - lastTapPulseTime) > pourMsgDelay ) {
+        (nowTime - lastTapPulseTime)/1000 > pourMsgDelay ) {
         //if there are enough high speed pulses, send a kicked message
         sendKickedMsg(userIdForPin[i], pulsePin[i]);
         reset = true;
@@ -290,14 +291,14 @@ void loop() {
     	//Only log if we have a major pulse count
         if( pulseCount[i] > 10 )debug("%s %d %d %lu %lu %lu %d %d %d",
               "RT L", pulsePin[i], i,
-              nowTime, lastTapPulseTime, nowTime-lastTapPulseTime,
+              nowTime, lastTapPulseTime, (nowTime-lastTapPulseTime)/1000,
               pourMsgDelay,
               pulseCount[i], pourTriggerValue);
         resetTap(i);
       }
       if ( useValves && shutNonPouring ){
           debug("%s %d %d %lu %lu %lu %d %d %d", "SD NP L ", pulsePin[i], i,
-                nowTime, lastTapPulseTime, nowTime-lastTapPulseTime, pourMsgDelay,
+                nowTime, lastTapPulseTime, (nowTime-lastTapPulseTime)/1000, pourMsgDelay,
                 pulseCount[i], pourTriggerValue);
     	  shutDownNonPouringTaps(i);
       }
@@ -325,7 +326,7 @@ void loop() {
 }
 
 void pollPins() {
-  unsigned long checkTime = millis();
+  unsigned long checkTime = micros();
   for ( unsigned int i = 0; i < numSensors; i++ ) {
     int pinState = readPin(pulsePin[i]);
     if ( pinState != lastPinState[i] ) {
@@ -337,7 +338,7 @@ void pollPins() {
         }else{
           kickedCount[i] ++;
         }
-        lastPulseTime[i] = lastPinStateChangeTime[i] =  millis();
+        lastPulseTime[i] = lastPinStateChangeTime[i] = micros();
       }
       lastPinState[i] = pinState;
     }
@@ -526,7 +527,7 @@ int getsc() {
   return getsc_timeout(-1);
 }
 
-int getsc_timeout(long timeout) {
+int getsc_timeout(unsigned long timeout) {
   unsigned long startTime = millis();
   while(Serial.available() <= 0 )
   {
@@ -646,6 +647,7 @@ void writePins(int count, int pins[], uint8_t state) {
   int  pinCount = 0;
   int  pin;
   static char msg[INPUT_SIZE];
+  static char update_msg[INPUT_SIZE];
   memset( msg, 0, sizeof(msg) );
   while (ii < count )
   {	
@@ -658,6 +660,9 @@ void writePins(int count, int pins[], uint8_t state) {
     }
     if(pin > 0) {
       digitalWrite(pin, state);		
+      memset( update_msg, 0, sizeof(update_msg) );
+      snprintf(update_msg, INPUT_SIZE, "%s%s%d", update_msg, (update_msg[0]==0?"":MSG_DELIMETER), pin);
+      sendPins(CMD_UPDATE_PINS, 1, update_msg, state);
     }
     else if(pin < 0){
       if( MAX_PIN_LENGTH + strlen(msg) + 1 < INPUT_SIZE)

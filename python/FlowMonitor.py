@@ -441,6 +441,18 @@ class FlowMonitor(object):
             #debug( "Sending "+ msg )
             self.write_notimeout(msg)
             
+        elif ( reading[0] == "UP" and len(reading) >= 3 ):
+            #debug( "got a Update Pins Request: "+ msg )
+            part = 1
+            MODE = int(reading[part])
+            part += 1
+            COUNT = int(reading[part])
+            part += 1
+            UpdatePinsThread("UP", reading, self.dispatch).start()
+            msg = "DONE;%d;%d|" % (COUNT, MODE)
+            #debug( "Sending "+ msg )
+            self.write_notimeout(msg)
+            
         #request basic status infomration like rfid/user and reconfig required
         elif ( reading[0] == "StatusCheck" ):
             #debug("RFIDCheck")
@@ -628,6 +640,29 @@ class WritePinsThread (threading.Thread):
                 debug("Got empty pin for part "+str(part))
                 continue
             self.dispatch.updatepin(int(self.splitMsg[part]), MODE)
+            part += 1
+            if self.delay > 0:
+                time.sleep(self.delay) 
+                
+class UpdatePinsThread (threading.Thread):
+    def __init__(self, threadID, splitMsg, dispatch, delay = .005):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.splitMsg = splitMsg
+        self.delay = delay
+        self.dispatch = dispatch
+      
+    def run(self):
+        part = 1
+        MODE = int(self.splitMsg[part])
+        part += 1
+        COUNT = int(self.splitMsg[part])
+        part += 1
+        while ( part-2 <= COUNT and COUNT > 0 ):
+            if not self.splitMsg[part]:
+                debug("Got empty pin for part "+str(part))
+                continue
+            self.dispatch.updatepinvalue(int(self.splitMsg[part]), MODE)
             part += 1
             if self.delay > 0:
                 time.sleep(self.delay) 

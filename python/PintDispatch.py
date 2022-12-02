@@ -714,10 +714,29 @@ class PintDispatch(object):
             result = cursor.execute(sql)
             con.commit()
             con.close()
+            self.sendvalveupdate(-1, value)
             
             return True
         return False
 
+    # update pin value in the database
+    def updatepinvalue(self, pin, value):   
+        pin = int(pin)
+        value = int(value)
+        if (pin < 1):
+            debug("invalid pin " + str(pin))
+            return False
+        
+        sql = "UPDATE tapconfig SET valvePinState=" + str(value) + " WHERE valvePin =" +  str(pin)
+        con = connectDB()
+        cursor = con.cursor(mdb.cursors.DictCursor)
+        result = cursor.execute(sql)
+        con.commit()
+        con.close()
+        self.sendvalveupdate(-1, value)
+        
+        return True
+    
     # update PI gpio pin (either turn on or off), this requires that this is run as root 
     def readpin(self, pin):
         if not GPIO_IMPORT_SUCCESSFUL:
@@ -744,8 +763,8 @@ class PintDispatch(object):
             if(tap["valveOn"] is None):
                 tap["valveOn"] = 0
                 
-            if self.valvesState[ii] != int(tap["valveOn"]):
-                self.sendvalveupdate(ii, tap["valveOn"])
+            #if self.valvesState[ii] != int(tap["valveOn"]):
+            #    self.sendvalveupdate(ii, tap["valveOn"])
                 
             self.valvesState[ii] = int(tap["valveOn"])
             ii = ii + 1
