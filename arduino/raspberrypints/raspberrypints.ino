@@ -446,7 +446,7 @@ void resetTap(int tapNum){
   updateCount[tapNum]  = 0;
   lastPulseTime[tapNum] = 0;
   kickedCount[tapNum]  = 0;
-  if(useValves > 0){
+  if(useValves > 0 && activeUserId == INVALID_USER_ID){
     shutDownTap(tapNum);
   }/*else if(useRFID > 0 && activeUserId > 0){		
    		unsigned int pouring = false;
