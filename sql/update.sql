@@ -1,3 +1,165 @@
+CREATE TABLE IF NOT EXISTS `tapconfig` (
+  `tapId` int(11) NOT NULL,
+  `flowPin` int(11) DEFAULT NULL,
+  `valvePin` int(11) DEFAULT NULL,
+  `valveOn` int(11) DEFAULT NULL,
+  `valvePinState` int(11) DEFAULT NULL,
+  `count` float NOT NULL DEFAULT '1500',
+  `countUnit` tinytext NULL,
+  `loadCellCmdPin` int(11) DEFAULT NULL,
+  `loadCellRspPin` int(11) DEFAULT NULL,
+  `loadCellTareReq` int(11) DEFAULT NULL,
+  `loadCellScaleRatio` float DEFAULT NULL,
+  `loadCellTareOffset` float DEFAULT NULL,
+  `loadCellUnit` tinytext DEFAULT NULL,
+  `loadCellTareDate` TIMESTAMP NULL,
+  `plaatoAuthToken` tinytext NULL,
+	PRIMARY KEY (`tapId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT IGNORE INTO tapconfig (tapId)
+(SELECT id from taps);
+
+CREATE TABLE IF NOT EXISTS `bottleTypes` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`displayName` text NOT NULL,
+	`volume` decimal(6,2) NOT NULL,
+	`volumeUnit` tinytext,
+	`total` int(11) NOT NULL,
+	`used` int(11) NOT NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `bottleTypes`
+--
+
+INSERT IGNORE INTO `bottleTypes` ( displayName, volume, total, used, createdDate, modifiedDate ) VALUES
+( 'standard (12oz)', '12.0', '40', '0', NOW(), NOW() ),
+( 'flip top (16oz)', '16.0', '5', '0', NOW(), NOW() );
+
+
+CREATE TABLE IF NOT EXISTS `fermentables` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` tinytext NOT NULL,
+	`type` tinytext NULL,
+	`srm` decimal(7,1) NULL,
+	`notes` text NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beerFermentables` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`beerId` int(11) NOT NULL,
+  `fermentablesId`int(11) NOT NULL,
+	`amount` tinytext NULL,
+	`time` tinytext NULL,
+	
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
+	FOREIGN KEY (`fermentablesId`) REFERENCES fermentables(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hops`
+--
+
+CREATE TABLE IF NOT EXISTS `hops` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` tinytext NOT NULL,
+	`alpha` decimal(6,2),
+	`beta` decimal(6,2),
+	`notes` text NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beerHops` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`beerId` int(11) NOT NULL,
+  `hopsId`  int(11) NOT NULL,
+	`amount` tinytext NULL,
+	`time` tinytext NULL,
+	
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
+	FOREIGN KEY (`hopsId`) REFERENCES hops(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `yeasts` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` tinytext NOT NULL,
+	`strand` tinytext NULL,
+	`format` tinytext NULL,
+	`minTemp` int(6) ,
+	`minTempUnit` tinytext ,
+	`maxTemp` int(6) ,
+	`maxTempUnit` tinytext ,
+	`minAttenuation` decimal(6,2) ,
+	`maxAttenuation` decimal(6,2) ,
+	`flocculation` decimal(6,2) ,
+	`notes` text NULL,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beerYeasts` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`beerId` int(11) NOT NULL,
+  `yeastsId`int(11) NOT NULL,
+	`amount` tinytext NULL,
+	
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
+	FOREIGN KEY (`yeastsId`) REFERENCES yeasts(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `bottles` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`bottleTypeId` int(11) NOT NULL,
+	`beerId` int(11) NOT NULL,
+	`beerBatchId` int(11) NULL,
+	`capRgba` varchar(16) NULL,
+	`capNumber` int(11) NULL,
+	`startAmount` int(11) NULL DEFAULT 0,
+	`currentAmount` int(11) NULL DEFAULT 0,
+	`active` tinyint(1) NULL DEFAULT 1,
+	`createdDate` TIMESTAMP NULL,
+	`modifiedDate` TIMESTAMP NULL,
+	
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`bottleTypeId`) REFERENCES bottleTypes(`id`) ON DELETE CASCADE,
+	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE IF NOT EXISTS `breweries` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` tinytext NOT NULL,
+	`imageUrl` varchar(2000),
+	`active` tinyint(1) NOT NULL DEFAULT 1,
+
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `userRfids` (
+	`userId` int(11) NOT NULL,
+	`RFID` varchar(128) CHARACTER SET utf8 NOT NULL,
+	`description` varchar(65) CHARACTER SET utf8 NULL,
+	PRIMARY KEY (`userId`, `RFID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 INSERT INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`)  
 SELECT 'showVerticleTapList', '0', 'Show the Tap List Vertically (ON = YES)', '1', NOW(), NOW() FROM DUAL 
     WHERE NOT EXISTS (SELECT configName from `config` WHERE configName = 'showVerticleTapList');
@@ -30,7 +192,7 @@ BEGIN
             WHERE
               (lower(table_name) = lower(tablename))
               AND (table_schema = dbname)
-              AND (lower(column_name) = lower(columnname))
+              AND (lower(column_name) = lower(replace(columnname,'`','')))
           ) > 0,
           CONCAT("select '",dbname,"','",tableName,"','",columnName,"','",columnType,"','exists'"),
           CONCAT("ALTER TABLE ", tablename, " ADD ", columnname, " ", columnType)
@@ -43,7 +205,11 @@ END//
 DELIMITER ;
 
 CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'valvePinState', 'INT(11)' );
-
+CALL addColumnIfNotExist(DATABASE(), 'users', 'nameFirst', 'varchar(65) CHARACTER SET utf8 NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'users', 'nameLast', 'varchar(65) CHARACTER SET utf8 NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'users', 'mugId', 'text NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'users', 'unTapAccessToken', 'text NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'users', 'isAdmin', 'tinyint(1) NOT NULL DEFAULT 0' );
 -- --------------------------------------------------------
 
 
@@ -67,7 +233,7 @@ UPDATE `config` SET `configValue` = '3.0.0.0' WHERE `configName` = 'version';
 
 CREATE TABLE IF NOT EXISTS `ioPins` (
 	`shield` varchar(30) NOT NULL,
-  `pin` int(11) DEFAULT NULL,
+  `pin` int(11) NOT NULL,
   `displayPin` text DEFAULT NULL,
 	`name` tinytext NULL,
   `col` int(11) DEFAULT NULL,
@@ -81,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `ioPins` (
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
 
-INSERT IGNORE INTO ioPins ( shield, pin, name, col, row, rgb, pinSide, notes, createdDate, modifiedDate ) VALUES
+INSERT IGNORE INTO ioPins ( shield, pin, name, col, `row`, rgb, pinSide, notes, createdDate, modifiedDate ) VALUES
 ('Pi', 1, 'PWR/3.3V', 1, 1, '255,200,126', 'right', '', NOW(), NOW()),
 ('Pi', 2, 'PWR/5v', 2, 1, '255,200,200', 'left', '', NOW(), NOW()),
 ('Pi', 3, 'SDA.1/2', 1, 2, '255,200,255', 'right', '', NOW(), NOW()),
@@ -158,9 +324,42 @@ INSERT IGNORE INTO ioPins ( shield, pin, name, col, row, rgb, pinSide, notes, cr
 ('Alamode', 33, '', 1, 15, '', '', '', NOW(), NOW()),
 ('Alamode', 34, '', 1, 16, '', '', '', NOW(), NOW()),
 ('Alamode', 35, '', 1, 17, '', '', '', NOW(), NOW());
-UPDATE ioPins SET displayPin=pin;
+UPDATE ioPins SET displayPin=pin WHERE shield <> '' AND pin > 0;
 
 
+set @var=if((SELECT TRUE FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'taps' AND
+            CONSTRAINT_NAME   = 'taps_ibfk_1' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE taps
+            DROP FOREIGN KEY taps_ibfk_1','select 1');
+
+prepare stmt from @var;
+execute stmt;
+deallocate prepare stmt;
+
+
+SET @preparedStatement = (
+      SELECT IF(
+        (
+          SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+          WHERE
+            (lower(table_name) = lower("taps"))
+            AND (lower(table_schema) = lower(DATABASE()))
+            AND (lower(column_name) = lower("beerId"))
+        ) = 0,
+        "SELECT 1",
+        "ALTER TABLE `taps` DROP COLUMN `beerId`, DROP INDEX `beerId`"
+      )
+  );
+PREPARE alterIfNotExists FROM @preparedStatement;
+EXECUTE alterIfNotExists;
+DEALLOCATE PREPARE alterIfNotExists;
+
+CALL addColumnIfNotExist(DATABASE(), 'taps', 'tapRgba', 'varchar(16) NULL' );
+
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'onTapId', 'int(11) NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'kegs', 'beerId', 'int(11) NULL' );
 CALL addColumnIfNotExist(DATABASE(), 'kegs', 'fermentationPSI', 'decimal(6, 2)' );
 CALL addColumnIfNotExist(DATABASE(), 'kegs', 'keggingTemp', 'decimal(6, 2)' );
 CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'loadCellCmdPin', 'int(11)' );
@@ -173,21 +372,41 @@ CALL addColumnIfNotExist(DATABASE(), 'kegTypes', 'emptyWeight', 'decimal(11, 4)'
 CALL addColumnIfNotExist(DATABASE(), 'kegs', 'emptyWeight', 'decimal(11, 4)' );
 CALL addColumnIfNotExist(DATABASE(), 'kegs', 'maxVolume', 'decimal(11, 4)' );
 
-UPDATE `kegTypes` SET emptyWeight =  '8.1571'  WHERE displayName = 'Ball Lock (5 gal)' AND emptyWeight IS NULL;
-UPDATE `kegTypes` SET emptyWeight =  '4.0786'  WHERE displayName = 'Ball Lock (2.5 gal)' AND emptyWeight IS NULL;
-UPDATE `kegTypes` SET emptyWeight =  '4.8943'  WHERE displayName = 'Ball Lock (3 gal)' AND emptyWeight IS NULL;
-UPDATE `kegTypes` SET emptyWeight =  '16.3142' WHERE displayName = 'Ball Lock (10 gal)' AND emptyWeight IS NULL;
-UPDATE `kegTypes` SET emptyWeight =  '8.1571'  WHERE displayName = 'Pin Lock (5 gal)' AND emptyWeight IS NULL;
-UPDATE `kegTypes` SET emptyWeight =  '9.9'     WHERE displayName = 'Sanke (1/6 bbl)' AND emptyWeight IS NULL;
-UPDATE `kegTypes` SET emptyWeight =  '14.85'   WHERE displayName = 'Sanke (1/4 bbl)' AND emptyWeight IS NULL;
-UPDATE `kegTypes` SET emptyWeight =  '14.85'   WHERE displayName = 'Sanke (slim 1/4 bbl)' AND emptyWeight IS NULL;
-UPDATE `kegTypes` SET emptyWeight =  '29.7'    WHERE displayName = 'Sanke (1/2 bbl)' AND emptyWeight IS NULL;
-UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE displayName = 'Sanke (Euro)' AND emptyWeight IS NULL;
-UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE displayName = 'Cask (pin)' AND emptyWeight IS NULL;
-UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE displayName = 'Cask (firkin)' AND emptyWeight IS NULL;
-UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE displayName = 'Cask (kilderkin)' AND emptyWeight IS NULL;
-UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE displayName = 'Cask (barrel)' AND emptyWeight IS NULL;
-UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE displayName = 'Cask (hogshead)' AND emptyWeight IS NULL;
+CALL addColumnIfNotExist(DATABASE(), 'beers', 'untID', 'int(10) NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'beers', 'breweryId', 'int(11)' );
+CALL addColumnIfNotExist(DATABASE(), 'beers', 'abv', 'decimal(3,1) NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'beers', 'og', 'decimal(7,3) NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'beers', 'fg', 'decimal(7,3) NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'beers', 'srm', 'decimal(7,1) NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'beers', 'ibu', 'int(4) NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'beers', 'rating', 'decimal(3,1) NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'beers', 'active', 'tinyint(1) NULL DEFAULT 1' );
+CALL addColumnIfNotExist(DATABASE(), 'beers', 'createdDate', 'TIMESTAMP NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'beers', 'modifiedDate', 'TIMESTAMP NULL' );
+
+CALL addColumnIfNotExist(DATABASE(), 'beerStyles', 'beerStyleList', 'tinytext NOT NULL' );
+
+CALL addColumnIfNotExist(DATABASE(), 'pours', 'userId', 'int(11) NOT NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'pours', 'beerId', 'int(11) NOT NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'pours', 'pinId', 'int(11) NOT NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'pours', 'pulses', 'int(11) NOT NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'pours', 'conversion', 'int(11) NOT NULL' );
+
+UPDATE `kegTypes` SET emptyWeight =  '8.1571'  WHERE id > 0 AND displayName = 'Ball Lock (5 gal)' AND emptyWeight IS NULL;
+UPDATE `kegTypes` SET emptyWeight =  '4.0786'  WHERE id > 0 AND displayName = 'Ball Lock (2.5 gal)' AND emptyWeight IS NULL;
+UPDATE `kegTypes` SET emptyWeight =  '4.8943'  WHERE id > 0 AND displayName = 'Ball Lock (3 gal)' AND emptyWeight IS NULL;
+UPDATE `kegTypes` SET emptyWeight =  '16.3142' WHERE id > 0 AND displayName = 'Ball Lock (10 gal)' AND emptyWeight IS NULL;
+UPDATE `kegTypes` SET emptyWeight =  '8.1571'  WHERE id > 0 AND displayName = 'Pin Lock (5 gal)' AND emptyWeight IS NULL;
+UPDATE `kegTypes` SET emptyWeight =  '9.9'     WHERE id > 0 AND displayName = 'Sanke (1/6 bbl)' AND emptyWeight IS NULL;
+UPDATE `kegTypes` SET emptyWeight =  '14.85'   WHERE id > 0 AND displayName = 'Sanke (1/4 bbl)' AND emptyWeight IS NULL;
+UPDATE `kegTypes` SET emptyWeight =  '14.85'   WHERE id > 0 AND displayName = 'Sanke (slim 1/4 bbl)' AND emptyWeight IS NULL;
+UPDATE `kegTypes` SET emptyWeight =  '29.7'    WHERE id > 0 AND displayName = 'Sanke (1/2 bbl)' AND emptyWeight IS NULL;
+UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE id > 0 AND displayName = 'Sanke (Euro)' AND emptyWeight IS NULL;
+UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE id > 0 AND displayName = 'Cask (pin)' AND emptyWeight IS NULL;
+UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE id > 0 AND displayName = 'Cask (firkin)' AND emptyWeight IS NULL;
+UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE id > 0 AND displayName = 'Cask (kilderkin)' AND emptyWeight IS NULL;
+UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE id > 0 AND displayName = 'Cask (barrel)' AND emptyWeight IS NULL;
+UPDATE `kegTypes` SET emptyWeight =  '0'       WHERE id > 0 AND displayName = 'Cask (hogshead)' AND emptyWeight IS NULL;
  
 INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOnPanel`, `createdDate`, `modifiedDate`) VALUES
 ( 'useKegWeightCalc', '1', 'Show weight calc columns', '1', NOW(), NOW() ),
@@ -229,6 +448,7 @@ INSERT IGNORE INTO `config` (`configName`, `configValue`, `displayName`, `showOn
 ('showTempOnMainPage', '1', 'Show Avg Temperature on home page', 1, NOW(), NOW() );
 
 ALTER TABLE taps CHANGE COLUMN `tapNumber` `tapNumber` INT(11) NULL ;
+ALTER TABLE taps CHANGE COLUMN `kegId` `kegId` INT(11) NULL ;
 
 CALL addColumnIfNotExist(DATABASE(), 'kegs', 'startAmount', 'decimal(7, 5)' );
 CALL addColumnIfNotExist(DATABASE(), 'kegs', 'currentAmount', 'decimal(7, 5)' );
@@ -243,7 +463,7 @@ SET @preparedStatement = (
             AND (lower(column_name) = lower("startAmount"))
         ) = 0,
         "SELECT 1",
-        "UPDATE kegs k INNER JOIN taps t ON k.onTapId = t.id SET k.startAmount = t.startAmount, k.currentAmount = t.currentAmount WHERE k.startAmount IS NULl AND k.currentAmount IS NULL"
+        "UPDATE kegs k INNER JOIN taps t ON k.onTapId = t.id SET k.startAmount = t.startAmount, k.currentAmount = t.currentAmount WHERE k.id > 0 AND k.startAmount IS NULl AND k.currentAmount IS NULL"
       )
   );
 PREPARE alterIfNotExists FROM @preparedStatement;
@@ -321,31 +541,31 @@ CALL addColumnIfNotExist(DATABASE(), 'kegTypes', 'emptyWeightUnit', 'tinytext' )
 CALL addColumnIfNotExist(DATABASE(), 'pours', 'amountPouredUnit', 'tinytext' );
 CALL addColumnIfNotExist(DATABASE(), 'yeasts', 'minTempUnit', 'tinytext' );
 CALL addColumnIfNotExist(DATABASE(), 'yeasts', 'maxTempUnit', 'tinytext' );
-UPDATE pours set amountPouredUnit = 'oz' WHERE amountPouredUnit IS NULL;
+UPDATE pours set amountPouredUnit = 'oz' WHERE id > 0 AND amountPouredUnit IS NULL;
 CALL addColumnIfNotExist(DATABASE(), 'tempLog', 'tempUnit', 'varchar(1) null' );
-UPDATE tempLog set tempUnit = 'F' WHERE tempUnit IS NULL;
+UPDATE tempLog set tempUnit = 'F' WHERE id > 0 AND tempUnit IS NULL;
 CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'countUnit', 'tinytext' );
 CALL addColumnIfNotExist(DATABASE(), 'tapconfig', 'loadCellUnit', 'tinytext DEFAULT NULL' );
 CALL addColumnIfNotExist(DATABASE(), 'bottleTypes', 'volumeUnit', 'tinytext' );
 CALL addColumnIfNotExist(DATABASE(), 'tapEvents', 'amountUnit', 'tinytext' );
 
-UPDATE tapconfig set countUnit = 'oz' WHERE countUnit IS NULL;
-UPDATE tapconfig set loadCellUnit = 'lb' WHERE loadCellUnit IS NULL;
-UPDATE beers set ogUnit = 'sg', fgUnit = 'sg' WHERE ogUnit IS NULL;
-UPDATE kegs SET weightUnit ='lb' WHERE weightUnit IS NULL;
-UPDATE kegs SET emptyWeightUnit ='lb' WHERE emptyWeightUnit IS NULL;
-UPDATE kegs SET maxVolumeUnit ='oz' WHERE maxVolumeUnit IS NULL;
-UPDATE kegs SET startAmountUnit ='oz' WHERE startAmountUnit IS NULL;
-UPDATE kegs SET currentAmountUnit ='oz' WHERE currentAmountUnit IS NULL;
-UPDATE kegs SET fermentationPSIUnit ='psi' WHERE fermentationPSIUnit IS NULL;
-UPDATE kegs SET keggingTempUnit = 'F' WHERE keggingTempUnit IS NULL;
+UPDATE tapconfig set countUnit = 'oz' WHERE tapid > 0 AND countUnit IS NULL;
+UPDATE tapconfig set loadCellUnit = 'lb' WHERE tapid > 0 AND loadCellUnit IS NULL;
+UPDATE beers set ogUnit = 'sg', fgUnit = 'sg' WHERE id > 0 AND ogUnit IS NULL;
+UPDATE kegs SET weightUnit ='lb' WHERE id > 0 AND weightUnit IS NULL;
+UPDATE kegs SET emptyWeightUnit ='lb' WHERE id > 0 AND emptyWeightUnit IS NULL;
+UPDATE kegs SET maxVolumeUnit ='oz' WHERE id > 0 AND maxVolumeUnit IS NULL;
+UPDATE kegs SET startAmountUnit ='oz' WHERE id > 0 AND startAmountUnit IS NULL;
+UPDATE kegs SET currentAmountUnit ='oz' WHERE id > 0 AND currentAmountUnit IS NULL;
+UPDATE kegs SET fermentationPSIUnit ='psi' WHERE id > 0 AND fermentationPSIUnit IS NULL;
+UPDATE kegs SET keggingTempUnit = 'F' WHERE id > 0 AND keggingTempUnit IS NULL;
 				
-UPDATE kegTypes SET maxAmountUnit = 'oz', emptyWeightUnit = 'lb' WHERE emptyWeightUnit IS NULL;
-UPDATE pours set amountPouredUnit = 'gal' WHERE amountPouredUnit IS NULL;
-UPDATE yeasts set minTempUnit = 'F', maxTempUnit = 'F' WHERE maxTempUnit IS NULL;
-UPDATE tempLog set tempUnit = 'F' WHERE tempUnit IS NULL;
-UPDATE bottleTypes set volumeUnit = 'oz' WHERE volumeUnit IS NULL;
-UPDATE tapEvents set amountUnit = 'gal' WHERE amountUnit IS NULL;
+UPDATE kegTypes SET maxAmountUnit = 'oz', emptyWeightUnit = 'lb' WHERE id > 0 AND emptyWeightUnit IS NULL;
+UPDATE pours set amountPouredUnit = 'gal' WHERE id > 0 AND amountPouredUnit IS NULL;
+UPDATE yeasts set minTempUnit = 'F', maxTempUnit = 'F' WHERE id > 0 AND maxTempUnit IS NULL;
+UPDATE tempLog set tempUnit = 'F' WHERE id > 0 AND tempUnit IS NULL;
+UPDATE bottleTypes set volumeUnit = 'oz' WHERE id > 0 AND volumeUnit IS NULL;
+UPDATE tapEvents set amountUnit = 'gal' WHERE id > 0 AND amountUnit IS NULL;
 
 ALTER TABLE beers CHANGE COLUMN `og` `og` decimal(7,3) NULL ;
 ALTER TABLE beers CHANGE COLUMN `fg` `fg` decimal(7,3) NULL ;
@@ -438,7 +658,7 @@ CREATE TABLE IF NOT EXISTS `accolades` (
 	
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
-CALL addColumnIfNotExist(DATABASE(), 'accolades', 'rank', 'int(11) DEFAULT NULL' );
+CALL addColumnIfNotExist(DATABASE(), 'accolades', '`rank`', 'int(11) DEFAULT NULL' );
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `beerAccolades` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -455,7 +675,7 @@ INSERT IGNORE INTO accolades (id, name, type, srm, notes, createdDate, modifiedD
 INSERT IGNORE INTO accolades (id, name, type, srm, notes, createdDate, modifiedDate) VALUES('2','Silver','Medal','4.2','','2020-08-04 14:14:34','2020-08-04 14:14:34');
 INSERT IGNORE INTO accolades (id, name, type, srm, notes, createdDate, modifiedDate) VALUES('3','Bronze','Medal','9.6','','2020-08-04 14:14:34','2020-08-04 14:14:34');
 INSERT IGNORE INTO accolades (id, name, type, srm, notes, createdDate, modifiedDate) VALUES('4','BOS','Medal','9.6','','2020-08-04 14:14:34','2020-08-04 14:14:34');
-UPDATE accolades SET rank = id WHERE rank IS NULL;
+UPDATE accolades SET `rank` = id WHERE id > 0 AND `rank` IS NULL;
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ('AccoladeColNum', '7', 'Column number for Accolades', 0, NOW(), NOW() );
@@ -504,10 +724,10 @@ CALL addColumnIfNotExist(DATABASE(), 'beerStyles', 'ogMaxUnit', 'tinytext' );
 CALL addColumnIfNotExist(DATABASE(), 'beerStyles', 'fgMinUnit', 'tinytext' );
 CALL addColumnIfNotExist(DATABASE(), 'beerStyles', 'fgMaxUnit', 'tinytext' );
 
-UPDATE beerStyles SET ogMinUnit='sg' WHERE ogMinUnit IS NULL;
-UPDATE beerStyles SET ogMaxUnit='sg' WHERE ogMaxUnit IS NULL;
-UPDATE beerStyles SET fgMinUnit='sg' WHERE fgMinUnit IS NULL;
-UPDATE beerStyles SET fgMaxUnit='sg' WHERE fgMaxUnit IS NULL;
+UPDATE beerStyles SET ogMinUnit='sg' WHERE id > 0 AND ogMinUnit IS NULL;
+UPDATE beerStyles SET ogMaxUnit='sg' WHERE id > 0 AND ogMaxUnit IS NULL;
+UPDATE beerStyles SET fgMinUnit='sg' WHERE id > 0 AND fgMinUnit IS NULL;
+UPDATE beerStyles SET fgMaxUnit='sg' WHERE id > 0 AND fgMaxUnit IS NULL;
 
 ALTER TABLE beerStyles MODIFY srmMin decimal(7,1) NOT NULL ;
 ALTER TABLE beerStyles MODIFY srmMax decimal(7,1) NOT NULL ;
@@ -1409,8 +1629,8 @@ ALTER TABLE beerStyles CHANGE COLUMN `srmMax` `srmMax` DECIMAL(7,1) NULL ;
 #remove the show column parameters as those are no longer used
 UPDATE config c1 left join config c2 on trim(c2.configName) = concat('show',substring(c1.configName,1,length(c1.configName)-3)) OR (c1.configName = 'BeerInfoColNum' AND c2.configName = 'showBeerName')
  SET c1.configValue=c1.configValue*(CASE WHEN c2.configValue = '0' THEN -1 ELSE 1 END)
-WHERE c1.configName like '%ColNum' and c2.configName IS NOT NULL and c2.showOnPanel = '1';
-UPDATE config SET showOnPanel='0', configValue='0' where configName like 'show%Col';
+WHERE c1.id > 0 AND c1.configName like '%ColNum' and c2.configName IS NOT NULL and c2.showOnPanel = '1';
+UPDATE config SET showOnPanel='0', configValue='0' where id > 0 AND configName like 'show%Col';
 
 INSERT IGNORE INTO `config` ( configName, configValue, displayName, showOnPanel, createdDate, modifiedDate ) VALUES
 ( 'showDigitalClock', '0', 'Show digital Clock in upper Right', '0', NOW(), NOW() ),
