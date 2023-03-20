@@ -860,7 +860,7 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 --
 
 CREATE TABLE IF NOT EXISTS `tapconfig` (
-  `tapId` int(11) DEFAULT NULL,
+  `tapId` int(11) NOT NULL,
   `flowPin` int(11) DEFAULT NULL,
   `valvePin` int(11) DEFAULT NULL,
   `valveOn` int(11) DEFAULT NULL,
@@ -1650,7 +1650,7 @@ INSERT INTO srmRgb ( srm, rgb, createdDate, modifiedDate ) VALUES
 
 CREATE TABLE IF NOT EXISTS `ioPins` (
 	`shield` varchar(30) NOT NULL,
-  `pin` int(11) DEFAULT NULL,
+  `pin` int(11) NOT NULL,
   `displayPin` text DEFAULT NULL,
 	`name` tinytext NULL,
   `col` int(11) DEFAULT NULL,
@@ -1663,7 +1663,7 @@ CREATE TABLE IF NOT EXISTS `ioPins` (
 	PRIMARY KEY (`shield`, `pin`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
-INSERT INTO ioPins ( shield, pin, name, col, row, rgb, pinSide, notes, createdDate, modifiedDate ) VALUES
+INSERT INTO ioPins ( shield, pin, name, col, `row`, rgb, pinSide, notes, createdDate, modifiedDate ) VALUES
 
 ('Pi', 1, 'PWR/3.3V', 1, 1, '255,200,126', 'right', '', NOW(), NOW()),
 
