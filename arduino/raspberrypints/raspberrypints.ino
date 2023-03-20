@@ -89,9 +89,10 @@ unsigned long lastBlinkState = LOW;
 unsigned long lastSend = 0;
 int waitingStatusResponse = false;
 void debug(char *sfmt, ...);
-#define writePin(pin, value) _writePin(pin, value, __func__)
+#define writePin(pin, value) _writePin(pin, value, true, __func__)
+#define writePinUpdatePi(pin, value, updatePi) _writePin(pin, updatePi, true, __func__)
 
-#define writePins( count, pins, state ) _writePins(count, pins, state, __func__)
+#define writePins( count, pins, state ) _writePins(count, pins, state, true, __func__)
 #define sendPins(cmd, count, msg, state) _sendPins(cmd, count, msg, state, __func__)
 // Install Pin change interrupt for a pin, can be called multiple times
 void pciSetup(byte pin) 
@@ -435,7 +436,7 @@ void LED(unsigned int delay){
   if((millis() - lastBlinkTime) < delay) return;
   int state = LOW;
   if(lastBlinkState == LOW) state = HIGH;
-  writePin(LED_PIN, state);
+  writePinUpdatePi(LED_PIN, state, false);
   lastBlinkState = state;
   lastBlinkTime = millis();
 }
@@ -641,12 +642,12 @@ unsigned char readPin(int pin) {
 /**
  * Write A Pin helper allows requesting python to write the pin for Arduino
  */
-void _writePin(int pin, uint8_t state, char *func) {
+void _writePin(int pin, uint8_t state, int updatePi, char *func) {
   static int	pins[1];
   pins[0] = pin;
-  _writePins(1, pins, state, func);
+  _writePins(1, pins, state, updatePi, func);
 }
-void _writePins(int count, int pins[], uint8_t state, char *func) {
+void _writePins(int count, int pins[], uint8_t state, int updatePi, char *func) {
   int  ii = 0;
   int  pinCount = 0;
   int  pin;
@@ -666,7 +667,7 @@ void _writePins(int count, int pins[], uint8_t state, char *func) {
       digitalWrite(pin, state);		
       memset( update_msg, 0, sizeof(update_msg) );
       snprintf(update_msg, INPUT_SIZE, "%s%s%d", update_msg, (update_msg[0]==0?"":MSG_DELIMETER), pin);
-      _sendPins(CMD_UPDATE_PINS, 1, update_msg, state, func);
+      if( updatePi ) _sendPins(CMD_UPDATE_PINS, 1, update_msg, state, func);
     }
     else if(pin < 0){
       if( MAX_PIN_LENGTH + strlen(msg) + 1 < INPUT_SIZE)
