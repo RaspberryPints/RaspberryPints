@@ -111,6 +111,7 @@ UPDATE `config` SET configValue='10' WHERE configname='numberOfTaps';
 
 
 UPDATE tapconfig set countUnit = 'oz' WHERE countUnit IS NULL;
+UPDATE tapconfig set count = '3000' WHERE count IS NULL;
 UPDATE tapconfig set loadCellUnit = 'lb' WHERE loadCellUnit IS NULL;
 UPDATE beers set ogUnit = 'sg', fgUnit = 'sg' WHERE ogUnit IS NULL;
 UPDATE kegs SET weightUnit ='lb', emptyWeightUnit ='lb', maxVolumeUnit ='oz', 
