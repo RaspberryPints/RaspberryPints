@@ -362,7 +362,16 @@ class FlowMonitor(object):
                 item.exit()
         if self.tempProbeThread is not None and self.tempProbeThread.is_alive():
             self.tempProbeThread.exit()
+        
+        self.resetAlamode = True
         self.alaIsAlive = False
+        self.alamodeUseRFID = False
+        
+        self.motionDetectors = []
+        self.loadCellThreads = []
+        self.readers = []
+        self.iSpindels = []
+        self.tempProbeThread = None
             
     def processMsg(self, msg):
         reading = msg.split(";")
@@ -448,7 +457,10 @@ class FlowMonitor(object):
             part += 1
             COUNT = int(reading[part])
             part += 1
-            UpdatePinsThread("UP", reading, self.dispatch).start()
+            try:
+                UpdatePinsThread("UP", reading, self.dispatch).start()
+            except:
+                debug("Unable to start new update thread")
             msg = "DONE;%d;%d|" % (COUNT, MODE)
             #debug( "Sending "+ msg )
             self.write_notimeout(msg)
