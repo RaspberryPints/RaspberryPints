@@ -90,7 +90,7 @@ unsigned long lastSend = 0;
 int waitingStatusResponse = false;
 void debug(char *sfmt, ...);
 #define writePin(pin, value) _writePin(pin, value, true, __func__)
-#define writePinUpdatePi(pin, value, updatePi) _writePin(pin, updatePi, true, __func__)
+#define writePinUpdatePi(pin, value, updatePi) _writePin(pin, value, updatePi, __func__)
 
 #define writePins( count, pins, state ) _writePins(count, pins, state, true, __func__)
 #define sendPins(cmd, count, msg, state) _sendPins(cmd, count, msg, state, __func__)
