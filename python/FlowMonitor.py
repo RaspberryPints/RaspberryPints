@@ -273,7 +273,10 @@ class FlowMonitor(object):
             configMD = self.dispatch.getMotionDetectors()
             for item in configMD:
                 if (item["type"] == 0):
-                    detector = MotionDetectionPIRThread( "MD-" + str(item["name"]), soundFile=str(item["soundFile"]), pirPin=int(item["pin"]) )
+                    detector = MotionDetectionPIRThread( "MD-" + str(item["name"]), pirPin=int(item["pin"]), 
+                                                        soundFile=str(item["soundFile"]), ledPin=int(item["ledPin"] or 0),
+                                                        mqttCommand=str(item["mqttCommand"]), mqttEvent=str(item["mqttEvent"]), mqttUser=str(item["mqttUser"]), 
+                                                        mqttPass=str(item["mqttPass"]), mqttHost=str(item["mqttHost"]), mqttPort=item["mqttPort"], mqttInterval=int(item["mqttInterval"] or 0) )
                     detector.start()
                     self.motionDetectors.append(detector)
                     
@@ -692,7 +695,7 @@ class MotionDetectionPIRThread (threading.Thread):
         self.mqttCommand = mqttCommand
         self.mqttEvent = mqttEvent
         self.mqttClient = None
-        if self.mqttCommand != '':
+        if self.mqttCommand != '' and MQTT_IMPORT_SUCCESSFUL:
             # Initiate MQTT Client
             self.mqttClient = mqtt.Client()
             #user and Pass
