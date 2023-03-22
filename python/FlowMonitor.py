@@ -273,7 +273,7 @@ class FlowMonitor(object):
             configMD = self.dispatch.getMotionDetectors()
             for item in configMD:
                 if (item["type"] == 0):
-                    detector = MotionDetectionPIRThread( "MD-" + str(item["name"]), pirPin=int(item["pin"]) )
+                    detector = MotionDetectionPIRThread( "MD-" + str(item["name"]), soundFile=str(item["soundFile"]), pirPin=int(item["pin"]) )
                     detector.start()
                     self.motionDetectors.append(detector)
                     
@@ -712,7 +712,7 @@ class MotionDetectionPIRThread (threading.Thread):
         if self.ledPin != 0:
             self.dispatch.updatepin(int(self.ledPin), True)
         if self.soundFile != '':
-            os.system(mpg321 + self.soundFile)
+            os.system("mpg321 -q " + self.soundFile)
         else:
             time.sleep(1)
         if self.mqttClient != None and self.mqttCommand != '':
