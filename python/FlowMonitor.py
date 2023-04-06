@@ -273,7 +273,7 @@ class FlowMonitor(object):
             configMD = self.dispatch.getMotionDetectors()
             for item in configMD:
                 if (item["type"] == 0):
-                    detector = MotionDetectionPIRThread( "MD-" + str(item["name"]), pirPin=int(item["pin"]), 
+                    detector = MotionDetectionPIRThread( "MD-" + str(item["name"]), dispatch=self.dispatch, pirPin=int(item["pin"]), 
                                                         soundFile=str(item["soundFile"]), ledPin=int(item["ledPin"] or 0),
                                                         mqttCommand=str(item["mqttCommand"]), mqttEvent=str(item["mqttEvent"]), mqttUser=str(item["mqttUser"]), 
                                                         mqttPass=str(item["mqttPass"]), mqttHost=str(item["mqttHost"]), mqttPort=item["mqttPort"], mqttInterval=int(item["mqttInterval"] or 0) )
@@ -684,10 +684,11 @@ class UpdatePinsThread (threading.Thread):
                 
 #Following is based on code from day_trippr (coverted to thread and allow configurable pin)
 class MotionDetectionPIRThread (threading.Thread):
-    def __init__(self, threadID, pirPin = 7, ledPin=0, soundFile='', 
+    def __init__(self, threadID, dispatch, pirPin = 7, ledPin=0, soundFile='', 
                 mqttCommand='', mqttEvent='', mqttUser='', mqttPass='', mqttHost='', mqttPort='', mqttInterval=100):
         threading.Thread.__init__(self)
         self.threadID = threadID
+        self.dispatch = dispatch
         self.pirPin = pirPin
         self.shutdown_required = False
         self.ledPin = ledPin
