@@ -763,7 +763,7 @@ class LoadCellCheckThread (threading.Thread):
         self.checkTare = checkTare
         
     def tare(self):
-        self.hx711.zero()
+        self.hx711.tare()
         self.dispatch.setLoadCellTareOffset(self.hx711.get_offset())
         return
     
