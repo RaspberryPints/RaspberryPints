@@ -39,8 +39,8 @@ if( isset($argv) && count($argv) >= 2 ){
                 $keggingTemperatureUnit = (!$config[ConfigNames::UseDefWeightSettings] && $keg->get_keggingTemp() && $keg->get_keggingTemp() != ''?$keg->get_keggingTempUnit():$config[ConfigNames::DefaultKeggingTempUnit]);
                 $beerCO2PSI = (!$config[ConfigNames::UseDefWeightSettings] && $keg->get_fermentationPSI() && $keg->get_fermentationPSI() != ''?$keg->get_fermentationPSI():$config[ConfigNames::DefaultFermPSI]);
                 $beerCO2PSIUnit = (!$config[ConfigNames::UseDefWeightSettings] && $keg->get_fermentationPSI() && $keg->get_fermentationPSI() != ''?$keg->get_fermentationPSIUnit():$config[ConfigNames::DefaultFermPSIUnit]);
-                $finalGravity = $beer->get_fg()?$beer->get_fg():'';
-                $finalGravityUnit = $beer->get_fgUnit()?$beer->get_fgUnit():'';
+                $finalGravity = $beer->get_fg()?$beer->get_fg():'1.010';
+                $finalGravityUnit = $beer->get_fgUnit()?$beer->get_fgUnit():UnitsOfMeasure::GravitySG;
                 $vol = getVolumeByWeight($NEW_WEIGHT, $NEW_WEIGHT_UNIT, $keg->get_emptyWeight(), $keg->get_emptyWeightUnit(), $keggingTemperature, $keggingTemperatureUnit, $config[ConfigNames::BreweryAltitude], $config[ConfigNames::BreweryAltitudeUnit], $beerCO2PSI, $beerCO2PSIUnit, $finalGravity, $finalGravityUnit, $config[ConfigNames::DisplayUnitVolume]);
     			if($vol && !is_nan($vol) && $vol < 100000){
     			    $keg->set_currentAmount($vol);
@@ -84,7 +84,7 @@ function getVolumeByWeight($weight, $weightUnit, $emptyWeight, $emptyWeightUnit,
     $actVolume = ($actBeerWeightCO2/$actH2OMassPress);	                                                //Actual volume of beer in liters
     
  
-    return convert_volume($actVolume, UnitsOfMeasure::VolumeLiter, $returnUnits);
+    return convert_volume($actVolume, UnitsOfMeasure::VolumeLiter, $returnUnits, true);
 }
 
 function estPressureAtAltitude($altitude, $altitudeUnits){
