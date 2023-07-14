@@ -186,7 +186,7 @@ class TapManager extends Manager{
 		return $ret;
 	}
 	
-	function saveTapLoadCellInfo($id, $loadCellCmdPin, $loadCellRspPin, $loadCellScaleRatio, $loadCellTareOffset, $loadCellUnit) {
+	function saveTapLoadCellInfo($id, $loadCellCmdPin, $loadCellRspPin, $loadCellScaleRatio, $loadCellTareOffset, $loadCellUnit, $loadCellUpdateVariance) {
 	    $ret = true;
 	    $sql="SELECT * FROM tapconfig where tapId = $id";
 	    $tap = $this->executeQueryWithSingleResult($sql);
@@ -198,10 +198,11 @@ class TapManager extends Manager{
 	        if($tap->get_loadCellScaleRatio() != $loadCellScaleRatio) $updateSql .= ($updateSql!=""?",":"")."loadCellScaleRatio = NULLIF('" . $loadCellScaleRatio . "', '')";
 	        if($tap->get_loadCellTareOffset() != $loadCellTareOffset) $updateSql .= ($updateSql!=""?",":"")."loadCellTareOffset = NULLIF('" . $loadCellTareOffset . "', '')";
 	        if($tap->get_loadCellUnit() != $loadCellUnit) $updateSql .= ($updateSql!=""?",":"")."loadCellUnit = NULLIF('" . $loadCellUnit . "', '')";
+	        if($tap->get_loadCellUpdateVariance() != $loadCellUpdateVariance) $updateSql .= ($updateSql!=""?",":"")."loadCellUpdateVariance = NULLIF('" . $loadCellUpdateVariance . "', '')";
 	        if($updateSql != "")$sql = "UPDATE tapconfig SET ".$updateSql." WHERE tapId = " . $id;
 	    } else {
-	        $sql = "INSERT INTO tapconfig (tapId, loadCellCmdPin, loadCellRspPin, loadCellScaleRatio, loadCellTareOffset, loadCellUnit) VALUES(" .
-	   	        $id.", ".$loadCellCmdPin.", ".$loadCellRspPin.", ".$loadCellScaleRatio.", ".$loadCellTareOffset.", '".$loadCellUnit."')";
+	        $sql = "INSERT INTO tapconfig (tapId, loadCellCmdPin, loadCellRspPin, loadCellScaleRatio, loadCellTareOffset, loadCellUnit, loadCellUpdateVariance) VALUES(" .
+	   	        $id.", ".$loadCellCmdPin.", ".$loadCellRspPin.", ".$loadCellScaleRatio.", ".$loadCellTareOffset.", '".$loadCellUnit."', '". $loadCellUpdateVariance. "' )";
 	    }
 	    if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
 	    return $ret;

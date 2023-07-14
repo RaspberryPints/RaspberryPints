@@ -25,7 +25,7 @@ class GasTankManager extends Manager{
 	protected function getViewName(){
 	    return "vwGasTanks";
 	}
-	function saveGasTankLoadCellInfo($id, $loadCellCmdPin, $loadCellRspPin, $loadCellScaleRatio, $loadCellTareOffset, $loadCellUnit) {
+	function saveGasTankLoadCellInfo($id, $loadCellCmdPin, $loadCellRspPin, $loadCellScaleRatio, $loadCellTareOffset, $loadCellUnit, $loadCellUpdateVariance) {
 	    $ret = true;
 	    $gasTank = $this->GetByID($id);
 	    $updateSql = "";
@@ -35,10 +35,11 @@ class GasTankManager extends Manager{
 	        if($gasTank->get_loadCellScaleRatio() != $loadCellScaleRatio) $updateSql .= ($updateSql!=""?",":"")."loadCellScaleRatio = NULLIF('" . $loadCellScaleRatio . "', '')";
 	        if($gasTank->get_loadCellTareOffset() != $loadCellTareOffset) $updateSql .= ($updateSql!=""?",":"")."loadCellTareOffset = NULLIF('" . $loadCellTareOffset . "', '')";
 	        if($gasTank->get_loadCellUnit() != $loadCellUnit) $updateSql .= ($updateSql!=""?",":"")."loadCellUnit = NULLIF('" . $loadCellUnit . "', '')";
+	        if($gasTank->get_loadCellUpdateVariance() != $loadCellUpdateVariance) $updateSql .= ($updateSql!=""?",":"")."loadCellUpdateVariance = NULLIF('" . $loadCellUpdateVariance . "', '')";
 	        if($updateSql != "")$sql = "UPDATE gasTanks SET ".$updateSql." WHERE id = " . $id;
 	    } else {
-	        $sql = "INSERT INTO gasTanks (id, loadCellCmdPin, loadCellRspPin, loadCellScaleRatio, loadCellTareOffset, loadCellUnit) VALUES(" .
-	   	        $id.", ".$loadCellCmdPin.", ".$loadCellRspPin.", ".$loadCellScaleRatio.", ".$loadCellTareOffset.", '".$loadCellUnit."')";
+	        $sql = "INSERT INTO gasTanks (id, loadCellCmdPin, loadCellRspPin, loadCellScaleRatio, loadCellTareOffset, loadCellUnit, loadCellUpdateVariance) VALUES(" .
+	   	        $id.", ".$loadCellCmdPin.", ".$loadCellRspPin.", ".$loadCellScaleRatio.", ".$loadCellTareOffset.", '".$loadCellUnit."', '".$loadCellUpdateVariance."' )";
 	    }
 	    if(isset($sql) && $sql != "")$ret = $ret && $this->executeQueryNoResult($sql);
 	    return $ret;

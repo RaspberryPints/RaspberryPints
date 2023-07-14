@@ -305,7 +305,7 @@ class PintDispatch(object):
     def getLoadCellConfig(self):
         con = connectDB()
         cursor = con.cursor(mdb.cursors.DictCursor)
-        cursor.execute("SELECT tapId,loadCellCmdPin,loadCellRspPin,loadCellUnit,loadCellScaleRatio,loadCellTareOffset FROM tapconfig WHERE loadCellCmdPin IS NOT NULL ORDER BY tapId")
+        cursor.execute("SELECT tapId,loadCellCmdPin,loadCellRspPin,loadCellUnit,loadCellScaleRatio,loadCellTareOffset,loadCellUpdateVariance FROM tapconfig WHERE loadCellCmdPin IS NOT NULL ORDER BY tapId")
         rows = cursor.fetchall()
         con.close()
         return rows

@@ -29,11 +29,11 @@ if (isset ( $_POST ['save'] )) {
 	        $ii++;
 	        continue;
 	    }
-	    if($_POST ['type'][$ii] == 1 && !$tapManager->saveTapLoadCellInfo($_POST ['id'][$ii], $_POST['loadCellCmdPin'][$ii], $_POST['loadCellRspPin'][$ii], $_POST['loadCellScaleRatio'][$ii], $_POST['loadCellTareOffset'][$ii], $_POST['loadCellUnit'][$ii]))$error=true;
+	    if($_POST ['type'][$ii] == 1 && !$tapManager->saveTapLoadCellInfo($_POST ['id'][$ii], $_POST['loadCellCmdPin'][$ii], $_POST['loadCellRspPin'][$ii], $_POST['loadCellScaleRatio'][$ii], $_POST['loadCellTareOffset'][$ii], $_POST['loadCellUnit'][$ii], $_POST['loadCellUpdateVariance'][$ii]))$error=true;
 	    if($_POST ['type'][$ii] == 2 && isset($_POST ['gtId'][$ii]) && $_POST ['gtId'][$ii] <> '' ){
 	        if( $_POST['oldId'][$ii] != $_POST['gtId'][$ii])if(!$gasTankManager->saveGasTankLoadCellInfo($_POST ['oldId'][$ii], 0, 0, 0, 0, 0))$error=true;
 	        
-	        if(!$gasTankManager->saveGasTankLoadCellInfo($_POST ['gtId'][$ii], $_POST['loadCellCmdPin'][$ii], $_POST['loadCellRspPin'][$ii], $_POST['loadCellScaleRatio'][$ii], $_POST['loadCellTareOffset'][$ii], $_POST['loadCellUnit'][$ii]))$error=true;
+	        if(!$gasTankManager->saveGasTankLoadCellInfo($_POST ['gtId'][$ii], $_POST['loadCellCmdPin'][$ii], $_POST['loadCellRspPin'][$ii], $_POST['loadCellScaleRatio'][$ii], $_POST['loadCellTareOffset'][$ii], $_POST['loadCellUnit'][$ii], $_POST['loadCellUpdateVariance'][$ii]))$error=true;
 	    }
 	    $ii++;
 	    $reconfig = true;
@@ -101,7 +101,8 @@ include 'top_menu.php';
                             <th style="vertical-align: middle;">Command Pin</th>
                             <th style="vertical-align: middle;">Response Pin</th>
                             <th style="vertical-align: middle;">Scale Ratio</th>
-                            <th style="vertical-align: middle;">Offset</th>
+                            <th style="vertical-align: middle;">Offset</th>>
+                            <th style="vertical-align: middle;">Update Variance</th>
                             <th style="width:200px;vertical-align: middle;">Unit</th>
                             <th style="width:50px; vertical-align: middle;">Tare Date</th>
                             <th style="width:50px; vertical-align: middle;">Current Weight(Raw)</th>
@@ -136,6 +137,9 @@ include 'top_menu.php';
                                     </td>
                                     <td style="vertical-align: middle;">
                                         <input type="text" id="loadCellTareOffset<?php echo $tap->get_id();?>" class="smallbox" name="loadCellTareOffset[]" value="<?php echo $tap->get_loadCellTareOffset() ?>" />
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <input type="text" id="loadCellUpdateVariance<?php echo $tap->get_id();?>" class="smallbox" name="loadCellUpdateVariance[]" value="<?php echo $tap->get_loadCellUpdateVariance() ?>" />
                                     </td>
                                     <td style="vertical-align: middle;">
                                     <select name="loadCellUnit[]">
@@ -184,6 +188,7 @@ include 'top_menu.php';
                             <th style="vertical-align: middle;">Response Pin</th>
                             <th style="vertical-align: middle;">Scale Ratio</th>
                             <th style="vertical-align: middle;">Offset</th>
+                            <th style="vertical-align: middle;">Update Variance</th>
                             <th style="width:200px;vertical-align: middle;">Unit</th>
                             <th style="width:50px; vertical-align: middle;">Tare Date</th>
                             <th style="width:50px; vertical-align: middle;">Current Weight(Raw)</th>
@@ -229,6 +234,9 @@ include 'top_menu.php';
                                     </td>
                                     <td style="vertical-align: middle;">
                                         <input type="text" id="loadCellTareOffset<?php echo $gt->get_id();?>" class="smallbox" name="loadCellTareOffset[]" value="<?php echo $gt->get_loadCellTareOffset() ?>" />
+                                    </td>
+                                    <td style="vertical-align: middle;">
+                                        <input type="text" id="loadCellUpdateVariance<?php echo $gt->get_id();?>" class="smallbox" name="loadCellUpdateVariance[]" value="<?php echo $gt->get_loadCellUpdateVariance() ?>" />
                                     </td>
                                     <td style="vertical-align: middle;">
                                     <select name="loadCellUnit[]">

@@ -280,24 +280,24 @@ class FlowMonitor(object):
                     detector.start()
                     self.motionDetectors.append(detector)
                     
-            self.loadCellThreads = []
-            configMD = self.dispatch.getLoadCellConfig()
-            for item in configMD:
-                loadCell = LoadCellCheckThread( "LC-" + str(item["tapId"]), updateDir=config['pints.dir'], 
-                                                dispatch=self.dispatch, tapId=item["tapId"], commandPin=item["loadCellCmdPin"], 
-                                                responsePin=item["loadCellRspPin"], unit=item["loadCellUnit"], logger=log.logger,
-                                                scaleRatio=item["loadCellScaleRatio"], tareOffset=item["loadCellTareOffset"] )
-                loadCell.start()
-                self.loadCellThreads.append(loadCell)
-            
-            configMD = self.dispatch.getGasTankLoadCellConfig()
-            for item in configMD:
-                loadCell = LoadCellCheckThread( "LC-" + str(item["id"]), updateDir=config['pints.dir'], 
-                                                dispatch=self.dispatch, tapId=item["id"], commandPin=item["loadCellCmdPin"], 
-                                                responsePin=item["loadCellRspPin"], unit=item["loadCellUnit"], logger=log.logger,
-                                                scaleRatio=item["loadCellScaleRatio"], tareOffset=item["loadCellTareOffset"], equipType=LOAD_CELL_EQUIP_TYPE_GT )
-                loadCell.start()
-                self.loadCellThreads.append(loadCell)
+        self.loadCellThreads = []
+        configLC = self.dispatch.getLoadCellConfig()
+        for item in configLC:
+            loadCell = LoadCellCheckThread( "LC-" + str(item["tapId"]), updateDir=config['pints.dir'], 
+                                            dispatch=self.dispatch, tapId=item["tapId"], commandPin=item["loadCellCmdPin"], 
+                                            responsePin=item["loadCellRspPin"], unit=item["loadCellUnit"], logger=log.logger,
+                                            scaleRatio=item["loadCellScaleRatio"], tareOffset=item["loadCellTareOffset"], updateVariance=item["loadCellUpdateVariance"] )
+            loadCell.start()
+            self.loadCellThreads.append(loadCell)
+        
+        configLC = self.dispatch.getGasTankLoadCellConfig()
+        for item in configLC:
+            loadCell = LoadCellCheckThread( "LC-" + str(item["id"]), updateDir=config['pints.dir'], 
+                                            dispatch=self.dispatch, tapId=item["id"], commandPin=item["loadCellCmdPin"], 
+                                            responsePin=item["loadCellRspPin"], unit=item["loadCellUnit"], logger=log.logger,
+                                            scaleRatio=item["loadCellScaleRatio"], tareOffset=item["loadCellTareOffset"], updateVariance=item["loadCellUpdateVariance"], equipType=LOAD_CELL_EQUIP_TYPE_GT )
+            loadCell.start()
+            self.loadCellThreads.append(loadCell)
             
         self.readers = []
         if RFID_IMPORT_SUCCESSFUL:
@@ -750,6 +750,8 @@ class LoadCellCheckThread (threading.Thread):
         self.responsePin = responsePin
         self.delay = delay
         self.updateVariance = updateVariance
+        if self.updateVariance == 0:
+            self.updateVariance = .1
         self.unit = unit
         self.checkTare = False
         self.shutdown_required = False
@@ -764,7 +766,7 @@ class LoadCellCheckThread (threading.Thread):
         
     def tare(self):
         self.hx711.tare()
-        self.dispatch.setLoadCellTareOffset(self.hx711.get_offset())
+        self.dispatch.setLoadCellTareOffset(self.tapId, self.hx711.get_offset())
         return
     
     def getWeight(self):
@@ -796,6 +798,7 @@ class LoadCellCheckThread (threading.Thread):
                         subprocess.call(["php", self.updateDir + '/admin/updateGasTank.php', str(self.tapId), str(weight), self.unit])
                     else:
                         subprocess.call(["php", self.updateDir + '/admin/updateKeg.php', str(self.tapId), str(weight), self.unit])
+                    self.dispatch.sendflowcount(-1, self.tapId, lastWeight - weight)
                     debug(self.threadID+": Updating "+str(self.tapId)+" Weight="+str(weight)+" "+self.unit)
                     lastWeight = weight
                 time.sleep(self.delay)

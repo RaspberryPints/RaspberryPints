@@ -874,6 +874,7 @@ CREATE TABLE IF NOT EXISTS `tapconfig` (
   `loadCellTareOffset` float DEFAULT NULL,
   `loadCellUnit` tinytext DEFAULT NULL,
   `loadCellTareDate` TIMESTAMP NULL,
+  `loadCellUpdateVariance` decimal(10,5) NULL,
   `plaatoAuthToken` tinytext NULL,
 	PRIMARY KEY (`tapId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -2357,6 +2358,7 @@ CREATE TABLE IF NOT EXISTS `gasTanks` (
         `loadCellTareOffset` float DEFAULT NULL,
         `loadCellUnit` tinytext DEFAULT NULL,
         `loadCellTareDate` TIMESTAMP NULL,
+        `loadCellUpdateVariance` decimal(10,5) NULL,
 	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
@@ -2398,6 +2400,7 @@ select
         g.loadCellTareOffset AS loadCellTareOffset,
         g.loadCellUnit AS loadCellUnit,
         g.loadCellTareDate AS loadCellTareDate,
+        g.loadCellUpdateVariance AS loadCellUpdateVariance,
 	g.modifiedDate AS modifiedDate,
 	g.createdDate AS createdDate 
 from (gasTanks g 
