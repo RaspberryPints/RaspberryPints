@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__.'/header.php';
-require_once __DIR__.'/updateKeg.php';
 $htmlHelper = new HtmlHelper();
 $kegManager = new KegManager();
 $kegStatusManager = new KegStatusManager();
