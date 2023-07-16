@@ -798,7 +798,7 @@ class LoadCellCheckThread (threading.Thread):
                         subprocess.call(["php", self.updateDir + '/admin/updateGasTank.php', str(self.tapId), str(weight), self.unit])
                     else:
                         subprocess.call(["php", self.updateDir + '/admin/updateKeg.php', str(self.tapId), str(weight), self.unit])
-                    self.dispatch.sendflowcount(-1, self.tapId, lastWeight - weight)
+                    #self.dispatch.sendflowcount(-1, self.tapId, lastWeight - weight)
                     debug(self.threadID+": Updating "+str(self.tapId)+" Weight="+str(weight)+" "+self.unit)
                     lastWeight = weight
                 time.sleep(self.delay)
