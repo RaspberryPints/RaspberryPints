@@ -5,17 +5,19 @@ require("../includes/conn.php");
 $email_to=$_POST['email_tou'];
 
 
+/** @var mixed $tbl_name **/
+/** @var mixed $mysqli **/
 $sql="SELECT username FROM $tbl_name WHERE email='$email_to'";
-$result=mysql_query($sql);
+$result=$mysqli->query($sql);
 
 // if found this e-mail address, row must be 1 row
 // keep value in variable name "$count"
-$count=mysql_num_rows($result);
+$count=$result->num_rows();
 
 // compare if $count =1 row
 if($count==1){
 
-$rows=mysql_fetch_array($result);
+$rows=$result->fetch_array();
 
 $your_username=$rows['username'];
 
@@ -34,7 +36,7 @@ $header="from: Support <shawn@besmartdesigns.com>";
 $messages.="This is your username to your login ( $your_username ) \r\n";
 
 // send email
-$sentmail = mail($to,$subject,$messages,$header);
+mail($to,$subject,$messages,$header);
 
 }
 
@@ -45,7 +47,7 @@ echo "Error ";
 
 // if your email succesfully sent
 {
-echo "An email has been sent including the info you have requested.";?><a href="../index.php">Click Here<a/> to go back to the login.
+echo "An email has been sent including the info you have requested.";?><a href="../index.php">Click Here</a> to go back to the login.
 <?php
 }
 ?>

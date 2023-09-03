@@ -1,0 +1,149 @@
+
+.temp-indicator{
+	background: url(img/temperature/stroke-4k.png) no-repeat bottom left;  
+}
+.temp-indicator .temp-full{
+	background: url(img/temperature/full-4k.png) no-repeat bottom left;
+}	
+
+body{
+	font-size: 2.5em;
+}
+
+
+table .tap-num{
+	width: 80px;
+}
+table .accolades{
+	width: 80px;
+}
+table .srm{
+	width: 250px;
+}
+table .ibu{
+	width: 250px;
+}
+
+table .abv{
+	width: 350px;
+}
+table .keg{
+	width: 250px;
+}
+
+span.tapcircle {	
+  font-size: 30px;
+}
+
+.srm-container{
+	height: 200px;
+	width: 110px;
+}
+
+.srm-indicator{
+	-webkit-mask-image: url(img/srm/pint-mask-4k.png);
+	-o-mask-image: url(img/srm/pint-mask-4k.png);
+	-moz-mask-image: url(img/srm/pint-mask-4k.png);
+	mask-image: url(img/srm/pint-mask-4k.png);
+}
+
+.srm-stroke{
+	background: url(img/srm/pint-stroke-4k.png)
+}
+
+
+.ibu-container{
+	height:200px;
+	width:107px;
+}
+.ibu-indicator{
+	background-image: url(img/ibu/stroke-4k.png);
+}
+.ibu-indicator .ibu-full{
+	background-image: url(img/ibu/full-4k.png);
+}
+	
+.abv-container{
+	height: 200px;
+	width: 230px;
+}	
+.abv-indicator{
+	background-image: url(img/abv/stroke-4k.png);
+}
+.abv-indicator .abv-full{
+	background-image: url(img/abv/full-4k.png);
+}
+.abv-offthechart{
+	height: 110px;
+	width: 229px;
+	background-image: url(img/abv/offthechart-4k.png);
+}
+
+.poursbeerimg{
+	width:100px;
+}
+.poursbreweryimg{
+	width:100px ;
+}
+.beerimg{ 
+	width:200px;
+	vertical-align:middle;
+}
+.breweryimg{ 
+	width: 200px;
+	vertical-align:middle;
+}
+
+.keg-container{
+	height: 200px;
+	width: 132px;
+}
+
+.keg-indicator{
+	background-image: url(img/keg/stroke-4k.png);	
+}
+.keg-indicator .keg-full{
+	background-image: url(img/keg/full-4k.png);
+}
+.keg-indicator .keg-empty{
+	background-image: url(img/keg/empty-4k.png);
+}
+.keg-indicator .keg-red{
+	background-image: url(img/keg/red-4k.png);
+}
+.keg-indicator .keg-orange{
+	background-image: url(img/keg/orange-4k.png);
+}
+.keg-indicator .keg-yellow{
+	background-image: url(img/keg/yellow-4k.png);
+}
+.keg-indicator .keg-green{
+	background-image: url(img/keg/green-4k.png);
+}
+
+.bottle-container{
+	height: 200px;
+	width: 90px;
+}
+
+.bottle-indicator{
+	background-image: url(img/bottle/stroke-4k.png);	
+}
+.bottle-indicator .bottle-full{
+	background-image: url(img/bottle/green-4k.png);
+}
+.bottle-indicator .bottle-empty{
+	background-image: url(img/bottle/stroke-4k.png);
+}
+.bottle-indicator .bottle-red{
+	background-image: url(img/bottle/red-4k.png);
+}
+.bottle-indicator .bottle-orange{
+	background-image: url(img/bottle/orange-4k.png);
+}
+.bottle-indicator .bottle-yellow{
+	background-image: url(img/bottle/yellow-4k.png);
+}
+.bottle-indicator .bottle-green{
+	background-image: url(img/bottle/green-4k.png);
+}

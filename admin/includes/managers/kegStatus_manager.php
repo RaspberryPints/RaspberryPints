@@ -1,33 +1,19 @@
 <?php
+require_once __DIR__.'/manager.php';
 require_once __DIR__.'/../models/kegStatus.php';
 
-class KegStatusManager{
-
-	function GetAll(){
-		$sql="SELECT * FROM kegStatuses ORDER BY name";
-		$qry = mysql_query($sql);
-		
-		$kegStatuses = array();
-		while($i = mysql_fetch_array($qry)){
-			$kegStatus = new KegStatus();
-			$kegStatus->setFromArray($i);
-			$kegStatuses[$kegStatus->get_code()] = $kegStatus;		
-		}
-		
-		return $kegStatuses;
-	}	
-		
-	function GetByCode($code){
-		$sql="SELECT * FROM kegStatuses WHERE code = '$code'";
-		$qry = mysql_query($sql);
-		
-		if( $i = mysql_fetch_array($qry) ){		
-			$kegStatus = new KegStatus();
-			$kegStatus->setFromArray($i);
-			return $kegStatus;
-		}
-
-		return null;
-	}
+class KegStatusManager extends Manager{
 	
+	protected function getPrimaryKeys(){
+		return ["code"];
+	}
+	protected function getColumns(){
+		return ["name"];
+	}
+	protected function getTableName(){
+		return "kegStatuses";
+	}
+	protected function getDBObject(){
+		return new KegStatus();
+	}	
 }

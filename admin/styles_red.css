@@ -1,0 +1,125 @@
+/* Red Theme Stylesheet */
+
+	.contentcontainer .altheading {background: url(img-red/bg_heading_alt.png); border: 1px solid #7A0000; color: #fff; text-shadow: 1px 1px 1px #7A0000;}
+
+	/* Navigation Styling */
+			
+	ul#nav li a.heading, a.collapsed, a.expanded, ul.navigation li.selected{border-bottom: 1px solid #9F0000; border-top: 1px solid #900; text-shadow: 1px 1px 1px #0D2C35; background: url(img-red/bg_navigation.png) no-repeat top;}
+	
+	ul#nav li a.expanded {background: url(img-red/bg_navigation.png) 0 -76px;}
+	
+	ul#nav li a.collapsed:hover {background: url(img-red/bg_navigation.png) no-repeat 0 -38px; width: 205px;}
+	ul#nav li a.expanded:hover {background: url(img-red/bg_navigation.png) no-repeat 0 -114px; width: 205px;}
+
+	ul.navigation li.selected {background: url(img-red/bg_navigation_selected.png) no-repeat -1px 0; border: none;}
+	
+	/* Side Notifications */
+	
+	.notifycount {background: url(img-red/bg_notify_count.png) no-repeat top;}
+	
+	/* Pagination */
+	
+	ul.pagination li.page a {background: #00789F url(img-red/bg_buttons.png) repeat-x top; border: 1px solid #7A0000;}
+		ul.pagination li.page a:hover {background: #00789F url(img-red/bg_buttons.png) 0 -50px; border: 1px solid #7A0000;}
+	
+	/* Button Styling */
+	
+	.btn, .btnalt {background: url(img-red/bg_buttons.png) repeat-x top; border: 1px solid #7A0000!important; color: #fff; font-size: 11px; padding: 7px 10px; boirder-radius: 7px; -moz-border-radius: 7px; font-weight: 700; border: none;}
+		.btn:hover {background: url(img-red/bg_buttons.png) 0 -50px; border: 1px solid #005977; cursor: pointer;}
+		
+	.btnalt {background: url(img-red/bg_buttons_alternative.png) repeat-x top !important; border: 1px solid #333 !important; color: #fff; padding: 7px 10px; border: none;}
+		.btnalt:hover {background: url(img-red/bg_buttons_alternative.png) 0 -50px !important; border: 1px solid #111 !important; cursor: pointer;}		
+	
+	/* Login Page */
+	
+	.logininput {background: #fff url(img-red/bg_login_input.png) repeat-x top;}
+	.logininput:focus {border: 1px solid #c00; color: #c00;}
+				
+		#logincontainer .loginbtn {background: url(img-red/bg_login_btn.png) repeat-x top; border-radius: 8px; -moz-border-radius: 8px; border: none; font-size: 25px; font-weight: 700; text-shadow: 1px 1px 1px #DF8F8F; color: #510000; width: 260px; padding: 11px 0; margin: 5px 0 0 0; display: block; cursor: pointer; border-top: 1px solid #CE5757; letter-spacing: -1px;}
+		
+		#logincontainer .loginbtn:hover {background: url(img-red/bg_login_btn.png) -0 -60px; cursor: pointer; color: #270C0C;}
+		
+		
+					.inputbox {border: 1px solid #999; padding: 10px; width: 300px; -moz-border-radius: 3px; border-radius: 3px; margin-bottom: 5px; color: #666; background: url(img-red/bg_fade_sml.png) repeat-x top;}
+	.inputbox:focus {border: 1px solid #666;}
+	.errorbox {border: 1px solid #CC0000; background: #FCF0EF url(img-red/bg_fade_red_sml.png) repeat-x top; color: #CC0000; margin-right: 5px;}
+	.errorbox:focus {border: 1px solid #8A0000;}
+	.correctbox {border: 1px solid #9DB832; background: #F3F8E0 url(img-red/bg_fade_green_sml.png) repeat-x top;; color: #9DB832; margin-right: 5px;}
+	.correctbox:focus {border: 1px solid #7C9227;}
+	.xsmallbox {border: 1px solid #999; padding: 10px; width: 25px; -moz-border-radius: 3px; border-radius: 3px; margin-bottom: 5px; color: #666; background: url(img-red/bg_fade_sml.png) repeat-x top;}
+	.smallbox {border: 1px solid #999; padding: 10px; width: 60px; -moz-border-radius: 3px; border-radius: 3px; margin-bottom: 5px; color: #666; background: url(img-red/bg_fade_sml.png) repeat-x top;}
+	.mediumbox {border: 1px solid #999; padding: 10px; width: 150px; -moz-border-radius: 3px; border-radius: 3px; margin-bottom: 5px; color: #666; background: url(img-red/bg_fade_sml.png) repeat-x top;}
+	.largebox {border: 1px solid #999; padding: 10px; width: 300px; -moz-border-radius: 3px; border-radius: 3px; margin-bottom: 5px; color: #666; background: url(img-red/bg_fade_sml.png) repeat-x top;}
+	.xlargebox {border: 1px solid #999; padding: 10px; width: 450px; -moz-border-radius: 3px; border-radius: 3px; margin-bottom: 5px; color: #666; background: url(img-red/bg_fade_sml.png) repeat-x top;}
+			
+		#welcome
+{ font-family: 'Fredoka One', cursive; font-weight: 400; color: white; font-size:140% }		
+	
+
+blockquote { 
+	margin: 0 15% 0 15%;
+	color: #666; 
+}
+blockquote:before, blockquote:after { 
+	display: block; 
+	font-size: 500%; 
+	color: #000000;
+}
+blockquote:before {
+	float:left;
+	content: "\201C";
+	margin-left: -8%; 
+	margin-top: -12px;
+	height: 0; 
+}
+blockquote:after { 
+	float:right;
+	content: "\201D"; 
+	margin-left: 100%; 
+	margin-top: -25px; 
+	margin-right: -8%;
+	height: 25px; 
+}
+
+/* bottle list styling */
+span.bottlecircle {
+  /* background-color: rgba(153,153,153,.3); */
+  border-radius: 1em;
+  border-style: dashed;
+  border-color: rgba(200,200,200,0.75);
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 2em;
+  margin-right: 5px;
+  text-align: center;
+  width: 2em; 
+}
+
+.alert {
+	color: #FF0000;
+	text-align:left;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+.tooltip .tooltiptext {
+  visibility: hidden;
+  background-color: gray;
+  color: #000;
+  text-align: center;
+  border-radius: 6px;
+  text-shadow:0px 0px 0px #000;
+  font-size:12px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}

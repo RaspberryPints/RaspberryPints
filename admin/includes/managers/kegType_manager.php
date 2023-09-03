@@ -1,34 +1,19 @@
 <?php
+require_once __DIR__.'/manager.php';
 require_once __DIR__.'/../models/kegType.php';
 
-class KegTypeManager{
-
-	function GetAll(){
-		$sql="SELECT * FROM kegTypes ORDER BY displayName";
-		$qry = mysql_query($sql);
-		
-		$kegTypes = array();
-		while($i = mysql_fetch_array($qry)){
-			$kegType = new KegType();
-			$kegType->setFromArray($i);
-			$kegTypes[$kegType->get_id()] = $kegType;		
-		}
-		
-		return $kegTypes;
-	}
+class KegTypeManager extends Manager{
 	
-	
-		
-	function GetById($id){
-		$sql="SELECT * FROM kegTypes WHERE id = $id";
-		$qry = mysql_query($sql);
-		
-		if( $i = mysql_fetch_array($qry) ){		
-			$kegType = new KegType();
-			$kegType->setFromArray($i);
-			return $kegType;
-		}
-
-		return null;
+	protected function getPrimaryKeys(){
+		return ["id"];
 	}
+	protected function getColumns(){
+		return ["displayName", "maxAmount", "maxAmountUnit", "emptyWeight", "emptyWeightUnit"];
+	}
+	protected function getTableName(){
+		return "kegTypes";
+	}
+	protected function getDBObject(){
+		return new KegType();
+	}	
 }

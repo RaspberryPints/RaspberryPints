@@ -1,0 +1,230 @@
+First things first:
+
+Start Menu > Preferences > Raspberry Pi Configuration 
+Enable Serial on Interfaces tap
+Setup Pi to your hearts content: Root Password, Overscan, Hostname, Local, Timezone, wifi, teamviewer ...
+
+Setup Wifi I used the GUI because I find it easier.
+Setup static IP or set use your router to assign your pi a static IP through DHCP reservations (Advanced and different for each router)
+
+Assemble the Alamode according to the user guide:
+https://docs.google.com/document/d/1HBvd3KNmcs632ZgO6t_u37B-qwV6P9o9FQe62lGkumM/edit
+
+The quick version is this:
+
+on Page 7 follow the instructions to install the headers (requires solidering)
+
+Open LXTerminal (or connect via ssh) and type following commands: 
+
+pi@raspberrypi ~ $ sudo rpi-update
+This updates the firmware of your pi.  This will reenable the serial port 
+
+pi@raspberrypi ~ $ sudo apt-get update
+pi@raspberrypi ~ $ sudo apt-get upgrade
+
+Set Your Display Rotation and Resolution
+
+RaspberryPints is built around the notion of a vertical display; that is, a monitor turned to the portrait orientation. While it is not required, many more beers can fit on a display rotated to portrait.
+
+On the desktop, double-click the LX Terminal icon. Depending on your screen size, it may take a few seconds to load.
+
+Type the following, then press enter:
+
+sudo nano /boot/config.txt
+
+If you turned your monitor 90º clockwise, scroll to the bottom and add the following line:
+
+display_rotate=3
+
+If you turned your monitor 90º counter-clockwise, scroll to the bottom and add the following line:
+
+display_rotate=1
+
+Scroll up and down. Look for two lines similar to:
+
+hdmi_group=1
+hdmi_mode=2
+
+These two lines need to be modified to reflect the maximum resolution of your display. Ensure they do not start with a ‘#’, as this symbol tells Raspbian to ignore the line. Some common resolutions are as follows.
+
+For 1920 x 1080 monitor or 1080p TV:
+hdmi_group=1
+hdmi_mode=16
+For 1280 x 720 monitor or 720p TV:
+hdmi_group=1
+hdmi_mode=4
+For 1600 x 1200 monitor:
+hdmi_group=1
+hdmi_mode=2
+For 1680 x 1050 monitor:
+hdmi_group=2
+hdmi_mode=51
+For 1920 x 1200 monitor:
+hdmi_group=2
+hdmi_mode=68
+
+To save, press ‘Ctrl+O’ (WriteOut), then press ‘Enter’ when asked to confirm the filename.
+To exit, press ‘Ctrl+X’ (Exit).
+
+pi@raspberrypi ~ $ sudo reboot
+
+
+Install the LAMP Stack
+Now we'll install Linux, Apache, MySQL and PHP. These four packages are commonly condensed into a stack called "LAMP".
+
+pi@raspberrypi ~ $ sudo apt-get -y install apache2 php7.0 mysql-client mysql-server php7.0-mysql phpmyadmin
+
+mysql-server specifically installs MariaDB, the problem is that the version does not allow a password for the root user, so a new
+
+During the install, ou will be prompted while configuring phpmyadmin, which web serve to reconfigure automatically. The choices are apache2 and lighttpd. Chose apache2 since we were installing it anyway.
+
+Now lets setup an admin user for Raspberry Pints to use to install itself
+
+pi@raspberrypi ~ $ sudo mysql
+You will see something like this:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 71
+Server version: 10.1.23-MariaDB-9+deb9u1 Raspbian 9.0
+
+Copyright (c) 2000, 2017, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+MariaDB [(none)]>
+
+Enter the following commands not including MariaDB [(none)](Lines that start with MariaDB [(none)]> the other lines are the result)
+Feel Free to change the userName(after USER) and password (after IDENTIFIED BY )
+MariaDB [(none)]> CREATE USER RaspberryPints@'%' IDENTIFIED BY 'RaspberryPints';
+Query OK, 0 rows affected (0.00 sec)
+
+MariaDB [(none)]> grant all privileges on *.* to RaspberryPints@'%';
+Query OK, 0 rows affected (0.00 sec)
+
+MariaDB [(none)]> exit
+Bye
+
+If you want to develop Raspberry Pints and dont want to use phpmyadmin you can enable MySql to be accessible remotely by editing
+/etc/mysql/mariadb.conf.d/50-server.cnf
+Change bind-address = 127.0.0.1 TO bind-address = 0.0.0.0
+Then restart mysql - sudo /etc/init.d/mysql restart
+
+The version of stretch I used had chromium preinstall but in case yours didnt
+pi@raspberrypi ~ $ sudo apt-get -y install chromium-browser
+
+Install Screen Management Packages
+In order to display the tap list correctly, we use a couple of different fonts that are not included in the Raspberry Pi operating system. We also need the mouse to hide when not being used, and the screensaver disabled.
+
+pi@raspberrypi ~ $ sudo apt-get -y install ttf-mscorefonts-installer x11-xserver-utils unclutter
+
+Disable screen blanking
+By default, the screen will blank to a black screen after 15 minutes of inactivity. Clearly, we want to prevent this from happening. With modern displays, image burn-in is rare, and even when it does occur, it’s almost always temporary.
+
+pi@raspberrypi ~ $ sudo nano /home/pi/.config/lxsession/LXDE-pi/autostart
+
+Add the following lines at the bottom:
+ @xset s off
+ @xset -dpms
+ @xset s noblank
+ @chromium –-kiosk localhost
+ 
+To save, press ‘Ctrl+O’ (WriteOut), then press ‘Enter’ when asked to confirm the filename.
+To exit, press ‘Ctrl+X’ (Exit).
+
+pi@raspberrypi ~ $ sudo reboot
+ 
+Now install Flow Meters (SKIP if not installing flow meters...)
+pi@raspberrypi ~ $ sudo apt-get install arduino python-serial python-mysqldb php5-cli xdotool dos2unix python-mod-pywebsocket
+
+Now lets get the alaMode files needed to connect to it
+pi@raspberrypi ~ $ wget https://github.com/wyolum/alamode/raw/master/bundles/alamode-setup.tar.gz
+
+Now from the command line, unpack, 
+	get the strech setup (they added it but didnt put it in the bundles at the time of writing),
+	convert files to run on linux and install it:
+
+pi@raspberrypi ~ $ tar -xvzf alamode-setup.tar.gz
+pi@raspberrypi ~ $ cd alamode-setup
+pi@raspberrypi ~ $ wget https://github.com/wyolum/alamode/raw/master/alamode-setup/stretch-setup
+pi@raspberrypi ~ $ sudo dos2unix ./*
+pi@raspberrypi ~ $ sudo ./stretch-setup
+
+Then (install alamode board and meters, if installed skip to "SETUP Raspberry Pints"):
+pi@raspberrypi ~ $ sudo shutdown -h now
+(this halts the rPi so you can safely remove power)
+
+To Power the Alamode and the rPi, set the 5V_link jumper to on (see page 11). This allows you to connect power to the alamode board 
+to power both the alamode and the rPi. This is important as the flow meters will draw more power than the rPi can safely supply via GPIO
+
+To connect the flow meter to the alamode:
+Pin1(red) -> Ground
+Pin2 (middle)-> Any digital pin 2-13 on the alaMode board. Be sure to set this at the top of the Arduino code
+Pin3 -> VIN
+
+Once the alamode has been seated on the rPi (on the gpio pins) and the flow meter has been attached you can power the 
+rPi up. Plug the power in to the micro usb on the alamode and not the rPi.
+
+If you plan to use RFID than you need to install SPI-Py
+get the package (Note: it will retreive to the current directory of the shell)
+git clone https://github.com/lthiery/SPI-Py
+cd SPI-Py
+sudo python setup.py install
+In the UI setup the RFID Reader information from the admin page (link on the left)
+
+if you plan on using Motion Sensors:
+apt-get install xscreensaver
+There is a link to the setting for it in the start menu->preferences->Screensaver
+configure as desired
+In the UI setup the motion detector information from the admin page (link on the left)
+
+SETUP Raspberry Pints
+Goto http://raspberrypints.com/download/ and click Download Now (this version does not work with PHP7)
+OR for a version that works with PHP7 https://github.com/rtlindne/RaspberryPints
+
+Open a terminal and change directories to download location)
+pi@raspberrypi ~ $ sudo rm /var/www/index.html
+If you get an error message stating that the file was not found, you can safely disregard it.
+"x.x.x.x" is the version number you downloaded
+pi@raspberrypi ~ $ unzip RaspberryPints-x.x.x.x.zip     
+pi@raspberrypi ~ $ sudo mv RaspberryPints-x.x.x.x/* /var/www/ html/    
+pi@raspberrypi ~ $ sudo chmod 777 /var/www/html -R 
+pi@raspberrypi ~ $ rm -R RaspberryPints-x.x.x.x     
+
+open a web browser and go to localhost it should automatically redirect you to index.php with information to setup raspberry pints. Fill out the form and submit
+
+UPLOAD sketch to Alamode
+Log in to the GUI on the rpi and go to the menu -> Programming -> arduino
+This opens a program used to edit the ino file for arduino as well as compiler and uploader.
+Click on file -> open
+Browse to your raspberrypints directory (default /var/www/html/), look for the arduino -> raspberrypints folder and select the raspberrypints.ino file
+
+MAKE A NOTE OF THE PINS AND TAPS you will need this information later.
+
+Go to Tools -> Board and select the Alamode
+Go to Tools->Serial and click the box for the serial connection (there should only be one)
+In the menu bar there is a button that is a circle with an arrow in it ->
+Click that button to compile and upload the ino file to the Alamode board 
+**This is important, the alamode needs the code uploaded to it in order to read the flow meters.**
+
+Log in to the admin area of your raspberrypints install.
+click on taps
+edit the taps and add the pinId.
+
+At this point you should be ready to run the python script.
+Copy the flowmon file from the python (/var/www/python) directory to /etc/init.d
+pi@raspberrypi ~ $ sudo cp /var/www/html/python/flowmon /etc/init.d
+Then give it the proper permissions:
+pi@raspberrypi ~ $ sudo chmod a+x /etc/init.d/flowmon
+**IF YOUR INSTALL IS IN /var/www/html you should be good to go forward. if not, you need to edit the 14th line and set the root dir for your install.
+
+You can test the program by running:
+pi@raspberrypi ~ $ sudo /etc/init.d/flowmon start 
+pi@raspberrypi ~ $ ps aux | grep [f]low_monitor.py
+Should return:
+ pi 3508 0.0 0.9 8796 4112 ? S 15:35 0:00 /usr/bin/python /home/pi/raspberrypints/python/flow_monitor.py pi 3558 0.0 0.1 3548 808 pts/0 S+ 15:43 0:00 grep --color=auto flow_monitor.py
+
+
+to ensure it runs at startup Run
+pi@raspberrypi ~ $ sudo update-rc.d flowmon defaults
+
+This will start the script. You will not see anything output until you actually pour a pint. When a pint is poured it passes the pin number and the pulse count
+to a php script which then updates the pours table in the database and then refreshes the chromium browser on the localhost.
+You should also see output on the terminal window where you started the python script.

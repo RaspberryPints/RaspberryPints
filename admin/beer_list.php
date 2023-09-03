@@ -1,65 +1,72 @@
 <?php
-session_start();
-if(!isset( $_SESSION['myusername'] )){
-	header("location:index.php");
-}
-
-require_once __DIR__.'/includes/conn.php';
-require_once __DIR__.'/../includes/config_names.php';
-require_once __DIR__.'/includes/html_helper.php';
-require_once __DIR__.'/includes/functions.php';
-
-require_once __DIR__.'/includes/models/beer.php';
-require_once __DIR__.'/includes/models/beerStyle.php';
-
-require_once __DIR__.'/includes/managers/beer_manager.php';
-require_once __DIR__.'/includes/managers/beerStyle_manager.php';
-
-
+require_once __DIR__.'/header.php';
 $htmlHelper = new HtmlHelper();
 $beerManager = new BeerManager();
 $beerStyleManager = new BeerStyleManager();
-
+$breweryManager = new BreweryManager();
+$config = getAllConfigs();
 if (isset($_POST['inactivateBeer'])) {
 	$beerManager->Inactivate($_POST['id']);		
 }
 
-$beers = $beerManager->GetAllActive();
+$beers = $beerManager->GetAllActiveWithLastBatchId();
+//$breweryList = $breweryManager->GetAll()
 ?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>RaspberryPints</title>
-<link href="styles/layout.css" rel="stylesheet" type="text/css" />
-<link href="styles/wysiwyg.css" rel="stylesheet" type="text/css" />
-	<!-- Theme Start -->
-<link href="styles.css" rel="stylesheet" type="text/css" />
-	<!-- Theme End -->
-<link href='http://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
-</head>
 	<!-- Start Header  -->
+<body>
+<script >
+function toggleBeerInfo(callingElement, beerId) {
+    var imageTh = document.getElementById("beerImg"+beerId);
+	toggleElementDisplay(imageTh, "beerInfo"+beerId );
+	toggleElementDisplay(imageTh, "beerNotes"+beerId );
+}
+function toggleElementDisplay(callingElement, elementToToggle) {
+	var div = document.getElementById(elementToToggle);
+	if(div != null){
+		if(div.style.display == ""){
+			div.style.display = "none";
+			if(callingElement != null)callingElement.style.backgroundImage = "url(img/bg_expander_plus.png)"
+		}else{
+			div.style.display = "";
+			if(callingElement != null)callingElement.style.backgroundImage = "url(img/bg_expander_minus.png)"
+		}
+	}
+}
+
+function filterBeer(searchTextElement){
+	$("p:not(:contains('"+searchTextElement.value+"'))").parent().map(function() {
+	    if(!$(this).is("th")) return 
+	    $(this).siblings("th[id^=beerImg]").css('background-image', 'url(img/bg_expander_plus.png)')
+	    $(this).parent().hide();
+	    $(this).parent().next("tr").hide();
+	    $(this).parent().next("tr").next("tr").hide();
+	  });
+	$("p:contains('"+searchTextElement.value+"')").parent().map(function() {
+	    if(!$(this).is("th")) return 
+	    $(this).parent().show();
+	  });
+}
+</script>
 <?php
-include 'header.php';
+include 'top_menu.php';
 ?>
 	<!-- End Header -->
-        
-    <!-- Top Breadcrumb Start -->
-    <div id="breadcrumb">
-    	<ul>	
-        	<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
-        	<li><strong>Location:</strong></li>
-            <li class="current">My Beers</li>            
-        </ul>
-    </div>
-    <!-- Top Breadcrumb End --> 
-     
-    <!-- Right Side/Main Content Start -->
+		
+	<!-- Top Breadcrumb Start -->
+	<div id="breadcrumb">
+		<ul>	
+			<li><img src="img/icons/icon_breadcrumb.png" alt="Location" /></li>
+			<li><strong>Location:</strong></li>
+			<li class="current">My Beers</li>            
+		</ul>
+	</div>
+	<!-- Top Breadcrumb End --> 
+	
+	<!-- Right Side/Main Content Start -->
 <div id="rightside">
 	<div class="contentcontainer lg left">
-		<div class="headings alt">
-			<h2>My Beers </h2>
+    	<div class="headings alt">
+			<h2>Beers</h2>
 		</div>
 		<div class="contentbox">
 		
@@ -67,114 +74,216 @@ include 'header.php';
 			
 			<?php $htmlHelper->ShowMessage(); ?>
 			
-			<input type="submit" class="btn" value="Add Beer" onclick="window.location='beer_form.php'" />
+			<input type="submit" class="btn" value="Add a Beer" onClick="window.location='beer_form.php'" />
+			<input type="submit" class="btn" value="Add with BeerXML" onClick="window.location='beer_form_xml.php'" />
+			<?php if($config[ConfigNames::ClientID] && $config[ConfigNames::ClientSecret]){?>
+				<input type="submit" class="btn" value="Add with Untappd Id" onClick="window.location='beer_form_untappd.php'" />
+			<?php }?>
 			<br/><br/>
-			
-			<table width="770px" border="0" cellspacing="0" cellpadding="0">
-				<thead>
+			<?php if( count($beers) != 0 ){	?>
+        		Search:<input type="text" id="search" class="largebox" name="search" value="" onkeyup="filterBeer(this);" />
+        	<?php } ?>
+			<table style="width:770px; padding:0px" class="outerborder" id="beersTable">
+<!--				<thead>
 					<tr>
-						<th width="28%">Name</th>
-						<th width="10%">Vitals</th>
-						<th width="22%">Yeast/Water/etc</th>
-						<th width="40%" colspan="3">Hop Additions</th>
+						<th style="width:28%">Name</th>
+						<th style="width:10%">Vitals</th>
+						<th style="width:22%">Yeast/Water/etc</th>
+						<th style="width:40%" colspan="3">Hop Additions</th>
 					</tr>
-				</thead>
+				</thead>-->
 				<tbody>
 					<?php 
 						if( count($beers) == 0 ){  
 					?>
 							<tr><td class="no-results" colspan="99">No beers :( Add some?</td></tr>
 					<?php 
-						}else{  
+						}else{
 							foreach ($beers as $beer){
 					?>
-								<tr>
-									<td>
-										<h3><?php echo $beer->get_name() ?></h3><br>
-										<b><?php 
+								<tr class="intborder collapsed heading" onClick="toggleBeerInfo(this, '<?php echo $beer->get_id()?>')" >
+									<th style="width:35%; vertical-align:middle;">
+										<p style="font-size:24px; font-weight:bold; width:400px; overflow:hidden"><?php echo $beer->get_name() ?></p>
+                                        <?php 
+											if($beer->get_breweryId())
+											{
+												$brewery = $breweryManager->GetByID($beer->get_breweryId());
+												if($brewery) echo "&nbsp;".$brewery->get_name();
+											}
+										?>
+									</th>
+									<th style="width:35%; vertical-align: middle;">
+										<b>Style: <?php 
 											$beerStyle = $beerStyleManager->GetById($beer->get_beerStyleId());
-											echo $beerStyle->get_name();
-										?></b><br>
-										(BJCP <?php echo $beerStyle->get_catNum() ?> - <?php echo $beerStyle->get_category() ?>)</b><br><br>
-									</td>
-									
-									<td>
+											if( $beerStyle )
+											{
+												if (strpos($beerStyle->get_name(),'Non-beer') !== false)
+													echo str_replace("_Non-beer: ","",$beerStyle->get_name());
+												else
+													echo $beerStyle->get_name();
+											}
+										?>
+                                        </b>
+                                        <br>
+										<?php
+											$style = "";
+											if (!$beerStyle || strpos($beerStyle->get_catNum(),'N/A') !== false)
+												$style = "&nbsp;";
+											else
+											{
+												$style = $beerStyle->get_beerStyleList().":".($beerStyle->get_catNum()? $beerStyle->get_catNum()." - ":"").$beerStyle->get_category();
+											}
+											echo $style;
+										?>
+									</th>
+									<th style="width:10%; text-align: center; vertical-align: middle; margin: 0; padding: 0;">
+										<input name="editBeer" type="button" class="btn" value="Edit" style="text-align: center; margin: 0;" onClick="window.location='beer_form.php?id=<?php echo $beer->get_id()?>'" />
+									</th>
+									<th style="width:10%; text-align: center; vertical-align: middle; margin: 0; padding: 0">
+										<form method="POST">
+											<input type='hidden' name='id' value='<?php echo $beer->get_id()?> '/>
+											<input class="inactivateBeer btn" style="text-align: center; margin: 0;" name="inactivateBeer" type="submit" value="Delete" />
+										</form>
+									</th>
+									<th id="beerImg<?php echo $beer->get_id()?>" style="width:10%; text-align: center; vertical-align: middle; margin: 0; padding: 0;
+									      background: url(img/bg_expander_plus.png) no-repeat center; background-size: 100%; background-color: #e0e0e0; background-position: 0 -10px; background-position-y: center; " >
+									</th>
+								</tr>
+								<tr class="intborder thick" id="beerInfo<?php echo $beer->get_id() ?>" style="display:none">
+									<td style="width:35%; margin: 0; padding: 0;">
+										<p><b style="text-decoration: underline;">Vitals</b></p>
+										<p>
+                                        <b>Untappd:</b>
+										<?php
+											if ( $beer->get_untID() != 0 )
+												echo $beer->get_untID() ;
+											else
+												echo "N/A" ;
+										?>
+                                        <br>
+                                        <b>SRM:</b>
 										<?php
 											if ( $beer->get_srm() != 0 )
-												echo "<b>SRM:</b> " , $beer->get_srm() , "<br>" ;
+												echo  $beer->get_srm();
 											else
-												echo ""
+												echo "N/A";
 										?>
+                                        <br>
+                                        <b>IBU:</b>
 										<?php
 											if ( $beer->get_ibu() != 0 )
-												echo "<b>IBU:</b> " , $beer->get_ibu() , "<br>" ;
+												echo $beer->get_ibu();
 											else
-												echo ""
+												echo "N/A";
 										?>
+                                        <br>
+                                        <b>ABV:</b>
+										<?php
+											if ( $beer->get_abv() != 1 && $beer->get_abv() != 0 )
+												echo $beer->get_abv() ;
+											else
+												echo "N/A";
+										?>
+                                        </p>
+                                        <p>
+                                        <b>OG:</b>
 										<?php
 											if ( $beer->get_og() != 1 && $beer->get_og() != 0 )
-												echo "<b>OG:</b> " , $beer->get_og() , "<br>" ;
+											    echo convert_gravity($beer->get_og(), $beer->get_ogUnit(), $config[ConfigNames::DisplayUnitGravity]) ;
 											else
-												echo ""
+												echo "N/A";
 										?>
+                                        <br>
+                                        <b>FG:</b>
 										<?php
 											if ( $beer->get_fg() != 1 && $beer->get_fg() != 0 )
-												echo "<b>FG:</b> " , $beer->get_fg() , "<br>" ;
+											    echo  convert_gravity($beer->get_fg(), $beer->get_fgUnit(), $config[ConfigNames::DisplayUnitGravity]);
 											else
-												echo ""
+												echo "N/A";
+										?>
+                                        </p>
+                                        <p>
+                                        <b>Batches:</b>
+										<?php
+										echo $beer->get_lastBatchNumber();
+										?>
+                                        </p>
+										
+									</td>
+									<td colspan="3" style="width:55%; margin: 0; padding: 0;">
+										<p style="padding-bottom: 1px"><b  style="text-decoration: underline;">Fermentables:</b></p><p>
+						                    <?php
+						                      $fermentables = $beerManager->GetFermentables($beer->get_id());
+						                      foreach($fermentables as $fermentable){
+						                      	 echo $fermentable->get_name(). "<br>";
+						                      }
+						                    ?>
+										</p>
+										
+										<p style="padding-bottom: 1px"><b style="text-decoration: underline;">Hops:</b></p><p>
+						                    <?php
+						                      $hops = $beerManager->GetHops($beer->get_id());
+						                      foreach($hops as $hop){
+						                          echo $hop->get_name() . "<br>";
+						                      }
+						                    ?>
+										</p>
+										<p style="padding-bottom: 1px"><b style="text-decoration: underline;">Yeast:</b></p><p>
+						                    <?php 
+						                      $yeasts = $beerManager->GetYeasts($beer->get_id());
+						                      foreach($yeasts as $yeast){
+						                          echo $yeast->get_name() . "<br>";
+						                      }
+						                    ?>
+										</p>
+									</td>
+									<td style="width:10%; margin: 0; padding: 0;"></td>
+								</tr>
+								<tr class="intborder" id="beerNotes<?php echo $beer->get_id() ?>" style="display:none">
+									<td colspan="2"style="width:70%; text-align: center;">
+										<?php
+										if(strlen($beer->get_notes()) < 200){
+										    echo htmlentities($beer->get_notes(),ENT_QUOTES| ENT_IGNORE) ;
+										}else{
+										    echo htmlentities(substr($beer->get_notes(), 0, 200) .' ...',ENT_QUOTES| ENT_IGNORE);										      
+										}
 										?>
 									</td>
-									
-									<td>
-										<b>Yeast</b>: Fermentis S-04<br>
-										<b>Water:</b> Sacramento, CA<br>
-										<b>More:</b> Info Here...<br>
-										<b>More:</b> Info Here...<br>
+									<td style="width:10%; text-align: center; vertical-align: middle; margin: 0; padding: 0;" >
+									<?php if($beer->get_lastBatchNumber()){?>
+										<input name="beerBatches" type="button" class="btn" value="Batches" style="text-align: center; margin: 0;" onClick="window.location='beerBatch_list.php?id=<?php echo $beer->get_id()?>'" />
+									<?php }?>
 									</td>
-									
-									<td colspan="3">
-										1.42 oz Northern Brewer (6.8%) @ 60 min<br>
-										2.14 oz Nelson Sauvin (9.1%) @ 30 min<br>
-										2.41 oz Columbus/Tomahawk (8.6%) @ 15 min<br>
-										1.24 oz East Kent Goldings (2.1%) @ 0 min<br>
+									<td style="width:10%; text-align: center; vertical-align: middle; margin: 0; padding: 0;">
+										<input name="editBeer" type="button" class="btn" value="Edit" style="text-align: center; margin: 0;" onClick="window.location='beer_form.php?id=<?php echo $beer->get_id()?>'" />
 									</td>
-								</tr>
-								<tr class="intborder">
-									<td colspan="3">
-										<?php if ($beer->get_notes()) echo '"' ?><?php echo $beer->get_notes() ?><?php if ($beer->get_notes()) echo '"' ?>
-									</td>
-									<td align="center" width="50px">
-										<input name="editBeer" type="button" class="btn" value="Edit" onclick="window.location='beer_form.php?id=<?php echo $beer->get_id()?>'" />
-									</td>
-									<td align="center" width="50px">
+									<td style="width:10%; text-align: center; vertical-align: middle; margin: 0; padding: 0">
 										<form method="POST">
-											<input type='hidden' name='id' value='<?php echo $beer->get_id()?>'/>
-											<input class="inactivateBeer btn" name="inactivateBeer" type="submit" value="Delete" />
+											<input type='hidden' name='id' value='<?php echo $beer->get_id()?> '/>
+											<input class="inactivateBeer btn" style="text-align: center; margin: 0;" name="inactivateBeer" type="submit" value="Delete" />
 										</form>
 									</td>
 								</tr>
 					<?php 
-							} 
+							}
 						}
 					?>
 				</tbody>
-			</table>
+			</table><br>
+			<input type="submit" class="btn" value="Add a Beer" onClick="window.location='beer_form.php'" />
+			<input type="submit" class="btn" value="Add a Beer with XML" onClick="window.location='beer_form_xml.php'" />
+			<?php if($config[ConfigNames::ClientID] && $config[ConfigNames::ClientSecret]){?>
+				<input type="submit" class="btn" value="Add with Untappd Id" onClick="window.location='beer_form_untappd.php'" />
+			<?php }?>
 		</div>
-    </div>
-</div>
-</div>
-	
-	<!-- End On Tap Section -->
-
-    <!-- Start Footer -->   
-<?php
-include 'footer.php';
-?>
-
+	</div>
+	<!-- Start Footer -->   
+	<?php
+	include 'footer.php';
+	?>
 	<!-- End Footer -->
-          
-    </div>
-    <!-- Right Side/Main Content End -->
+</div>
+	<!-- Right Side/Main Content End -->
 	<!-- Start Left Bar Menu -->   
 <?php
 include 'left_bar.php';
@@ -182,7 +291,7 @@ include 'left_bar.php';
 	<!-- End Left Bar Menu -->  
 	<!-- Start Js  -->
 <?php
-include 'scripts.php';
+require_once 'scripts.php';
 ?>
 <script>
 	$(function(){
@@ -195,11 +304,11 @@ include 'scripts.php';
 </script>
 
 	<!-- End Js -->
-    <!--[if IE 6]>
-    <script type='text/javascript' src='scripts/png_fix.js'></script>
-    <script type='text/javascript'>
-      DD_belatedPNG.fix('img, .notifycount, .selected');
-    </script>
-    <![endif]--> 
+	<!--[if IE 6]>
+	<script type='text/javascript' src='scripts/png_fix.js'></script>
+	<script type='text/javascript'>
+	DD_belatedPNG.fix('img, .notifycount, .selected');
+	</script>
+	<![endif]--> 
 </body>
 </html>

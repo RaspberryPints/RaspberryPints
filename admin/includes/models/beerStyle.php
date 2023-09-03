@@ -1,15 +1,32 @@
 <?php
 class BeerStyle
 {  
-    private $_id;  
-    private $_name;
+	private $_id;  
+	private $_name;
 	private $_catNum;
 	private $_category;
+	private $_beerStyleList;
+	private $_ogMin;
+	private $_ogMinUnit;
+	private $_ogMax;
+	private $_ogMaxUnit;
+	private $_fgMin;
+	private $_fgMinUnit;
+	private $_fgMax;
+	private $_fgMaxUnit;
+	private $_abvMin;
+	private $_abvMax;
+	private $_ibuMin;
+	private $_ibuMax;
+	private $_srmMin;
+	private $_srmMax;
+	private $_active;
+	
 	private $_createdDate; 
 	private $_modifiedDate; 
 
 	public function __construct(){}
-  
+
 	public function get_id(){ return $this->_id; }
 	public function set_id($_id){ $this->_id = $_id; }
 
@@ -22,14 +39,64 @@ class BeerStyle
 	public function get_category(){ return $this->_category; }
 	public function set_category($_category){ $this->_category = $_category; }
 
-	public function get_createdDate(){ return $this->_createdDate; }
+	public function get_beerStyleList(){ return $this->_beerStyleList; }
+	public function set_beerStyleList($_beerStyleList){ $this->_beerStyleList = $_beerStyleList; }
+	
+	public function get_ogMin(){ return $this->_ogMin; }
+    public function set_ogMin($_ogMin){ $this->_ogMin = $_ogMin; }
+    
+    public function get_ogMinUnit(){ return $this->_ogMinUnit; }
+    public function set_ogMinUnit($_ogMinUnit){ $this->_ogMinUnit = $_ogMinUnit; }    
+    
+    public function get_ogMax(){ return $this->_ogMax; }
+    public function set_ogMax($_ogMax){ $this->_ogMax = $_ogMax; }
+    
+    public function get_ogMaxUnit(){ return $this->_ogMaxUnit; }
+    public function set_ogMaxUnit($_ogMaxUnit){ $this->_ogMaxUnit = $_ogMaxUnit; }
+    
+    public function get_fgMin(){ return $this->_fgMin; }
+    public function set_fgMin($_fgMin){ $this->_fgMin = $_fgMin; }
+    
+    public function get_fgMinUnit(){ return $this->_fgMinUnit; }
+    public function set_fgMinUnit($_fgMinUnit){ $this->_fgMinUnit = $_fgMinUnit; }
+    
+    public function get_fgMax(){ return $this->_fgMax; }
+    public function set_fgMax($_fgMax){ $this->_fgMax = $_fgMax; }
+    
+    public function get_fgMaxUnit(){ return $this->_fgMaxUnit; }
+    public function set_fgMaxUnit($_fgMaxUnit){ $this->_fgMaxUnit = $_fgMaxUnit; }
+    
+    public function get_abvMin(){ return $this->_abvMin; }
+    public function set_abvMin($_abvMin){ $this->_abvMin = $_abvMin; }
+    
+    public function get_abvMax(){ return $this->_abvMax; }
+    public function set_abvMax($_abvMax){ $this->_abvMax = $_abvMax; }
+    
+    public function get_ibuMin(){ return $this->_ibuMin; }
+    public function set_ibuMin($_ibuMin){ $this->_ibuMin = $_ibuMin; }
+    
+    public function get_ibuMax(){ return $this->_ibuMax; }
+    public function set_ibuMax($_ibuMax){ $this->_ibuMax = $_ibuMax; }
+    
+    public function get_srmMin(){ return $this->_srmMin; }
+    public function set_srmMin($_srmMin){ $this->_srmMin = $_srmMin; }
+    
+    public function get_srmMax(){ return $this->_srmMax; }
+    public function set_srmMax($_srmMax){ $this->_srmMax = $_srmMax; }
+    
+    public function get_active(){ return $this->_active; }
+    public function set_active($_active){ $this->_active = $_active; }
+    
+    public function get_createdDate(){ return $this->_createdDate; }
+	public function get_createdDateFormatted(){ return Manager::format_time($this->_createdDate); }
 	public function set_createdDate($_createdDate){ $this->_createdDate = $_createdDate; }
-	
+
 	public function get_modifiedDate(){ return $this->_modifiedDate; }
+	public function get_modifiedDateFormatted(){ return Manager::format_time($this->_modifiedDate); }
 	public function set_modifiedDate($_modifiedDate){ $this->_modifiedDate = $_modifiedDate; }
-	
-    public function setFromArray($postArr)  
-    {  	
+
+	public function setFromArray($postArr)  
+	{
 		if( isset($postArr['id']) )
 			$this->set_id($postArr['id']);
 		else
@@ -52,6 +119,85 @@ class BeerStyle
 		else
 			$this->set_category(null);
 			
+		if( isset($postArr['beerStyleList']) )
+			$this->set_beerStyleList($postArr['beerStyleList']);
+		else
+			$this->set_beerStyleList(null);
+			
+		if (isset($postArr['ogMin']))
+            $this->set_ogMin($postArr['ogMin']);
+        else
+            $this->set_ogMin(null);
+        if( isset($postArr['ogMinUnit']) )
+            $this->set_ogMinUnit($postArr['ogMinUnit']);
+        else
+            $this->set_ogMinUnit(null);
+        
+        if (isset($postArr['ogMax']))
+            $this->set_ogMax($postArr['ogMax']);
+        else
+            $this->set_ogMax(null);            
+            
+        if( isset($postArr['ogMaxUnit']) )
+            $this->set_ogMaxUnit($postArr['ogMaxUnit']);
+        else
+            $this->set_ogMaxUnit(null);
+        
+        if (isset($postArr['fgMin']))
+            $this->set_fgMin($postArr['fgMin']);
+        else
+            $this->set_fgMin(null);
+        
+        if( isset($postArr['fgMinUnit']) )
+            $this->set_fgMinUnit($postArr['fgMinUnit']);
+        else
+            $this->set_fgMinUnit(null);
+        
+        if (isset($postArr['fgMax']))
+            $this->set_fgMax($postArr['fgMax']);
+        else
+            $this->set_fgMax(null);
+        
+        if( isset($postArr['fgMaxUnit']) )
+            $this->set_fgMaxUnit($postArr['fgMaxUnit']);
+        else
+            $this->set_fgMaxUnit(null);
+        
+        if (isset($postArr['abvMin']))
+            $this->set_abvMin($postArr['abvMin']);
+        else
+            $this->set_abvMin(null);
+        
+        if (isset($postArr['abvMax']))
+            $this->set_abvMax($postArr['abvMax']);
+        else
+            $this->set_abvMax(null);
+        
+        if (isset($postArr['ibuMin']))
+            $this->set_ibuMin($postArr['ibuMin']);
+        else
+            $this->set_ibuMin(null);
+        
+        if (isset($postArr['ibuMax']))
+            $this->set_ibuMax($postArr['ibuMax']);
+        else
+            $this->set_ibuMax(null);
+        
+        if (isset($postArr['srmMin']))
+            $this->set_srmMin($postArr['srmMin']);
+        else
+            $this->set_srmMin(null);
+        
+        if (isset($postArr['srmMax']))
+            $this->set_srmMax($postArr['srmMax']);
+        else
+            $this->set_srmMax(null);
+            
+        if( isset($postArr['active']) )
+            $this->set_active($postArr['active']);
+        else
+            $this->set_active(null);
+        
 		if( isset($postArr['createdDate']) )
 			$this->set_createdDate($postArr['createdDate']);
 		else
@@ -61,7 +207,7 @@ class BeerStyle
 			$this->set_modifiedDate($postArr['modifiedDate']);
 		else
 			$this->set_modifiedDate(null);
-    }  
+	}
 	
 	function toJson(){
 		return "{" . 
@@ -69,6 +215,21 @@ class BeerStyle
 			"name: '" . $this->get_name() . "', " .
 			"catNum: '" . $this->get_catNum() . "', " .
 			"category: '" . $this->get_category() . "', " .
+			"beerStyleList: '" . $this->get_beerStyleList() . "', " .
+			"ogMin: '" . $this->get_ogMin() . "', ".
+			"ogMinUnit: '" . $this->get_ogMinUnit() . "', ".
+			"ogMax: '" . $this->get_ogMax() . "', ".
+			"ogMaxUnit: '" . $this->get_ogMaxUnit() . "', ".
+			"fgMin: '" . $this->get_fgMin() . "', ".
+			"fgMinUnit: '" . $this->get_fgMinUnit() . "', ".
+			"fgMax: '" . $this->get_fgMax() . "', ".
+			"fgMaxUnit: '" . $this->get_fgMaxUnit() . "', ".
+			"abvMin: '" . $this->get_abvMin() . "', ".
+			"abvMax: '" . $this->get_abvMax() . "', ".
+			"ibuMin: '" . $this->get_ibuMin() . "', ".
+			"ibuMax: '" . $this->get_ibuMax() . "', ".
+			"srmMin: '" . $this->get_srmMin() . "', ".
+			"srmMax: '" . $this->get_srmMax() . "', ".
 			"createdDate: new Date('" . $this->get_createdDate() . "'), " .
 			"modifiedDate: new Date('" . $this->get_modifiedDate() . "') " .  
 		"}";

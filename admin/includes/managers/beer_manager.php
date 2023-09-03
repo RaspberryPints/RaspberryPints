@@ -1,95 +1,90 @@
 <?php
+require_once __DIR__.'/manager.php';
+require_once __DIR__.'/tap_manager.php';
+require_once __DIR__.'/fermentable_manager.php';
+require_once __DIR__.'/hop_manager.php';
+require_once __DIR__.'/yeast_manager.php';
+require_once __DIR__.'/accolade_manager.php';
+require_once __DIR__.'/beerBatch_manager.php';
 require_once __DIR__.'/../models/beer.php';
 
-class BeerManager{
-
-	function Save($beer){
-		$sql = "";
-		if($beer->get_id()){
-			$sql = 	"UPDATE beers " .
-					"SET " .
-						"name = '" . encode($beer->get_name()) . "', " .
-						"beerStyleId = '" . encode($beer->get_beerStyleId()) . "', " .
-						"notes = '" . encode($beer->get_notes()) . "', " .
-						"ogEst = '" . $beer->get_og() . "', " .
-						"fgEst = '" . $beer->get_fg() . "', " .
-						"srmEst = '" . $beer->get_srm() . "', " .
-						"ibuEst = '" . $beer->get_ibu() . "', " .
-						"modifiedDate = NOW() ".
-					"WHERE id = " . $beer->get_id();
-					
-		}else{		
-			$sql = 	"INSERT INTO beers(name, beerStyleId, notes, ogEst, fgEst, srmEst, ibuEst, createdDate, modifiedDate ) " .
-					"VALUES(" . 
-					"'" . encode($beer->get_name()) . "', " .
-					$beer->get_beerStyleId() . ", " .
-					"'" . encode($beer->get_notes()) . "', " .
-					"'" . $beer->get_og() . "', " . 
-					"'" . $beer->get_fg() . "', " . 
-					"'" . $beer->get_srm() . "', " . 
-					"'" . $beer->get_ibu() . "' " .
-					", NOW(), NOW())";
-		}
-		
-		//echo $sql; exit();
-		
-		mysql_query($sql);
-	}
+class BeerManager extends Manager{
 	
-	function GetAll(){
-		$sql="SELECT * FROM beers ORDER BY name";
-		$qry = mysql_query($sql);
-		
-		$beers = array();
-		while($i = mysql_fetch_array($qry)){
-			$beer = new Beer();
-			$beer->setFromArray($i);
-			$beers[$beer->get_id()] = $beer;		
-		}
-		
-		return $beers;
+	protected function getPrimaryKeys(){
+		return ["id"];
 	}
-	
-	function GetAllActive(){
-		$sql="SELECT * FROM beers WHERE active = 1 ORDER BY name";
-		$qry = mysql_query($sql);
-		
-		$beers = array();
-		while($i = mysql_fetch_array($qry)){
-			$beer = new Beer();
-			$beer->setFromArray($i);
-			$beers[$beer->get_id()] = $beer;	
-		}
-		
-		return $beers;
+	protected function getColumns(){
+		return ["name", "untID", "beerStyleId", "breweryId", "notes", "abv", "og", "ogUnit", "fg", "fgUnit", "srm", "ibu", "rating", "active", "containerId"];
 	}
-		
-	function GetById($id){
-		$sql="SELECT * FROM beers WHERE id = $id";
-		$qry = mysql_query($sql);
-		
-		if( $i = mysql_fetch_array($qry) ){		
-			$beer = new Beer();
-			$beer->setFromArray($i);
-			return $beer;
-		}
-
-		return null;
+	protected function getTableName(){
+		return "beers";
 	}
-	
+	protected function getDBObject(){
+		return new Beer();
+	}	
+	protected function getActiveColumnName(){
+		return "active";
+	}	
 	function Inactivate($id){
-		$sql = "SELECT * FROM taps WHERE beerId = $id AND active = 1";
-		$qry = mysql_query($sql);
+		$tapManager = new TapManager();
+		$tap = $tapManager->GetByBeerId($id);
 		
-		if( mysql_fetch_array($qry) ){		
+		if( $tap ){		
 			$_SESSION['errorMessage'] = "Beer is associated with an active tap and could not be deleted.";
 			return;
 		}
-	
-		$sql="UPDATE beers SET active = 0 WHERE id = $id";
-		//echo $sql; exit();
-		$qry = mysql_query($sql);
-		
-		$_SESSION['successMessage'] = "Beer successfully deleted.";
+		parent::Inactivate($id);
 	}
+
+	protected function getOrderByClause(){
+		return "ORDER BY name";
+	}
+
+  function GetFermentables($id){
+	$manager = new FermentableManager();
+	return $manager->GetDistinctForBeer($id);
+  }
+
+  function GetHops($id){
+	$manager = new HopManager();
+	return $manager->GetDistinctForBeer($id);
+  }
+
+  function GetYeasts($id){
+	$manager = new yeastManager();
+	return $manager->GetDistinctForBeer($id);
+  }
+  
+  private static function cmpBeer($a, $b) {
+      return strcmp($a->get_displayName(), $b->get_displayName());
+  }
+  function GetAllWithBatches(){
+      $beerList = $this->GetAll();
+      
+      $beerBatchList = (new BeerBatchManager())->GetAll();
+      if( count($beerBatchList) > 0){
+          $beerList = array_merge($beerList, $beerBatchList );
+          uasort($beerList, array('BeerManager','cmpBeer'));
+      }
+      return $beerList;
+  }
+  
+  function GetAllActiveWithBatches(){
+      $beerList = $this->GetAllActive();
+      
+      $beerBatchList = (new BeerBatchManager())->GetAllActiveWithRemaining();
+      if( count($beerBatchList) > 0){
+          $beerList = array_merge($beerList, $beerBatchList );
+          uasort($beerList, array('BeerManager','cmpBeer'));
+      }
+      return $beerList;
+  }
+  function GetAllActiveWithLastBatchId(){
+      if($this->getActiveColumnName()){
+          $sql="SELECT *, (select COALESCE(max(batchNumber),0) from ".(new BeerBatchManager())->getViewName()." where beerid = b.id) AS lastBatchNumber FROM ".$this->getViewName()." b WHERE ".$this->getActiveColumnName()." = 1 ".$this->getOrderByClause();
+          return $this->executeQueryWithResults($sql);
+      }
+      return $this->GetAll();
+  }
+  
 }
